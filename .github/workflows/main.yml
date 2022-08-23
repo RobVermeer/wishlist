@@ -1,0 +1,32 @@
+name: Deploy 🚀
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Do it 💪
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest code 🚚
+        uses: actions/checkout@v2
+      - name: Install dependencies ⏳
+        run: npm ci
+      - name: Build website 👷‍♀️
+        run: npm run build
+      - name: Copy public folder 🚝
+        run: cp -R public/ .next/standalone/public/
+      - name: Copy static folder 🗂
+        run: cp -R .next/static/ .next/standalone/static/
+      - name: Install SSH Key 🔑
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: "just-a-placeholder-so-we-dont-get-errors"
+      - name: Adding Known Hosts 💾
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Deploy with rsync 💨
+        run: rsync -avz --delete .next/standalone/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wishlist.ru-coding.nl/
+      - name: Restart server 🏁
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && pm2 reload wishlist"
