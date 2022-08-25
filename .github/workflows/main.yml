@@ -18,7 +18,7 @@ jobs:
       - name: Copy public folder 🚝
         run: cp -R public/ .next/standalone/public/
       - name: Copy static folder 🗂
-        run: cp -R .next/static/ .next/standalone/static/
+        run: cp -R .next/static/ .next/standalone/.next/static/
       - name: Install SSH Key 🔑
         uses: shimataro/ssh-key-action@v2
         with:

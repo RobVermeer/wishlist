@@ -11,20 +11,19 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -38,13 +37,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  wishlists     Wishlist[]
+  wishlistItem  WishlistItem[]
+  groups        Group[]
 }
 
 model VerificationToken {
@@ -53,4 +55,34 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Group {
+  id        String     @id @default(cuid())
+  title     String
+  createdAt DateTime
+  wishlist  Wishlist[]
+  createdBy User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+}
+
+model Wishlist {
+  id           String         @id @default(cuid())
+  title        String
+  createdAt    DateTime
+  wishlistItem WishlistItem[]
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groups       Group[]
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  title      String
+  url        String?
+  createdAt  DateTime
+  userId     String?
+  boughtBy   User?    @relation(fields: [userId], references: [id])
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
 }
