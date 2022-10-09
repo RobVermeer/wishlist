@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Install dependencies ⏳
         run: npm ci
+      - name: Migrate database 👷‍♀️
+        run: npx prisma migrate deploy
       - name: Build website 👷‍♀️
         run: npm run build
       - name: Copy public folder 🚝
