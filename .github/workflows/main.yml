@@ -31,6 +31,6 @@ jobs:
       - name: Deploy with rsync 💨
         run: rsync -avz --delete .next/standalone/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wishlist.ru-coding.nl/ --exclude=.env.local
       - name: Migrate database 🪤
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && prisma migrate deploy"
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && dotenv -e .env.local prisma migrate deploy"
       - name: Restart server 🏁
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && pm2 reload wishlist"
