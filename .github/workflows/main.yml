@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Install dependencies ⏳
         run: npm ci
-      - name: Migrate database 👷‍♀️
-        run: npx prisma migrate deploy
       - name: Build website 👷‍♀️
         run: npm run build
+      - name: Copy prisma folder 💾
+        run: cp -R prisma/ .next/standalone/prisma/
       - name: Copy public folder 🚝
         run: cp -R public/ .next/standalone/public/
       - name: Copy static folder 🗂
@@ -30,5 +30,7 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Deploy with rsync 💨
         run: rsync -avz --delete .next/standalone/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wishlist.ru-coding.nl/
+      - name: Migrate database 🪤
+        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && prisma migrate deploy"
       - name: Restart server 🏁
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/wishlist.ru-coding.nl/ && pm2 reload wishlist"
