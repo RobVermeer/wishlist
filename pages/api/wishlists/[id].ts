@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
 import prisma from "../../../lib/prisma"
 
 const publicUserProperties = {
@@ -31,11 +30,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, body } = req
-  const session = await getSession({ req })
+  const { method, query, body } = req
+  const { id } = query
+
+  if (Array.isArray(id)) {
+    return res.status(404).send("")
+  }
 
   if (method === "GET") {
-    const data = await prisma.group.findMany({
+    const data = await prisma.group.findFirst({
+      where: { id },
       orderBy: { createdAt: "desc" },
       select: publicGroupProperties,
     })
@@ -43,18 +47,30 @@ export default async function handler(
     return res.status(200).json({ data })
   }
 
-  if (method === "POST") {
+  if (method === "DELETE") {
+    try {
+      const data = await prisma.group.delete({
+        where: { id },
+      })
+
+      return res.status(200).json({ data })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  if (method === "PUT") {
     const { title } = JSON.parse(body)
+    try {
+      const data = await prisma.group.update({
+        where: { id },
+        data: { title },
+      })
 
-    const data = await prisma.group.create({
-      data: {
-        title,
-        createdAt: new Date(),
-        userId: session.userId as string,
-      },
-    })
-
-    return res.status(200).json({ data })
+      return res.status(200).json({ data })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return res.status(404).send("")
