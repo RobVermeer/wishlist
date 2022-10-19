@@ -38,10 +38,17 @@ export default async function handler(
   }
 
   if (method === "GET") {
-    const data = await prisma.group.findFirst({
+    const data = await prisma.wishlist.findFirst({
       where: { id },
       orderBy: { createdAt: "desc" },
-      select: publicGroupProperties,
+      select: {
+        title: true,
+        user: {
+          select: publicUserProperties,
+        },
+        id: true,
+        wishlistItem: true,
+      },
     })
 
     return res.status(200).json({ data })

@@ -40,6 +40,26 @@ export default async function handler(
       select: publicGroupProperties,
     })
 
+    const userData = await prisma.user.findUnique({
+      select: {
+        groups: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      where: {
+        id: session.userId as string,
+      },
+    })
+
+    const d = data.map((group) => ({
+      ...group,
+      isMember: userData.groups.map(({ id }) => id).includes(group.id),
+    }))
+
+    console.log(data, userData, d)
+
     return res.status(200).json({ data })
   }
 

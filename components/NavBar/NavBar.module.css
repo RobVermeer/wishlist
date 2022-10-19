@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: var(--font-size-6);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: var(--size-3);
+}
+
+.user p {
+  font-size: var(--font-size-1);
+}
+
+.user img {
+  width: var(--size-8);
+  border-radius: var(--radius-6);
+  box-shadow: var(--shadow-4);
+}
