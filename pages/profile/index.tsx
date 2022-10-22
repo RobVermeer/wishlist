@@ -18,13 +18,15 @@ function ProfilePage() {
       <PageTitle>Profile</PageTitle>
       <h3>Groups you follow</h3>
       <Cards>
-        {groups.map((group) => (
-          <Link key={group.id} href={`/group/${group.id}`}>
-            <a>
-              {group.title} <small>({group.wishlist.length})</small>
-            </a>
-          </Link>
-        ))}
+        {groups
+          .filter(({ isSubscribed }) => isSubscribed)
+          .map((group) => (
+            <Link key={group.id} href={`/group/${group.id}`}>
+              <a>
+                {group.title} <small>({group.wishlist.length})</small>
+              </a>
+            </Link>
+          ))}
       </Cards>
       <Link href="/profile/groups">
         <a>Manage groups you follow</a>

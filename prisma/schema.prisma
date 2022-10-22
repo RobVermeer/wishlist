@@ -46,7 +46,8 @@ model User {
   sessions      Session[]
   wishlists     Wishlist[]
   wishlistItem  WishlistItem[]
-  groups        Group[]
+  groups        Group[]        @relation(name: "OwnedGroups")
+  subscribed    Group[]        @relation(name: "Subscribed")
 }
 
 model VerificationToken {
@@ -62,8 +63,9 @@ model Group {
   title     String
   createdAt DateTime
   wishlist  Wishlist[]
-  createdBy User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdBy User       @relation(name: "OwnedGroups", fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  members   User[]     @relation(name: "Subscribed")
 }
 
 model Wishlist {

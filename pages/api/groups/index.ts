@@ -42,7 +42,7 @@ export default async function handler(
 
     const userData = await prisma.user.findUnique({
       select: {
-        groups: {
+        subscribed: {
           select: {
             id: true,
           },
@@ -55,12 +55,10 @@ export default async function handler(
 
     const d = data.map((group) => ({
       ...group,
-      isMember: userData.groups.map(({ id }) => id).includes(group.id),
+      isSubscribed: userData.subscribed.map(({ id }) => id).includes(group.id),
     }))
 
-    console.log(data, userData, d)
-
-    return res.status(200).json({ data })
+    return res.status(200).json({ data: d })
   }
 
   if (method === "POST") {
