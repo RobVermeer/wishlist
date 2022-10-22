@@ -8,14 +8,30 @@ import styles from "../../styles/Profile.module.css"
 
 function ProfilePage() {
   const { push } = useRouter()
-  const { data = {} } = useQuery(["groups"], () =>
+  const { data: groupData = {} } = useQuery(["groups"], () =>
     fetch("/api/groups").then((res) => res.json())
   )
-  const { data: groups = [] } = data
+  const { data: groups = [] } = groupData
+  const { data: wishlistData = {} } = useQuery(["wishlists"], () =>
+    fetch("/api/wishlists").then((res) => res.json())
+  )
+  const { data: wishlists = [] } = wishlistData
 
   return (
     <div className={styles.container}>
       <PageTitle>Profile</PageTitle>
+      <h3>Your wishlists</h3>
+      <Cards>
+        {wishlists.map((wishlist) => (
+          <Link key={wishlist.id} href={`/wishlist/${wishlist.id}`}>
+            <a>{wishlist.title}</a>
+          </Link>
+        ))}
+      </Cards>
+      <Link href="/profile/wishlists">
+        <a>Manage your wishlists</a>
+      </Link>
+
       <h3>Groups you follow</h3>
       <Cards>
         {groups
