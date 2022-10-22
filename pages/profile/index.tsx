@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { Cards } from "../../components/Card"
-import { PageTitle } from "../../components/PageTitle"
-import styles from "../../styles/Profile.module.css"
+import { Cards } from "~/components/Card"
+import { PageTitle } from "~/components/PageTitle"
+import styles from "~/styles/Profile.module.css"
 
 function ProfilePage() {
   const { push } = useRouter()

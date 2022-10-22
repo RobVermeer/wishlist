@@ -1,35 +1,16 @@
-import { useQuery } from "@tanstack/react-query"
-import { useSession } from "next-auth/react"
-import Link from "next/link"
-import { Cards } from "../components/Card"
-import { PageTitle } from "../components/PageTitle"
-import styles from "../styles/Home.module.css"
+import { GetServerSideProps } from "next"
+import { Home } from "~/components/Home"
+import { NotLoggedIn } from "~/components/NotLoggedIn"
+import { withBaseProps } from "~/utils/withBaseProps"
 
-function HomePage() {
-  const { data: userData } = useSession()
-  const { data = {} } = useQuery(["groups"], () =>
-    fetch("/api/groups").then((res) => res.json())
-  )
-  const { data: groups = [] } = data
+function HomePage({ session }) {
+  if (!session) return <NotLoggedIn />
 
-  return (
-    <div className={styles.container}>
-      {userData && (
-        <>
-          <PageTitle>Your groups</PageTitle>
-          <Cards>
-            {groups.map((group) => (
-              <Link key={group.id} href={`/group/${group.id}`}>
-                <a>
-                  {group.title} <small>({group.wishlist.length})</small>
-                </a>
-              </Link>
-            ))}
-          </Cards>
-        </>
-      )}
-    </div>
-  )
+  return <Home />
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async () => ({ props: { title: "Home" } }))
 }
 
 export default HomePage

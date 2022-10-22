@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
-import { PageTitle } from "../../../components/PageTitle"
-import styles from "../../../styles/Profile.module.css"
+import { PageTitle } from "~/components/PageTitle"
+import styles from "~/styles/Profile.module.css"
 
 function ProfileWishlistsPage() {
   const [title, setTitle] = useState("")

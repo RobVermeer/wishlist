@@ -1,20 +1,32 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { SessionProvider } from "next-auth/react"
-import { Footer } from "../components/Footer"
-import { NavBar } from "../components/NavBar"
-import "../styles/globals.css"
+import Head from "next/head"
+import { Footer } from "~/components/Footer"
+import { NavBar } from "~/components/NavBar"
+import "~/styles/globals.css"
 
 const queryClient = new QueryClient()
 
 export default function App({ Component, pageProps }) {
-  const { session, ...componentProps } = pageProps
+  const { title, session } = pageProps
+  const pageTitle = [title, "Wishlist"].filter(Boolean).join(" - ")
 
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <NavBar />
-        <Component {...componentProps} />
-        <Footer />
+        <Head>
+          <title>{pageTitle}</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
+
+        <main className="main">
+          <NavBar />
+          <Component {...pageProps} />
+          <Footer />
+        </main>
       </QueryClientProvider>
     </SessionProvider>
   )

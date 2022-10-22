@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
 import { useRouter } from "next/router"
-import { Cards } from "../../../components/Card"
-import { PageTitle } from "../../../components/PageTitle"
-import styles from "../../../styles/Profile.module.css"
+import { Cards } from "~/components/Card"
+import { PageTitle } from "~/components/PageTitle"
+import styles from "~/styles/Profile.module.css"
 
 function WishlistPage() {
   const { query } = useRouter()

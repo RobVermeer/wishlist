@@ -1,9 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { signOut } from "next-auth/react"
-import Link from "next/link"
 import { useRouter } from "next/router"
-import { PageTitle } from "../../../components/PageTitle"
-import styles from "../../../styles/Profile.module.css"
+import { PageTitle } from "~/components/PageTitle"
+import styles from "~/styles/Profile.module.css"
 
 function ProfileGroupsPage() {
   const { push } = useRouter()
