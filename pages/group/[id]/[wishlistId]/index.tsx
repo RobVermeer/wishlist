@@ -2,8 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { CSSProperties } from "react"
 import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
+import { WishlistItem } from "~/components/WishlistItem"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
@@ -44,17 +46,13 @@ function WishlistPage({ session }) {
     <div className={styles.container}>
       <PageTitle>{wishlist.title || wishlist.user.name}</PageTitle>
       <Cards>
-        {wishlist.wishlistItem.map((item) => (
-          <div key={item.id}>
-            {item.title}{" "}
-            <input
-              type="checkbox"
-              checked={Boolean(item.boughtBy)}
-              onChange={() => {
-                update.mutate(item.id)
-              }}
-            />
-          </div>
+        {wishlist.wishlistItem.map((item, index) => (
+          <WishlistItem
+            key={item.id}
+            wishlistId={query.wishlistId}
+            item={item}
+            index={index}
+          />
         ))}
       </Cards>
     </div>

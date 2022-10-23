@@ -10,16 +10,33 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+  accent-color: var(--orange-5);
 }
 
 h1 {
   font-weight: var(--font-weight-5);
 }
 
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: var(--font-weight-3);
 }
+
+a,
+a:visited {
+  color: var(--orange-6);
+  text-decoration-color: var(--orange-3);
+}
+
+button {
+  font-weight: var(--font-weight-5);
+  text-shadow: none;
+}
+
 .main {
   display: grid;
   gap: var(--gap-4) 0;

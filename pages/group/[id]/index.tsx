@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { CSSProperties } from "react"
 import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
@@ -18,9 +19,11 @@ function GroupPage() {
     <div className={styles.container}>
       <PageTitle>{group.title}</PageTitle>
       <Cards>
-        {group.wishlist.map((wishlist) => (
+        {group.wishlist.map((wishlist, index) => (
           <Link key={wishlist.id} href={`/group/${query.id}/${wishlist.id}`}>
-            <a>{wishlist.title || wishlist.user.name}</a>
+            <a style={{ "--_index": index } as CSSProperties}>
+              {wishlist.title || wishlist.user.name}
+            </a>
           </Link>
         ))}
       </Cards>

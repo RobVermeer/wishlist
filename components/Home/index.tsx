@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { CSSProperties } from "react"
 import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Home.module.css"
@@ -16,7 +17,7 @@ export const Home = ({ userId }) => {
       <Cards>
         {groups.map((group, index) => (
           <Link key={group.id} href={`/group/${group.id}`}>
-            <a style={{ "--_index": index }}>
+            <a style={{ "--_index": index } as CSSProperties}>
               {group.title} <small>({group.wishlist.length})</small>
             </a>
           </Link>

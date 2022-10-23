@@ -1,13 +1,49 @@
-.wishlists, .groups, .signoutButton {
+.wishlists,
+.groups,
+.signoutButton {
   margin-top: 2rem;
 }
 
-.signoutButton {
-  font-size: var(--font-size-1);
-  border-radius: var(--radius-blob-4);
-  font-weight: var(--font-weight-3);
+.tabs {
+  display: grid;
+  grid-template-rows: auto auto;
 }
 
-.wishlists a, .groups a {
-  color: var(--orange-6);
+.tabs nav {
+  display: flex;
+  gap: var(--size-3);
+}
+
+.tabs nav button.current {
+  --_bg: linear-gradient(var(--orange-5), var(--orange-7));
+  --_text: var(--orange-0);
+}
+
+.tabs nav button:last-of-type {
+  margin-left: auto;
+  --_bg: linear-gradient(var(--red-5), var(--red-7));
+  --_text: var(--red-0);
+  --_border: var(--red-6);
+}
+
+.tab {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  opacity: 0;
+  animation: var(--animation-slide-out-right);
+  animation-timing-function: var(--ease-squish-3);
+  animation-duration: 1s;
+  transition: opacity 1s var(--ease-squish-3);
+  pointer-events: none;
+}
+
+.tab.active {
+  opacity: 1;
+  pointer-events: auto;
+  animation: var(--animation-slide-in-up);
+}
+
+.manage {
+  display: inline-block;
+  margin-block-start: var(--size-3);
 }
