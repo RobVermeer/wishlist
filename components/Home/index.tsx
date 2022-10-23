@@ -4,9 +4,9 @@ import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Home.module.css"
 
-export const Home = () => {
-  const { data = {} } = useQuery(["groups"], () =>
-    fetch("/api/groups").then((res) => res.json())
+export const Home = ({ userId }) => {
+  const { data = {} } = useQuery(["groups", userId], () =>
+    fetch("/api/user/groups").then((res) => res.json())
   )
   const { data: groups = [] } = data
 

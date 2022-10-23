@@ -19,8 +19,8 @@ function GroupPage() {
       <PageTitle>{group.title}</PageTitle>
       <Cards>
         {group.wishlist.map((wishlist) => (
-          <Link key={wishlist.id} href={`/wishlist/${wishlist.id}`}>
-            <a>{wishlist.title}</a>
+          <Link key={wishlist.id} href={`/group/${query.id}/${wishlist.id}`}>
+            <a>{wishlist.title || wishlist.user.name}</a>
           </Link>
         ))}
       </Cards>

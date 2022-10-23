@@ -70,7 +70,7 @@ model Group {
 
 model Wishlist {
   id           String         @id @default(cuid())
-  title        String
+  title        String?
   createdAt    DateTime
   wishlistItem WishlistItem[]
   userId       String

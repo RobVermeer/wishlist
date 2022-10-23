@@ -1,3 +1,3 @@
 export const NotLoggedIn = () => {
-  return null
+  return <h2>Please login</h2>
 }

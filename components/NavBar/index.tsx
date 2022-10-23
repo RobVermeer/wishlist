@@ -27,6 +27,7 @@ export function NavBar() {
               <picture>
                 <source srcSet={data.user.image} type="image/png" />
                 <img
+                  referrerPolicy="no-referrer"
                   src={data.user.image}
                   alt={`Avatar of ${data.user.name}`}
                   width="96"

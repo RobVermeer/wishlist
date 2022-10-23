@@ -6,7 +6,7 @@ import { withBaseProps } from "~/utils/withBaseProps"
 function HomePage({ session }) {
   if (!session) return <NotLoggedIn />
 
-  return <Home />
+  return <Home userId={session.userId} />
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

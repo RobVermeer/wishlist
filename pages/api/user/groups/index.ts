@@ -1,19 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getGroupById } from "~/lib/groups/getGroupById"
+import { getSession } from "next-auth/react"
+import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, query } = req
-  const { id } = query
+  const { method } = req
+  const session = await getSession({ req })
 
-  if (Array.isArray(id)) {
+  if (!session || !session.userId) {
     return res.status(404).send("")
   }
 
+  const { userId } = session
+
   if (method === "GET") {
-    const data = await getGroupById(id)
+    const data = await getGroupsForUser(userId)
 
     return res.status(200).json({ data })
   }

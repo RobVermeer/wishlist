@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
-import { getWishlists } from "~/lib/wishlists/getWishlists"
+import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,8 +13,10 @@ export default async function handler(
     return res.status(404).send("")
   }
 
+  const { userId } = session
+
   if (method === "GET") {
-    const data = await getWishlists()
+    const data = await getWishlistsForUser(userId)
 
     return res.status(200).json({ data })
   }
