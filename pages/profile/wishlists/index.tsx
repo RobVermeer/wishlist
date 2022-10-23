@@ -99,7 +99,7 @@ function ProfileWishlistsPage({ session }) {
               }}
             >
               <input type="text" name="title" defaultValue={wishlist.title} />
-              <button type="submit">Edit wishlist</button>
+              <button type="submit">Bewerk verlanglijstje</button>
             </form>
             {groups.map((group) => (
               <label key={group.id}>
@@ -119,7 +119,7 @@ function ProfileWishlistsPage({ session }) {
                 {group.title}
               </label>
             ))}
-            <button onClick={() => remove.mutate(wishlist.id)}>remove</button>
+            <button onClick={() => remove.mutate(wishlist.id)}>Verwijder</button>
           </li>
         ))}
       </ul>
@@ -155,7 +155,7 @@ function ProfileWishlistsPage({ session }) {
             {group.title}
           </label>
         ))}
-        <button type="submit">Create new wishlist</button>
+        <button type="submit">Nieuw verlanglijstje</button>
       </form>
     </div>
   )

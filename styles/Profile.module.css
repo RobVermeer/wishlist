@@ -1,3 +1,13 @@
-.title {
-  font-size: var(--font-size-5);
+.wishlists, .groups, .signoutButton {
+  margin-top: 2rem;
+}
+
+.signoutButton {
+  font-size: var(--font-size-1);
+  border-radius: var(--radius-blob-4);
+  font-weight: var(--font-weight-3);
+}
+
+.wishlists a, .groups a {
+  color: var(--orange-6);
 }

@@ -9,6 +9,17 @@
   --gap-4: var(--size-6);
 }
 
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+  font-weight: var(--font-weight-5);
+}
+
+h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-3);
+}
 .main {
   display: grid;
   gap: var(--gap-4) 0;

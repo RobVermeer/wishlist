@@ -1,4 +1,4 @@
-import { useSession, signIn } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import styles from "./NavBar.module.css"
 

@@ -23,45 +23,50 @@ function ProfilePage({ session }) {
 
   return (
     <div className={styles.container}>
-      <PageTitle>Profile</PageTitle>
-      <h3>Your wishlists</h3>
-      <Cards>
-        {wishlists.map((wishlist, index) => (
-          <Link key={wishlist.id} href={`/profile/wishlists/${wishlist.id}`}>
-            <a style={{ "--_index": index }}>
-              {wishlist.title || "My wishlist"}{" "}
-              <small>
-                {wishlist.groups.map(({ title }) => title).join(", ")}
-              </small>
-            </a>
-          </Link>
-        ))}
-      </Cards>
-      <Link href="/profile/wishlists">
-        <a>Manage your wishlists</a>
-      </Link>
+      <PageTitle>Profiel</PageTitle>
 
-      <h3>Groups you follow</h3>
-      <Cards>
-        {groups.map((group, index) => (
-          <Link key={group.id} href={`/group/${group.id}`}>
-            <a style={{ "--_index": index }}>
-              {group.title} <small>({group.wishlist.length})</small>
-            </a>
-          </Link>
-        ))}
-      </Cards>
-      <Link href="/profile/groups">
-        <a>Manage groups you follow</a>
-      </Link>
+      <div className={styles.wishlists}>
+        <h3>Je verlanglijstjes</h3>
+        <Cards>
+          {wishlists.map((wishlist, index) => (
+            <Link key={wishlist.id} href={`/profile/wishlists/${wishlist.id}`}>
+              <a style={{ "--_index": index }}>
+                {wishlist.title || "My wishlist"}{" "}
+                <small>
+                  {wishlist.groups.map(({ title }) => title).join(", ")}
+                </small>
+              </a>
+            </Link>
+          ))}
+        </Cards>
+        <Link href="/profile/wishlists">
+          <a>Bewerk verlanglijstjes</a>
+        </Link>
+      </div>
 
-      <button
+      <div className={styles.groups}>
+        <h3>Groepen die je volgt</h3>
+        <Cards>
+          {groups.map((group, index) => (
+            <Link key={group.id} href={`/group/${group.id}`}>
+              <a style={{ "--_index": index }}>
+                {group.title} <small>({group.wishlist.length})</small>
+              </a>
+            </Link>
+          ))}
+        </Cards>
+        <Link href="/profile/groups">
+          <a>Bewerk groepen</a>
+        </Link>
+      </div>
+
+      <button className={styles.signoutButton}
         onClick={async () => {
           await signOut({ redirect: false, callbackUrl: "/" })
           await push("/")
         }}
       >
-        Sign out
+        Uitloggen
       </button>
     </div>
   )
