@@ -26,9 +26,9 @@ function ProfilePage({ session }) {
       <PageTitle>Profile</PageTitle>
       <h3>Your wishlists</h3>
       <Cards>
-        {wishlists.map((wishlist) => (
+        {wishlists.map((wishlist, index) => (
           <Link key={wishlist.id} href={`/profile/wishlists/${wishlist.id}`}>
-            <a>
+            <a style={{ "--_index": index }}>
               {wishlist.title || "My wishlist"}{" "}
               <small>
                 {wishlist.groups.map(({ title }) => title).join(", ")}
@@ -43,9 +43,9 @@ function ProfilePage({ session }) {
 
       <h3>Groups you follow</h3>
       <Cards>
-        {groups.map((group) => (
+        {groups.map((group, index) => (
           <Link key={group.id} href={`/group/${group.id}`}>
-            <a>
+            <a style={{ "--_index": index }}>
               {group.title} <small>({group.wishlist.length})</small>
             </a>
           </Link>

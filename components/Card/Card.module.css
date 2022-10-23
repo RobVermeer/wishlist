@@ -6,11 +6,19 @@
 }
 
 .cards > * {
+  background-color: var(--gray-2);
+  color: var(--gray-7);
   font-size: var(--font-size-3);
   font-weight: var(--font-weight-6);
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-3);
   padding: var(--size-3);
   box-shadow: var(--shadow-2);
+  transition: all 200ms var(--ease-3);
+  opacity: 0;
+  animation: var(--animation-fade-in) forwards, var(--animation-slide-in-up);
+  animation-timing-function: var(--ease-squish-3);
+  animation-duration: 1s;
+  animation-delay: calc(var(--_index, 0) * 100ms);
 }
 
 .cards > *:hover {

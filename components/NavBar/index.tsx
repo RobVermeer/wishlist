@@ -9,19 +9,15 @@ export function NavBar() {
 
   return (
     <nav className={styles.container}>
-      <Link href="/">
-        <a>
-          <h1 className={styles.title}>Wishlist</h1>
-        </a>
-      </Link>
-
-      {!loading && !loggedIn && (
-        <button onClick={() => signIn("google")}>Login</button>
-      )}
+      <h1 className={styles.title}>
+        <Link href="/">🎁 Wishlist</Link>
+      </h1>
 
       {!loading && loggedIn && (
         <div className={styles.user}>
-          <p>Logged in as {data.user.name}</p>
+          <p>
+            Ingelogd als <Link href="/profile">{data.user.name}</Link>
+          </p>
           <Link href="/profile">
             <a>
               <picture>

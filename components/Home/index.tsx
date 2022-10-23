@@ -12,11 +12,11 @@ export const Home = ({ userId }) => {
 
   return (
     <div className={styles.container}>
-      <PageTitle>Your groups</PageTitle>
+      <PageTitle>Groepen die je volgt</PageTitle>
       <Cards>
-        {groups.map((group) => (
+        {groups.map((group, index) => (
           <Link key={group.id} href={`/group/${group.id}`}>
-            <a>
+            <a style={{ "--_index": index }}>
               {group.title} <small>({group.wishlist.length})</small>
             </a>
           </Link>

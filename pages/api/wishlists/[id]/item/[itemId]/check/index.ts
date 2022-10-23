@@ -44,8 +44,6 @@ export default async function handler(
       boughtBy = { connect: { id: session.userId } }
     }
 
-    console.log(boughtBy)
-
     const data = updateWishlistItemById(itemId, { boughtBy })
 
     return res.status(200).json({ data })

@@ -5,21 +5,36 @@
 }
 
 .title {
-  font-size: var(--font-size-6);
+  font-size: var(--font-size-4);
+}
+
+.title a {
+  color: var(--orange-6);
+}
+
+.title a:hover {
+  text-decoration: none;
 }
 
 .user {
   display: flex;
   align-items: center;
-  gap: var(--size-3);
+  gap: var(--size-2);
 }
 
 .user p {
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-0);
+  color: var(--gray-6);
 }
 
 .user img {
   width: var(--size-8);
   border-radius: var(--radius-6);
-  box-shadow: var(--shadow-4);
+  box-shadow: var(--shadow-3), var(--shadow-3);
+  transition: all 200ms var(--ease-3);
+}
+
+.user img:hover {
+  translate: 1px 1px;
+  box-shadow: var(--shadow-2), var(--shadow-2);
 }

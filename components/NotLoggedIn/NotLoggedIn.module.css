@@ -1,0 +1,25 @@
+.container {
+  text-align: center;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--size-4);
+  padding-block-end: 20%;
+  opacity: 0;
+  animation: var(--animation-fade-in) forwards,
+    var(--animation-scale-down) reverse;
+  animation-timing-function: var(--ease-squish-3);
+  animation-duration: 1s;
+  animation-delay: calc(var(--_index, 0) * 100ms);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--size-4);
+  justify-content: center;
+}
+
+.buttons button {
+  min-width: 200px;
+}
