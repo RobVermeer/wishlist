@@ -1,8 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { CSSProperties } from "react"
 import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
 import { WishlistItem } from "~/components/WishlistItem"
@@ -12,24 +11,10 @@ import { withBaseProps } from "~/utils/withBaseProps"
 function WishlistPage({ session }) {
   const { userId } = session
   const { query } = useRouter()
-  const queryClient = useQueryClient()
   const { data = {} } = useQuery(["wishlist", query.wishlistId], () =>
     fetch(`/api/wishlists/${query.wishlistId}`).then((res) => res.json())
   )
   const { data: wishlist } = data
-
-  const update = useMutation(
-    (id) => {
-      return fetch(`/api/wishlists/${query.wishlistId}/item/${id}/check`, {
-        method: "put",
-      }).then((res) => res.json())
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", query.wishlistId])
-      },
-    }
-  )
 
   if (!wishlist) return <div></div>
 
