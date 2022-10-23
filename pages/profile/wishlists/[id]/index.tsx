@@ -7,7 +7,7 @@ import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function WishlistPage() {
+function ProfileWishlistPage() {
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const { query } = useRouter()
@@ -119,4 +119,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }))
 }
 
-export default WishlistPage
+export default ProfileWishlistPage
