@@ -1,4 +1,10 @@
+import { ButtonHTMLAttributes } from "react"
 import styles from "./Button.module.css"
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  onClick?: (event) => void
+  variant?: "default" | "primary" | "secondary" | "danger"
+}
 
 export const Button = ({
   onClick = (event) => null,
@@ -6,8 +12,8 @@ export const Button = ({
   variant = "default",
   disabled = false,
   className = "",
-  type = "button",
-}) => {
+  type,
+}: ButtonProps) => {
   if (variant === "primary") {
     className += " " + styles.primary
   }
