@@ -29,26 +29,15 @@ const Checkbox = ({ wishlistId, item }) => {
   )
 }
 
-export const WishlistItem = ({ wishlistId, item, index }) => {
+export const WishlistItem = ({ wishlistId, item, children = null, index }) => {
   const { url, title } = item
   const checked = Boolean(item.boughtBy)
   const classNames = `${styles.item} ${checked ? styles.checked : ""}`
 
-  if (url) {
-    return (
-      <a
-        className={classNames}
-        href={url}
-        style={{ "--_index": index } as CSSProperties}
-      >
-        {title} <Checkbox wishlistId={wishlistId} item={item} />
-      </a>
-    )
-  }
-
   return (
     <div className={classNames} style={{ "--_index": index } as CSSProperties}>
-      {title} <Checkbox wishlistId={wishlistId} item={item} />
+      {url ? <a href={url}>{title}</a> : title}
+      {children ? children : <Checkbox wishlistId={wishlistId} item={item} />}
     </div>
   )
 }

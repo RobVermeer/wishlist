@@ -1,0 +1,13 @@
+.dialog {
+  min-inline-size: min(100vw, 32rem);
+}
+
+.body {
+  display: grid;
+  gap: var(--size-4);
+}
+
+.title {
+  display: flex;
+  justify-content: space-between;
+}

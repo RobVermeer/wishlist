@@ -4,6 +4,7 @@ import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { CSSProperties, useState } from "react"
+import { Button } from "~/components/Button"
 import { Cards } from "~/components/Card"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
@@ -29,26 +30,27 @@ function ProfilePage({ session }) {
 
       <div className={styles.tabs}>
         <nav>
-          <button
-            className={`${activeTab === "wishlists" ? styles.current : ""}`}
+          <Button
+            variant={`${activeTab === "wishlists" ? "primary" : "secondary"}`}
             onClick={() => setActiveTab("wishlists")}
           >
             Je verlanglijstjes
-          </button>
-          <button
-            className={`${activeTab === "groups" ? styles.current : ""}`}
+          </Button>
+          <Button
+            variant={`${activeTab === "groups" ? "primary" : "secondary"}`}
             onClick={() => setActiveTab("groups")}
           >
             Je groepen
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="danger"
             onClick={async () => {
               await signOut({ redirect: false, callbackUrl: "/" })
               await push("/")
             }}
           >
             Uitloggen
-          </button>
+          </Button>
         </nav>
 
         <div
@@ -56,28 +58,35 @@ function ProfilePage({ session }) {
             activeTab === "wishlists" ? styles.active : ""
           }`}
         >
-          <Cards>
-            {wishlists.map((wishlist, index) => (
-              <Link
-                key={wishlist.id}
-                href={`/profile/wishlists/${wishlist.id}`}
-              >
-                <a style={{ "--_index": index } as CSSProperties}>
-                  {wishlist.title || "My wishlist"}{" "}
-                  <small>
-                    in groep{wishlist.groups.length > 1 && "en"}:{" "}
-                    {wishlist.groups
-                      .map(({ title }) => title)
-                      .join(", ")
-                      .replace(/,([^,]+)$/i, " & $1")}
-                  </small>
-                </a>
-              </Link>
-            ))}
-          </Cards>
-          <Link href="/profile/wishlists">
-            <a className={styles.manage}>Bewerk verlanglijstjes</a>
-          </Link>
+          {wishlists.length === 0 && (
+            <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
+          )}
+
+          {wishlists.length > 0 && (
+            <Cards>
+              {wishlists.map((wishlist, index) => (
+                <Link
+                  key={wishlist.id}
+                  href={`/profile/wishlists/${wishlist.id}`}
+                >
+                  <a style={{ "--_index": index } as CSSProperties}>
+                    {wishlist.title || "Mijn lijstje"}{" "}
+                    <small>
+                      in groep{wishlist.groups.length > 1 && "en"}:{" "}
+                      {wishlist.groups
+                        .map(({ title }) => title)
+                        .join(", ")
+                        .replace(/,([^,]+)$/i, " & $1")}
+                    </small>
+                  </a>
+                </Link>
+              ))}
+            </Cards>
+          )}
+
+          <Button onClick={() => push("/profile/wishlists")}>
+            Beheer verlanglijstjes
+          </Button>
         </div>
 
         <div
@@ -85,18 +94,25 @@ function ProfilePage({ session }) {
             activeTab === "groups" ? styles.active : ""
           }`}
         >
-          <Cards>
-            {groups.map((group, index) => (
-              <Link key={group.id} href={`/group/${group.id}`}>
-                <a style={{ "--_index": index } as CSSProperties}>
-                  {group.title} <small>({group.wishlist.length})</small>
-                </a>
-              </Link>
-            ))}
-          </Cards>
-          <Link href="/profile/groups">
-            <a className={styles.manage}>Bewerk groepen</a>
-          </Link>
+          {groups.length === 0 && (
+            <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
+          )}
+
+          {groups.length > 0 && (
+            <Cards>
+              {groups.map((group, index) => (
+                <Link key={group.id} href={`/group/${group.id}`}>
+                  <a style={{ "--_index": index } as CSSProperties}>
+                    {group.title}
+                  </a>
+                </Link>
+              ))}
+            </Cards>
+          )}
+
+          <Button onClick={() => push("/profile/groups")}>
+            Beheer groepen
+          </Button>
         </div>
       </div>
     </div>

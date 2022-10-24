@@ -1,13 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { Button } from "~/components/Button"
 import { Cards } from "~/components/Card"
+import { Dialog } from "~/components/Dialog"
+import { EditItem } from "~/components/EditItem"
 import { PageTitle } from "~/components/PageTitle"
+import { WishlistItem } from "~/components/WishlistItem"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 function ProfileWishlistPage() {
+  const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const { query } = useRouter()
@@ -16,19 +21,7 @@ function ProfileWishlistPage() {
     fetch(`/api/wishlists/${query.id}`).then((res) => res.json())
   )
   const { data: wishlist } = data
-  const update = useMutation(
-    ({ id, data }: { id: string; data: object }) => {
-      return fetch(`/api/user/wishlists/${query.id}/item/${id}/edit`, {
-        method: "put",
-        body: JSON.stringify(data),
-      }).then((res) => res.json())
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", query.id])
-      },
-    }
-  )
+
   const create = useMutation(
     (data: { title: string; url: string }) => {
       return fetch(`/api/user/wishlists/${query.id}/item/create`, {
@@ -44,71 +37,78 @@ function ProfileWishlistPage() {
       },
     }
   )
-  const remove = useMutation(
-    (id) => {
-      return fetch(`/api/user/wishlists/${query.id}/item/${id}/remove`, {
-        method: "delete",
-      }).then((res) => res.json())
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", query.id])
-      },
-    }
-  )
 
   if (!wishlist) return <div></div>
 
   return (
     <div className={styles.container}>
-      <PageTitle>{wishlist.title}</PageTitle>
-      <Cards>
-        {wishlist.wishlistItem.map((item) => (
-          <div key={item.id}>
-            {item.title} - {item.url}
-            <form
-              onSubmit={(event) => {
-                event.preventDefault()
-                const form = event.target as HTMLFormElement
-                const data = new FormData(form)
-                update.mutate({
-                  id: item.id,
-                  data: {
-                    title: data.get("title"),
-                    url: data.get("url"),
-                  },
-                })
-              }}
+      <PageTitle>{wishlist.title || "Mijn lijstje"}</PageTitle>
+
+      {wishlist.wishlistItem.length === 0 && (
+        <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>
+      )}
+
+      {wishlist.wishlistItem.length > 0 && (
+        <Cards>
+          {wishlist.wishlistItem.map((item, index) => (
+            <WishlistItem
+              key={item.id}
+              item={item}
+              wishlistId={item.id}
+              index={index}
             >
-              <input type="text" name="title" defaultValue={item.title} />
-              <input type="text" name="url" defaultValue={item.url} />
-              <button type="submit">Edit item</button>
-            </form>
-            <button onClick={() => remove.mutate(item.id)}>Remove item</button>
-          </div>
-        ))}
-      </Cards>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault()
-          create.mutate({
-            title,
-            url,
-          })
-        }}
+              <EditItem wishlistId={wishlist.id} item={item} />
+            </WishlistItem>
+          ))}
+        </Cards>
+      )}
+
+      <Button
+        className={styles.button}
+        variant="primary"
+        onClick={() => setOpen(true)}
       >
-        <input
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-        />
-        <input
-          type="text"
-          value={url}
-          onChange={(event) => setUrl(event.target.value)}
-        />
-        <button type="submit">Add item</button>
-      </form>
+        Add new item
+      </Button>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Voeg wens toe 🤠"
+      >
+        <form
+          className={styles.form}
+          onSubmit={(event) => {
+            event.preventDefault()
+            create.mutate({
+              title,
+              url,
+            })
+            setOpen(false)
+          }}
+        >
+          <label htmlFor="title">Wens</label>
+          <input
+            required
+            id="title"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+          />
+          <label htmlFor="url">
+            URL <small>(optioneel)</small>
+          </label>
+          <input
+            id="url"
+            type="url"
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+          />
+          <Button variant="primary" type="submit">
+            Voeg wens toe
+          </Button>
+        </form>
+      </Dialog>
     </div>
   )
 }

@@ -42,9 +42,7 @@ export const Home = ({ userId }) => {
       <Cards>
         {groups.map((group, index) => (
           <Link key={group.id} href={`/group/${group.id}`}>
-            <a style={{ "--_index": index } as CSSProperties}>
-              {group.title} <small>({group.wishlist.length})</small>
-            </a>
+            <a style={{ "--_index": index } as CSSProperties}>{group.title}</a>
           </Link>
         ))}
       </Cards>

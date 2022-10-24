@@ -1,23 +1,32 @@
 import styles from "./Button.module.css"
 
 export const Button = ({
-  onClick = () => null,
+  onClick = (event) => null,
   children,
   variant = "default",
   disabled = false,
+  className = "",
+  type = "button",
 }) => {
-  let className = ""
-
   if (variant === "primary") {
-    className = styles.primary
+    className += " " + styles.primary
+  }
+
+  if (variant === "secondary") {
+    className += " " + styles.secondary
   }
 
   if (variant === "danger") {
-    className = styles.danger
+    className += " " + styles.danger
   }
 
   return (
-    <button disabled={disabled} className={className} onClick={onClick}>
+    <button
+      disabled={disabled}
+      className={className}
+      onClick={onClick}
+      type={type}
+    >
       {children}
     </button>
   )

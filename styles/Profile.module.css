@@ -35,6 +35,11 @@
   animation-duration: 1s;
   transition: opacity 1s var(--ease-squish-3);
   pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: var(--size-3);
+  margin-block-start: var(--size-3);
 }
 
 .tab.active {
@@ -43,7 +48,6 @@
   animation: var(--animation-slide-in-up);
 }
 
-.manage {
-  display: inline-block;
+.button {
   margin-block-start: var(--size-3);
 }

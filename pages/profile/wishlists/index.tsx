@@ -84,7 +84,7 @@ function ProfileWishlistsPage({ session }) {
       <ul>
         {wishlists.map((wishlist) => (
           <li key={wishlist.id}>
-            {wishlist.title || "My wishlist"}{" "}
+            {wishlist.title || "Mijn lijstje"}{" "}
             <form
               onSubmit={(event) => {
                 event.preventDefault()
@@ -119,7 +119,9 @@ function ProfileWishlistsPage({ session }) {
                 {group.title}
               </label>
             ))}
-            <button onClick={() => remove.mutate(wishlist.id)}>Verwijder</button>
+            <button onClick={() => remove.mutate(wishlist.id)}>
+              Verwijder
+            </button>
           </li>
         ))}
       </ul>

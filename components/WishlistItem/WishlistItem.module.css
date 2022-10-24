@@ -10,6 +10,14 @@
   text-decoration: line-through;
 }
 
+.item a {
+  color: inherit;
+}
+
+.item a:hover {
+  text-decoration: none;
+}
+
 .checkbox {
   position: absolute;
   display: flex;
