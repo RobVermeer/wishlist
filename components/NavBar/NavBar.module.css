@@ -25,6 +25,13 @@
 .user p {
   font-size: var(--font-size-0);
   color: var(--gray-6);
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .user p {
+    display: block;
+  }
 }
 
 .user img {

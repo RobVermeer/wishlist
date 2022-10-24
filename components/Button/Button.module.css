@@ -1,0 +1,11 @@
+.primary {
+  --_bg: linear-gradient(var(--blue-5), var(--blue-7));
+  --_text: var(--blue-0);
+  --_border: var(--blue-6);
+}
+
+.danger {
+  --_bg: linear-gradient(var(--red-5), var(--red-7));
+  --_text: var(--red-0);
+  --_border: var(--red-6);
+}

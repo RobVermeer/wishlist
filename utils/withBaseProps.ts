@@ -12,9 +12,20 @@ type WithBaseProps = (
 ) => ReturnType<GetServerSideProps>
 
 export const withBaseProps: WithBaseProps = async (ctx, getPageProps) => {
-  const { req, res } = ctx
+  const { req, res, resolvedUrl } = ctx
+
+  console.log(resolvedUrl)
 
   const session = await unstable_getServerSession(req, res, authOptions)
+
+  if (!session && resolvedUrl !== "/") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
 
   const baseProps = { session }
 

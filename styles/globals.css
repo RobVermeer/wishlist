@@ -43,6 +43,8 @@ button {
   grid-template-rows: auto 1fr auto;
   grid-template-columns: var(--gap-2) calc(100% - 2 * var(--gap-2)) var(--gap-2);
   padding-block: var(--gap-2);
+  margin-inline: auto;
+  max-inline-size: calc(var(--size-14) * 2);
   min-block-size: 100vh;
 }
 
