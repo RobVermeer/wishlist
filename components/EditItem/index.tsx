@@ -49,7 +49,7 @@ export const EditItem = ({ wishlistId, item }) => {
           setOpen(true)
         }}
       >
-        Edit
+        Wijzig
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)} title="Wijzig wens 🧐">

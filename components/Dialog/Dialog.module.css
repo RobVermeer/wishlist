@@ -1,5 +1,5 @@
 .dialog {
-  min-inline-size: min(100vw, 32rem);
+  min-inline-size: min(calc(100vw - var(--size-4) * 2), 32rem);
 }
 
 .body {

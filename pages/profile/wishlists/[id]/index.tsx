@@ -6,6 +6,7 @@ import { Button } from "~/components/Button"
 import { Cards } from "~/components/Card"
 import { Dialog } from "~/components/Dialog"
 import { EditItem } from "~/components/EditItem"
+import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
 import { WishlistItem } from "~/components/WishlistItem"
 import styles from "~/styles/Profile.module.css"
@@ -68,7 +69,7 @@ function ProfileWishlistPage() {
         variant="primary"
         onClick={() => setOpen(true)}
       >
-        Add new item
+        Voeg een wens toe
       </Button>
 
       <Dialog
@@ -76,10 +77,8 @@ function ProfileWishlistPage() {
         onClose={() => setOpen(false)}
         title="Voeg wens toe 🤠"
       >
-        <form
-          className={styles.form}
-          onSubmit={(event) => {
-            event.preventDefault()
+        <Form
+          onSubmit={() => {
             create.mutate({
               title,
               url,
@@ -107,7 +106,7 @@ function ProfileWishlistPage() {
           <Button variant="primary" type="submit">
             Voeg wens toe
           </Button>
-        </form>
+        </Form>
       </Dialog>
     </div>
   )
