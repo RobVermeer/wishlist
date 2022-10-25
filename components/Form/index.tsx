@@ -5,7 +5,7 @@ export const Form = ({ children, onSubmit }) => (
     className={styles.form}
     onSubmit={(event) => {
       event.preventDefault()
-      onSubmit()
+      onSubmit(event)
     }}
   >
     {children}

@@ -6,21 +6,23 @@ import { useRouter } from "next/router"
 import { CSSProperties, useState } from "react"
 import { Button } from "~/components/Button"
 import { Cards } from "~/components/Card"
+import { CreateGroup } from "~/components/CreateGroup"
+import { CreateWishlist } from "~/components/CreateWishlist"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 function ProfilePage({ session }) {
+  const { userId } = session
   const [activeTab, setActiveTab] = useState("wishlists")
   const { push } = useRouter()
-  const { data: groupData = {} } = useQuery(["groups", session.userId], () =>
+  const { data: groupData = {} } = useQuery(["groups", userId], () =>
     fetch("/api/user/groups").then((res) => res.json())
   )
 
   const { data: groups = [] } = groupData
-  const { data: wishlistData = {} } = useQuery(
-    ["wishlists", session.userId],
-    () => fetch("/api/user/wishlists").then((res) => res.json())
+  const { data: wishlistData = {} } = useQuery(["wishlists", userId], () =>
+    fetch("/api/user/wishlists").then((res) => res.json())
   )
   const { data: wishlists = [] } = wishlistData
 
@@ -84,9 +86,7 @@ function ProfilePage({ session }) {
             </Cards>
           )}
 
-          <Button onClick={() => push("/profile/wishlists")}>
-            Beheer verlanglijstjes
-          </Button>
+          <CreateWishlist userId={userId} />
         </div>
 
         <div
@@ -110,9 +110,7 @@ function ProfilePage({ session }) {
             </Cards>
           )}
 
-          <Button onClick={() => push("/profile/groups")}>
-            Beheer groepen
-          </Button>
+          <CreateGroup />
         </div>
       </div>
     </div>

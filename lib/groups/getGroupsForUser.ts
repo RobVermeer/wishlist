@@ -3,7 +3,7 @@ import { groupProperties } from "./publicProperties"
 
 export const getGroupsForUser = async (userId) => {
   const data = await prisma.group.findMany({
-    orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "asc" },
     select: groupProperties,
     where: {
       members: {
