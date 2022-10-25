@@ -1,5 +1,5 @@
 import { userProperties } from "~/lib/users/publicProperties"
-import { wishlistItemProperties } from "../wishlistItems/publicProperties"
+import { wishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 
 export const wishlistProperties = {
   id: true,

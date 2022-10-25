@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { getSession } from "next-auth/react"
 import { deleteWishlistItemById } from "~/lib/wishlistItems/deleteWishlistItemById"
 import { getWishlistItemById } from "~/lib/wishlistItems/getWishlistItemById"
-import { updateWishlistItemById } from "~/lib/wishlistItems/updateWishlistItemById"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 
 export default async function handler(

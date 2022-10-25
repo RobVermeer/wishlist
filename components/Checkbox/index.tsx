@@ -12,7 +12,7 @@ export const Checkbox = ({ wishlistId, item }) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", wishlistId])
+        queryClient.invalidateQueries(["wishlists", wishlistId])
       },
     }
   )

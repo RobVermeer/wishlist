@@ -4,6 +4,7 @@ import styles from "./Button.module.css"
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   onClick?: (event) => void
   variant?: "default" | "primary" | "secondary" | "danger"
+  small?: boolean
 }
 
 export const Button = ({
@@ -11,6 +12,7 @@ export const Button = ({
   children,
   variant = "default",
   disabled = false,
+  small = false,
   className = "",
   type,
 }: ButtonProps) => {
@@ -24,6 +26,10 @@ export const Button = ({
 
   if (variant === "danger") {
     className += " " + styles.danger
+  }
+
+  if (small) {
+    className += " " + styles.small
   }
 
   return (

@@ -35,13 +35,18 @@
 }
 
 .user img {
+  --_highlight-size: 0;
+  --_highlight-light: rgba(174, 181, 188, 0.25);
+  --_highlight-dark: rgba(11, 13, 14, 0.25);
+  --_highlight: var(--_highlight-light);
   width: var(--size-8);
   border-radius: var(--radius-6);
   box-shadow: var(--shadow-3), var(--shadow-3);
+  box-shadow: var(--shadow-2), 0 1px var(--surface-3),
+    0 0 0 var(--_highlight-size) var(--_highlight);
   transition: all 200ms var(--ease-3);
 }
 
 .user img:hover {
-  translate: 1px 1px;
-  box-shadow: var(--shadow-2), var(--shadow-2);
+  --_highlight-size: var(--size-2);
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
@@ -18,7 +18,7 @@ function ProfileWishlistPage() {
   const [url, setUrl] = useState("")
   const { query } = useRouter()
   const queryClient = useQueryClient()
-  const { data = {} } = useQuery(["wishlist", query.id], () =>
+  const { data = {} } = useQuery(["wishlists", query.id], () =>
     fetch(`/api/wishlists/${query.id}`).then((res) => res.json())
   )
   const { data: wishlist } = data
@@ -34,7 +34,7 @@ function ProfileWishlistPage() {
       onSuccess: () => {
         setTitle("")
         setUrl("")
-        queryClient.invalidateQueries(["wishlist", query.id])
+        queryClient.invalidateQueries(["wishlists", query.id])
       },
     }
   )
@@ -42,7 +42,7 @@ function ProfileWishlistPage() {
   if (!wishlist) return <div></div>
 
   return (
-    <div className={styles.container}>
+    <div>
       <PageTitle>{wishlist.title || "Mijn lijstje"}</PageTitle>
 
       {wishlist.wishlistItem.length === 0 && (

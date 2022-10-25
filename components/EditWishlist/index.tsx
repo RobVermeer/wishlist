@@ -14,8 +14,8 @@ export const EditWishlist = ({ wishlist }) => {
   const [userGroups, setUserGroups] = useState(
     wishlist.groups.map(({ id }) => id)
   )
-  const { data: groupsData = {} } = useQuery(["groups"], () =>
-    fetch("/api/groups").then((res) => res.json())
+  const { data: groupsData = {} } = useQuery(["groups", userId], () =>
+    fetch("/api/user/groups").then((res) => res.json())
   )
   const { data: groups = [] } = groupsData
 

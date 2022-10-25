@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
@@ -8,14 +7,13 @@ import { Cards } from "~/components/Cards"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
-import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 function WishlistPage({ session }) {
   const { userId } = session
   const { query, push } = useRouter()
   const { id, wishlistId } = query
-  const { data = {} } = useQuery(["wishlist", wishlistId], () =>
+  const { data = {} } = useQuery(["wishlists", wishlistId], () =>
     fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json())
   )
   const { data: wishlist } = data
@@ -60,7 +58,7 @@ function WishlistPage({ session }) {
   }
 
   return (
-    <div className={styles.container}>
+    <div>
       <PageTitle>{wishlist.title || wishlist.user.name}</PageTitle>
       <Cards>
         {wishlist.wishlistItem.map((item, index) => (
@@ -69,6 +67,7 @@ function WishlistPage({ session }) {
             title={item.title}
             url={item.url}
             index={index}
+            checked={Boolean(item.boughtBy)}
             adornment={<Checkbox item={item} wishlistId={wishlist.id} />}
           />
         ))}

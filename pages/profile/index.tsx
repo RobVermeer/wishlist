@@ -14,12 +14,10 @@ import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function ProfilePage({ session }) {
-  const { push, query } = useRouter()
+function ProfilePage({ session, initialTab }) {
+  const { push } = useRouter()
   const { userId } = session
-  const [activeTab, setActiveTab] = useState(
-    "groups" in query ? "groups" : "wishlists"
-  )
+  const [activeTab, setActiveTab] = useState(initialTab)
   const { data: groupData = {} } = useQuery(["groups", userId], () =>
     fetch("/api/user/groups").then((res) => res.json())
   )
@@ -31,8 +29,20 @@ function ProfilePage({ session }) {
   const { data: wishlists = [] } = wishlistData
 
   return (
-    <div className={styles.container}>
-      <PageTitle>Profiel</PageTitle>
+    <div>
+      <nav className={styles.profileTitle}>
+        <PageTitle>Profiel</PageTitle>
+        <Button
+          variant="danger"
+          onClick={async () => {
+            await signOut({ redirect: false, callbackUrl: "/" })
+            await push("/")
+          }}
+          small
+        >
+          Uitloggen
+        </Button>
+      </nav>
 
       <div className={styles.tabs}>
         <nav>
@@ -47,15 +57,6 @@ function ProfilePage({ session }) {
             onClick={() => setActiveTab("groups")}
           >
             Je groepen
-          </Button>
-          <Button
-            variant="danger"
-            onClick={async () => {
-              await signOut({ redirect: false, callbackUrl: "/" })
-              await push("/")
-            }}
-          >
-            Uitloggen
           </Button>
         </nav>
 
@@ -75,6 +76,7 @@ function ProfilePage({ session }) {
                   .map(({ title }) => title)
                   .join(", ")
                   .replace(/,([^,]+)$/i, " & $1")
+
                 return (
                   <Card
                     key={wishlist.id}
@@ -133,7 +135,12 @@ function ProfilePage({ session }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async () => ({ props: { title: "Profile" } }))
+  return await withBaseProps(ctx, async (context) => {
+    const { session, query } = context
+    const initialTab = "groups" in query ? "groups" : "wishlists"
+
+    return { props: { title: session.user.name, initialTab } }
+  })
 }
 
 export default ProfilePage

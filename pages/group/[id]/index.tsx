@@ -1,17 +1,16 @@
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
+import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import { CSSProperties } from "react"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
-import styles from "~/styles/Profile.module.css"
+import { withBaseProps } from "~/utils/withBaseProps"
 
 function GroupPage() {
   const { query, push } = useRouter()
-  const { data = {} } = useQuery(["groupLists", query.id], () =>
+  const { data = {} } = useQuery(["groups", query.id], () =>
     fetch(`/api/groups/${query.id}`).then((res) => res.json())
   )
   const { data: group } = data
@@ -35,7 +34,7 @@ function GroupPage() {
     )
 
   return (
-    <div className={styles.container}>
+    <div>
       <PageTitle>{group.title}</PageTitle>
 
       <Cards>
@@ -50,6 +49,12 @@ function GroupPage() {
       </Cards>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async () => ({
+    props: { title: "Group" },
+  }))
 }
 
 export default GroupPage

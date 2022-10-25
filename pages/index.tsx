@@ -10,7 +10,7 @@ function HomePage({ session }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async () => ({ props: { title: "Home" } }))
+  return await withBaseProps(ctx, async () => ({ props: {} }))
 }
 
 export default HomePage

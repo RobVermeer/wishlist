@@ -1,13 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import Link from "next/link"
 import { useRouter } from "next/router"
-import { CSSProperties } from "react"
 import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
-import styles from "~/styles/Home.module.css"
 import { EmptyState } from "~/components/EmptyState"
 import { Button } from "~/components/Button"
-import { Card } from "../Card"
+import { Card } from "~/components/Card"
 
 export const Home = ({ userId }) => {
   const { push } = useRouter()
@@ -38,7 +35,7 @@ export const Home = ({ userId }) => {
   }
 
   return (
-    <div className={styles.container}>
+    <div>
       <PageTitle>Groepen die je volgt</PageTitle>
       <Cards>
         {groups.map((group, index) => (

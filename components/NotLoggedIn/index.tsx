@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react"
-import { Button } from "../Button"
-import { EmptyState } from "../EmptyState"
+import { Button } from "~/components/Button"
+import { EmptyState } from "~/components/EmptyState"
 
 export const NotLoggedIn = () => (
   <EmptyState

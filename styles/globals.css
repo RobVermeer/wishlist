@@ -2,13 +2,6 @@
 @import "open-props/normalize";
 @import "open-props/buttons";
 
-:root {
-  --gap-1: var(--size-2);
-  --gap-2: var(--size-3);
-  --gap-3: var(--size-4);
-  --gap-4: var(--size-6);
-}
-
 body {
   font-family: "Poppins", sans-serif;
   accent-color: var(--orange-5);
@@ -39,15 +32,11 @@ button {
 
 .main {
   display: grid;
-  gap: var(--gap-4) 0;
+  gap: var(--size-6);
   grid-template-rows: auto 1fr auto;
-  grid-template-columns: var(--gap-2) calc(100% - 2 * var(--gap-2)) var(--gap-2);
-  padding-block: var(--gap-2);
+  padding-inline: var(--size-2);
+  padding-block: var(--size-3);
   margin-inline: auto;
   max-inline-size: calc(var(--size-14) * 2);
   min-block-size: 100vh;
-}
-
-.main > * {
-  grid-column: 2;
 }

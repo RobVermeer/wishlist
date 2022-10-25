@@ -14,8 +14,6 @@ type WithBaseProps = (
 export const withBaseProps: WithBaseProps = async (ctx, getPageProps) => {
   const { req, res, resolvedUrl } = ctx
 
-  console.log(resolvedUrl)
-
   const session = await unstable_getServerSession(req, res, authOptions)
 
   if (!session && resolvedUrl !== "/") {
