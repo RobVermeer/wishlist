@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
 
         <NextNProgress color="#fd7e14" options={{ showSpinner: false }} />
         <main className="main">
-          <NavBar />
+          <NavBar session={session} />
           <Component {...pageProps} />
           <Footer />
         </main>

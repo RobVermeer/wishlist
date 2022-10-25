@@ -7,14 +7,17 @@ import { Cards } from "~/components/Cards"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
+import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function WishlistPage({ session }) {
+function WishlistPage({ session, initialData }) {
   const { userId } = session
   const { query, push } = useRouter()
   const { id, wishlistId } = query
-  const { data = {} } = useQuery(["wishlists", wishlistId], () =>
-    fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json())
+  const { data = {} } = useQuery(
+    ["wishlists", wishlistId],
+    () => fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),
+    { initialData }
   )
   const { data: wishlist } = data
 
@@ -77,9 +80,14 @@ function WishlistPage({ session }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async () => ({
-    props: { title: "Wishlist" },
-  }))
+  return await withBaseProps(ctx, async (context) => {
+    const { query } = context
+    const data = await getWishlistById(query.wishlistId)
+
+    return {
+      props: { title: "Wishlist", initialData: { data } },
+    }
+  })
 }
 
 export default WishlistPage

@@ -41,10 +41,6 @@
   animation: var(--animation-slide-in-up);
 }
 
-.button {
-  margin-block-start: var(--size-3);
-}
-
 .wishlistTitle small {
   display: block;
   color: var(--gray-6);

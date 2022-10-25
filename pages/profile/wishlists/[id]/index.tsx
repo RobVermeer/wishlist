@@ -9,17 +9,20 @@ import { Dialog } from "~/components/Dialog"
 import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
+import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function ProfileWishlistPage() {
+function ProfileWishlistPage({ initialData }) {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
   const { query } = useRouter()
   const queryClient = useQueryClient()
-  const { data = {} } = useQuery(["wishlists", query.id], () =>
-    fetch(`/api/wishlists/${query.id}`).then((res) => res.json())
+  const { data = {} } = useQuery(
+    ["wishlists", query.id],
+    () => fetch(`/api/wishlists/${query.id}`).then((res) => res.json()),
+    { initialData }
   )
   const { data: wishlist } = data
 
@@ -49,27 +52,25 @@ function ProfileWishlistPage() {
         <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>
       )}
 
-      {wishlist.wishlistItem.length > 0 && (
-        <Cards>
-          {wishlist.wishlistItem.map((item, index) => (
-            <Card
-              key={item.id}
-              title={item.title}
-              url={item.url}
-              index={index}
-              adornment={<EditItem wishlistId={wishlist.id} item={item} />}
-            />
-          ))}
-        </Cards>
-      )}
+      <Cards>
+        {wishlist.wishlistItem.map((item, index) => (
+          <Card
+            key={item.id}
+            title={item.title}
+            url={item.url}
+            index={index}
+            adornment={<EditItem wishlistId={wishlist.id} item={item} />}
+          />
+        ))}
 
-      <Button
-        className={styles.button}
-        variant="primary"
-        onClick={() => setOpen(true)}
-      >
-        Voeg een wens toe
-      </Button>
+        <Button
+          className={styles.button}
+          variant="primary"
+          onClick={() => setOpen(true)}
+        >
+          Voeg een wens toe
+        </Button>
+      </Cards>
 
       <Dialog
         open={open}
@@ -112,9 +113,14 @@ function ProfileWishlistPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async () => ({
-    props: { title: "Wishlist" },
-  }))
+  return await withBaseProps(ctx, async (context) => {
+    const { query } = context
+    const data = await getWishlistById(query.id)
+
+    return {
+      props: { title: "Wishlist", initialData: { data } },
+    }
+  })
 }
 
 export default ProfileWishlistPage

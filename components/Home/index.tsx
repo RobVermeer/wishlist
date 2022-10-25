@@ -6,10 +6,12 @@ import { EmptyState } from "~/components/EmptyState"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 
-export const Home = ({ userId }) => {
+export const Home = ({ userId, initialGroups }) => {
   const { push } = useRouter()
-  const { data = {} } = useQuery(["groups", userId], () =>
-    fetch("/api/user/groups").then((res) => res.json())
+  const { data = {} } = useQuery(
+    ["groups", userId],
+    () => fetch("/api/user/groups").then((res) => res.json()),
+    { initialData: initialGroups }
   )
   const { data: groups } = data
 

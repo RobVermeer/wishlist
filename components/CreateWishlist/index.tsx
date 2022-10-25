@@ -3,7 +3,6 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
-import styles from "./CreateWishlist.module.css"
 
 export const CreateWishlist = ({ userId }) => {
   const queryClient = useQueryClient()
@@ -32,7 +31,6 @@ export const CreateWishlist = ({ userId }) => {
   return (
     <>
       <Button
-        className={styles.button}
         onClick={(event) => {
           event.preventDefault()
           setOpen(true)

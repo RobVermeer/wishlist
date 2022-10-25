@@ -11,20 +11,26 @@ import { CreateWishlist } from "~/components/CreateWishlist"
 import { EditGroup } from "~/components/EditGroup"
 import { EditWishlist } from "~/components/EditWishlist"
 import { PageTitle } from "~/components/PageTitle"
+import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
+import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function ProfilePage({ session, initialTab }) {
+function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
   const { push } = useRouter()
   const { userId } = session
   const [activeTab, setActiveTab] = useState(initialTab)
-  const { data: groupData = {} } = useQuery(["groups", userId], () =>
-    fetch("/api/user/groups").then((res) => res.json())
+  const { data: groupData = {} } = useQuery(
+    ["groups", userId],
+    () => fetch("/api/user/groups").then((res) => res.json()),
+    { initialData: initialGroups }
   )
 
   const { data: groups = [] } = groupData
-  const { data: wishlistData = {} } = useQuery(["wishlists", userId], () =>
-    fetch("/api/user/wishlists").then((res) => res.json())
+  const { data: wishlistData = {} } = useQuery(
+    ["wishlists", userId],
+    () => fetch("/api/user/wishlists").then((res) => res.json()),
+    { initialData: initialWishlists }
   )
   const { data: wishlists = [] } = wishlistData
 
@@ -96,10 +102,10 @@ function ProfilePage({ session, initialTab }) {
                   />
                 )
               })}
+
+              <CreateWishlist userId={userId} />
             </Cards>
           )}
-
-          <CreateWishlist userId={userId} />
         </div>
 
         <div
@@ -124,10 +130,10 @@ function ProfilePage({ session, initialTab }) {
                   }
                 />
               ))}
+
+              <CreateGroup />
             </Cards>
           )}
-
-          <CreateGroup />
         </div>
       </div>
     </div>
@@ -138,8 +144,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session, query } = context
     const initialTab = "groups" in query ? "groups" : "wishlists"
+    const wishlistsData = await getWishlistsForUser(session.userId)
+    const groupsData = await getGroupsForUser(session.userId)
 
-    return { props: { title: session.user.name, initialTab } }
+    return {
+      props: {
+        title: session.user.name,
+        initialTab,
+        initialWishlists: { data: wishlistsData },
+        initialGroups: { data: groupsData },
+      },
+    }
   })
 }
 

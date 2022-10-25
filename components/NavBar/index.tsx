@@ -1,31 +1,28 @@
-import { useSession } from "next-auth/react"
 import Link from "next/link"
 import styles from "./NavBar.module.css"
 
-export function NavBar() {
-  const { data, status } = useSession()
-  const loading = status === "loading"
-  const loggedIn = Boolean(data)
+export function NavBar({ session }) {
+  const loggedIn = Boolean(session)
 
   return (
-    <nav className={styles.container}>
+    <nav className={`${styles.container} ${loggedIn ? styles.loggedIn : ""}`}>
       <h1 className={styles.title}>
         <Link href="/">🎁 Wishlist</Link>
       </h1>
 
-      {!loading && loggedIn && (
+      {loggedIn && (
         <div className={styles.user}>
           <p>
-            Ingelogd als <Link href="/profile">{data.user.name}</Link>
+            Ingelogd als <Link href="/profile">{session.user.name}</Link>
           </p>
           <Link href="/profile">
             <a>
               <picture>
-                <source srcSet={data.user.image} type="image/png" />
+                <source srcSet={session.user.image} type="image/png" />
                 <img
                   referrerPolicy="no-referrer"
-                  src={data.user.image}
-                  alt={`Avatar of ${data.user.name}`}
+                  src={session.user.image}
+                  alt={`Avatar of ${session.user.name}`}
                   width="96"
                   height="96"
                 />

@@ -6,12 +6,15 @@ import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
+import { getGroupById } from "~/lib/groups/getGroupById"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function GroupPage() {
+function GroupPage({ initialData }) {
   const { query, push } = useRouter()
-  const { data = {} } = useQuery(["groups", query.id], () =>
-    fetch(`/api/groups/${query.id}`).then((res) => res.json())
+  const { data = {} } = useQuery(
+    ["groups", query.id],
+    () => fetch(`/api/groups/${query.id}`).then((res) => res.json()),
+    { initialData }
   )
   const { data: group } = data
 
@@ -52,9 +55,14 @@ function GroupPage() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async () => ({
-    props: { title: "Group" },
-  }))
+  return await withBaseProps(ctx, async (context) => {
+    const { query } = context
+    const data = await getGroupById(query.id)
+
+    return {
+      props: { title: "Group", initialData: { data } },
+    }
+  })
 }
 
 export default GroupPage

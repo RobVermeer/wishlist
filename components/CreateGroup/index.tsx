@@ -3,7 +3,6 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
-import styles from "./CreateGroup.module.css"
 
 export const CreateGroup = () => {
   const queryClient = useQueryClient()
@@ -26,7 +25,6 @@ export const CreateGroup = () => {
   return (
     <>
       <Button
-        className={styles.button}
         onClick={(event) => {
           event.preventDefault()
           setOpen(true)

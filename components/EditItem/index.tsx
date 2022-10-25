@@ -74,7 +74,11 @@ export const EditItem = ({ wishlistId, item }) => {
           <Button variant="primary" type="submit">
             Opslaan
           </Button>
-          <Button variant="danger" onClick={() => remove.mutate()}>
+          <Button
+            type="button"
+            variant="danger"
+            onClick={() => remove.mutate()}
+          >
             Verwijder
           </Button>
         </Form>
