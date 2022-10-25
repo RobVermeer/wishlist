@@ -1,21 +1,25 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { signOut } from "next-auth/react"
-import Link from "next/link"
 import { useRouter } from "next/router"
-import { CSSProperties, useState } from "react"
+import { useState } from "react"
 import { Button } from "~/components/Button"
-import { Cards } from "~/components/Card"
+import { Card } from "~/components/Card"
+import { Cards } from "~/components/Cards"
 import { CreateGroup } from "~/components/CreateGroup"
 import { CreateWishlist } from "~/components/CreateWishlist"
+import { EditGroup } from "~/components/EditGroup"
+import { EditWishlist } from "~/components/EditWishlist"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 function ProfilePage({ session }) {
+  const { push, query } = useRouter()
   const { userId } = session
-  const [activeTab, setActiveTab] = useState("wishlists")
-  const { push } = useRouter()
+  const [activeTab, setActiveTab] = useState(
+    "groups" in query ? "groups" : "wishlists"
+  )
   const { data: groupData = {} } = useQuery(["groups", userId], () =>
     fetch("/api/user/groups").then((res) => res.json())
   )
@@ -66,23 +70,30 @@ function ProfilePage({ session }) {
 
           {wishlists.length > 0 && (
             <Cards>
-              {wishlists.map((wishlist, index) => (
-                <Link
-                  key={wishlist.id}
-                  href={`/profile/wishlists/${wishlist.id}`}
-                >
-                  <a style={{ "--_index": index } as CSSProperties}>
-                    {wishlist.title || "Mijn lijstje"}{" "}
-                    <small>
-                      in groep{wishlist.groups.length > 1 && "en"}:{" "}
-                      {wishlist.groups
-                        .map(({ title }) => title)
-                        .join(", ")
-                        .replace(/,([^,]+)$/i, " & $1")}
-                    </small>
-                  </a>
-                </Link>
-              ))}
+              {wishlists.map((wishlist, index) => {
+                const inGroups = wishlist.groups
+                  .map(({ title }) => title)
+                  .join(", ")
+                  .replace(/,([^,]+)$/i, " & $1")
+                return (
+                  <Card
+                    key={wishlist.id}
+                    index={index}
+                    link={`/profile/wishlists/${wishlist.id}`}
+                    title={
+                      <span className={styles.wishlistTitle}>
+                        {wishlist.title || "Mijn lijstje"}{" "}
+                        {inGroups ? (
+                          <small>{`in groep${
+                            wishlist.groups.length > 1 ? "en" : ""
+                          } ${inGroups}`}</small>
+                        ) : null}
+                      </span>
+                    }
+                    adornment={<EditWishlist wishlist={wishlist} />}
+                  />
+                )
+              })}
             </Cards>
           )}
 
@@ -101,11 +112,15 @@ function ProfilePage({ session }) {
           {groups.length > 0 && (
             <Cards>
               {groups.map((group, index) => (
-                <Link key={group.id} href={`/group/${group.id}`}>
-                  <a style={{ "--_index": index } as CSSProperties}>
-                    {group.title}
-                  </a>
-                </Link>
+                <Card
+                  key={group.id}
+                  index={index}
+                  link={`/group/${group.id}`}
+                  title={group.title}
+                  adornment={
+                    group.createdBy.id === userId && <EditGroup group={group} />
+                  }
+                />
               ))}
             </Cards>
           )}

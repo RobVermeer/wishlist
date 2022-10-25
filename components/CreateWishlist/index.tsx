@@ -9,8 +9,8 @@ export const CreateWishlist = ({ userId }) => {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [otherName, setOtherName] = useState(false)
-  const { data: groupsData = {} } = useQuery(["groups", userId], () =>
-    fetch("/api/user/groups").then((res) => res.json())
+  const { data: groupsData = {} } = useQuery(["groups"], () =>
+    fetch("/api/groups").then((res) => res.json())
   )
   const { data: groups = [] } = groupsData
 

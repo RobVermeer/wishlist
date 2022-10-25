@@ -26,9 +26,17 @@ export default async function handler(
       return res.status(403).send("Not allowed")
     }
 
-    const { title } = JSON.parse(body)
+    const { title, groups } = JSON.parse(body)
 
-    const data = updateWishlistById(id, { title })
+    const update = { title }
+
+    if (groups) {
+      update["groups"] = {
+        set: [...groups].map((id) => ({ id })),
+      }
+    }
+
+    const data = updateWishlistById(id, update)
 
     return res.status(200).json({ data })
   }

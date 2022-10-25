@@ -3,12 +3,12 @@ import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import { useRef, useState } from "react"
 import { Button } from "~/components/Button"
-import { Cards } from "~/components/Card"
+import { Card } from "~/components/Card"
+import { Cards } from "~/components/Cards"
 import { Dialog } from "~/components/Dialog"
 import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
-import { WishlistItem } from "~/components/WishlistItem"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
@@ -52,14 +52,13 @@ function ProfileWishlistPage() {
       {wishlist.wishlistItem.length > 0 && (
         <Cards>
           {wishlist.wishlistItem.map((item, index) => (
-            <WishlistItem
+            <Card
               key={item.id}
-              item={item}
-              wishlistId={item.id}
+              title={item.title}
+              url={item.url}
               index={index}
-            >
-              <EditItem wishlistId={wishlist.id} item={item} />
-            </WishlistItem>
+              adornment={<EditItem wishlistId={wishlist.id} item={item} />}
+            />
           ))}
         </Cards>
       )}

@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { CSSProperties } from "react"
-import { Cards } from "~/components/Card"
+import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Home.module.css"
 import { EmptyState } from "~/components/EmptyState"
 import { Button } from "~/components/Button"
+import { Card } from "../Card"
 
 export const Home = ({ userId }) => {
   const { push } = useRouter()
@@ -27,7 +28,7 @@ export const Home = ({ userId }) => {
         buttons={
           <>
             <Button onClick={() => push("/profile")}>Bekijk je profiel</Button>
-            <Button variant="primary" onClick={() => push("/profile/groups")}>
+            <Button variant="primary" onClick={() => push("/profile?groups")}>
               Ga direct naar groepen
             </Button>
           </>
@@ -41,9 +42,12 @@ export const Home = ({ userId }) => {
       <PageTitle>Groepen die je volgt</PageTitle>
       <Cards>
         {groups.map((group, index) => (
-          <Link key={group.id} href={`/group/${group.id}`}>
-            <a style={{ "--_index": index } as CSSProperties}>{group.title}</a>
-          </Link>
+          <Card
+            key={group.id}
+            index={index}
+            title={group.title}
+            link={`/group/${group.id}`}
+          />
         ))}
       </Cards>
     </div>

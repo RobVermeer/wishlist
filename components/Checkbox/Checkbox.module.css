@@ -1,0 +1,8 @@
+.checkbox {
+  position: absolute;
+  display: flex;
+  inset-inline-end: var(--size-4);
+  scale: 1.6;
+  top: 50%;
+  translate: 0 -50%;
+}

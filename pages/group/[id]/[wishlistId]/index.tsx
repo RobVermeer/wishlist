@@ -3,10 +3,11 @@ import { GetServerSideProps } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
-import { Cards } from "~/components/Card"
+import { Card } from "~/components/Card"
+import { Cards } from "~/components/Cards"
+import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
-import { WishlistItem } from "~/components/WishlistItem"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
@@ -63,11 +64,12 @@ function WishlistPage({ session }) {
       <PageTitle>{wishlist.title || wishlist.user.name}</PageTitle>
       <Cards>
         {wishlist.wishlistItem.map((item, index) => (
-          <WishlistItem
+          <Card
             key={item.id}
-            wishlistId={wishlistId}
-            item={item}
+            title={item.title}
+            url={item.url}
             index={index}
+            adornment={<Checkbox item={item} wishlistId={wishlist.id} />}
           />
         ))}
       </Cards>

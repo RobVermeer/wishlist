@@ -3,7 +3,8 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { CSSProperties } from "react"
 import { Button } from "~/components/Button"
-import { Cards } from "~/components/Card"
+import { Card } from "~/components/Card"
+import { Cards } from "~/components/Cards"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
 import styles from "~/styles/Profile.module.css"
@@ -25,10 +26,7 @@ function GroupPage() {
         buttons={
           <>
             <Button onClick={() => push("/profile")}>Bekijk je profiel</Button>
-            <Button
-              variant="primary"
-              onClick={() => push("/profile/wishlists")}
-            >
+            <Button variant="primary" onClick={() => push("/profile")}>
               Ga direct naar je wensenlijstjes
             </Button>
           </>
@@ -42,11 +40,12 @@ function GroupPage() {
 
       <Cards>
         {group.wishlist.map((wishlist, index) => (
-          <Link key={wishlist.id} href={`/group/${query.id}/${wishlist.id}`}>
-            <a style={{ "--_index": index } as CSSProperties}>
-              {wishlist.title || wishlist.user.name}
-            </a>
-          </Link>
+          <Card
+            key={wishlist.id}
+            index={index}
+            title={wishlist.title || wishlist.user.name}
+            link={`/group/${query.id}/${wishlist.id}`}
+          />
         ))}
       </Cards>
     </div>
