@@ -11,7 +11,6 @@ import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
-import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 function ProfileWishlistPage({ initialData }) {
@@ -51,11 +50,11 @@ function ProfileWishlistPage({ initialData }) {
         <WishlistTitle wishlist={wishlist} />
       </PageTitle>
 
-      {wishlist.wishlistItem.length === 0 && (
-        <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>
-      )}
-
       <Cards>
+        {wishlist.wishlistItem.length === 0 && (
+          <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>
+        )}
+
         {wishlist.wishlistItem.map((item, index) => (
           <Card
             key={item.id}
@@ -66,11 +65,7 @@ function ProfileWishlistPage({ initialData }) {
           />
         ))}
 
-        <Button
-          className={styles.button}
-          variant="primary"
-          onClick={() => setOpen(true)}
-        >
+        <Button variant="primary" onClick={() => setOpen(true)}>
           Voeg een wens toe
         </Button>
       </Cards>
