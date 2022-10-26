@@ -25,7 +25,7 @@ function WishlistPage({ session, initialData }) {
 
   if (!wishlist) return <div></div>
 
-  if (false) {
+  if (wishlist.user.id === userId) {
     return (
       <EmptyState
         title="🥸 Dit is je eigen lijstje 🥸"

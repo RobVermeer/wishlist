@@ -8,7 +8,6 @@ export const WishlistTitle = ({
   showGroups = false,
   isOwn = false,
 }) => {
-  isOwn = false
   const { title, user, groups } = wishlist
   const listTitle = title || (isOwn ? "Mijn lijstje" : user.name)
 
