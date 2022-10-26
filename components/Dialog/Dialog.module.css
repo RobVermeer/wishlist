@@ -1,6 +1,6 @@
 .dialog {
   inline-size: 100%;
-  max-inline-size: min(calc(100vw - var(--size-4) * 2), 32rem);
+  max-width: min(calc(100vw - var(--size-4) * 2), 32rem);
   opacity: 0;
   animation: var(--animation-fade-in) forwards, var(--animation-slide-in-up);
   animation-timing-function: var(--ease-squish-3);
@@ -11,6 +11,7 @@
 .body {
   display: grid;
   gap: var(--size-4);
+  max-width: 100%;
 }
 
 .title {
