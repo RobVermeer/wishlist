@@ -14,6 +14,13 @@
   transition: all 200ms var(--ease-3);
 }
 
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--gray-8);
+    color: var(--gray-2);
+  }
+}
+
 .card:hover {
   text-decoration: none;
   box-shadow: var(--shadow-3);

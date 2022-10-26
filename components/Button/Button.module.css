@@ -10,6 +10,14 @@
   --_border: var(--gray-2);
 }
 
+@media (prefers-color-scheme: dark) {
+  .secondary {
+    --_bg: linear-gradient(var(--gray-8), var(--gray-9));
+    --_text: var(--gray-4);
+    --_border: var(--gray-8);
+  }
+}
+
 .danger {
   --_bg: linear-gradient(var(--red-5), var(--red-7));
   --_text: var(--red-0);
