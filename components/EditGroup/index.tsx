@@ -72,7 +72,7 @@ export const EditGroup = ({ group }) => {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Wijzig group 🧐"
+        title="Wijzig groep 🧐"
       >
         {isOwnGroup && (
           <Form onSubmit={() => update.mutate()}>
