@@ -7,10 +7,7 @@ export const NotLoggedIn = () => (
     title="👋 Welkom! 👋"
     text="Maak een account aan of log in om te starten! 🎁"
     buttons={
-      <>
-        <Button onClick={() => signIn("google")}>Registreren</Button>
-        <Button onClick={() => signIn("google")}>Inloggen</Button>
-      </>
+      <Button onClick={() => signIn("google")}>Inloggen met Google</Button>
     }
   />
 )
