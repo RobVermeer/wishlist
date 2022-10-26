@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
+import { WishlistTitle } from "~/components/CardWishlist"
 import { Dialog } from "~/components/Dialog"
 import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
@@ -46,7 +47,9 @@ function ProfileWishlistPage({ initialData }) {
 
   return (
     <div>
-      <PageTitle>{wishlist.title || "Mijn lijstje"}</PageTitle>
+      <PageTitle>
+        <WishlistTitle wishlist={wishlist} />
+      </PageTitle>
 
       {wishlist.wishlistItem.length === 0 && (
         <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>

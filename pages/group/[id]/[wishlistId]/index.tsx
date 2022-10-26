@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
+import { WishlistTitle } from "~/components/CardWishlist"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
@@ -62,7 +63,9 @@ function WishlistPage({ session, initialData }) {
 
   return (
     <div>
-      <PageTitle>{wishlist.title || wishlist.user.name}</PageTitle>
+      <PageTitle>
+        <WishlistTitle wishlist={wishlist} />
+      </PageTitle>
       <Cards>
         {wishlist.wishlistItem.map((item, index) => (
           <Card

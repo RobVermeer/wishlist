@@ -4,18 +4,26 @@ import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
 import { EmptyState } from "~/components/EmptyState"
 import { Button } from "~/components/Button"
-import { Card } from "~/components/Card"
+import { CardGroup } from "~/components/CardGroup"
+import { CardWishlist } from "~/components/CardWishlist"
 
-export const Home = ({ userId, initialGroups }) => {
+export const Home = ({ userId, initialGroups, initialWishlists }) => {
   const { push } = useRouter()
-  const { data = {} } = useQuery(
+  const { data: groupsData = {} } = useQuery(
     ["groups", userId],
     () => fetch("/api/user/groups").then((res) => res.json()),
     { initialData: initialGroups }
   )
-  const { data: groups } = data
+  const { data: groups } = groupsData
 
-  if (!groups) return <div></div>
+  const { data: wishlistsData = {} } = useQuery(
+    ["wishlists", userId],
+    () => fetch("/api/user/wishlists").then((res) => res.json()),
+    { initialData: initialWishlists }
+  )
+  const { data: wishlists } = wishlistsData
+
+  if (!groups || !wishlists) return <div></div>
 
   if (groups.length === 0) {
     return (
@@ -41,12 +49,15 @@ export const Home = ({ userId, initialGroups }) => {
       <PageTitle>Groepen die je volgt</PageTitle>
       <Cards>
         {groups.map((group, index) => (
-          <Card
-            key={group.id}
-            index={index}
-            title={group.title}
-            link={`/group/${group.id}`}
-          />
+          <CardGroup key={group.id} index={index} group={group} />
+        ))}
+      </Cards>
+      <br />
+      <br />
+      <PageTitle>Ga direct naar je eigen lijstjes</PageTitle>
+      <Cards>
+        {wishlists.map((wishlist, index) => (
+          <CardWishlist key={wishlist.id} wishlist={wishlist} index={index} />
         ))}
       </Cards>
     </div>

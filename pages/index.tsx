@@ -2,12 +2,19 @@ import { GetServerSideProps } from "next"
 import { Home } from "~/components/Home"
 import { NotLoggedIn } from "~/components/NotLoggedIn"
 import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
+import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function HomePage({ session, initialGroups }) {
+function HomePage({ session, initialGroups, initialWishlists }) {
   if (!session) return <NotLoggedIn />
 
-  return <Home userId={session.userId} initialGroups={initialGroups} />
+  return (
+    <Home
+      userId={session.userId}
+      initialGroups={initialGroups}
+      initialWishlists={initialWishlists}
+    />
+  )
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -20,11 +27,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
     }
 
-    const data = await getGroupsForUser(session.userId)
+    const groupsData = await getGroupsForUser(session.userId)
+    const wishlistsData = await getWishlistsForUser(session.userId)
 
     return {
       props: {
-        initialGroups: { data },
+        initialGroups: { data: groupsData },
+        initialWishlists: { data: wishlistsData },
       },
     }
   })

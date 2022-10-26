@@ -1,15 +1,16 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
-import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
+import { CardWishlist } from "~/components/CardWishlist"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
 import { getGroupById } from "~/lib/groups/getGroupById"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function GroupPage({ initialData }) {
+function GroupPage({ session, initialData }) {
+  const queryClient = useQueryClient()
   const { query, push } = useRouter()
   const { data = {} } = useQuery(
     ["groups", query.id],
@@ -17,10 +18,40 @@ function GroupPage({ initialData }) {
     { initialData }
   )
   const { data: group } = data
+  const subscribed = group.members.some(({ id }) => id === session.userId)
+
+  const subscribe = useMutation(
+    () => {
+      return fetch(`/api/user/groups/${group.id}/subscribe`, {
+        method: "put",
+      }).then((res) => res.json())
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["groups"])
+      },
+    }
+  )
 
   if (!group) return <div></div>
 
-  if (group.wishlist.length === 0)
+  if (!subscribed) {
+    return (
+      <EmptyState
+        title="😵 Je volgt deze groep nog niet 😵"
+        text="Volg de groep snel om alle lijstjes te kunnen zien! 😇"
+        buttons={
+          <>
+            <Button variant="primary" onClick={() => subscribe.mutate()}>
+              Volg de groep
+            </Button>
+          </>
+        }
+      />
+    )
+  }
+
+  if (group.wishlist.length === 0) {
     return (
       <EmptyState
         title="😵‍💫 Er zijn nog geen lijstjes! 😵‍💫"
@@ -35,6 +66,7 @@ function GroupPage({ initialData }) {
         }
       />
     )
+  }
 
   return (
     <div>
@@ -42,11 +74,11 @@ function GroupPage({ initialData }) {
 
       <Cards>
         {group.wishlist.map((wishlist, index) => (
-          <Card
+          <CardWishlist
             key={wishlist.id}
             index={index}
-            title={wishlist.title || wishlist.user.name}
-            link={`/group/${query.id}/${wishlist.id}`}
+            wishlist={wishlist}
+            groupId={group.id}
           />
         ))}
       </Cards>

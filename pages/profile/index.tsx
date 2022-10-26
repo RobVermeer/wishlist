@@ -4,12 +4,11 @@ import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { Button } from "~/components/Button"
-import { Card } from "~/components/Card"
+import { CardGroup } from "~/components/CardGroup"
 import { Cards } from "~/components/Cards"
+import { CardWishlist } from "~/components/CardWishlist"
 import { CreateGroup } from "~/components/CreateGroup"
 import { CreateWishlist } from "~/components/CreateWishlist"
-import { EditGroup } from "~/components/EditGroup"
-import { EditWishlist } from "~/components/EditWishlist"
 import { PageTitle } from "~/components/PageTitle"
 import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
@@ -77,31 +76,15 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
 
           {wishlists.length > 0 && (
             <Cards>
-              {wishlists.map((wishlist, index) => {
-                const inGroups = wishlist.groups
-                  .map(({ title }) => title)
-                  .join(", ")
-                  .replace(/,([^,]+)$/i, " & $1")
-
-                return (
-                  <Card
-                    key={wishlist.id}
-                    index={index}
-                    link={`/profile/wishlists/${wishlist.id}`}
-                    title={
-                      <span className={styles.wishlistTitle}>
-                        {wishlist.title || "Mijn lijstje"}{" "}
-                        {inGroups ? (
-                          <small>{`in groep${
-                            wishlist.groups.length > 1 ? "en" : ""
-                          } ${inGroups}`}</small>
-                        ) : null}
-                      </span>
-                    }
-                    adornment={<EditWishlist wishlist={wishlist} />}
-                  />
-                )
-              })}
+              {wishlists.map((wishlist, index) => (
+                <CardWishlist
+                  key={wishlist.id}
+                  wishlist={wishlist}
+                  index={index}
+                  showEdit
+                  showGroups
+                />
+              ))}
 
               <CreateWishlist userId={userId} />
             </Cards>
@@ -120,14 +103,11 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
           {groups.length > 0 && (
             <Cards>
               {groups.map((group, index) => (
-                <Card
+                <CardGroup
                   key={group.id}
                   index={index}
-                  link={`/group/${group.id}`}
-                  title={group.title}
-                  adornment={
-                    group.createdBy.id === userId && <EditGroup group={group} />
-                  }
+                  group={group}
+                  showEdit
                 />
               ))}
 
