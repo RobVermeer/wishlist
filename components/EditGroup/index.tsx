@@ -8,7 +8,7 @@ import styles from "./EditGroup.module.css"
 
 export const EditGroup = ({ group }) => {
   const { data } = useSession()
-  const isOwnGroup = data.userId === group.createdBy.id
+  const isOwnGroup = data?.userId === group.createdBy.id
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(group.title)

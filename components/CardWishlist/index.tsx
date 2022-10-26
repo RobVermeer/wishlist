@@ -6,7 +6,7 @@ import styles from "./CardWishlist.module.css"
 export const WishlistTitle = ({ wishlist, showGroups = false }) => {
   const { data } = useSession()
   const { title, user, groups } = wishlist
-  const isOwnList = user.id === data.userId
+  const isOwnList = user.id === data?.userId
   const listTitle = title || (isOwnList ? "Mijn lijstje" : user.name)
 
   if (!showGroups) {
