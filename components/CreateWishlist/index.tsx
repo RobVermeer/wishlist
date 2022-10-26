@@ -37,7 +37,7 @@ export const CreateWishlist = ({ userId }) => {
           setOpen(true)
         }}
       >
-        Maak een nieuwe verlanglijstje aan
+        Maak een nieuw verlanglijstje aan
       </Button>
 
       <Dialog
