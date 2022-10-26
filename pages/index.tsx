@@ -13,6 +13,13 @@ function HomePage({ session, initialGroups }) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session } = context
+
+    if (!session) {
+      return {
+        props: {},
+      }
+    }
+
     const data = await getGroupsForUser(session.userId)
 
     return {
