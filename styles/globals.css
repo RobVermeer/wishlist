@@ -30,6 +30,10 @@ button {
   text-shadow: none;
 }
 
+input {
+  width: 100%;
+}
+
 .main {
   display: grid;
   gap: var(--size-6);
