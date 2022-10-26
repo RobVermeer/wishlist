@@ -35,9 +35,7 @@ export const CreateGroup = () => {
 
       <Dialog
         open={open}
-        onClose={() => {
-          setOpen(false)
-        }}
+        onClose={() => setOpen(false)}
         title="Nieuwe group 👨‍👨‍👧‍👦"
       >
         {open && (

@@ -24,12 +24,17 @@ export const Card = ({
   link = null,
   checked = false,
   adornment = null,
+  isOwn = false,
   index,
 }) => {
   const classNames = [styles.card]
 
   if (checked) {
     classNames.push(styles.checked)
+  }
+
+  if (isOwn) {
+    classNames.push(styles.isOwn)
   }
 
   if (link) {

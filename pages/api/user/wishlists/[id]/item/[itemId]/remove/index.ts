@@ -25,11 +25,11 @@ export default async function handler(
     const wishlistItem = await getWishlistItemById(itemId)
 
     if (wishlistItem.wishlist.id !== wishlist.id) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     if (wishlistItem.wishlist.user.id !== session.userId) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     const data = deleteWishlistItemById(itemId)

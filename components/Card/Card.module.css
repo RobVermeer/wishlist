@@ -41,6 +41,16 @@ a:hover.card,
   text-decoration: line-through;
 }
 
+.card.isOwn {
+  background-color: var(--gray-3);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card.isOwn {
+    background-color: var(--gray-7);
+  }
+}
+
 .link a::after {
   content: "";
   position: absolute;

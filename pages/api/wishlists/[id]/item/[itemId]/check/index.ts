@@ -8,7 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, body, query } = req
+  const { method, query } = req
   const session = await getSession({ req })
   const { id, itemId } = query
 
@@ -25,18 +25,18 @@ export default async function handler(
     const wishlistItem = await getWishlistItemById(itemId)
 
     if (wishlistItem.wishlist.id !== wishlist.id) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     if (wishlistItem.wishlist.user.id === session.userId) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     let boughtBy = null
 
     if (wishlistItem.boughtBy) {
       if (wishlistItem.boughtBy.id !== session.userId) {
-        return res.status(403).send("Not allowed")
+        return res.status(403).json({ error: "Already checked" })
       }
 
       boughtBy = { disconnect: true }

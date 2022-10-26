@@ -23,7 +23,7 @@ export default async function handler(
     const group = await getGroupById(id)
 
     if (group.createdBy.id !== session.userId) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     const { title } = JSON.parse(body)

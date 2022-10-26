@@ -23,7 +23,7 @@ export default async function handler(
     const wishlist = await getWishlistById(id)
 
     if (wishlist.user.id !== session.userId) {
-      return res.status(403).send("Not allowed")
+      return res.status(403).json({ error: "Not allowed" })
     }
 
     const { title, groups } = JSON.parse(body)

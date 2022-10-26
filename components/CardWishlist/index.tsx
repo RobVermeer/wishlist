@@ -3,11 +3,9 @@ import { Card } from "~/components/Card"
 import { EditWishlist } from "~/components/EditWishlist"
 import styles from "./CardWishlist.module.css"
 
-export const WishlistTitle = ({ wishlist, showGroups = false }) => {
-  const { data } = useSession()
+export const WishlistTitle = ({ wishlist, showGroups = false, isOwn }) => {
   const { title, user, groups } = wishlist
-  const isOwnList = user.id === data?.userId
-  const listTitle = title || (isOwnList ? "Mijn lijstje" : user.name)
+  const listTitle = title || (isOwn ? "Mijn lijstje" : user.name)
 
   if (!showGroups) {
     return listTitle
@@ -37,6 +35,8 @@ export const CardWishlist = ({
   groupId = null,
   showEdit = false,
 }) => {
+  const { data } = useSession()
+  const isOwn = wishlist.user.id === data?.userId
   const link = groupId
     ? `/group/${groupId}/${wishlist.id}`
     : `/profile/wishlists/${wishlist.id}`
@@ -46,8 +46,15 @@ export const CardWishlist = ({
       key={wishlist.id}
       index={index}
       link={link}
-      title={<WishlistTitle wishlist={wishlist} showGroups={showGroups} />}
+      title={
+        <WishlistTitle
+          wishlist={wishlist}
+          showGroups={showGroups}
+          isOwn={isOwn}
+        />
+      }
       adornment={showEdit && <EditWishlist wishlist={wishlist} />}
+      isOwn={isOwn}
     />
   )
 }

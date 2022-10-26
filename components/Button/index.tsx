@@ -16,6 +16,10 @@ export const Button = ({
   className = "",
   type,
 }: ButtonProps) => {
+  if (variant === "default") {
+    className += " " + styles.default
+  }
+
   if (variant === "primary") {
     className += " " + styles.primary
   }
