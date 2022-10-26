@@ -61,7 +61,7 @@ export const EditWishlist = ({ wishlist }) => {
           setOpen(true)
         }}
       >
-        Wijzig
+        Instellingen
       </Button>
 
       <Dialog

@@ -65,7 +65,7 @@ export const EditGroup = ({ group }) => {
           setOpen(true)
         }}
       >
-        Wijzig
+        Instellingen
       </Button>
 
       <Dialog
