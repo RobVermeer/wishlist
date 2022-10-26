@@ -72,25 +72,23 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
             activeTab === "wishlists" ? styles.active : ""
           }`}
         >
-          {wishlists.length === 0 && (
-            <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
-          )}
+          <Cards>
+            {wishlists.length === 0 && (
+              <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
+            )}
 
-          {wishlists.length > 0 && (
-            <Cards>
-              {wishlists.map((wishlist, index) => (
-                <CardWishlist
-                  key={wishlist.id}
-                  wishlist={wishlist}
-                  index={index}
-                  showEdit
-                  showGroups
-                />
-              ))}
+            {wishlists.map((wishlist, index) => (
+              <CardWishlist
+                key={wishlist.id}
+                wishlist={wishlist}
+                index={index}
+                showEdit
+                showGroups
+              />
+            ))}
 
-              <CreateWishlist userId={userId} />
-            </Cards>
-          )}
+            <CreateWishlist userId={userId} />
+          </Cards>
         </div>
 
         <div
@@ -98,24 +96,22 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
             activeTab === "groups" ? styles.active : ""
           }`}
         >
-          {groups.length === 0 && (
-            <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
-          )}
+          <Cards>
+            {groups.length === 0 && (
+              <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
+            )}
 
-          {groups.length > 0 && (
-            <Cards>
-              {groups.map((group, index) => (
-                <CardGroup
-                  key={group.id}
-                  index={index}
-                  group={group}
-                  showEdit
-                />
-              ))}
+            {groups.map((group, index) => (
+              <CardGroup
+                key={group.id}
+                index={index}
+                group={group}
+                showEdit
+              />
+            ))}
 
-              <CreateGroup />
-            </Cards>
-          )}
+            <CreateGroup />
+          </Cards>
         </div>
       </div>
     </div>
