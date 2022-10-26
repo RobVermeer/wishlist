@@ -59,6 +59,7 @@ export const EditGroup = ({ group }) => {
   return (
     <>
       <Button
+        small
         className={styles.button}
         onClick={(event) => {
           event.preventDefault()

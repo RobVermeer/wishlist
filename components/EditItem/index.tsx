@@ -43,6 +43,7 @@ export const EditItem = ({ wishlistId, item }) => {
   return (
     <>
       <Button
+        small
         className={styles.button}
         onClick={(event) => {
           event.preventDefault()
