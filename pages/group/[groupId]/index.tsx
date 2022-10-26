@@ -13,8 +13,8 @@ function GroupPage({ session, initialData }) {
   const queryClient = useQueryClient()
   const { query, push } = useRouter()
   const { data = {} } = useQuery(
-    ["groups", query.id],
-    () => fetch(`/api/groups/${query.id}`).then((res) => res.json()),
+    ["groups", query.groupId],
+    () => fetch(`/api/groups/${query.groupId}`).then((res) => res.json()),
     { initialData }
   )
   const { data: group } = data
@@ -89,7 +89,7 @@ function GroupPage({ session, initialData }) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getGroupById(query.id)
+    const data = await getGroupById(query.groupId)
 
     return {
       props: { title: "Group", initialData: { data } },

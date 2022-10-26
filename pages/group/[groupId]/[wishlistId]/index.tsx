@@ -14,7 +14,7 @@ import { withBaseProps } from "~/utils/withBaseProps"
 function WishlistPage({ session, initialData }) {
   const { userId } = session
   const { query, push } = useRouter()
-  const { id, wishlistId } = query
+  const { groupId, wishlistId } = query
   const { data = {} } = useQuery(
     ["wishlists", wishlistId],
     () => fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),
@@ -51,7 +51,7 @@ function WishlistPage({ session, initialData }) {
         text="Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
         buttons={
           <>
-            <Button onClick={() => push(`/group/${id}`)}>
+            <Button onClick={() => push(`/group/${groupId}`)}>
               Terug naar de groep
             </Button>
             <Button disabled>Stuur een notificatie</Button>
