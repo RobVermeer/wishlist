@@ -20,7 +20,7 @@ export const EditItem = ({ wishlistId, item }) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", wishlistId])
+        queryClient.invalidateQueries(["wishlists", wishlistId])
         setOpen(false)
       },
     }
@@ -34,7 +34,7 @@ export const EditItem = ({ wishlistId, item }) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["wishlist", wishlistId])
+        queryClient.invalidateQueries(["wishlists", wishlistId])
         setOpen(false)
       },
     }
