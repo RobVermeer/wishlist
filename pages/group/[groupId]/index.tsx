@@ -61,7 +61,7 @@ function GroupPage({ session, initialData }) {
           <>
             <Button onClick={() => push("/profile")}>Bekijk je profiel</Button>
             <Button variant="primary" onClick={() => push("/profile")}>
-              Ga direct naar je wensenlijstjes
+              Ga direct naar je verlanglijstjes
             </Button>
           </>
         }

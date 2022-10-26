@@ -67,7 +67,7 @@ export const EditWishlist = ({ wishlist }) => {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Wijzig wensenlijst 🧐"
+        title="Wijzig verlanglijstje 🧐"
       >
         <Form onSubmit={() => update.mutate()}>
           <label htmlFor="other-name">

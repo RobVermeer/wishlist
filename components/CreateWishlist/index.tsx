@@ -37,7 +37,7 @@ export const CreateWishlist = ({ userId }) => {
           setOpen(true)
         }}
       >
-        Maak een nieuwe wensenlijst aan
+        Maak een nieuwe verlanglijstje aan
       </Button>
 
       <Dialog
@@ -46,7 +46,7 @@ export const CreateWishlist = ({ userId }) => {
           setOtherName(false)
           setOpen(false)
         }}
-        title="Nieuwe wensenlijst 🤩"
+        title="Nieuw verlanglijstje 🤩"
       >
         {open && (
           <Form

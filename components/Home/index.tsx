@@ -31,7 +31,7 @@ export const Home = ({ userId, initialGroups, initialWishlists }) => {
     return (
       <EmptyState
         title="🥺 Je volgt nog geen enkele groep 🥺"
-        text="Om te zien wat anderen willen en om je eigen wensenlijstje te kunnen
+        text="Om te zien wat anderen willen en om je eigen verlanglijstje te kunnen
           toevoegen moet je als eerste een groep volgen. Ga naar je profiel om
           te beginnen! 🚀"
         buttons={
