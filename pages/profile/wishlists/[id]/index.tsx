@@ -19,6 +19,7 @@ function ProfileWishlistPage({ initialData }) {
   const [url, setUrl] = useState("")
   const { query } = useRouter()
   const queryClient = useQueryClient()
+  // @ts-ignore
   const { data = {} } = useQuery(
     ["wishlists", query.id],
     () => fetch(`/api/wishlists/${query.id}`).then((res) => res.json()),

@@ -12,6 +12,7 @@ import { withBaseProps } from "~/utils/withBaseProps"
 function GroupPage({ session, initialData }) {
   const queryClient = useQueryClient()
   const { query, push } = useRouter()
+  // @ts-ignore
   const { data = {} } = useQuery(
     ["groups", query.groupId],
     () => fetch(`/api/groups/${query.groupId}`).then((res) => res.json()),

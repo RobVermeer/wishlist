@@ -15,6 +15,7 @@ function WishlistPage({ session, initialData }) {
   const { userId } = session
   const { query, push } = useRouter()
   const { groupId, wishlistId } = query
+  // @ts-ignore
   const { data = {} } = useQuery(
     ["wishlists", wishlistId],
     () => fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),

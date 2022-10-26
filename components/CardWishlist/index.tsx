@@ -3,7 +3,11 @@ import { Card } from "~/components/Card"
 import { EditWishlist } from "~/components/EditWishlist"
 import styles from "./CardWishlist.module.css"
 
-export const WishlistTitle = ({ wishlist, showGroups = false, isOwn }) => {
+export const WishlistTitle = ({
+  wishlist,
+  showGroups = false,
+  isOwn = false,
+}) => {
   const { title, user, groups } = wishlist
   const listTitle = title || (isOwn ? "Mijn lijstje" : user.name)
 

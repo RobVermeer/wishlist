@@ -19,6 +19,7 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
   const { push } = useRouter()
   const { userId } = session
   const [activeTab, setActiveTab] = useState(initialTab)
+  // @ts-ignore
   const { data: groupData = {} } = useQuery(
     ["groups", userId],
     () => fetch("/api/user/groups").then((res) => res.json()),
@@ -26,6 +27,7 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
   )
 
   const { data: groups = [] } = groupData
+  // @ts-ignore
   const { data: wishlistData = {} } = useQuery(
     ["wishlists", userId],
     () => fetch("/api/user/wishlists").then((res) => res.json()),

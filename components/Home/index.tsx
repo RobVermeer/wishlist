@@ -9,6 +9,7 @@ import { CardWishlist } from "~/components/CardWishlist"
 
 export const Home = ({ userId, initialGroups, initialWishlists }) => {
   const { push } = useRouter()
+  // @ts-ignore
   const { data: groupsData = {} } = useQuery(
     ["groups", userId],
     () => fetch("/api/user/groups").then((res) => res.json()),
@@ -16,6 +17,7 @@ export const Home = ({ userId, initialGroups, initialWishlists }) => {
   )
   const { data: groups } = groupsData
 
+  // @ts-ignore
   const { data: wishlistsData = {} } = useQuery(
     ["wishlists", userId],
     () => fetch("/api/user/wishlists").then((res) => res.json()),
