@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
+import { unstable_getServerSession as getSession } from "next-auth/next"
+import { authOptions } from "~/pages/api/auth/[...nextauth]"
 import { createGroupForUser } from "~/lib/groups/createGroupForUser"
 
 export default async function handler(
@@ -7,7 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { method, body } = req
-  const session = await getSession({ req })
+  const session = await getSession(req, res, authOptions)
 
   if (!session || !session.userId) {
     return res.status(404).send("")

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
+import { unstable_getServerSession as getSession } from "next-auth/next"
+import { authOptions } from "~/pages/api/auth/[...nextauth]"
 import { getGroupById } from "~/lib/groups/getGroupById"
 import { updateGroupById } from "~/lib/groups/updateGroupById"
 
@@ -8,7 +9,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { method, query } = req
-  const session = await getSession({ req })
+  const session = await getSession(req, res, authOptions)
   const { id } = query
 
   if (Array.isArray(id)) {

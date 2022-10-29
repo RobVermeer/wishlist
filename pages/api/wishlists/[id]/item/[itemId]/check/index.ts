@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
+import { unstable_getServerSession as getSession } from "next-auth/next"
+import { authOptions } from "~/pages/api/auth/[...nextauth]"
 import { getWishlistItemById } from "~/lib/wishlistItems/getWishlistItemById"
 import { updateWishlistItemById } from "~/lib/wishlistItems/updateWishlistItemById"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
@@ -9,7 +10,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { method, query } = req
-  const session = await getSession({ req })
+  const session = await getSession(req, res, authOptions)
   const { id, itemId } = query
 
   if (Array.isArray(id)) {
