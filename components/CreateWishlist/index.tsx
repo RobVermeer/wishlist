@@ -60,11 +60,10 @@ export const CreateWishlist = ({ userId }) => {
               })
             }}
           >
-            <label htmlFor="other-name">
+            <label>
               <input
                 type="checkbox"
                 name="other-name"
-                id="other-name"
                 checked={otherName}
                 onChange={(event) => setOtherName(event.target.checked)}
               />{" "}
