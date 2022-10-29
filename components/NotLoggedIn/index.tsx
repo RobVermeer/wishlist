@@ -8,9 +8,9 @@ export const NotLoggedIn = () => (
     text="Maak een account aan of log in om te starten! 🎁"
     buttons={
       <>
-        <Button onClick={() => signIn("instagram")}>
+        {/* <Button onClick={() => signIn("instagram")}>
           Inloggen met Instagram
-        </Button>
+        </Button> */}
         <Button onClick={() => signIn("google")} variant="primary">
           Inloggen met Google
         </Button>
