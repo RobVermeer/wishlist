@@ -16,7 +16,8 @@ export const WishlistTitle = ({
   isOwn = false,
 }: WishlistTitleProps) => {
   const { title, user, groups } = wishlist
-  const listTitle = title || (isOwn ? "Mijn lijstje" : user.name)
+  const listTitle =
+    title || (isOwn ? "Mijn lijstje" : user.firstName || user.name)
 
   if (!showGroups) {
     return <>{listTitle}</>

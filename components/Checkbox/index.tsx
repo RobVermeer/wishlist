@@ -41,7 +41,8 @@ export const Checkbox = ({ wishlistId, item }: CheckboxProps) => {
 
       <Dialog open={open} onClose={() => setOpen(false)} title="Oeps! 🙈">
         <p>
-          Deze wens is al gekocht door <strong>{item.boughtBy?.name}</strong>,
+          Deze wens is al gekocht door{" "}
+          <strong>{item.boughtBy?.firstName || item.boughtBy?.name}</strong>,
           dus je kan deze niet meer zelf afvinken.
         </p>
         <Button variant="primary" onClick={() => setOpen(false)}>

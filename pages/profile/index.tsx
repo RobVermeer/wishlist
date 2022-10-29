@@ -139,7 +139,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        title: session?.user?.name as string,
+        title: session?.firstName || (session?.user?.name as string),
         initialTab,
         initialWishlists: { data: wishlistsData },
         initialGroups: { data: groupsData },

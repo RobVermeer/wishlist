@@ -7,7 +7,8 @@ interface NavBarProps {
 }
 export function NavBar({ session }: NavBarProps) {
   const loggedIn = Boolean(session)
-  const { user } = session || {}
+  // @ts-ignore
+  const { user, firstName } = session || {}
 
   return (
     <nav className={`${styles.container} ${loggedIn ? styles.loggedIn : ""}`}>
@@ -18,7 +19,7 @@ export function NavBar({ session }: NavBarProps) {
       {loggedIn && (
         <div className={styles.user}>
           <p>
-            Ingelogd als <Link href="/profile">{user?.name}</Link>
+            Ingelogd als <Link href="/profile">{firstName || user?.name}</Link>
           </p>
           <Link href="/profile">
             <a>
@@ -26,7 +27,7 @@ export function NavBar({ session }: NavBarProps) {
                 <img
                   referrerPolicy="no-referrer"
                   src={user?.image as string}
-                  alt={`Avatar of ${user?.name}`}
+                  alt={`Avatar of ${firstName || user?.name}`}
                   width="96"
                   height="96"
                 />
