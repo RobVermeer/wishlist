@@ -4,8 +4,14 @@ import { useState } from "react"
 import { Dialog } from "~/components/Dialog"
 import { Button } from "~/components/Button"
 import styles from "./Checkbox.module.css"
+import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 
-export const Checkbox = ({ wishlistId, item }) => {
+interface CheckboxProps {
+  wishlistId: string
+  item: WishlistItemProperties
+}
+
+export const Checkbox = ({ wishlistId, item }: CheckboxProps) => {
   const { mutate } = useWishlistItemCheck({
     wishlistId,
     onError: (error) => {

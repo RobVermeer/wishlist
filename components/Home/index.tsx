@@ -6,8 +6,20 @@ import { EmptyState } from "~/components/EmptyState"
 import { Button } from "~/components/Button"
 import { CardGroup } from "~/components/CardGroup"
 import { CardWishlist } from "~/components/CardWishlist"
+import { GroupProperties } from "~/lib/groups/publicProperties"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 
-export const Home = ({ userId, initialGroups, initialWishlists }) => {
+interface HomeProps {
+  userId: string
+  initialGroups: GroupProperties[]
+  initialWishlists: WishlistProperties[]
+}
+
+export const Home = ({
+  userId,
+  initialGroups,
+  initialWishlists,
+}: HomeProps) => {
   const { push } = useRouter()
   // @ts-ignore
   const { data: groupsData = {} } = useQuery(
@@ -50,7 +62,7 @@ export const Home = ({ userId, initialGroups, initialWishlists }) => {
     <div>
       <PageTitle>Groepen die je volgt</PageTitle>
       <Cards>
-        {groups.map((group, index) => (
+        {groups.map((group: GroupProperties, index: number) => (
           <CardGroup key={group.id} index={index} group={group} />
         ))}
       </Cards>
@@ -58,7 +70,7 @@ export const Home = ({ userId, initialGroups, initialWishlists }) => {
       <br />
       <PageTitle>Ga direct naar je eigen lijstjes</PageTitle>
       <Cards>
-        {wishlists.map((wishlist, index) => (
+        {wishlists.map((wishlist: WishlistProperties, index: number) => (
           <CardWishlist key={wishlist.id} wishlist={wishlist} index={index} />
         ))}
       </Cards>

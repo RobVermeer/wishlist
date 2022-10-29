@@ -8,7 +8,7 @@ export default async function handler(
   const { method, query } = req
   const { id } = query
 
-  if (Array.isArray(id)) {
+  if (!id || Array.isArray(id)) {
     return res.status(404).send("")
   }
 

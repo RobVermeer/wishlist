@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
+import { Session } from "next-auth"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Cards } from "~/components/Cards"
@@ -7,9 +8,16 @@ import { CardWishlist } from "~/components/CardWishlist"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
 import { getGroupById } from "~/lib/groups/getGroupById"
+import { GroupProperties } from "~/lib/groups/publicProperties"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function GroupPage({ session, initialData }) {
+interface GroupPageProps {
+  session: Session
+  initialData: GroupProperties[]
+}
+
+function GroupPage({ session, initialData }: GroupPageProps) {
   const queryClient = useQueryClient()
   const { query, push } = useRouter()
   // @ts-ignore
@@ -19,7 +27,9 @@ function GroupPage({ session, initialData }) {
     { initialData }
   )
   const { data: group } = data
-  const subscribed = group.members.some(({ id }) => id === session.userId)
+  const subscribed = group.members.some(
+    ({ id }: { id: string }) => id === session.userId
+  )
 
   const subscribe = useMutation(
     () => {
@@ -74,7 +84,7 @@ function GroupPage({ session, initialData }) {
       <PageTitle>{group.title}</PageTitle>
 
       <Cards>
-        {group.wishlist.map((wishlist, index) => (
+        {group.wishlist.map((wishlist: WishlistProperties, index: number) => (
           <CardWishlist
             key={wishlist.id}
             index={index}
@@ -90,7 +100,7 @@ function GroupPage({ session, initialData }) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getGroupById(query.groupId)
+    const data = await getGroupById(query.groupId as string)
 
     return {
       props: { title: "Group", initialData: { data } },

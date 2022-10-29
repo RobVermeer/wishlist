@@ -1,9 +1,16 @@
-import { useEffect, useRef } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { Button } from "~/components/Button"
 import styles from "./Dialog.module.css"
 
-export const Dialog = ({ children, open, onClose, title }) => {
-  const ref = useRef(null)
+interface DialogProps {
+  children: ReactNode
+  open: boolean
+  onClose: () => void
+  title: string
+}
+
+export const Dialog = ({ children, open, onClose, title }: DialogProps) => {
+  const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
     if (open) {

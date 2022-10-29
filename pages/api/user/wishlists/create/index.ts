@@ -19,9 +19,9 @@ export default async function handler(
   if (method === "POST") {
     const { title, groups } = JSON.parse(body)
 
-    const data = await createWishlistForUser(userId, {
+    const data = await createWishlistForUser(userId as string, {
       title,
-      groups: { connect: groups.map((id) => ({ id })) },
+      groups: { connect: groups.map((id: string) => ({ id })) },
     })
 
     return res.status(200).json({ data })

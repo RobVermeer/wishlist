@@ -3,13 +3,19 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
+import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 import styles from "./EditItem.module.css"
 
-export const EditItem = ({ wishlistId, item }) => {
+interface EditItemProps {
+  wishlistId: string
+  item: WishlistItemProperties
+}
+
+export const EditItem = ({ wishlistId, item }: EditItemProps) => {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(item.title)
-  const [url, setUrl] = useState(item.url)
+  const [url, setUrl] = useState(item.url || "")
 
   const update = useMutation(
     () => {

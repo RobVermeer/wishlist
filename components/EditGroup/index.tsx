@@ -4,9 +4,14 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
+import { GroupProperties } from "~/lib/groups/publicProperties"
 import styles from "./EditGroup.module.css"
 
-export const EditGroup = ({ group }) => {
+interface EditGroupProps {
+  group: GroupProperties
+}
+
+export const EditGroup = ({ group }: EditGroupProps) => {
   const { data } = useSession()
   const isOwnGroup = data?.userId === group.createdBy.id
   const queryClient = useQueryClient()

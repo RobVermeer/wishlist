@@ -3,8 +3,13 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
+import { GroupProperties } from "~/lib/groups/publicProperties"
 
-export const CreateWishlist = ({ userId }) => {
+interface CreateWishlistProps {
+  userId: string
+}
+
+export const CreateWishlist = ({ userId }: CreateWishlistProps) => {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [otherName, setOtherName] = useState(false)
@@ -78,7 +83,7 @@ export const CreateWishlist = ({ userId }) => {
             <p>
               <strong>In welke groepen wil je dit lijstje hebben?</strong>
             </p>
-            {groups.map((group) => (
+            {groups.map((group: GroupProperties) => (
               <label key={group.id}>
                 <input
                   value={group.id}

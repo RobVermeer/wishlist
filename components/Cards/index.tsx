@@ -1,5 +1,10 @@
+import { ReactNode } from "react"
 import styles from "./Cards.module.css"
 
-export const Cards = ({ children }) => (
+interface CardsProps {
+  children: ReactNode
+}
+
+export const Cards = ({ children }: CardsProps) => (
   <div className={styles.cards}>{children}</div>
 )

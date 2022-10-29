@@ -1,5 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Session } from "next-auth"
 import { SessionProvider } from "next-auth/react"
+import { AppProps } from "next/app"
 import Head from "next/head"
 import NextNProgress from "nextjs-progressbar"
 import { Footer } from "~/components/Footer"
@@ -8,7 +10,12 @@ import "~/styles/globals.css"
 
 const queryClient = new QueryClient()
 
-export default function App({ Component, pageProps }) {
+interface PageProps {
+  title: string
+  session: Session | null
+}
+
+export default function App({ Component, pageProps }: AppProps<PageProps>) {
   const { title, session } = pageProps
   const pageTitle = [title, "Wishlist"].filter(Boolean).join(" - ")
 

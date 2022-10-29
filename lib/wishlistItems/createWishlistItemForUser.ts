@@ -1,7 +1,10 @@
 import prisma from "~/lib/prisma"
 import { wishlistItemProperties } from "./publicProperties"
 
-export const createWishlistItemForUser = async (wishlistId, userData) => {
+export const createWishlistItemForUser = async (
+  wishlistId: string,
+  userData: any
+) => {
   const data = await prisma.wishlistItem.create({
     select: wishlistItemProperties,
     data: {

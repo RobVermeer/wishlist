@@ -20,7 +20,7 @@ export default async function handler(
   }
 
   if (method === "GET") {
-    const data = await getWishlistById(id)
+    const data = await getWishlistById(id as string)
 
     return res.status(200).json({ data })
   }

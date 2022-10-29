@@ -4,7 +4,7 @@ import { getCookie, deleteCookie, setCookie } from "cookies-next"
 import { authOptions } from "~/pages/api/auth/[...nextauth]"
 
 export interface GetPagePropsType extends GetServerSidePropsContext {
-  session: Session
+  session: Session | null
 }
 
 type WithBaseProps = (

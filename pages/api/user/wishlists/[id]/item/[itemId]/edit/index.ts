@@ -13,7 +13,11 @@ export default async function handler(
   const session = await getSession(req, res, authOptions)
   const { id, itemId } = query
 
-  if (Array.isArray(id)) {
+  if (!id || Array.isArray(id)) {
+    return res.status(404).send("")
+  }
+
+  if (!itemId || Array.isArray(itemId)) {
     return res.status(404).send("")
   }
 
@@ -24,6 +28,10 @@ export default async function handler(
   if (method === "PUT") {
     const wishlist = await getWishlistById(id)
     const wishlistItem = await getWishlistItemById(itemId)
+
+    if (!wishlistItem || !wishlist) {
+      return res.status(404).send("")
+    }
 
     if (wishlistItem.wishlist.id !== wishlist.id) {
       return res.status(403).json({ error: "Not allowed" })

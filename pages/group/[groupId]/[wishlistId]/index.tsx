@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
+import { Session } from "next-auth"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
@@ -8,10 +9,17 @@ import { WishlistTitle } from "~/components/CardWishlist"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
+import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function WishlistPage({ session, initialData }) {
+interface WishlistPageProps {
+  session: Session
+  initialData: WishlistProperties[]
+}
+
+function WishlistPage({ session, initialData }: WishlistPageProps) {
   const { userId } = session
   const { query, push } = useRouter()
   const { groupId, wishlistId } = query
@@ -68,16 +76,18 @@ function WishlistPage({ session, initialData }) {
         <WishlistTitle wishlist={wishlist} />
       </PageTitle>
       <Cards>
-        {wishlist.wishlistItem.map((item, index) => (
-          <Card
-            key={item.id}
-            title={item.title}
-            url={item.url}
-            index={index}
-            checked={Boolean(item.boughtBy)}
-            adornment={<Checkbox item={item} wishlistId={wishlist.id} />}
-          />
-        ))}
+        {wishlist.wishlistItem.map(
+          (item: WishlistItemProperties, index: number) => (
+            <Card
+              key={item.id}
+              title={item.title}
+              url={item.url}
+              index={index}
+              checked={Boolean(item.boughtBy)}
+              adornment={<Checkbox item={item} wishlistId={wishlist.id} />}
+            />
+          )
+        )}
       </Cards>
     </div>
   )
@@ -86,7 +96,7 @@ function WishlistPage({ session, initialData }) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getWishlistById(query.wishlistId)
+    const data = await getWishlistById(query.wishlistId as string)
 
     return {
       props: { title: "Wishlist", initialData: { data } },

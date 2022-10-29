@@ -1,10 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-export const useWishlistItemCheck = ({ wishlistId, onError }) => {
+interface UseWishlistItemCheckProps {
+  wishlistId: string
+  onError: (error: Error) => void
+}
+
+export const useWishlistItemCheck = ({
+  wishlistId,
+  onError,
+}: UseWishlistItemCheckProps) => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation(
-    async (id) => {
+    async (id: string) => {
       try {
         const response = await fetch(
           `/api/wishlists/${wishlistId}/item/${id}/check`,
@@ -15,7 +23,7 @@ export const useWishlistItemCheck = ({ wishlistId, onError }) => {
         if ("error" in data) {
           throw data.error
         }
-      } catch (error) {
+      } catch (error: any) {
         throw new Error(error)
       }
     },

@@ -1,8 +1,15 @@
 import Link from "next/link"
-import { CSSProperties } from "react"
+import { CSSProperties, ReactNode } from "react"
+import { UrlObject } from "url"
 import styles from "./Card.module.css"
 
-const TitleLink = ({ title, url, link }) => {
+interface TitleLinkProps {
+  title: ReactNode
+  url?: string | null
+  link?: string | UrlObject
+}
+
+const TitleLink = ({ title, url, link }: TitleLinkProps) => {
   if (url) {
     return <a href={url}>🔗 {title}</a>
   }
@@ -15,18 +22,28 @@ const TitleLink = ({ title, url, link }) => {
     )
   }
 
-  return title
+  return <>{title}</>
+}
+
+interface CardProps {
+  title: ReactNode
+  url?: string | null
+  link?: string | UrlObject
+  checked?: boolean
+  adornment?: ReactNode
+  isOwn?: boolean
+  index: number
 }
 
 export const Card = ({
   title,
-  url = null,
-  link = null,
+  url,
+  link,
   checked = false,
-  adornment = null,
+  adornment,
   isOwn = false,
   index,
-}) => {
+}: CardProps) => {
   const classNames = [styles.card]
 
   if (checked) {

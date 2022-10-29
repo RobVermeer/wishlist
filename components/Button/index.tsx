@@ -2,7 +2,6 @@ import { ButtonHTMLAttributes } from "react"
 import styles from "./Button.module.css"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  onClick?: (event) => void
   variant?: "default" | "primary" | "secondary" | "danger"
   small?: boolean
 }

@@ -10,10 +10,16 @@ import { Dialog } from "~/components/Dialog"
 import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
+import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function ProfileWishlistPage({ initialData }) {
+interface ProfileWishlistPageProps {
+  initialData: WishlistProperties[]
+}
+
+function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
@@ -56,15 +62,17 @@ function ProfileWishlistPage({ initialData }) {
           <p>Je hebt nog geen wensen, maak er snel wat aan! 😎</p>
         )}
 
-        {wishlist.wishlistItem.map((item, index) => (
-          <Card
-            key={item.id}
-            title={item.title}
-            url={item.url}
-            index={index}
-            adornment={<EditItem wishlistId={wishlist.id} item={item} />}
-          />
-        ))}
+        {wishlist.wishlistItem.map(
+          (item: WishlistItemProperties, index: number) => (
+            <Card
+              key={item.id}
+              title={item.title}
+              url={item.url}
+              index={index}
+              adornment={<EditItem wishlistId={wishlist.id} item={item} />}
+            />
+          )
+        )}
 
         <Button variant="primary" onClick={() => setOpen(true)}>
           Voeg een wens toe
@@ -114,7 +122,7 @@ function ProfileWishlistPage({ initialData }) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getWishlistById(query.id)
+    const data = await getWishlistById(query.id as string)
 
     return {
       props: { title: "Wishlist", initialData: { data } },

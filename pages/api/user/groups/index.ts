@@ -17,7 +17,7 @@ export default async function handler(
   const { userId } = session
 
   if (method === "GET") {
-    const data = await getGroupsForUser(userId)
+    const data = await getGroupsForUser(userId as string)
 
     return res.status(200).json({ data })
   }

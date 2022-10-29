@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
+import { Session } from "next-auth"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -11,11 +12,27 @@ import { CreateGroup } from "~/components/CreateGroup"
 import { CreateWishlist } from "~/components/CreateWishlist"
 import { PageTitle } from "~/components/PageTitle"
 import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
+import { GroupProperties } from "~/lib/groups/publicProperties"
 import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 
-function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
+type Tab = "groups" | "wishlists"
+
+interface ProfilePage {
+  session: Session
+  initialTab: Tab
+  initialWishlists: WishlistProperties[]
+  initialGroups: GroupProperties[]
+}
+
+function ProfilePage({
+  session,
+  initialTab,
+  initialWishlists,
+  initialGroups,
+}: ProfilePage) {
   const { push } = useRouter()
   const { userId } = session
   const [activeTab, setActiveTab] = useState(initialTab)
@@ -77,7 +94,7 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
               <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
             )}
 
-            {wishlists.map((wishlist, index) => (
+            {wishlists.map((wishlist: WishlistProperties, index: number) => (
               <CardWishlist
                 key={wishlist.id}
                 wishlist={wishlist}
@@ -87,7 +104,7 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
               />
             ))}
 
-            <CreateWishlist userId={userId} />
+            <CreateWishlist userId={userId as string} />
           </Cards>
         </div>
 
@@ -101,13 +118,8 @@ function ProfilePage({ session, initialTab, initialWishlists, initialGroups }) {
               <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
             )}
 
-            {groups.map((group, index) => (
-              <CardGroup
-                key={group.id}
-                index={index}
-                group={group}
-                showEdit
-              />
+            {groups.map((group: GroupProperties, index: number) => (
+              <CardGroup key={group.id} index={index} group={group} showEdit />
             ))}
 
             <CreateGroup />
@@ -122,12 +134,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session, query } = context
     const initialTab = "groups" in query ? "groups" : "wishlists"
-    const wishlistsData = await getWishlistsForUser(session.userId)
-    const groupsData = await getGroupsForUser(session.userId)
+    const wishlistsData = await getWishlistsForUser(session?.userId as string)
+    const groupsData = await getGroupsForUser(session?.userId as string)
 
     return {
       props: {
-        title: session.user.name,
+        title: session?.user?.name as string,
         initialTab,
         initialWishlists: { data: wishlistsData },
         initialGroups: { data: groupsData },

@@ -12,7 +12,7 @@ export default async function handler(
   const session = await getSession(req, res, authOptions)
   const { id } = query
 
-  if (Array.isArray(id)) {
+  if (!id || Array.isArray(id)) {
     return res.status(404).send("")
   }
 
@@ -22,6 +22,10 @@ export default async function handler(
 
   if (method === "PUT") {
     const group = await getGroupById(id)
+
+    if (!group) {
+      return res.status(404).send("")
+    }
 
     if (group.createdBy.id !== session.userId) {
       return res.status(403).json({ error: "Not allowed" })

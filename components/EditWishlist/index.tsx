@@ -3,14 +3,20 @@ import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Dialog } from "~/components/Dialog"
 import { Form } from "~/components/Form"
+import { GroupProperties } from "~/lib/groups/publicProperties"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "./EditWishlist.module.css"
 
-export const EditWishlist = ({ wishlist }) => {
+interface EditWishlistProps {
+  wishlist: WishlistProperties
+}
+
+export const EditWishlist = ({ wishlist }: EditWishlistProps) => {
   const userId = wishlist.user.id
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [otherName, setOtherName] = useState(Boolean(wishlist.title))
-  const [title, setTitle] = useState(wishlist.title)
+  const [title, setTitle] = useState(wishlist.title || "")
   const [userGroups, setUserGroups] = useState(
     wishlist.groups.map(({ id }) => id)
   )
@@ -99,7 +105,7 @@ export const EditWishlist = ({ wishlist }) => {
               Selecteer de groepen waarin je lijstje zichtbaar moet zijn
             </strong>
           </p>
-          {groups.map((group) => (
+          {groups.map((group: GroupProperties) => (
             <label key={group.id}>
               <input
                 value={group.id}

@@ -1,6 +1,13 @@
+import { ReactNode } from "react"
 import styles from "./EmptyState.module.css"
 
-export const EmptyState = ({ title, text, buttons }) => {
+interface EmptyStateProps {
+  title: string
+  text: ReactNode
+  buttons: ReactNode
+}
+
+export const EmptyState = ({ title, text, buttons }: EmptyStateProps) => {
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>{title}</h2>

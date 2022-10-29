@@ -1,18 +1,25 @@
 import { useSession } from "next-auth/react"
 import { Card } from "~/components/Card"
 import { EditWishlist } from "~/components/EditWishlist"
+import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "./CardWishlist.module.css"
+
+interface WishlistTitleProps {
+  wishlist: WishlistProperties
+  showGroups?: boolean
+  isOwn?: boolean
+}
 
 export const WishlistTitle = ({
   wishlist,
   showGroups = false,
   isOwn = false,
-}) => {
+}: WishlistTitleProps) => {
   const { title, user, groups } = wishlist
   const listTitle = title || (isOwn ? "Mijn lijstje" : user.name)
 
   if (!showGroups) {
-    return listTitle
+    return <>{listTitle}</>
   }
 
   const inGroups = groups
@@ -32,13 +39,21 @@ export const WishlistTitle = ({
   )
 }
 
+interface CardWishlistProps {
+  wishlist: WishlistProperties
+  index: number
+  showGroups?: boolean
+  groupId?: string
+  showEdit?: boolean
+}
+
 export const CardWishlist = ({
   wishlist,
   index,
   showGroups = false,
-  groupId = null,
+  groupId,
   showEdit = false,
-}) => {
+}: CardWishlistProps) => {
   const { data } = useSession()
   const isOwn = wishlist.user.id === data?.userId
   const link = groupId

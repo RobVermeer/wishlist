@@ -19,7 +19,7 @@ export default async function handler(
   if (method === "POST") {
     const { title } = JSON.parse(body)
 
-    const data = await createGroupForUser(userId, {
+    const data = await createGroupForUser(userId as string, {
       title,
       members: { connect: [{ id: userId }] },
     })
