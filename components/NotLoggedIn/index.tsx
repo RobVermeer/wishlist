@@ -7,7 +7,14 @@ export const NotLoggedIn = () => (
     title="👋 Welkom! 👋"
     text="Maak een account aan of log in om te starten! 🎁"
     buttons={
-      <Button onClick={() => signIn("google")}>Inloggen met Google</Button>
+      <>
+        <Button onClick={() => signIn("instagram")}>
+          Inloggen met Instagram
+        </Button>
+        <Button onClick={() => signIn("google")} variant="primary">
+          Inloggen met Google
+        </Button>
+      </>
     }
   />
 )
