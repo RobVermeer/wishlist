@@ -29,6 +29,8 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, user }) => {
       session.userId = user.id
       session.firstName = user.firstName || user.name?.split(" ")[0]
+      session.isAdmin = user.id === process.env.ADMIN_USER_ID
+
       return session
     },
   },
