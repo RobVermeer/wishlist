@@ -55,7 +55,13 @@ function AdminDashboardPage({ session, userData }: AdminDashboardPageProps) {
         {users.map((user: User, index: number) => (
           <Card
             key={user.id}
-            title={user.name}
+            title={
+              <span>
+                {user.name}
+                <br />
+                <small>{user.email}</small>
+              </span>
+            }
             index={index}
             isOwn={userId === user.id}
             adornment={
