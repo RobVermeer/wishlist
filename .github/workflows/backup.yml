@@ -3,6 +3,7 @@ name: Backup 📀
 on:
   schedule:
     - cron: 0 4 * * *
+  workflow_dispatch:
 
 jobs:
   backup:
