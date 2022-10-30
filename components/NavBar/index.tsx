@@ -19,21 +19,20 @@ export function NavBar({ session }: NavBarProps) {
       {loggedIn && (
         <div className={styles.user}>
           <p>
-            Ingelogd als{" "}
-            <Link href="/profile" legacyBehavior>
-              {firstName || user?.name}
-            </Link>
+            Ingelogd als <Link href="/profile">{firstName || user?.name}</Link>
           </p>
           <Link href="/profile">
-            <picture>
-              <img
-                referrerPolicy="no-referrer"
-                src={user?.image as string}
-                alt={`Avatar of ${firstName || user?.name}`}
-                width="96"
-                height="96"
-              />
-            </picture>
+            <a>
+              <picture>
+                <img
+                  referrerPolicy="no-referrer"
+                  src={user?.image as string}
+                  alt={`Avatar of ${firstName || user?.name}`}
+                  width="96"
+                  height="96"
+                />
+              </picture>
+            </a>
           </Link>
         </div>
       )}
