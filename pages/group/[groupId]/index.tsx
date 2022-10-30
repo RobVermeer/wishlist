@@ -102,6 +102,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const { query } = context
     const data = await getGroupById(query.groupId as string)
 
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
+
     return {
       props: { title: "Group", initialData: { data } },
     }
