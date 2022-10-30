@@ -20,10 +20,10 @@ jobs:
           known_hosts: "just-a-placeholder-so-we-dont-get-errors"
       - name: Adding Known Hosts 💾
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      - name: Restart server 🏁
-        run: scp ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/wishlist.ru-coding.nl/database/production.db ./
+      - name: Download data ⌛️
+        run: scp ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.BACKUP_PATH }}${{ secrets.BACKUP_FILE }} ./
       - name: Upload as artifact 📟
         uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
-          path: ./production.db
+          name: backup
+          path: ./${{ secrets.BACKUP_FILE }}
