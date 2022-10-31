@@ -10,7 +10,6 @@
   animation: var(--animation-fade-in) forwards,
     var(--animation-scale-down) reverse;
   animation-timing-function: var(--ease-squish-3);
-  animation-delay: calc(var(--_index, 0) * 100ms);
   animation-duration: 750ms;
 }
 
