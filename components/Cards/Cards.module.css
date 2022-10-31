@@ -9,6 +9,6 @@
   opacity: 0;
   animation: var(--animation-fade-in) forwards, var(--animation-slide-in-up);
   animation-timing-function: var(--ease-squish-3);
-  animation-duration: 1s;
-  animation-delay: calc(var(--_index, 0) * 100ms);
+  animation-duration: 750ms;
+  animation-delay: calc(var(--_index, 0) * 75ms);
 }

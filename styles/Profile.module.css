@@ -25,8 +25,8 @@
   opacity: 0;
   animation: var(--animation-slide-out-right);
   animation-timing-function: var(--ease-squish-3);
-  animation-duration: 1s;
-  transition: opacity 1s var(--ease-squish-3);
+  animation-duration: 750ms;
+  transition: opacity 750ms var(--ease-squish-3);
   pointer-events: none;
   display: flex;
   align-items: flex-start;
