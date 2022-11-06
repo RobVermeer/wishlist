@@ -41,14 +41,17 @@ a:hover.card,
   text-decoration: line-through;
 }
 
-.card.isOwn {
-  background-color: var(--gray-3);
-}
-
-@media (prefers-color-scheme: dark) {
-  .card.isOwn {
-    background-color: var(--gray-7);
-  }
+.card.isOwn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  height: 2px;
+  background-image: linear-gradient(
+    to right,
+    transparent 20%,
+    var(--orange-5),
+    transparent 80%
+  );
 }
 
 .link a::after {
