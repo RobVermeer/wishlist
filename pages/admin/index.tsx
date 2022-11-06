@@ -57,7 +57,7 @@ function AdminDashboardPage({ session, userData }: AdminDashboardPageProps) {
             key={user.id}
             title={
               <span>
-                {user.name}
+                {user.name} <small>({user.firstName})</small>
                 <br />
                 <small>{user.email}</small>
               </span>
