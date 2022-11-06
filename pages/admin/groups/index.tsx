@@ -61,11 +61,7 @@ function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
         {groups.map((group: Group, index: number) => (
           <Card
             key={group.id}
-            title={
-              <span>
-                {group.title} <small>({group.slug})</small>
-              </span>
-            }
+            title={<span>{group.title}</span>}
             index={index}
             adornment={
               <Button
