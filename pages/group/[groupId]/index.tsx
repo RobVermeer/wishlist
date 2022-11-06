@@ -52,11 +52,9 @@ function GroupPage({ session, initialData }: GroupPageProps) {
         title="😵 Je volgt deze groep nog niet 😵"
         text="Volg de groep snel om alle lijstjes te kunnen zien! 😇"
         buttons={
-          <>
-            <Button variant="primary" onClick={() => subscribe.mutate()}>
-              Volg de groep
-            </Button>
-          </>
+          <Button variant="primary" onClick={() => subscribe.mutate()}>
+            Volg de groep
+          </Button>
         }
       />
     )
