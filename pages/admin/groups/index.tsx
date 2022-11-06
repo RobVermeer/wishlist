@@ -1,4 +1,4 @@
-import { Group, User } from "@prisma/client"
+import { Group } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
@@ -8,21 +8,19 @@ import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
 import { getGroups } from "~/lib/groups/getGroups"
-import { getUsers } from "~/lib/users/getUsers"
 import { withBaseProps } from "~/utils/withBaseProps"
 
 interface AdminGroupsPageProps {
-  userData: User[]
+  groupsData: Group[]
   session: Session
 }
 
-function AdminGroupsPage({ session, groupsData }: AdminGroupsPageProps) {
+function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
   const queryClient = useQueryClient()
-  const { userId } = session
 
   // @ts-ignore
   const { data = {} } = useQuery(
-    ["usgroupsers"],
+    ["groups"],
     () => fetch("/api/groups").then((res) => res.json()),
     { initialData: { data: groupsData } }
   )
