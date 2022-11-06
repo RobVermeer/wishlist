@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
@@ -9,6 +10,8 @@ import { WishlistTitle } from "~/components/CardWishlist"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
+import { getGroupById } from "~/lib/groups/getGroupById"
+import { GroupProperties } from "~/lib/groups/publicProperties"
 import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
 import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
@@ -16,20 +19,32 @@ import { withBaseProps } from "~/utils/withBaseProps"
 
 interface WishlistPageProps {
   session: Session
-  initialData: WishlistProperties[]
+  initialWishlistData: WishlistProperties[]
+  initialGroupData: GroupProperties[]
 }
 
-function WishlistPage({ session, initialData }: WishlistPageProps) {
+function WishlistPage({
+  session,
+  initialWishlistData,
+  initialGroupData,
+}: WishlistPageProps) {
   const { userId } = session
   const { query, push } = useRouter()
   const { groupId, wishlistId } = query
   // @ts-ignore
-  const { data = {} } = useQuery(
+  const { data: wishlistData = {} } = useQuery(
     ["wishlists", wishlistId],
     () => fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),
-    { initialData }
+    { initialData: initialWishlistData }
   )
-  const { data: wishlist } = data
+  const { data: wishlist } = wishlistData
+  // @ts-ignore
+  const { data: groupData = {} } = useQuery(
+    ["groups", groupId],
+    () => fetch(`/api/groups/${groupId}`).then((res) => res.json()),
+    { initialData: initialGroupData }
+  )
+  const { data: group } = groupData
 
   if (!wishlist) return <div></div>
 
@@ -73,7 +88,10 @@ function WishlistPage({ session, initialData }: WishlistPageProps) {
   return (
     <div>
       <PageTitle>
-        <WishlistTitle wishlist={wishlist} />
+        <WishlistTitle wishlist={wishlist} />{" "}
+        <small>
+          In <Link href={`/group/${groupId}`}>{group.title}</Link>
+        </small>
       </PageTitle>
       <Cards>
         {wishlist.wishlistItem.map(
@@ -96,16 +114,21 @@ function WishlistPage({ session, initialData }: WishlistPageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getWishlistById(query.wishlistId as string)
+    const wishlistData = await getWishlistById(query.wishlistId as string)
+    const groupData = await getGroupById(query.groupId as string)
 
-    if (!data) {
+    if (!wishlistData || !groupData) {
       return {
         notFound: true,
       }
     }
 
     return {
-      props: { title: "Wishlist", initialData: { data } },
+      props: {
+        title: "Wishlist",
+        initialWishlistData: { data: wishlistData },
+        initialGroupData: { data: groupData },
+      },
     }
   })
 }

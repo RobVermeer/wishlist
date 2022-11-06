@@ -3,3 +3,7 @@
   color: var(--gray-5);
   margin-block-end: var(--size-4);
 }
+
+.title small {
+  opacity: 0.8;
+}
