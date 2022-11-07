@@ -93,7 +93,7 @@ function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
             setOpen(false)
           }}
         >
-          <label htmlFor="title">Wens</label>
+          <label htmlFor="title">Wens:</label>
           <input
             required
             id="title"
@@ -102,7 +102,7 @@ function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
             onChange={(event) => setTitle(event.target.value)}
           />
           <label htmlFor="url">
-            URL <small>(optioneel)</small>
+            Linkje: <small>(optioneel)</small>
           </label>
           <input
             id="url"

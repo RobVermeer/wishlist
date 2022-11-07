@@ -89,7 +89,7 @@ export const EditWishlist = ({ wishlist }: EditWishlistProps) => {
           </label>
           {otherName && (
             <>
-              <label htmlFor={`${wishlist.id}-title`}>Titel</label>
+              <label htmlFor={`${wishlist.id}-title`}>Titel:</label>
               <input
                 required
                 id={`${wishlist.id}-title`}

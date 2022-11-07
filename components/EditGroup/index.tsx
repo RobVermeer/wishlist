@@ -81,7 +81,7 @@ export const EditGroup = ({ group }: EditGroupProps) => {
       >
         {isOwnGroup && (
           <Form onSubmit={() => update.mutate()}>
-            <label htmlFor={`${group.id}-title`}>Titel</label>
+            <label htmlFor={`${group.id}-title`}>Titel:</label>
             <input
               required
               id={`${group.id}-title`}

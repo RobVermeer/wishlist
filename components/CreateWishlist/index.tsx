@@ -76,7 +76,7 @@ export const CreateWishlist = ({ userId }: CreateWishlistProps) => {
             </label>
             {otherName && (
               <>
-                <label htmlFor="wishlist-title">Naam</label>
+                <label htmlFor="wishlist-title">Naam:</label>
                 <input name="wishlist-title" id="wishlist-title" type="text" />
               </>
             )}

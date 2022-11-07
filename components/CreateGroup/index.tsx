@@ -36,7 +36,7 @@ export const CreateGroup = () => {
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        title="Nieuwe group 👨‍👨‍👧‍👦"
+        title="Nieuwe groep 👨‍👨‍👧‍👦"
       >
         {open && (
           <Form
@@ -47,7 +47,7 @@ export const CreateGroup = () => {
               create.mutate(data.get("group-title") as string)
             }}
           >
-            <label htmlFor="group-title">Naam</label>
+            <label htmlFor="group-title">Naam:</label>
             <input name="group-title" id="group-title" type="text" />
 
             <Button variant="primary" type="submit">
