@@ -17,8 +17,9 @@ import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
+import { BoughtPresents } from "~/components/BoughtPresents"
 
-type Tab = "groups" | "wishlists"
+type Tab = "groups" | "wishlists" | "boughtPresents"
 
 interface ProfilePage {
   session: Session
@@ -82,6 +83,12 @@ function ProfilePage({
           >
             Je groepen
           </Button>
+          <Button 
+            variant={`${activeTab === "boughtPresents" ? "primary" : "secondary"}`}
+            onClick={() => setActiveTab("boughtPresents")}
+          >
+            Gekochte cadeaus
+          </Button>
         </nav>
 
         <div
@@ -125,6 +132,16 @@ function ProfilePage({
             <CreateGroup />
           </Cards>
         </div>
+
+        
+        <div
+          className={`${styles.tab} ${
+            activeTab === "boughtPresents" ? styles.active : ""
+          }`}
+        >
+          <BoughtPresents />
+        </div>     
+
       </div>
     </div>
   )
