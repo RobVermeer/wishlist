@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        title: "Wishlist",
+        title: wishlistData.title || wishlistData.user.firstName || wishlistData?.user.name?.split(" ")[0],
         initialWishlistData: { data: wishlistData },
         initialGroupData: { data: groupData },
       },

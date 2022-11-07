@@ -107,7 +107,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     }
 
     return {
-      props: { title: "Group", initialData: { data } },
+      props: { title: data.title, initialData: { data } },
     }
   })
 }
