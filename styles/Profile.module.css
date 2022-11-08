@@ -14,6 +14,16 @@
   gap: var(--size-3);
 }
 
+.tabs nav button {
+  --_size: 0.75rem;
+}
+
+@media (min-width: 48rem) {
+  .tabs nav button {
+    --_size: 1rem;
+  }
+}
+
 .tabs nav button.current {
   --_bg: linear-gradient(var(--orange-5), var(--orange-7));
   --_text: var(--orange-0);
