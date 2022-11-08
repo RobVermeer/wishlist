@@ -18,6 +18,10 @@ import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "~/styles/Profile.module.css"
 import { withBaseProps } from "~/utils/withBaseProps"
 import { BoughtPresents } from "~/components/BoughtPresents"
+import {
+  BoughtWishlistItemProperties,
+  getBoughtWishlistItemsForUser,
+} from "~/lib/wishlistItems/getBoughtWishlistItemsForUser"
 
 type Tab = "groups" | "wishlists" | "boughtPresents"
 
@@ -26,6 +30,7 @@ interface ProfilePage {
   initialTab: Tab
   initialWishlists: WishlistProperties[]
   initialGroups: GroupProperties[]
+  boughtWishlistItems: BoughtWishlistItemProperties[]
 }
 
 function ProfilePage({
@@ -33,6 +38,7 @@ function ProfilePage({
   initialTab,
   initialWishlists,
   initialGroups,
+  boughtWishlistItems,
 }: ProfilePage) {
   const { push } = useRouter()
   const { userId } = session
@@ -75,16 +81,18 @@ function ProfilePage({
             variant={`${activeTab === "wishlists" ? "primary" : "secondary"}`}
             onClick={() => setActiveTab("wishlists")}
           >
-            Je verlanglijstjes
+            Verlanglijstjes
           </Button>
           <Button
             variant={`${activeTab === "groups" ? "primary" : "secondary"}`}
             onClick={() => setActiveTab("groups")}
           >
-            Je groepen
+            Groepen
           </Button>
-          <Button 
-            variant={`${activeTab === "boughtPresents" ? "primary" : "secondary"}`}
+          <Button
+            variant={`${
+              activeTab === "boughtPresents" ? "primary" : "secondary"
+            }`}
             onClick={() => setActiveTab("boughtPresents")}
           >
             Gekochte cadeaus
@@ -133,15 +141,13 @@ function ProfilePage({
           </Cards>
         </div>
 
-        
         <div
           className={`${styles.tab} ${
             activeTab === "boughtPresents" ? styles.active : ""
           }`}
         >
-          <BoughtPresents />
-        </div>     
-
+          <BoughtPresents presents={boughtWishlistItems} />
+        </div>
       </div>
     </div>
   )
@@ -153,6 +159,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const initialTab = "groups" in query ? "groups" : "wishlists"
     const wishlistsData = await getWishlistsForUser(session?.userId as string)
     const groupsData = await getGroupsForUser(session?.userId as string)
+    const boughtWishlistItems = await getBoughtWishlistItemsForUser(
+      session?.userId as string
+    )
 
     return {
       props: {
@@ -160,6 +169,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         initialTab,
         initialWishlists: { data: wishlistsData },
         initialGroups: { data: groupsData },
+        boughtWishlistItems,
       },
     }
   })

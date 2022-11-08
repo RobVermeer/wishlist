@@ -1,0 +1,5 @@
+.title small {
+  display: block;
+  color: var(--gray-6);
+  max-inline-size: none;
+}
