@@ -16,7 +16,7 @@ export default async function handler(
     return res.status(404).send("")
   }
 
-  if (!session || !session.userId || !session.isAdmin) {
+  if (!session || !session.user.id || !session.user.isAdmin) {
     return res.status(404).send("")
   }
 

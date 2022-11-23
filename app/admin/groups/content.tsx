@@ -1,18 +1,15 @@
+"use client"
+
 import { Group } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { GetServerSideProps } from "next"
-import { Session } from "next-auth"
 import Link from "next/link"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
-import { getGroups } from "~/lib/groups/getGroups"
-import { withBaseProps } from "~/utils/withBaseProps"
 
 interface AdminGroupsPageProps {
   groupsData: Group[]
-  session: Session
 }
 
 function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
@@ -40,12 +37,12 @@ function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
     }
   )
 
-  async function removeGroup(id: string) {
+  function removeGroup(id: string) {
     const confirm = window.confirm("Are you sure?")
 
     if (!confirm) return
 
-    await remove.mutate(id)
+    remove.mutate(id)
   }
 
   return (
@@ -83,26 +80,6 @@ function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
       </Cards>
     </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async (context) => {
-    const { session } = context
-
-    if (!session || !session.isAdmin) {
-      return {
-        notFound: true,
-      }
-    }
-
-    const data = await getGroups()
-
-    return {
-      props: {
-        groupsData: data,
-      },
-    }
-  })
 }
 
 export default AdminGroupsPage

@@ -16,11 +16,13 @@ export default async function handler(
     return res.status(404).send("")
   }
 
-  if (!session || !session.userId) {
+  if (!session || !session.user.id) {
     return res.status(404).send("")
   }
 
-  const { userId } = session as unknown as { userId: string }
+  const {
+    user: { id: userId },
+  } = session
 
   if (method === "PUT") {
     const group = await getGroupById(id)
