@@ -11,16 +11,16 @@ export default async function handler(
   const { id } = query
   const session = await getSession(req, res, authOptions)
 
-  if (!id || Array.isArray(id)) {
+  if (Array.isArray(id)) {
     return res.status(404).send("")
   }
 
-  if (!session || !session.user.id) {
+  if (!session || !session.userId) {
     return res.status(404).send("")
   }
 
   if (method === "GET") {
-    const data = await getWishlistById(id)
+    const data = await getWishlistById(id as string)
 
     return res.status(200).json({ data })
   }

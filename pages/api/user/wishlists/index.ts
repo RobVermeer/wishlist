@@ -10,16 +10,14 @@ export default async function handler(
   const { method } = req
   const session = await getSession(req, res, authOptions)
 
-  if (!session || !session.user.id) {
+  if (!session || !session.userId) {
     return res.status(404).send("")
   }
 
-  const {
-    user: { id: userId },
-  } = session
+  const { userId } = session
 
   if (method === "GET") {
-    const data = await getWishlistsForUser(userId)
+    const data = await getWishlistsForUser(userId as string)
 
     return res.status(200).json({ data })
   }

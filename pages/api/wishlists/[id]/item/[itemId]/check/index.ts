@@ -21,7 +21,7 @@ export default async function handler(
     return res.status(404).send("")
   }
 
-  if (!session || !session.user.id) {
+  if (!session || !session.userId) {
     return res.status(404).send("")
   }
 
@@ -37,20 +37,20 @@ export default async function handler(
       return res.status(403).json({ error: "Not allowed" })
     }
 
-    if (wishlistItem.wishlist.user.id === session.user.id) {
+    if (wishlistItem.wishlist.user.id === session.userId) {
       return res.status(403).json({ error: "Not allowed" })
     }
 
     let boughtBy = null
 
     if (wishlistItem.boughtBy) {
-      if (wishlistItem.boughtBy.id !== session.user.id) {
+      if (wishlistItem.boughtBy.id !== session.userId) {
         return res.status(403).json({ error: "Already checked" })
       }
 
       boughtBy = { disconnect: true }
     } else {
-      boughtBy = { connect: { id: session.user.id } }
+      boughtBy = { connect: { id: session.userId } }
     }
 
     const data = updateWishlistItemById(itemId, { boughtBy })

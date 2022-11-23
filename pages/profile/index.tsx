@@ -1,9 +1,8 @@
-"use client"
-
 import { useQuery } from "@tanstack/react-query"
+import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
-import { signOut, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { Button } from "~/components/Button"
 import { CardGroup } from "~/components/CardGroup"
@@ -12,11 +11,17 @@ import { CardWishlist } from "~/components/CardWishlist"
 import { CreateGroup } from "~/components/CreateGroup"
 import { CreateWishlist } from "~/components/CreateWishlist"
 import { PageTitle } from "~/components/PageTitle"
+import { getGroupsForUser } from "~/lib/groups/getGroupsForUser"
 import { GroupProperties } from "~/lib/groups/publicProperties"
+import { getWishlistsForUser } from "~/lib/wishlists/getWishlistsForUser"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
 import styles from "~/styles/Profile.module.css"
+import { withBaseProps } from "~/utils/withBaseProps"
 import { BoughtPresents } from "~/components/BoughtPresents"
-import { BoughtWishlistItemProperties } from "~/lib/wishlistItems/getBoughtWishlistItemsForUser"
+import {
+  BoughtWishlistItemProperties,
+  getBoughtWishlistItemsForUser,
+} from "~/lib/wishlistItems/getBoughtWishlistItemsForUser"
 
 type Tab = "groups" | "wishlists" | "boughtPresents"
 
@@ -36,10 +41,7 @@ function ProfilePage({
   boughtWishlistItems,
 }: ProfilePage) {
   const { push } = useRouter()
-
-  const {
-    user: { id: userId },
-  } = session
+  const { userId } = session
   const [activeTab, setActiveTab] = useState(initialTab)
   // @ts-ignore
   const { data: groupData = {} } = useQuery(
@@ -149,6 +151,28 @@ function ProfilePage({
       </div>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async (context) => {
+    const { session, query } = context
+    const initialTab = "groups" in query ? "groups" : "wishlists"
+    const wishlistsData = await getWishlistsForUser(session?.userId as string)
+    const groupsData = await getGroupsForUser(session?.userId as string)
+    const boughtWishlistItems = await getBoughtWishlistItemsForUser(
+      session?.userId as string
+    )
+
+    return {
+      props: {
+        title: session?.firstName || (session?.user?.name as string),
+        initialTab,
+        initialWishlists: { data: wishlistsData },
+        initialGroups: { data: groupsData },
+        boughtWishlistItems,
+      },
+    }
+  })
 }
 
 export default ProfilePage

@@ -15,7 +15,11 @@ const TitleLink = ({ title, url, link }: TitleLinkProps) => {
   }
 
   if (link) {
-    return <Link href={link}>{title}</Link>
+    return (
+      <Link href={link}>
+        <a>{title}</a>
+      </Link>
+    )
   }
 
   return <>{title}</>
