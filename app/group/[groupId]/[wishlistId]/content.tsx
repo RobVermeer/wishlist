@@ -1,8 +1,9 @@
+"use client"
+
 import { useQuery } from "@tanstack/react-query"
-import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
 import Link from "next/link"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
@@ -10,27 +11,29 @@ import { WishlistTitle } from "~/components/CardWishlist"
 import { Checkbox } from "~/components/Checkbox"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
-import { getGroupById } from "~/lib/groups/getGroupById"
 import { GroupProperties } from "~/lib/groups/publicProperties"
 import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
-import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
-import { withBaseProps } from "~/utils/withBaseProps"
 
 interface WishlistPageProps {
+  groupId: string
+  wishlistId: string
   session: Session
   initialWishlistData: WishlistProperties[]
   initialGroupData: GroupProperties[]
 }
 
 function WishlistPage({
+  groupId,
+  wishlistId,
   session,
   initialWishlistData,
   initialGroupData,
 }: WishlistPageProps) {
-  const { userId } = session
-  const { query, push } = useRouter()
-  const { groupId, wishlistId } = query
+  const {
+    user: { id: userId },
+  } = session
+  const { push } = useRouter()
   // @ts-ignore
   const { data: wishlistData = {} } = useQuery(
     ["wishlists", wishlistId],
@@ -109,28 +112,6 @@ function WishlistPage({
       </Cards>
     </div>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return await withBaseProps(ctx, async (context) => {
-    const { query } = context
-    const wishlistData = await getWishlistById(query.wishlistId as string)
-    const groupData = await getGroupById(query.groupId as string)
-
-    if (!wishlistData || !groupData) {
-      return {
-        notFound: true,
-      }
-    }
-
-    return {
-      props: {
-        title: wishlistData.title || wishlistData.user.firstName || wishlistData?.user.name?.split(" ")[0],
-        initialWishlistData: { data: wishlistData },
-        initialGroupData: { data: groupData },
-      },
-    }
-  })
 }
 
 export default WishlistPage

@@ -10,7 +10,7 @@ export default async function handler(
   const { method } = req
   const session = await getSession(req, res, authOptions)
 
-  if (!session || !session.userId || !session.isAdmin) {
+  if (!session || !session.user.id || !session.user.isAdmin) {
     return res.status(404).send("")
   }
 

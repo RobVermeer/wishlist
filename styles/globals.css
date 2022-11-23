@@ -3,7 +3,6 @@
 @import "open-props/buttons";
 
 body {
-  font-family: "Poppins", sans-serif;
   accent-color: var(--orange-5);
 }
 
@@ -38,7 +37,7 @@ label input {
   width: auto;
 }
 
-.main {
+main {
   display: grid;
   gap: var(--size-6);
   grid-template-rows: auto 1fr auto;
