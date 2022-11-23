@@ -23,7 +23,7 @@ export const Checkbox = ({ wishlistId, item }: CheckboxProps) => {
   const { data } = useSession()
   const [open, setOpen] = useState(false)
   const checked = Boolean(item.boughtBy)
-  const uncheck = checked && data?.user.id === item.boughtBy.id
+  const uncheck = checked && data?.userId === item.boughtBy.id
 
   const handleChange = async () => {
     if (checked && !uncheck) {

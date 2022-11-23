@@ -1,34 +1,34 @@
-"use client"
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { Cards } from "~/components/Cards"
 import { CardWishlist } from "~/components/CardWishlist"
 import { EmptyState } from "~/components/EmptyState"
 import { PageTitle } from "~/components/PageTitle"
+import { getGroupById } from "~/lib/groups/getGroupById"
 import { GroupProperties } from "~/lib/groups/publicProperties"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
+import { withBaseProps } from "~/utils/withBaseProps"
 
 interface GroupPageProps {
-  groupId: string
   session: Session
   initialData: GroupProperties[]
 }
 
-function GroupPage({ groupId, session, initialData }: GroupPageProps) {
+function GroupPage({ session, initialData }: GroupPageProps) {
   const queryClient = useQueryClient()
-  const { push } = useRouter()
+  const { query, push } = useRouter()
   // @ts-ignore
   const { data = {} } = useQuery(
-    ["groups", groupId],
-    () => fetch(`/api/groups/${groupId}`).then((res) => res.json()),
+    ["groups", query.groupId],
+    () => fetch(`/api/groups/${query.groupId}`).then((res) => res.json()),
     { initialData }
   )
   const { data: group } = data
   const subscribed = group.members.some(
-    ({ id }: { id: string }) => id === session.user.id
+    ({ id }: { id: string }) => id === session.userId
   )
 
   const subscribe = useMutation(
@@ -93,6 +93,23 @@ function GroupPage({ groupId, session, initialData }: GroupPageProps) {
       </Cards>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async (context) => {
+    const { query } = context
+    const data = await getGroupById(query.groupId as string)
+
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
+
+    return {
+      props: { title: data.title, initialData: { data } },
+    }
+  })
 }
 
 export default GroupPage

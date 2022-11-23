@@ -16,7 +16,7 @@ export default async function handler(
     return res.status(404).send("")
   }
 
-  if (!session || !session.user.id) {
+  if (!session || !session.userId) {
     return res.status(404).send("")
   }
 
@@ -27,7 +27,7 @@ export default async function handler(
       return res.status(404).send("")
     }
 
-    if (wishlist.user.id !== session.user.id) {
+    if (wishlist.user.id !== session.userId) {
       return res.status(403).json({ error: "Not allowed" })
     }
 

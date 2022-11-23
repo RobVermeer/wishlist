@@ -1,7 +1,6 @@
-"use client"
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
+import { GetServerSideProps } from "next"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
@@ -12,32 +11,31 @@ import { EditItem } from "~/components/EditItem"
 import { Form } from "~/components/Form"
 import { PageTitle } from "~/components/PageTitle"
 import { WishlistItemProperties } from "~/lib/wishlistItems/publicProperties"
+import { getWishlistById } from "~/lib/wishlists/getWishlistById"
 import { WishlistProperties } from "~/lib/wishlists/publicProperties"
+import { withBaseProps } from "~/utils/withBaseProps"
 
 interface ProfileWishlistPageProps {
   initialData: WishlistProperties[]
-  params: { id: string }
 }
 
-function ProfileWishlistPage({
-  initialData,
-  params,
-}: ProfileWishlistPageProps) {
+function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [url, setUrl] = useState("")
+  const { query } = useRouter()
   const queryClient = useQueryClient()
   // @ts-ignore
   const { data = {} } = useQuery(
-    ["wishlists", params.id],
-    () => fetch(`/api/wishlists/${params.id}`).then((res) => res.json()),
+    ["wishlists", query.id],
+    () => fetch(`/api/wishlists/${query.id}`).then((res) => res.json()),
     { initialData }
   )
   const { data: wishlist } = data
 
   const create = useMutation(
     (data: { title: string; url: string }) => {
-      return fetch(`/api/user/wishlists/${params.id}/item/create`, {
+      return fetch(`/api/user/wishlists/${query.id}/item/create`, {
         method: "post",
         body: JSON.stringify(data),
       }).then((res) => res.json())
@@ -46,7 +44,7 @@ function ProfileWishlistPage({
       onSuccess: () => {
         setTitle("")
         setUrl("")
-        queryClient.invalidateQueries(["wishlists", params.id])
+        queryClient.invalidateQueries(["wishlists", query.id])
       },
     }
   )
@@ -119,6 +117,23 @@ function ProfileWishlistPage({
       </Dialog>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async (context) => {
+    const { query } = context
+    const data = await getWishlistById(query.id as string)
+
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
+
+    return {
+      props: { title: "Wishlist", initialData: { data } },
+    }
+  })
 }
 
 export default ProfileWishlistPage

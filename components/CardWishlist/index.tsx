@@ -57,7 +57,7 @@ export const CardWishlist = ({
   showEdit = false,
 }: CardWishlistProps) => {
   const { data } = useSession()
-  const isOwn = wishlist.user.id === data?.user.id
+  const isOwn = wishlist.user.id === data?.userId
   const link = groupId
     ? `/group/${groupId}/${wishlist.id}`
     : `/profile/wishlists/${wishlist.id}`

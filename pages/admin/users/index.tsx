@@ -1,13 +1,14 @@
-"use client"
-
 import { User } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { GetServerSideProps } from "next"
 import { Session } from "next-auth"
 import Link from "next/link"
 import { Button } from "~/components/Button"
 import { Card } from "~/components/Card"
 import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
+import { getUsers } from "~/lib/users/getUsers"
+import { withBaseProps } from "~/utils/withBaseProps"
 
 interface AdminUsersPageProps {
   userData: User[]
@@ -16,9 +17,7 @@ interface AdminUsersPageProps {
 
 function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
   const queryClient = useQueryClient()
-  const {
-    user: { id: userId },
-  } = session
+  const { userId } = session
 
   // @ts-ignore
   const { data = {} } = useQuery(
@@ -42,12 +41,12 @@ function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
     }
   )
 
-  function removeUser(id: string) {
+  async function removeUser(id: string) {
     const confirm = window.confirm("Are you sure?")
 
     if (!confirm) return
 
-    remove.mutate(id)
+    await remove.mutate(id)
   }
 
   return (
@@ -88,6 +87,26 @@ function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
       </Cards>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return await withBaseProps(ctx, async (context) => {
+    const { session } = context
+
+    if (!session || !session.isAdmin) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const data = await getUsers()
+
+    return {
+      props: {
+        userData: data,
+      },
+    }
+  })
 }
 
 export default AdminUsersPage
