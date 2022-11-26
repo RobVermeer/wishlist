@@ -28,7 +28,7 @@ function GroupPage({ session, initialData }: GroupPageProps) {
   )
   const { data: group } = data
   const subscribed = group.members.some(
-    ({ id }: { id: string }) => id === session.userId
+    ({ id }: { id: string }) => id === session.user.id
   )
 
   const subscribe = useMutation(

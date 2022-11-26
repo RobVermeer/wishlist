@@ -10,7 +10,7 @@ export default async function handler(
   const { method } = req
   const session = await getSession(req, res, authOptions)
 
-  if (!session || !session.userId) {
+  if (!session || !session.user.id) {
     return res.status(404).send("")
   }
 

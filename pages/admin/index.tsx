@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session } = context
 
-    if (!session || !session.isAdmin) {
+    if (!session || !session.user.isAdmin) {
       return {
         notFound: true,
       }

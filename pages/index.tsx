@@ -19,7 +19,7 @@ function HomePage({ session, initialGroups, initialWishlists }: HomePageProps) {
 
   return (
     <Home
-      userId={session.userId as string}
+      userId={session.user.id}
       initialGroups={initialGroups}
       initialWishlists={initialWishlists}
     />
@@ -36,8 +36,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       }
     }
 
-    const groupsData = await getGroupsForUser(session.userId as string)
-    const wishlistsData = await getWishlistsForUser(session.userId as string)
+    const groupsData = await getGroupsForUser(session.user.id)
+    const wishlistsData = await getWishlistsForUser(session.user.id)
 
     return {
       props: {

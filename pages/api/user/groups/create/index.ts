@@ -10,16 +10,17 @@ export default async function handler(
   const { method, body } = req
   const session = await getSession(req, res, authOptions)
 
-  if (!session || !session.userId) {
+  if (!session || !session.user.id) {
     return res.status(404).send("")
   }
 
-  const { userId } = session
+  const { user } = session
+  const { id: userId } = user
 
   if (method === "POST") {
     const { title } = JSON.parse(body)
 
-    const data = await createGroupForUser(userId as string, {
+    const data = await createGroupForUser(userId, {
       title,
       members: { connect: [{ id: userId }] },
     })

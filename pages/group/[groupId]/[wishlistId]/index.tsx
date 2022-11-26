@@ -28,7 +28,8 @@ function WishlistPage({
   initialWishlistData,
   initialGroupData,
 }: WishlistPageProps) {
-  const { userId } = session
+  const { user } = session
+  const { id: userId } = user
   const { query, push } = useRouter()
   const { groupId, wishlistId } = query
   // @ts-ignore
@@ -125,7 +126,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        title: wishlistData.title || wishlistData.user.firstName || wishlistData?.user.name?.split(" ")[0],
+        title:
+          wishlistData.title ||
+          wishlistData.user.firstName ||
+          wishlistData?.user.name?.split(" ")[0],
         initialWishlistData: { data: wishlistData },
         initialGroupData: { data: groupData },
       },

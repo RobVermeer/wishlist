@@ -41,7 +41,8 @@ function ProfilePage({
   boughtWishlistItems,
 }: ProfilePage) {
   const { push } = useRouter()
-  const { userId } = session
+  const { user } = session
+  const { id: userId } = user
   const [activeTab, setActiveTab] = useState(initialTab)
   // @ts-ignore
   const { data: groupData = {} } = useQuery(
@@ -119,7 +120,7 @@ function ProfilePage({
               />
             ))}
 
-            <CreateWishlist userId={userId as string} />
+            <CreateWishlist userId={userId} />
           </Cards>
         </div>
 
@@ -156,16 +157,19 @@ function ProfilePage({
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session, query } = context
+
+    if (!session) return { notFound: true }
+
     const initialTab = "groups" in query ? "groups" : "wishlists"
-    const wishlistsData = await getWishlistsForUser(session?.userId as string)
-    const groupsData = await getGroupsForUser(session?.userId as string)
+    const wishlistsData = await getWishlistsForUser(session?.user.id)
+    const groupsData = await getGroupsForUser(session?.user.id)
     const boughtWishlistItems = await getBoughtWishlistItemsForUser(
-      session?.userId as string
+      session?.user.id
     )
 
     return {
       props: {
-        title: session?.firstName || (session?.user?.name as string),
+        title: session?.user.firstName || session?.user.name,
         initialTab,
         initialWishlists: { data: wishlistsData },
         initialGroups: { data: groupsData },

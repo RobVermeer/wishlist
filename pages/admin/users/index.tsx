@@ -17,7 +17,8 @@ interface AdminUsersPageProps {
 
 function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
   const queryClient = useQueryClient()
-  const { userId } = session
+  const { user } = session
+  const { id: userId } = user
 
   // @ts-ignore
   const { data = {} } = useQuery(
@@ -93,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { session } = context
 
-    if (!session || !session.isAdmin) {
+    if (!session || !session.user.isAdmin) {
       return {
         notFound: true,
       }
