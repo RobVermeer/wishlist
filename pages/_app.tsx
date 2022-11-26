@@ -6,7 +6,14 @@ import Head from "next/head"
 import NextNProgress from "nextjs-progressbar"
 import { Footer } from "~/components/Footer"
 import { NavBar } from "~/components/NavBar"
+import { Poppins } from "@next/font/google"
 import "~/styles/globals.css"
+
+const poppins = Poppins({
+  weight: ["300", "500"],
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+})
 
 const queryClient = new QueryClient()
 
@@ -31,7 +38,7 @@ export default function App({ Component, pageProps }: AppProps<PageProps>) {
         </Head>
 
         <NextNProgress color="#fd7e14" options={{ showSpinner: false }} />
-        <main className="main">
+        <main className={poppins.className}>
           <NavBar session={session} />
           <Component {...pageProps} />
           <Footer />
