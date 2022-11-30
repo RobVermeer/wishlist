@@ -33,7 +33,7 @@ export default async function handler(
 
     const { title, groups } = JSON.parse(body)
 
-    const update = { title } as any
+    const update: any = { title }
 
     if (groups) {
       update["groups"] = {
