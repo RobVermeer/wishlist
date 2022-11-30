@@ -115,8 +115,21 @@ function WishlistPage({
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const wishlistData = await getWishlistById(query.wishlistId as string)
-    const groupData = await getGroupById(query.groupId as string)
+    const { wishlistId, groupId } = query
+
+    if (
+      !wishlistId ||
+      Array.isArray(wishlistId) ||
+      !groupId ||
+      Array.isArray(groupId)
+    ) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const wishlistData = await getWishlistById(wishlistId)
+    const groupData = await getGroupById(groupId)
 
     if (!wishlistData || !groupData) {
       return {

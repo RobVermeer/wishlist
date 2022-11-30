@@ -122,7 +122,15 @@ function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getWishlistById(query.id as string)
+    const { id } = query
+
+    if (!id || Array.isArray(id)) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const data = await getWishlistById(id)
 
     if (!data) {
       return {

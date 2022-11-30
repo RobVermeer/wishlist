@@ -98,7 +98,15 @@ function GroupPage({ session, initialData }: GroupPageProps) {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return await withBaseProps(ctx, async (context) => {
     const { query } = context
-    const data = await getGroupById(query.groupId as string)
+    const { groupId } = query
+
+    if (!groupId || Array.isArray(groupId)) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const data = await getGroupById(groupId)
 
     if (!data) {
       return {
