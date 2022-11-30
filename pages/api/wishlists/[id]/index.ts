@@ -11,7 +11,7 @@ export default async function handler(
   const { id } = query
   const session = await getSession(req, res, authOptions)
 
-  if (Array.isArray(id)) {
+  if (!id || Array.isArray(id)) {
     return res.status(404).send("")
   }
 
@@ -20,7 +20,7 @@ export default async function handler(
   }
 
   if (method === "GET") {
-    const data = await getWishlistById(id as string)
+    const data = await getWishlistById(id)
 
     return res.status(200).json({ data })
   }

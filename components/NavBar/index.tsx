@@ -25,7 +25,7 @@ export function NavBar({ session }: NavBarProps) {
             <picture>
               <img
                 referrerPolicy="no-referrer"
-                src={user?.image as string}
+                src={user?.image || "/avatar.svg"}
                 alt={`Avatar of ${firstName || user?.name}`}
                 width="96"
                 height="96"

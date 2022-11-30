@@ -9,6 +9,7 @@ import { Cards } from "~/components/Cards"
 import { PageTitle } from "~/components/PageTitle"
 import { getUsers } from "~/lib/users/getUsers"
 import { withBaseProps } from "~/utils/withBaseProps"
+import styles from "./AdminUser.module.css"
 
 interface AdminUsersPageProps {
   userData: User[]
@@ -64,11 +65,22 @@ function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
           <Card
             key={user.id}
             title={
-              <span>
-                {user.name} <small>({user.firstName})</small>
-                <br />
-                <small>{user.email}</small>
-              </span>
+              <div className={styles.user}>
+                <picture>
+                  <img
+                    referrerPolicy="no-referrer"
+                    src={user?.image || "/avatar.svg"}
+                    alt={`Avatar of ${user.firstName || user?.name}`}
+                    width="96"
+                    height="96"
+                  />
+                </picture>
+                <span>
+                  {user.name} <small>({user.firstName})</small>
+                  <br />
+                  <small>{user.email}</small>
+                </span>
+              </div>
             }
             index={index}
             isOwn={userId === user.id}
