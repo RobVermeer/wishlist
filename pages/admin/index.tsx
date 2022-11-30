@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import { Button } from "~/components/Button"
 import { PageTitle } from "~/components/PageTitle"
 import { withBaseProps } from "~/utils/withBaseProps"
-import styles from "~/styles/Profile.module.css"
+import styles from "~/components/Tabs/Tabs.module.css"
 
 function AdminDashboardPage() {
   const { push } = useRouter()
