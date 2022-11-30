@@ -49,7 +49,7 @@ export const Home = ({
         buttons={
           <>
             <Button onClick={() => push("/profile")}>Bekijk je profiel</Button>
-            <Button variant="primary" onClick={() => push("/profile?groups")}>
+            <Button variant="primary" onClick={() => push("/profile/groups")}>
               Ga direct naar groepen
             </Button>
           </>

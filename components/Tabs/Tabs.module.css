@@ -1,9 +1,3 @@
-.profileTitle {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
 .tabs {
   display: grid;
   grid-template-rows: auto auto;
