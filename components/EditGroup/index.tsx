@@ -18,48 +18,42 @@ export const EditGroup = ({ group }: EditGroupProps) => {
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState(group.title)
 
-  const update = useMutation(
-    () => {
+  const update = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/groups/${group.id}/edit`, {
         method: "put",
         body: JSON.stringify({ title }),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+      setOpen(false)
+    },
+  })
 
-  const unsubscribe = useMutation(
-    () => {
+  const unsubscribe = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/groups/${group.id}/subscribe`, {
         method: "put",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+      setOpen(false)
+    },
+  })
 
-  const remove = useMutation(
-    () => {
+  const remove = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/groups/${group.id}/remove`, {
         method: "delete",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+      setOpen(false)
+    },
+  })
 
   return (
     <>

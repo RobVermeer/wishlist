@@ -11,8 +11,8 @@ export const useWishlistItemCheck = ({
 }: UseWishlistItemCheckProps) => {
   const queryClient = useQueryClient()
 
-  const mutation = useMutation(
-    async (id: string) => {
+  const mutation = useMutation({
+    mutationFn: async (id: string) => {
       try {
         const response = await fetch(
           `/api/wishlists/${wishlistId}/item/${id}/check`,
@@ -27,13 +27,11 @@ export const useWishlistItemCheck = ({
         throw new Error(error)
       }
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", wishlistId])
-      },
-      onError,
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", wishlistId])
+    },
+    onError,
+  })
 
   return mutation
 }

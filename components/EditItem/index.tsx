@@ -17,34 +17,30 @@ export const EditItem = ({ wishlistId, item }: EditItemProps) => {
   const [title, setTitle] = useState(item.title)
   const [url, setUrl] = useState(item.url || "")
 
-  const update = useMutation(
-    () => {
+  const update = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/wishlists/${wishlistId}/item/${item.id}/edit`, {
         method: "put",
         body: JSON.stringify({ title, url }),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", wishlistId])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", wishlistId])
+      setOpen(false)
+    },
+  })
 
-  const remove = useMutation(
-    () => {
+  const remove = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/wishlists/${wishlistId}/item/${item.id}/remove`, {
         method: "delete",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", wishlistId])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", wishlistId])
+      setOpen(false)
+    },
+  })
 
   return (
     <>

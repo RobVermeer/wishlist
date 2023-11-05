@@ -22,19 +22,19 @@ export const Home = ({
 }: HomeProps) => {
   const { push } = useRouter()
   // @ts-ignore
-  const { data: groupsData = {} } = useQuery(
-    ["groups", userId],
-    () => fetch("/api/user/groups").then((res) => res.json()),
-    { initialData: initialGroups }
-  )
+  const { data: groupsData = {} } = useQuery({
+    queryKey: ["groups", userId],
+    queryFn: () => fetch("/api/user/groups").then((res) => res.json()),
+    initialData: initialGroups,
+  })
   const { data: groups } = groupsData
 
   // @ts-ignore
-  const { data: wishlistsData = {} } = useQuery(
-    ["wishlists", userId],
-    () => fetch("/api/user/wishlists").then((res) => res.json()),
-    { initialData: initialWishlists }
-  )
+  const { data: wishlistsData = {} } = useQuery({
+    queryKey: ["wishlists", userId],
+    queryFn: () => fetch("/api/user/wishlists").then((res) => res.json()),
+    initialData: initialWishlists,
+  })
   const { data: wishlists } = wishlistsData
 
   if (!groups || !wishlists) return <div></div>

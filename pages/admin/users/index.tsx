@@ -22,26 +22,24 @@ function AdminUsersPage({ session, userData }: AdminUsersPageProps) {
   const { id: userId } = user
 
   // @ts-ignore
-  const { data = {} } = useQuery(
-    ["users"],
-    () => fetch("/api/users").then((res) => res.json()),
-    { initialData: { data: userData } }
-  )
+  const { data = {} } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => fetch("/api/users").then((res) => res.json()),
+    initialData: { data: userData },
+  })
 
   const users = data?.data || []
 
-  const remove = useMutation(
-    (id: string) => {
+  const remove = useMutation({
+    mutationFn: (id: string) => {
       return fetch(`/api/users/${id}/remove`, {
         method: "delete",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["users"])
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"])
+    },
+  })
 
   async function removeUser(id: string) {
     const confirm = window.confirm("Are you sure?")

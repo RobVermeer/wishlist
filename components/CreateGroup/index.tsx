@@ -7,20 +7,18 @@ import { Form } from "~/components/Form"
 export const CreateGroup = () => {
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
-  const create = useMutation(
-    (title: string) => {
+  const create = useMutation({
+    mutationFn: (title: string) => {
       return fetch("/api/user/groups/create", {
         method: "post",
         body: JSON.stringify({ title }),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+      setOpen(false)
+    },
+  })
 
   return (
     <>

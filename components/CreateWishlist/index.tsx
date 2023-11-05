@@ -14,25 +14,24 @@ export const CreateWishlist = ({ userId }: CreateWishlistProps) => {
   const [open, setOpen] = useState(false)
   const [otherName, setOtherName] = useState(false)
   // @ts-ignore
-  const { data: groupsData = {} } = useQuery(["groups", userId], () =>
-    fetch("/api/user/groups").then((res) => res.json())
-  )
+  const { data: groupsData = {} } = useQuery({
+    queryKey: ["groups", userId],
+    queryFn: () => fetch("/api/user/groups").then((res) => res.json()),
+  })
   const { data: groups = [] } = groupsData
 
-  const create = useMutation(
-    (data: { title: string; groups: string[] }) => {
+  const create = useMutation({
+    mutationFn: (data: { title: string; groups: string[] }) => {
       return fetch("/api/user/wishlists/create", {
         method: "post",
         body: JSON.stringify(data),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", userId])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", userId])
+      setOpen(false)
+    },
+  })
 
   return (
     <>

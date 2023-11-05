@@ -18,11 +18,11 @@ interface ProfilePage {
 function ProfilePage({ session, initialWishlists }: ProfilePage) {
   const { user } = session
   const { id: userId } = user
-  const { data: wishlistData = {} } = useQuery(
-    ["wishlists", userId],
-    () => fetch("/api/user/wishlists").then((res) => res.json()),
-    { initialData: initialWishlists }
-  )
+  const { data: wishlistData = {} } = useQuery({
+    queryKey: [("wishlists", userId)],
+    queryFn: () => fetch("/api/user/wishlists").then((res) => res.json()),
+    initialData: initialWishlists,
+  })
   const { data: wishlists = [] } = wishlistData
 
   return (

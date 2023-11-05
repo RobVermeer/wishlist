@@ -33,18 +33,19 @@ function WishlistPage({
   const { query, push } = useRouter()
   const { groupId, wishlistId } = query
   // @ts-ignore
-  const { data: wishlistData = {} } = useQuery(
-    ["wishlists", wishlistId],
-    () => fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),
-    { initialData: initialWishlistData }
-  )
+  const { data: wishlistData = {} } = useQuery({
+    queryKey: ["wishlists", wishlistId],
+    queryFn: () =>
+      fetch(`/api/wishlists/${wishlistId}`).then((res) => res.json()),
+    initialData: initialWishlistData,
+  })
   const { data: wishlist } = wishlistData
   // @ts-ignore
-  const { data: groupData = {} } = useQuery(
-    ["groups", groupId],
-    () => fetch(`/api/groups/${groupId}`).then((res) => res.json()),
-    { initialData: initialGroupData }
-  )
+  const { data: groupData = {} } = useQuery({
+    queryKey: [("groups", groupId)],
+    queryFn: () => fetch(`/api/groups/${groupId}`).then((res) => res.json()),
+    initialData: initialGroupData,
+  })
   const { data: group } = groupData
 
   if (!wishlist) return <div></div>

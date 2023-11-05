@@ -19,26 +19,24 @@ function AdminGroupsPage({ groupsData }: AdminGroupsPageProps) {
   const queryClient = useQueryClient()
 
   // @ts-ignore
-  const { data = {} } = useQuery(
-    ["groups"],
-    () => fetch("/api/groups").then((res) => res.json()),
-    { initialData: { data: groupsData } }
-  )
+  const { data = {} } = useQuery({
+    queryKey: ["groups"],
+    queryFn: () => fetch("/api/groups").then((res) => res.json()),
+    initialData: { data: groupsData },
+  })
 
   const groups = data?.data || []
 
-  const remove = useMutation(
-    (id: string) => {
+  const remove = useMutation({
+    mutationFn: (id: string) => {
       return fetch(`/api/groups/${id}/remove`, {
         method: "delete",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+    },
+  })
 
   async function removeGroup(id: string) {
     const confirm = window.confirm("Are you sure?")

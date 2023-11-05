@@ -18,11 +18,11 @@ interface ProfileGroupsPage {
 function ProfileGroupsPage({ session, initialGroups }: ProfileGroupsPage) {
   const { user } = session
   const { id: userId } = user
-  const { data: groupData = {} } = useQuery(
-    ["groups", userId],
-    () => fetch("/api/user/groups").then((res) => res.json()),
-    { initialData: initialGroups }
-  )
+  const { data: groupData = {} } = useQuery({
+    queryKey: ["groups", userId],
+    queryFn: () => fetch("/api/user/groups").then((res) => res.json()),
+    initialData: initialGroups,
+  })
 
   const { data: groups = [] } = groupData
 

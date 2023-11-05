@@ -21,28 +21,27 @@ function GroupPage({ session, initialData }: GroupPageProps) {
   const queryClient = useQueryClient()
   const { query, push } = useRouter()
   // @ts-ignore
-  const { data = {} } = useQuery(
-    ["groups", query.groupId],
-    () => fetch(`/api/groups/${query.groupId}`).then((res) => res.json()),
-    { initialData }
-  )
+  const { data = {} } = useQuery({
+    queryKey: ["groups", query.groupId],
+    queryFn: () =>
+      fetch(`/api/groups/${query.groupId}`).then((res) => res.json()),
+    initialData,
+  })
   const { data: group } = data
   const subscribed = group.members.some(
     ({ id }: { id: string }) => id === session.user.id
   )
 
-  const subscribe = useMutation(
-    () => {
+  const subscribe = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/groups/${group.id}/subscribe`, {
         method: "put",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["groups"])
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"])
+    },
+  })
 
   if (!group) return <div></div>
 

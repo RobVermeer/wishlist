@@ -21,13 +21,14 @@ export const EditWishlist = ({ wishlist }: EditWishlistProps) => {
     wishlist.groups.map(({ id }) => id)
   )
   // @ts-ignore
-  const { data: groupsData = {} } = useQuery(["groups", userId], () =>
-    fetch("/api/user/groups").then((res) => res.json())
-  )
+  const { data: groupsData = {} } = useQuery({
+    queryKey: ["groups", userId],
+    queryFn: () => fetch("/api/user/groups").then((res) => res.json()),
+  })
   const { data: groups = [] } = groupsData
 
-  const update = useMutation(
-    () => {
+  const update = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/wishlists/${wishlist.id}/edit`, {
         method: "put",
         body: JSON.stringify({
@@ -36,27 +37,23 @@ export const EditWishlist = ({ wishlist }: EditWishlistProps) => {
         }),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", userId])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", userId])
+      setOpen(false)
+    },
+  })
 
-  const remove = useMutation(
-    () => {
+  const remove = useMutation({
+    mutationFn: () => {
       return fetch(`/api/user/wishlists/${wishlist.id}/remove`, {
         method: "delete",
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["wishlists", userId])
-        setOpen(false)
-      },
-    }
-  )
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wishlists", userId])
+      setOpen(false)
+    },
+  })
 
   return (
     <>

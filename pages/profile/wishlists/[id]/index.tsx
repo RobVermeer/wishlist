@@ -26,28 +26,27 @@ function ProfileWishlistPage({ initialData }: ProfileWishlistPageProps) {
   const { query } = useRouter()
   const queryClient = useQueryClient()
   // @ts-ignore
-  const { data = {} } = useQuery(
-    ["wishlists", query.id],
-    () => fetch(`/api/wishlists/${query.id}`).then((res) => res.json()),
-    { initialData }
-  )
+  const { data = {} } = useQuery({
+    queryKey: [("wishlists", query.id)],
+    queryFn: () =>
+      fetch(`/api/wishlists/${query.id}`).then((res) => res.json()),
+    initialData,
+  })
   const { data: wishlist } = data
 
-  const create = useMutation(
-    (data: { title: string; url: string }) => {
+  const create = useMutation({
+    mutationFn: (data: { title: string; url: string }) => {
       return fetch(`/api/user/wishlists/${query.id}/item/create`, {
         method: "post",
         body: JSON.stringify(data),
       }).then((res) => res.json())
     },
-    {
-      onSuccess: () => {
-        setTitle("")
-        setUrl("")
-        queryClient.invalidateQueries(["wishlists", query.id])
-      },
-    }
-  )
+    onSuccess: () => {
+      setTitle("")
+      setUrl("")
+      queryClient.invalidateQueries(["wishlists", query.id])
+    },
+  })
 
   if (!wishlist) return <div></div>
 
