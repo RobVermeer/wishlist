@@ -5,7 +5,6 @@ import { Ubuntu } from "next/font/google"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Header } from "@/components/Header"
 import { Login } from "@/components/Login"
-import { Footer } from "@/components/Footer"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
@@ -28,7 +27,6 @@ export default async function RootLayout({
       <body className={ubuntu.className}>
         <Header session={session} />
         {session ? children : <Login />}
-        <Footer />
       </body>
     </html>
   )
