@@ -1,7 +1,12 @@
 import { Card } from "@/components/Card"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import Link from "next/link"
 
-export const GroupCard = ({ group }) => {
+interface Props {
+  group: Awaited<ReturnType<typeof getGroupsForUser>>[0]
+}
+
+export const GroupCard = ({ group }: Props) => {
   const { id, title } = group
 
   return (

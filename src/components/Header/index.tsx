@@ -6,7 +6,7 @@ interface Props {
   session: Session | null
 }
 
-export async function Header({ session }: Props) {
+export function Header({ session }: Props) {
   return (
     <header
       className="p-4 flex h-64 bg-cover bg-center items-start justify-between"

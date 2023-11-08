@@ -7,7 +7,11 @@ import { Button } from "@/components/ui/button"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import Link from "next/link"
 
-export default async function GroupPage({ params }) {
+interface Props {
+  params: { groupId: string }
+}
+
+export default async function GroupPage({ params }: Props) {
   const group = await getGroupById(params.groupId)
 
   if (!group.subscribed) {

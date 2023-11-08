@@ -8,7 +8,11 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import Link from "next/link"
 
-export default async function GroupWishlistPage({ params }) {
+interface Props {
+  params: { wishlistId: string; groupId: string }
+}
+
+export default async function GroupWishlistPage({ params }: Props) {
   const wishlist = await getWishlistById(params.wishlistId)
   const group = await getGroupById(params.groupId)
 

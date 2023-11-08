@@ -23,7 +23,7 @@ interface Props {
 
 export function Menu({ session }: Props) {
   const [open, setOpen] = useState(false)
-  const initials = session.user.name
+  const initials = (session.user.name || "")
     .split(" ")
     .map((part: string) => part.at(0))
     .slice(0, 2)
@@ -39,7 +39,12 @@ export function Menu({ session }: Props) {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Avatar className="border border-slate-500 cursor-pointer">
-          <AvatarImage src={session.user.image} alt={`@${session.user.name}`} />
+          {session.user.image && (
+            <AvatarImage
+              src={session.user.image}
+              alt={`@${session.user.name}`}
+            />
+          )}
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </SheetTrigger>

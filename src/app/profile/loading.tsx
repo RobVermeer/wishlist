@@ -1,5 +1,3 @@
-"use client"
-
 import { LoaderIcon } from "lucide-react"
 
 export default async function Loading() {

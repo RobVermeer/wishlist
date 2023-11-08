@@ -1,12 +1,17 @@
 import { Card } from "@/components/Card"
+import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
-import { CheckSquare, Link, Square } from "lucide-react"
+import { Link } from "lucide-react"
 import { useMemo } from "react"
-import { Button } from "../ui/button"
 import { ToggleItem } from "../ToggleItem"
 
-export const ItemCard = ({ item }) => {
-  const { id, title, url, boughtBy } = item
+interface Props {
+  item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
+}
+
+export const ItemCard = ({ item }: Props) => {
+  const { title, url, boughtBy } = item
+
   const className = useMemo(() => {
     if (boughtBy) {
       return "line-through text-slate-400"
