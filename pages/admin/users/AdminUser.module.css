@@ -1,9 +1,0 @@
-.user {
-  display: flex;
-  gap: var(--size-2);
-}
-
-.user img {
-  width: var(--size-8);
-  border-radius: var(--radius-6);
-}

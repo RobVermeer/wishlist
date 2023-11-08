@@ -1,7 +1,7 @@
 import { GetServerSideProps, GetServerSidePropsContext } from "next"
 import { Session, unstable_getServerSession } from "next-auth"
 import { getCookie, deleteCookie, setCookie } from "cookies-next"
-import { authOptions } from "~/pages/api/auth/[...nextauth]"
+import { authOptions } from "pages_old/api/auth/[...nextauth]"
 
 export interface GetPagePropsType extends GetServerSidePropsContext {
   session: Session | null
