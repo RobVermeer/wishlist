@@ -3,7 +3,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
 import { Link } from "lucide-react"
 import { useMemo } from "react"
-import { ToggleItem } from "../ToggleItem"
+import { ToggleItem } from "@/components/ToggleItem"
 
 interface Props {
   item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]

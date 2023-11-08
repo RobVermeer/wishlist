@@ -1,7 +1,7 @@
 "use client"
 
 import { CheckSquare, Square } from "lucide-react"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { toggleWishlistItemById } from "@/lib/wishlistItems/toggleWishlistItemById"
 

@@ -3,7 +3,6 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getUsers } from "@/lib/users/getUsers"
-import Link from "next/link"
 import { RemoveUser } from "./components/RemoveUser"
 
 export default async function AdminUsersPage() {

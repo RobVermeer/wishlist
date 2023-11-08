@@ -1,3 +1,5 @@
+"use server"
+
 import { User, Wishlist, WishlistItem } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { wishlistProperties } from "../wishlists/publicProperties"

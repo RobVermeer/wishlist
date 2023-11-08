@@ -2,7 +2,7 @@ import { Card } from "@/components/Card"
 import Link from "next/link"
 import { EditGroup } from "@/components/EditGroup"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { LeaveGroup } from "../LeaveGroup"
+import { LeaveGroup } from "@/components/LeaveGroup"
 
 interface Props {
   group: Awaited<ReturnType<typeof getGroupsForUser>>[0]

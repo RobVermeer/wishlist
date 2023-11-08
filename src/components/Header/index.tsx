@@ -1,5 +1,5 @@
 import { Session } from "next-auth"
-import { Logo } from "../Logo"
+import { Logo } from "@/components/Logo"
 import { Menu } from "./Menu"
 
 interface Props {

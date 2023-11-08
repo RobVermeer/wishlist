@@ -1,3 +1,5 @@
+"use server"
+
 import { prisma } from "@/lib/prisma"
 import { groupProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
