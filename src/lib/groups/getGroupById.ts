@@ -9,7 +9,7 @@ export const getGroupById = async (id: string) => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    throw new Error("Not logged in")
+    throw new Error("Je bent niet ingelogd")
   }
 
   const userId = session.user.id
@@ -20,7 +20,7 @@ export const getGroupById = async (id: string) => {
   })
 
   if (!data) {
-    throw new Error("Group not found")
+    throw new Error("Groep niet gevonden")
   }
 
   const wishlist = data.wishlist.map((wishlist) => ({

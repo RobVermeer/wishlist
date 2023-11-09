@@ -15,17 +15,29 @@ import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemBy
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
 }
 
 export const EditItem = ({ item }: Props) => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { id, title, url } = item
 
   async function handleSubmit(data: FormData) {
-    await updateWishlistItemById(id, data)
+    const { type, errors } = await updateWishlistItemById(id, data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 

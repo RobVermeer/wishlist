@@ -5,41 +5,61 @@ import { wishlistProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { revalidatePath } from "next/cache"
+import { wishlistSchema } from "@/lib/schema"
+import { z } from "zod"
+import { getErrorMessage } from "@/lib//utils"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
-  const session = await getServerSession(authOptions)
+  try {
+    const session = await getServerSession(authOptions)
 
-  if (!session) {
-    throw new Error("Not logged in")
+    if (!session) {
+      throw new Error("Je bent niet ingelogd")
+    }
+
+    const userId = session.user.id
+
+    const wishlist = await prisma.wishlist.findUnique({
+      where: {
+        id,
+        userId,
+      },
+    })
+
+    if (!wishlist) {
+      throw new Error("Wensenlijst is niet gevonden")
+    }
+
+    const data = wishlistSchema.parse({
+      name: formData.get("name")?.toString() || undefined,
+      groups: formData.getAll("groups").map((group) => group.toString()),
+    })
+
+    await prisma.wishlist.update({
+      where: { id },
+      data: {
+        title: data.name || null,
+        groups: { set: data.groups?.map((id) => ({ id })) },
+      },
+      select: wishlistProperties,
+    })
+
+    revalidatePath("/")
+
+    return {
+      type: "success" as const,
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        type: "error" as const,
+        errors: error.issues.map((issue) => issue.message),
+      }
+    }
+
+    return {
+      type: "error" as const,
+      errors: [getErrorMessage(error)],
+    }
   }
-
-  const userId = session.user.id
-
-  const wishlist = await prisma.wishlist.findUnique({
-    where: {
-      id,
-      userId,
-    },
-  })
-
-  if (!wishlist) {
-    throw new Error("Wishlist not found")
-  }
-
-  const title = formData.get("name")?.toString()
-  const groups =
-    formData.getAll("groups").map((group) => group.toString()) || []
-
-  const data = await prisma.wishlist.update({
-    where: { id },
-    data: {
-      title,
-      groups: { set: groups.map((id) => ({ id })) },
-    },
-    select: wishlistProperties,
-  })
-
-  revalidatePath("/")
-
-  return data
 }

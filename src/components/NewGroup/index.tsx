@@ -13,12 +13,24 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createGroupForUser } from "@/lib/groups/createGroupForUser"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 export const NewGroup = () => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
 
   async function handleSubmit(data: FormData) {
-    await createGroupForUser(data)
+    const { type, errors } = await createGroupForUser(data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 

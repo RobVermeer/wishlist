@@ -9,7 +9,7 @@ export const getGroupsForUser = async () => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    throw new Error("Not logged in")
+    throw new Error("Je bent niet ingelogd")
   }
 
   const userId = session.user.id

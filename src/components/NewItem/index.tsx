@@ -13,16 +13,28 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   id: string
 }
 
 export const NewItem = ({ id }: Props) => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
 
   async function handleSubmit(data: FormData) {
-    await createWishlistItemForUser(id, data)
+    const { type, errors } = await createWishlistItemForUser(id, data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 

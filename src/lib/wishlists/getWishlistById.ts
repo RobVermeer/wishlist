@@ -12,7 +12,7 @@ export const getWishlistById = async (
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    throw new Error("Not logged in")
+    throw new Error("Je bent niet ingelogd")
   }
 
   const userId = session.user.id
@@ -22,11 +22,11 @@ export const getWishlistById = async (
   })
 
   if (!data) {
-    throw new Error("Todo list not found")
+    throw new Error("Wensenlijst is niet gevonden")
   }
 
   if (isOwnList && data.user.id !== userId) {
-    throw new Error("Access forbidden")
+    throw new Error("Je hebt niet de juiste rechten om dit te doen")
   }
 
   return { ...data, isOwnList: data.user.id === userId }

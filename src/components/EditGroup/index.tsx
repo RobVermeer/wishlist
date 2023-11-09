@@ -15,17 +15,29 @@ import { deleteGroupById } from "@/lib/groups/deleteGroupById"
 import { getGroups } from "@/lib/groups/getGroups"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   group: Awaited<ReturnType<typeof getGroups>>[0]
 }
 
 export const EditGroup = ({ group }: Props) => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { id, title } = group
 
   async function handleSubmit(data: FormData) {
-    await updateGroupById(id, data)
+    const { type, errors } = await updateGroupById(id, data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 
@@ -50,8 +62,8 @@ export const EditGroup = ({ group }: Props) => {
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >
-          <Label htmlFor="name">Naam</Label>
-          <Input required id="name" name="name" defaultValue={title} />
+          <Label htmlFor="title">Naam</Label>
+          <Input required id="title" name="title" defaultValue={title} />
         </form>
         <DialogFooter>
           <form action={handleRemove}>

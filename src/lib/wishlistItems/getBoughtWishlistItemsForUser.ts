@@ -2,7 +2,7 @@
 
 import { User, Wishlist, WishlistItem } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
-import { wishlistProperties } from "../wishlists/publicProperties"
+import { wishlistProperties } from "@/lib/wishlists/publicProperties"
 import { wishlistItemProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
@@ -19,7 +19,7 @@ export const getBoughtWishlistItemsForUser = async () => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    throw new Error("Not logged in")
+    throw new Error("Je bent niet ingelogd")
   }
 
   const userId = session.user.id

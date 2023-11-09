@@ -16,6 +16,7 @@ import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -23,11 +24,22 @@ interface Props {
 }
 
 export const EditWishlist = ({ wishlist, groups }: Props) => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { id, title } = wishlist
 
   async function handleSubmit(data: FormData) {
-    await updateWishlistById(id, data)
+    const { type, errors } = await updateWishlistById(id, data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 

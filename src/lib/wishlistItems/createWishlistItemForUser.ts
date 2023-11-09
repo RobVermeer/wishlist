@@ -5,47 +5,65 @@ import { wishlistItemProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { revalidatePath } from "next/cache"
+import { z } from "zod"
+import { getErrorMessage } from "@/lib/utils"
+import { wishlistItemSchema } from "@/lib/schema"
 
 export const createWishlistItemForUser = async (
   wishlistId: string,
   formData: FormData
 ) => {
-  const session = await getServerSession(authOptions)
+  try {
+    const session = await getServerSession(authOptions)
 
-  if (!session) {
-    throw new Error("Not logged in")
+    if (!session) {
+      throw new Error("Je bent niet ingelogd")
+    }
+
+    const userId = session.user.id
+
+    const wishlist = await prisma.wishlist.findUnique({
+      where: {
+        id: wishlistId,
+        userId,
+      },
+    })
+
+    if (!wishlist) {
+      throw new Error("Wensenlijst is niet gevonden")
+    }
+
+    const data = wishlistItemSchema.parse({
+      title: formData.get("title")?.toString(),
+      url: formData.get("url")?.toString() || undefined,
+    })
+
+    await prisma.wishlistItem.create({
+      select: wishlistItemProperties,
+      data: {
+        title: data.title,
+        url: data.url || null,
+        createdAt: new Date(),
+        wishlistId,
+      },
+    })
+
+    revalidatePath("/")
+
+    return {
+      type: "success" as const,
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        type: "error" as const,
+        errors: error.issues.map((issue) => issue.message),
+      }
+    }
+
+    return {
+      type: "error" as const,
+      errors: [getErrorMessage(error)],
+    }
   }
-
-  const userId = session.user.id
-  const title = formData.get("title")?.toString()
-  const url = formData.get("url")?.toString()
-
-  if (!title) {
-    throw new Error("Title is mandatory")
-  }
-
-  const wishlist = await prisma.wishlist.findUnique({
-    where: {
-      id: wishlistId,
-      userId,
-    },
-  })
-
-  if (!wishlist) {
-    throw new Error("Wishlist not found")
-  }
-
-  const data = await prisma.wishlistItem.create({
-    select: wishlistItemProperties,
-    data: {
-      title,
-      url,
-      createdAt: new Date(),
-      wishlistId,
-    },
-  })
-
-  revalidatePath("/")
-
-  return data
 }

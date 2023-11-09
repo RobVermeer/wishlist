@@ -14,16 +14,28 @@ import { Label } from "@/components/ui/label"
 import { getGroups } from "@/lib/groups/getGroups"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
 import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   groups: Awaited<ReturnType<typeof getGroups>>
 }
 
 export const NewWishlist = ({ groups }: Props) => {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
 
   async function handleSubmit(data: FormData) {
-    await createWishlistForUser(data)
+    const { type, errors } = await createWishlistForUser(data)
+
+    if (type === "error") {
+      return errors.map((title) => {
+        toast({
+          variant: "destructive",
+          title,
+        })
+      })
+    }
+
     setOpen(false)
   }
 
