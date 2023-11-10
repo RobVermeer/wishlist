@@ -60,7 +60,7 @@ export const NewItem = ({ id }: Props) => {
         </form>
         <DialogFooter>
           <Button type="submit" form="add">
-            Voeg wens toe
+            <Plus size="16" className="mr-2" /> Voeg wens toe
           </Button>
         </DialogFooter>
       </DialogContent>

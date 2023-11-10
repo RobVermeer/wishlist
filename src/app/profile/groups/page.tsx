@@ -1,3 +1,4 @@
+import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { NewGroup } from "@/components/NewGroup"
 import { YourGroupCard } from "@/components/YourGroupCard"
@@ -14,7 +15,7 @@ export default async function ProfileGroupPage() {
     <>
       <List>
         {groups.length === 0 && (
-          <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
+          <EmptyState title="Je volgt nog geen groepen, doe dit snel! 🧐" />
         )}
 
         {groups.map((group) => (

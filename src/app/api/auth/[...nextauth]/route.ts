@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma"
+import { updateFirstNameById } from "@/lib/users/updateFirstNameById"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import NextAuth, { Session, User } from "next-auth"
+import NextAuth, { AuthOptions, Session, User } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -28,15 +29,13 @@ export const authOptions = {
       return session
     },
   },
-  // events: {
-  //   signIn: async ({ profile, user, isNewUser }) => {
-  //     if (!isNewUser && !user.firstName && profile?.firstName) {
-  //       // await updateUserById(user.id, {
-  //       //   firstName: profile.firstName,
-  //       // })
-  //     }
-  //   },
-  // },
+  events: {
+    signIn: async ({ profile, user, isNewUser }) => {
+      if (!isNewUser && !user.firstName && profile?.firstName) {
+        await updateFirstNameById(user.id, profile.firstName)
+      }
+    },
+  },
 }
 
 const handler = NextAuth(authOptions)

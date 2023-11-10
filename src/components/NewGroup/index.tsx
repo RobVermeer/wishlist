@@ -52,7 +52,7 @@ export const NewGroup = () => {
         </form>
         <DialogFooter>
           <Button type="submit" form="add">
-            Maak aan
+            <Plus size="16" className="mr-2" /> Maak aan
           </Button>
         </DialogFooter>
       </DialogContent>

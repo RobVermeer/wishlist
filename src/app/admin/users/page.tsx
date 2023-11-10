@@ -27,7 +27,9 @@ export default async function AdminUsersPage() {
           <span className="leading-none">
             {user.name} <small>({user.firstName})</small>
             <br />
-            <small className="text-xs text-slate-500">{user.email}</small>
+            <small className="text-xs text-muted-foreground">
+              {user.email}
+            </small>
           </span>
 
           <RemoveUser id={user.id} />

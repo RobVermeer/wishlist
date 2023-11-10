@@ -18,7 +18,7 @@ export const RemoveUser = ({ id }: Props) => {
 
   return (
     <Button
-      className="ml-auto"
+      className="absolute right-2"
       size="sm"
       variant="destructive"
       onClick={() => removeUser(id)}

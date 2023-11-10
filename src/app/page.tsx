@@ -28,7 +28,7 @@ export default async function Home() {
           <EmptyState title="Je volgt nog geen enkele groep 🥺">
             Om te zien wat anderen willen en om je eigen verlanglijstje te
             kunnen toevoegen moet je als eerste een groep volgen. Ga naar{" "}
-            <Link href="/profile" className="text-slate-500">
+            <Link href="/profile" className="text-primary">
               je profiel
             </Link>{" "}
             om te beginnen! 🚀
@@ -45,7 +45,7 @@ export default async function Home() {
         {wishlists.length === 0 && (
           <EmptyState title="Je hebt nog geen lijstjes gemaakt 🥺">
             Doe dit snel op{" "}
-            <Link href="/profile" className="text-slate-500">
+            <Link href="/profile" className="text-primary">
               je profiel
             </Link>
             ! 🤩

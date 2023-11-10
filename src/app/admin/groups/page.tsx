@@ -16,7 +16,7 @@ export default async function AdminUsersPage() {
           <span className="leading-none">
             {group.title}
             <br />
-            <small className="text-xs text-slate-500">
+            <small className="text-xs text-muted-foreground">
               {group.createdBy.name}
             </small>
           </span>

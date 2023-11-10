@@ -16,6 +16,7 @@ import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemBy
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { Pencil, Save, Trash } from "lucide-react"
 
 interface Props {
   item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
@@ -56,7 +57,7 @@ export const EditItem = ({ item }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="ml-auto" size="sm" variant="outline">
-          Wijzig
+          <Pencil size="12" className="mr-2" /> Wijzig
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -78,11 +79,11 @@ export const EditItem = ({ item }: Props) => {
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
             <Button className="w-full" type="submit" variant="outline">
-              Verwijder
+              <Trash size="16" className="mr-2" /> Verwijder
             </Button>
           </form>
           <Button type="submit" form={`change-${id}`}>
-            Opslaan
+            <Save size="16" className="mr-2" /> Opslaan
           </Button>
         </DialogFooter>
       </DialogContent>

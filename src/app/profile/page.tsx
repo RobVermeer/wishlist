@@ -1,3 +1,4 @@
+import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { NewWishlist } from "@/components/NewWishlist"
 import { YourWishlistCard } from "@/components/YourWishlistCard"
@@ -16,7 +17,7 @@ export default async function ProfilePage() {
     <>
       <List>
         {wishlists.length === 0 && (
-          <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
+          <EmptyState title="Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳" />
         )}
 
         {wishlists.map((wishlist) => (

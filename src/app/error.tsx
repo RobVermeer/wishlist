@@ -8,7 +8,10 @@ export default function Error() {
   return (
     <Layout>
       <EmptyState title="Oeps, er ging iets mis! 🤯">
-        Ga terug naar <Link href="/">het overzicht</Link>
+        Ga terug naar{" "}
+        <Link className="text-primary" href="/">
+          het overzicht
+        </Link>
       </EmptyState>
     </Layout>
   )

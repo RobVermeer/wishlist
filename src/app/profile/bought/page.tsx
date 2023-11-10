@@ -1,4 +1,5 @@
 import { Card } from "@/components/Card"
+import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { getBoughtWishlistItemsForUser } from "@/lib/wishlistItems/getBoughtWishlistItemsForUser"
 
@@ -12,7 +13,7 @@ export default async function ProfileBoughtPage() {
   return (
     <List>
       {boughtWishlistItems.length === 0 && (
-        <p>Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 🤨</p>
+        <EmptyState title="Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 🤨" />
       )}
 
       {boughtWishlistItems.map((item) => (
@@ -20,8 +21,8 @@ export default async function ProfileBoughtPage() {
           {item.title}{" "}
           <small className="text-muted-foreground">
             Gekocht voor{" "}
-            {item.wishlist.title ||
-              item.wishlist.user.firstName ||
+            {item.wishlist.title ??
+              item.wishlist.user.firstName ??
               item.wishlist.user.name?.split(" ")[0]}
           </small>
         </Card>

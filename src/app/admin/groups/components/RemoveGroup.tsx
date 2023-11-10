@@ -18,7 +18,7 @@ export const RemoveGroup = ({ id }: Props) => {
 
   return (
     <Button
-      className="ml-auto"
+      className="absolute right-2"
       size="sm"
       variant="destructive"
       onClick={() => removeGroup(id)}

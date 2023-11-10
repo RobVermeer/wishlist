@@ -14,7 +14,7 @@ export const YourItemCard = ({ item }: Props) => {
     <Card className="flex items-center">
       {url && (
         <a href={url} className="inline-flex gap-2 items-center">
-          <Link size="16" /> {title}
+          <Link size="16" strokeWidth="2.5" /> {title}
         </a>
       )}
 

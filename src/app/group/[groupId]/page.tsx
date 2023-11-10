@@ -46,7 +46,10 @@ export default async function GroupPage({ params }: Props) {
         {group.wishlist.length === 0 && (
           <EmptyState title="😵‍💫 Er zijn nog geen lijstjes! 😵‍💫">
             Maak als eerste een lijstje aan in{" "}
-            <Link href="/profile">je profiel</Link>! 🤑
+            <Link className="text-primary" href="/profile">
+              je profiel
+            </Link>
+            ! 🤑
           </EmptyState>
         )}
       </List>

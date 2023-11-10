@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { getGroups } from "@/lib/groups/getGroups"
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
-import { Pencil } from "lucide-react"
+import { Pencil, UserMinus } from "lucide-react"
 import { useState } from "react"
 
 interface Props {
@@ -45,7 +45,7 @@ export const LeaveGroup = ({ group }: Props) => {
         <DialogFooter>
           <form action={handleLeave}>
             <Button className="w-full" type="submit">
-              Stap uit de groep
+              <UserMinus size="16" className="mr-2" /> Stap uit de groep
             </Button>
           </form>
         </DialogFooter>

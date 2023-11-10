@@ -14,9 +14,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const group = await getGroupById(params.groupId)
 
   return {
-    title: `${wishlist.title ?? wishlist.user.firstName} - ${
-      group.title
-    } - Wishlist`,
+    title: `${
+      wishlist.title ??
+      wishlist.user.firstName ??
+      wishlist.user.name?.split(" ")[0]
+    } - ${group.title} - Wishlist`,
   }
 }
 
@@ -34,7 +36,10 @@ export default async function GroupWishlistPage({ params }: Props) {
         <EmptyState title="🥸 Dit is je eigen lijstje 🥸">
           Je mag natuurlijk niet zien wat anderen al hebben gekocht, maar als je
           je lijstje wilt aanpassen, dan kan dat op{" "}
-          <Link href="/profile">je profiel</Link>! 🤩
+          <Link className="text-primary" href="/profile">
+            je profiel
+          </Link>
+          ! 🤩
         </EmptyState>
       </Layout>
     )
@@ -45,8 +50,14 @@ export default async function GroupWishlistPage({ params }: Props) {
       <List>
         <ListTitle>
           <WishlistTitle wishlist={wishlist} />{" "}
-          <small>
-            In <Link href={`/group/${group.id}`}>{group.title}</Link>
+          <small className="text-secondary-foreground">
+            In{" "}
+            <Link
+              className="underline underline-offset-2"
+              href={`/group/${group.id}`}
+            >
+              {group.title}
+            </Link>
           </small>
         </ListTitle>
 

@@ -9,14 +9,14 @@ export const ProfileTabs = () => {
   const pathname = usePathname()
 
   return (
-    <div className="flex gap-2 overflow-scroll">
-      <Button variant={pathname === "/profile" ? "default" : "ghost"} asChild>
+    <div className="flex gap-2 overflow-x-scroll">
+      <Button variant={pathname === "/profile" ? "default" : "outline"} asChild>
         <Link href="/profile">
           <List size="16" className="mr-2" /> Verlanglijstjes
         </Link>
       </Button>
       <Button
-        variant={pathname === "/profile/groups" ? "default" : "ghost"}
+        variant={pathname === "/profile/groups" ? "default" : "outline"}
         asChild
       >
         <Link href="/profile/groups">
@@ -25,7 +25,7 @@ export const ProfileTabs = () => {
         </Link>
       </Button>
       <Button
-        variant={pathname === "/profile/bought" ? "default" : "ghost"}
+        variant={pathname === "/profile/bought" ? "default" : "outline"}
         asChild
       >
         <Link href="/profile/bought">

@@ -24,7 +24,7 @@ export const WishlistTitle = ({ wishlist, showGroups = false }: Props) => {
     <span>
       {listTitle}{" "}
       {inGroups && (
-        <small>
+        <small className="block text-muted-foreground">
           in groep{groups.length !== 1 && "en"} {inGroups}
         </small>
       )}

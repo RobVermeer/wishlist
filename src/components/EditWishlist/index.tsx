@@ -17,7 +17,7 @@ import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { FileEdit, Pencil } from "lucide-react"
+import { FileEdit, Pencil, Save, Trash } from "lucide-react"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -90,11 +90,11 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
             <Button className="w-full" type="submit" variant="outline">
-              Verwijder
+              <Trash size="16" className="mr-2" /> Verwijder
             </Button>
           </form>
           <Button type="submit" form={`change-${id}`}>
-            Opslaan
+            <Save size="16" className="mr-2" /> Opslaan
           </Button>
         </DialogFooter>
       </DialogContent>

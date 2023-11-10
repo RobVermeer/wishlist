@@ -16,7 +16,7 @@ import { getGroups } from "@/lib/groups/getGroups"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil } from "lucide-react"
+import { Pencil, Save, Trash } from "lucide-react"
 
 interface Props {
   group: Awaited<ReturnType<typeof getGroups>>[0]
@@ -75,11 +75,11 @@ export const EditGroup = ({ group }: Props) => {
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
             <Button className="w-full" type="submit" variant="outline">
-              Verwijder
+              <Trash size="16" className="mr-2" /> Verwijder
             </Button>
           </form>
           <Button type="submit" form={`change-${id}`}>
-            Opslaan
+            <Save size="16" className="mr-2" /> Opslaan
           </Button>
         </DialogFooter>
       </DialogContent>
