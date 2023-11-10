@@ -1,12 +1,10 @@
 "use server"
 
-import { Resend } from "resend"
 import DrawUserEmail from "./templates"
 import { prisma } from "@/lib/prisma"
 import { getErrorMessage, shuffle } from "@/lib/utils"
 import { User } from "@prisma/client"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { resend } from "@/lib/resend"
 
 export const sendEmailToUsers = async (groupId: string, formData: FormData) => {
   try {
