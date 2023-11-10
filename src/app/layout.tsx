@@ -6,13 +6,19 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Header } from "@/components/Header"
 import { Login } from "@/components/Login"
 import { Toaster } from "@/components/ui/toaster"
+import { headers } from "next/headers"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
 export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers()
+  const colorScheme = headersList.get("sec-ch-prefers-color-scheme")
+
   return {
     title: "Wishlist",
-    description: "",
+    description: "Making all your dreams come true.",
+    manifest: "/manifest.json",
+    themeColor: colorScheme === "dark" ? "#0c0a09" : "#ffffff",
   }
 }
 
