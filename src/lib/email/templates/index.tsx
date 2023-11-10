@@ -30,7 +30,7 @@ export const DrawUserEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Img
-          src={`${baseUrl}/gift.svg`}
+          src={`${baseUrl}/gift.png`}
           width="32"
           height="32"
           alt="Wishlist"
