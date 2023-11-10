@@ -21,8 +21,8 @@ export default async function ProfileBoughtPage() {
           {item.title}{" "}
           <small className="text-muted-foreground">
             Gekocht voor{" "}
-            {item.wishlist.title ??
-              item.wishlist.user.firstName ??
+            {item.wishlist.title ||
+              item.wishlist.user.firstName ||
               item.wishlist.user.name?.split(" ")[0]}
           </small>
         </Card>

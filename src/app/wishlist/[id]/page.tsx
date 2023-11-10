@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const wishlist = await getWishlistById(params.id, true)
 
   return {
-    title: `${wishlist.title ?? "Mijn lijstje"} - Wishlist`,
+    title: `${wishlist.title || "Mijn lijstje"} - Wishlist`,
   }
 }
 
