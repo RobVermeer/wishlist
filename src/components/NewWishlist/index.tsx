@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getGroups } from "@/lib/groups/getGroups"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 
 interface Props {
-  groups: Awaited<ReturnType<typeof getGroups>>
+  groups: Awaited<ReturnType<typeof getGroupsForUser>>
 }
 
 export const NewWishlist = ({ groups }: Props) => {

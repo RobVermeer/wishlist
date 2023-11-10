@@ -11,17 +11,17 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { getGroups } from "@/lib/groups/getGroups"
 import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { FileEdit, Pencil, Save, Trash } from "lucide-react"
+import { Pencil, Save, Trash } from "lucide-react"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
-  groups: Awaited<ReturnType<typeof getGroups>>
+  groups: Awaited<ReturnType<typeof getGroupsForUser>>
 }
 
 export const EditWishlist = ({ wishlist, groups }: Props) => {

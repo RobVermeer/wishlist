@@ -2,7 +2,7 @@ import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { NewWishlist } from "@/components/NewWishlist"
 import { YourWishlistCard } from "@/components/YourWishlistCard"
-import { getGroups } from "@/lib/groups/getGroups"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 
 export const metadata = {
@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function ProfilePage() {
   const wishlists = await getWishlistsForUser()
-  const groups = await getGroups()
+  const groups = await getGroupsForUser()
 
   return (
     <>

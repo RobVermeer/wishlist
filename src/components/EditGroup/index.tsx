@@ -12,14 +12,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteGroupById } from "@/lib/groups/deleteGroupById"
-import { getGroups } from "@/lib/groups/getGroups"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroups>>[0]
+  group: Awaited<ReturnType<typeof getGroupsForUser>>[0]
 }
 
 export const EditGroup = ({ group }: Props) => {

@@ -9,13 +9,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { getGroups } from "@/lib/groups/getGroups"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
 import { Pencil, UserMinus } from "lucide-react"
 import { useState } from "react"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroups>>[0]
+  group: Awaited<ReturnType<typeof getGroupsForUser>>[0]
 }
 
 export const LeaveGroup = ({ group }: Props) => {

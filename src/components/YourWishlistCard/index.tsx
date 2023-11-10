@@ -3,11 +3,11 @@ import Link from "next/link"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { EditWishlist } from "@/components/EditWishlist"
-import { getGroups } from "@/lib/groups/getGroups"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
-  groups: Awaited<ReturnType<typeof getGroups>>
+  groups: Awaited<ReturnType<typeof getGroupsForUser>>
 }
 
 export const YourWishlistCard = ({ wishlist, groups }: Props) => {
