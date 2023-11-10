@@ -11,13 +11,18 @@ import { headers } from "next/headers"
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers()
-  const colorScheme = headersList.get("sec-ch-prefers-color-scheme")
-
   return {
     title: "Wishlist",
     description: "Making all your dreams come true.",
     manifest: "/manifest.json",
+  }
+}
+
+export async function generateViewport(): Promise<Metadata> {
+  const headersList = headers()
+  const colorScheme = headersList.get("sec-ch-prefers-color-scheme")
+
+  return {
     themeColor: colorScheme === "dark" ? "#0c0a09" : "#ffffff",
   }
 }
