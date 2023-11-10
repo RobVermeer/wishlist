@@ -25,12 +25,22 @@ export const ToggleItem = ({ item }: Props) => {
         })
       })
     }
+
+    toast({
+      title: boughtBy
+        ? "Je hebt het afstrepen ongedaan gemaakt"
+        : "Je hebt deze wens afgestreept",
+    })
   }
 
   return (
-    <form action={onToggle} className="ml-auto">
+    <form action={onToggle} className="absolute right-1">
       <Button type="submit" variant="ghost" size="icon">
-        {boughtBy ? <CheckSquare /> : <Square />}
+        {boughtBy ? (
+          <CheckSquare className="text-primary" strokeWidth="2.5" />
+        ) : (
+          <Square className="text-secondary-foreground" strokeWidth="2.5" />
+        )}
       </Button>
     </form>
   )

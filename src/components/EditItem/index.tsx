@@ -42,6 +42,12 @@ export const EditItem = ({ item }: Props) => {
   }
 
   async function handleRemove() {
+    const confirm = window.confirm(
+      "Ben je er zeker van dat je deze wens wilt verwijderen?"
+    )
+
+    if (!confirm) return
+
     await deleteWishlistItemById(id)
     setOpen(false)
   }
@@ -69,9 +75,9 @@ export const EditItem = ({ item }: Props) => {
           </Label>
           <Input id="url" name="url" defaultValue={url || ""} />
         </form>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
-            <Button type="submit" variant="destructive">
+            <Button className="w-full" type="submit" variant="outline">
               Verwijder
             </Button>
           </form>

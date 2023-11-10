@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { Plus } from "lucide-react"
 
 interface Props {
   id: string
@@ -41,8 +42,8 @@ export const NewItem = ({ id }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          Voeg een wens toe
+        <Button>
+          <Plus size="16" className="mr-2" /> Voeg een wens toe
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

@@ -7,16 +7,18 @@ export default async function ProfileGroupPage() {
   const groups = await getGroupsForUser()
 
   return (
-    <List>
-      {groups.length === 0 && (
-        <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
-      )}
+    <>
+      <List>
+        {groups.length === 0 && (
+          <p>Je volgt nog geen groepen, doe dit snel! 🧐</p>
+        )}
 
-      {groups.map((group) => (
-        <YourGroupCard key={group.id} group={group} />
-      ))}
+        {groups.map((group) => (
+          <YourGroupCard key={group.id} group={group} />
+        ))}
+      </List>
 
       <NewGroup />
-    </List>
+    </>
   )
 }

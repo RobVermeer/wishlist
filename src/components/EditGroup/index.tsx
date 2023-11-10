@@ -16,6 +16,7 @@ import { getGroups } from "@/lib/groups/getGroups"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { Pencil } from "lucide-react"
 
 interface Props {
   group: Awaited<ReturnType<typeof getGroups>>[0]
@@ -42,6 +43,12 @@ export const EditGroup = ({ group }: Props) => {
   }
 
   async function handleRemove() {
+    const confirm = window.confirm(
+      "Ben je er zeker van dat je deze groep wilt verwijderen?"
+    )
+
+    if (!confirm) return
+
     await deleteGroupById(id)
     setOpen(false)
   }
@@ -49,8 +56,8 @@ export const EditGroup = ({ group }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto" size="sm" variant="outline">
-          Wijzig
+        <Button className="absolute right-1" size="sm" variant="outline">
+          <Pencil size="12" className="mr-2" /> Wijzig
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -65,9 +72,9 @@ export const EditGroup = ({ group }: Props) => {
           <Label htmlFor="title">Naam</Label>
           <Input required id="title" name="title" defaultValue={title} />
         </form>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
-            <Button type="submit" variant="destructive">
+            <Button className="w-full" type="submit" variant="outline">
               Verwijder
             </Button>
           </form>

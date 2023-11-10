@@ -5,5 +5,5 @@ interface Props {
 }
 
 export const ListTitle = ({ children }: Props) => (
-  <h2 className="text-2xl text-slate-800">{children}</h2>
+  <h2 className="text-2xl mb-2 text-primary">{children}</h2>
 )

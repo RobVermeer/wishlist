@@ -15,6 +15,7 @@ import { getGroups } from "@/lib/groups/getGroups"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { Plus } from "lucide-react"
 
 interface Props {
   groups: Awaited<ReturnType<typeof getGroups>>
@@ -42,8 +43,8 @@ export const NewWishlist = ({ groups }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          Maak een nieuw verlanglijstje aan
+        <Button>
+          <Plus size="16" className="mr-2" /> Maak een nieuw verlanglijstje aan
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

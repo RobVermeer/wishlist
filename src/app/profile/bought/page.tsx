@@ -12,46 +12,16 @@ export default async function ProfileBoughtPage() {
       )}
 
       {boughtWishlistItems.map((item) => (
-        <Card key={item.id}>
-          <span>
-            {item.title}{" "}
-            <small>
-              Gekocht voor{" "}
-              {item.wishlist.title ||
-                item.wishlist.user.firstName ||
-                item.wishlist.user.name?.split(" ")[0]}
-            </small>
-          </span>
+        <Card key={item.id} className="flex justify-between items-center">
+          {item.title}{" "}
+          <small className="text-muted-foreground">
+            Gekocht voor{" "}
+            {item.wishlist.title ||
+              item.wishlist.user.firstName ||
+              item.wishlist.user.name?.split(" ")[0]}
+          </small>
         </Card>
       ))}
-
-      {/* <CreateGroup /> */}
     </List>
   )
 }
-
-// import { GetServerSideProps } from "next"
-// import { withBaseProps } from "~/utils/withBaseProps"
-// import { BoughtPresents } from "~/components/BoughtPresents"
-// import {
-//   BoughtWishlistItemProperties,
-//   getBoughtWishlistItemsForUser,
-// } from "~/lib/wishlistItems/getBoughtWishlistItemsForUser"
-// import { Tabs } from "~/components/Tabs"
-// import { ProfileNavBar } from "~/components/ProfileNavBar"
-
-// interface ProfileBoughtPage {
-//   boughtWishlistItems: BoughtWishlistItemProperties[]
-// }
-
-// function ProfileBoughtPage({ boughtWishlistItems }: ProfileBoughtPage) {
-//   return (
-//     <div>
-//       <ProfileNavBar />
-
-//       <Tabs activeTab="boughtPresents">
-//         <BoughtPresents presents={boughtWishlistItems} />
-//       </Tabs>
-//     </div>
-//   )
-// }

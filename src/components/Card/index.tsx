@@ -7,7 +7,12 @@ interface Props {
 }
 
 export const Card = ({ children, className }: Props) => (
-  <div className={clsx(className, "rounded-md p-3 bg-slate-100")}>
+  <div
+    className={clsx(
+      className,
+      "font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
+    )}
+  >
     {children}
   </div>
 )

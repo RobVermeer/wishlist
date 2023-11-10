@@ -9,20 +9,22 @@ export default async function ProfilePage() {
   const groups = await getGroups()
 
   return (
-    <List>
-      {wishlists.length === 0 && (
-        <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
-      )}
+    <>
+      <List>
+        {wishlists.length === 0 && (
+          <p>Je hebt nog geen lijstjes gemaakt, doe dit snel! 🥳</p>
+        )}
 
-      {wishlists.map((wishlist) => (
-        <YourWishlistCard
-          key={wishlist.id}
-          wishlist={wishlist}
-          groups={groups}
-        />
-      ))}
+        {wishlists.map((wishlist) => (
+          <YourWishlistCard
+            key={wishlist.id}
+            wishlist={wishlist}
+            groups={groups}
+          />
+        ))}
+      </List>
 
       <NewWishlist groups={groups} />
-    </List>
+    </>
   )
 }

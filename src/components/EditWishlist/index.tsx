@@ -17,6 +17,7 @@ import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { FileEdit, Pencil } from "lucide-react"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -44,6 +45,12 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
   }
 
   async function handleRemove() {
+    const confirm = window.confirm(
+      "Ben je er zeker van dat je deze wensenlijst wilt verwijderen?"
+    )
+
+    if (!confirm) return
+
     await deleteWishlistById(id)
     setOpen(false)
   }
@@ -51,8 +58,8 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto" size="sm" variant="outline">
-          Wijzig
+        <Button className="absolute right-1" size="sm" variant="outline">
+          <Pencil size="12" className="mr-2" /> Wijzig
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -80,9 +87,9 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
             </label>
           ))}
         </form>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
-            <Button type="submit" variant="destructive">
+            <Button className="w-full" type="submit" variant="outline">
               Verwijder
             </Button>
           </form>

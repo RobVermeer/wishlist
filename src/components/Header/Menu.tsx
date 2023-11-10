@@ -53,7 +53,7 @@ export function Menu({ session }: Props) {
           <SheetHeader>
             <SheetTitle>
               <Logo
-                className="justify-center text-slate-900 dark:text-white"
+                className="justify-center text-secondary-foreground"
                 onClick={close}
               />
             </SheetTitle>
@@ -65,9 +65,11 @@ export function Menu({ session }: Props) {
             onClick={close}
             className="flex gap-2 items-center mt-4"
           >
-            <Home className="text-green-500" size="18" strokeWidth="2.5" />{" "}
+            <Home className="text-emerald-500" size="18" strokeWidth="2.5" />{" "}
             Overzicht
           </Link>
+
+          <Separator />
 
           <Link
             href="/profile"
@@ -75,8 +77,8 @@ export function Menu({ session }: Props) {
             onClick={close}
             className="flex gap-2 items-center"
           >
-            <List className="text-pink-500" size="18" strokeWidth="2.5" /> Mijn
-            verlanglijstjes
+            <List className="text-orange-500" size="18" strokeWidth="2.5" />{" "}
+            Mijn verlanglijstjes
           </Link>
 
           <Link
@@ -85,8 +87,8 @@ export function Menu({ session }: Props) {
             onClick={close}
             className="flex gap-2 items-center"
           >
-            <Group className="text-indigo-400" size="18" strokeWidth="2.5" />{" "}
-            Mijn groepen
+            <Group className="text-pink-500" size="18" strokeWidth="2.5" /> Mijn
+            groepen
           </Link>
 
           <Link
@@ -95,7 +97,7 @@ export function Menu({ session }: Props) {
             onClick={close}
             className="flex gap-2 items-center"
           >
-            <BookUser className="text-zinc-400" size="18" strokeWidth="2.5" />{" "}
+            <BookUser className="text-purple-500" size="18" strokeWidth="2.5" />{" "}
             Mijn gekochte cadeaus
           </Link>
 
@@ -116,8 +118,7 @@ export function Menu({ session }: Props) {
           )}
 
           <Button className="flex gap-2 items-center mt-5" onClick={logout}>
-            <LogOut className="text-red-500 dark:text-red-400" size="16" />{" "}
-            Uitloggen
+            <LogOut size="16" /> Uitloggen
           </Button>
         </div>
       </SheetContent>

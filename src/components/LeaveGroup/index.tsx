@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { getGroups } from "@/lib/groups/getGroups"
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
+import { Pencil } from "lucide-react"
 import { useState } from "react"
 
 interface Props {
@@ -29,8 +30,8 @@ export const LeaveGroup = ({ group }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto" size="sm" variant="outline">
-          Wijzig
+        <Button className="absolute right-1" size="sm" variant="outline">
+          <Pencil size="12" className="mr-2" /> Wijzig
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -43,7 +44,7 @@ export const LeaveGroup = ({ group }: Props) => {
         </p>
         <DialogFooter>
           <form action={handleLeave}>
-            <Button type="submit" variant="destructive">
+            <Button className="w-full" type="submit">
               Stap uit de groep
             </Button>
           </form>

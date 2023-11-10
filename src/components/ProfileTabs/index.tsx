@@ -3,26 +3,35 @@
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { BookUser, Group, List } from "lucide-react"
 
 export const ProfileTabs = () => {
   const pathname = usePathname()
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 overflow-scroll">
       <Button variant={pathname === "/profile" ? "default" : "ghost"} asChild>
-        <Link href="/profile">Verlanglijstjes</Link>
+        <Link href="/profile">
+          <List size="16" className="mr-2" /> Verlanglijstjes
+        </Link>
       </Button>
       <Button
         variant={pathname === "/profile/groups" ? "default" : "ghost"}
         asChild
       >
-        <Link href="/profile/groups">Groepen</Link>
+        <Link href="/profile/groups">
+          <Group size="16" className="mr-2" />
+          Groepen
+        </Link>
       </Button>
       <Button
         variant={pathname === "/profile/bought" ? "default" : "ghost"}
         asChild
       >
-        <Link href="/profile/bought">Gekochte cadeaus</Link>
+        <Link href="/profile/bought">
+          <BookUser size="16" className="mr-2" />
+          Gekochte cadeaus
+        </Link>
       </Button>
     </div>
   )

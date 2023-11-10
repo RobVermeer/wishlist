@@ -15,7 +15,7 @@ export function Logo({ className = "text-white", onClick }: Props) {
       scroll={false}
       onClick={onClick}
     >
-      <Gift size="24" strokeWidth="2" className="text-pink-500 mr-1" /> Wishlist
+      <Gift size="24" strokeWidth="2" className="text-primary mr-1" /> Wishlist
     </Link>
   )
 }

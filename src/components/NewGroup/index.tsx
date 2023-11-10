@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { createGroupForUser } from "@/lib/groups/createGroupForUser"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { Plus } from "lucide-react"
 
 export const NewGroup = () => {
   const { toast } = useToast()
@@ -37,8 +38,8 @@ export const NewGroup = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          Maak een nieuwe groep aan
+        <Button>
+          <Plus size="16" className="mr-2" /> Maak een nieuwe groep aan
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
