@@ -16,7 +16,7 @@ export const AdminTabs = () => {
         </Link>
       </Button>
       <Button
-        variant={pathname === "/admin/groups" ? "default" : "outline"}
+        variant={pathname.startsWith("/admin/groups") ? "default" : "outline"}
         asChild
       >
         <Link href="/admin/groups">
