@@ -26,7 +26,7 @@ export const DrawUserEmail = ({
 }: DrawUserEmailProps) => (
   <Html>
     <Head />
-    <Preview>Je hebt een lootje getrokken</Preview>
+    <Preview>Je hebt een lootje getrokken!</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -37,15 +37,16 @@ export const DrawUserEmail = ({
         />
 
         <Text style={title}>
-          <strong>{userName}</strong>, je hebt een lootje getrokken.
+          <strong>{userName}</strong>, je hebt een lootje getrokken!
         </Text>
 
         <Section style={section}>
           <Text style={text}>
-            Hey <strong>{userName}</strong>!
+            Hey <strong>{userName}</strong>,
           </Text>
           <Text style={text}>
-            De lootjes voor {groupName} zijn getrokken. Kijk snel wie je hebt.
+            De lootjes voor <strong>{groupName}</strong> zijn getrokken. Kijk
+            snel wie je hebt!
           </Text>
           <Text style={text}>
             Voorkom dubbele cadeaus. Vink de cadeaus aan die je gaat geven. Dit
@@ -61,7 +62,7 @@ export const DrawUserEmail = ({
           </Button>
         </Section>
         <Text style={links}>
-          Liefs <strong>Sinterklaas</strong>
+          Liefs, <strong>Sinterklaas</strong>
         </Text>
 
         <Text style={footer}>
