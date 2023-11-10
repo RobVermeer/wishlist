@@ -31,9 +31,14 @@ export const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ profile, user, isNewUser }) => {
+      console.log("User sign in", { ...user, isNewUser })
+
       if (!isNewUser && !user.firstName && profile?.firstName) {
         await updateFirstNameById(user.id, profile.firstName)
       }
+    },
+    signOut: ({ session }) => {
+      console.log("User sign out", session)
     },
   },
 }
