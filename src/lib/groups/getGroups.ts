@@ -13,10 +13,6 @@ export const getGroups = cache(async () => {
     throw new Error("Je bent niet ingelogd")
   }
 
-  if (!session.user.isAdmin) {
-    throw new Error("Je hebt niet de juiste rechten om dit te doen")
-  }
-
   const data = await prisma.group.findMany({
     orderBy: { createdAt: "desc" },
     select: groupProperties,
