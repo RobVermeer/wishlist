@@ -27,7 +27,7 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
     })
 
     if (!wishlist) {
-      throw new Error("Wensenlijst is niet gevonden")
+      throw new Error("Verlanglijst is niet gevonden")
     }
 
     const data = wishlistSchema.parse({

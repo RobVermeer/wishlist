@@ -24,7 +24,7 @@ export const deleteWishlistById = async (id: string) => {
     })
 
     if (!wishlist) {
-      throw new Error("Wensenlijst is niet gevonden")
+      throw new Error("Verlanglijst is niet gevonden")
     }
 
     await prisma.wishlist.delete({

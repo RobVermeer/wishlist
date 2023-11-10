@@ -4,8 +4,9 @@ import { prisma } from "@/lib/prisma"
 import { groupProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { cache } from "react"
 
-export const getGroupById = async (id: string) => {
+export const getGroupById = cache(async (id: string) => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -33,4 +34,4 @@ export const getGroupById = async (id: string) => {
   )
 
   return { ...data, wishlist, subscribed }
-}
+})

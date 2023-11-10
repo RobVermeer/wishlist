@@ -2,6 +2,10 @@ import { Card } from "@/components/Card"
 import { List } from "@/components/List"
 import { getBoughtWishlistItemsForUser } from "@/lib/wishlistItems/getBoughtWishlistItemsForUser"
 
+export const metadata = {
+  title: "Mijn gekochte cadeaus - Profiel - Wishlist",
+}
+
 export default async function ProfileBoughtPage() {
   const boughtWishlistItems = await getBoughtWishlistItemsForUser()
 

@@ -6,7 +6,19 @@ import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import { Metadata } from "next"
 import Link from "next/link"
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const wishlist = await getWishlistById(params.wishlistId)
+  const group = await getGroupById(params.groupId)
+
+  return {
+    title: `${wishlist.title ?? wishlist.user.firstName} - ${
+      group.title
+    } - Wishlist`,
+  }
+}
 
 interface Props {
   params: { wishlistId: string; groupId: string }

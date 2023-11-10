@@ -46,7 +46,7 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
 
   async function handleRemove() {
     const confirm = window.confirm(
-      "Ben je er zeker van dat je deze wensenlijst wilt verwijderen?"
+      "Ben je er zeker van dat je deze verlanglijst wilt verwijderen?"
     )
 
     if (!confirm) return

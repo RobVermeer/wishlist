@@ -30,7 +30,7 @@ export const createWishlistItemForUser = async (
     })
 
     if (!wishlist) {
-      throw new Error("Wensenlijst is niet gevonden")
+      throw new Error("Verlanglijst is niet gevonden")
     }
 
     const data = wishlistItemSchema.parse({

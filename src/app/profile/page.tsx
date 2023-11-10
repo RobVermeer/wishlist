@@ -4,6 +4,10 @@ import { YourWishlistCard } from "@/components/YourWishlistCard"
 import { getGroups } from "@/lib/groups/getGroups"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 
+export const metadata = {
+  title: "Mijn verlanglijstjes - Profiel - Wishlist",
+}
+
 export default async function ProfilePage() {
   const wishlists = await getWishlistsForUser()
   const groups = await getGroups()

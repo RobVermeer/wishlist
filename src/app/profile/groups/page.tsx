@@ -3,6 +3,10 @@ import { NewGroup } from "@/components/NewGroup"
 import { YourGroupCard } from "@/components/YourGroupCard"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 
+export const metadata = {
+  title: "Mijn groepen - Profiel - Wishlist",
+}
+
 export default async function ProfileGroupPage() {
   const groups = await getGroupsForUser()
 

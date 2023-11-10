@@ -8,6 +8,10 @@ import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import Link from "next/link"
 
+export const metadata = {
+  title: "Overzicht - Wishlist",
+}
+
 export default async function Home() {
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()

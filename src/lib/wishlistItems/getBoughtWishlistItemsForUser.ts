@@ -6,6 +6,7 @@ import { wishlistProperties } from "@/lib/wishlists/publicProperties"
 import { wishlistItemProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { cache } from "react"
 
 interface BoughtWishlistProperties extends Wishlist {
   user: User
@@ -15,7 +16,7 @@ export interface BoughtWishlistItemProperties extends WishlistItem {
   wishlist: BoughtWishlistProperties
 }
 
-export const getBoughtWishlistItemsForUser = async () => {
+export const getBoughtWishlistItemsForUser = cache(async () => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -35,4 +36,4 @@ export const getBoughtWishlistItemsForUser = async () => {
   })
 
   return data
-}
+})

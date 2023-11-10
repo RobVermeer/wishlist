@@ -3,8 +3,9 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
+import { cache } from "react"
 
-export const getUsers = async () => {
+export const getUsers = cache(async () => {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -20,4 +21,4 @@ export const getUsers = async () => {
   })
 
   return data
-}
+})
