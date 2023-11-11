@@ -51,6 +51,8 @@ export const updateGroupById = async (id: string, formData: FormData) => {
       }
     }
 
+    console.error("Update group by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

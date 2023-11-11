@@ -62,6 +62,8 @@ export const updateWishlistItemById = async (
       }
     }
 
+    console.error("Update wishlist item by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

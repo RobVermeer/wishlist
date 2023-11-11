@@ -41,6 +41,8 @@ export const followGroupById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
+    console.error("Follow group by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

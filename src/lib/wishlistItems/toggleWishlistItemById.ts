@@ -50,6 +50,8 @@ export const toggleWishlistItemById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
+    console.error("Toggle wishlist item by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

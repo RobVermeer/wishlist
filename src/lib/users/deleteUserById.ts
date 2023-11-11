@@ -28,6 +28,8 @@ export const deleteUserById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
+    console.error("Delete user by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

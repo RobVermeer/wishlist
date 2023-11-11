@@ -43,6 +43,8 @@ export const createGroupForUser = async (formData: FormData) => {
       }
     }
 
+    console.error("Create group for user", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

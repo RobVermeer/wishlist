@@ -61,6 +61,8 @@ export const createWishlistItemForUser = async (
       }
     }
 
+    console.error("Create wishlist item for user", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

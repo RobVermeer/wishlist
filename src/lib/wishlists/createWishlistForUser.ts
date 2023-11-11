@@ -46,6 +46,8 @@ export const createWishlistForUser = async (formData: FormData) => {
       }
     }
 
+    console.error("Create wishlist for user", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

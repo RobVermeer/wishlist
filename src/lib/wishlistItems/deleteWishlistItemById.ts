@@ -39,6 +39,8 @@ export const deleteWishlistItemById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
+    console.error("Delete wishlist item by ID", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

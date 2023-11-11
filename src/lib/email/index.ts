@@ -69,6 +69,8 @@ export const sendEmailToUsers = async (groupId: string, formData: FormData) => {
       type: "success" as const,
     }
   } catch (error) {
+    console.error("Send email to users", error)
+
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],
