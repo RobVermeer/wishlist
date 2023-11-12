@@ -23,6 +23,6 @@ export const wishlistItemSchema = z.object({
     .string()
     .trim()
     .min(2, { message: "Je wens moet minimaal uit 2 tekens bestaan" })
-    .max(40, { message: "Je wens mag maximaal uit 40 tekens bestaan" }),
+    .max(100, { message: "Je wens mag maximaal uit 100 tekens bestaan" }),
   url: z.string().url({ message: "Vul een geldige URL in" }).optional(),
 })
