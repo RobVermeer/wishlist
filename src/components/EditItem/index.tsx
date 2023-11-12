@@ -56,7 +56,7 @@ export const EditItem = ({ item }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto" size="sm" variant="outline">
+        <Button className="absolute right-1" size="sm" variant="outline">
           <Pencil size="12" className="mr-2" /> Wijzig
         </Button>
       </DialogTrigger>

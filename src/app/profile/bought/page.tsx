@@ -17,9 +17,9 @@ export default async function ProfileBoughtPage() {
       )}
 
       {boughtWishlistItems.map((item) => (
-        <Card key={item.id} className="flex justify-between items-center">
+        <Card key={item.id}>
           {item.title}{" "}
-          <small className="text-muted-foreground">
+          <small className="block text-muted-foreground">
             Gekocht voor{" "}
             {item.wishlist.title ||
               item.wishlist.user.firstName ||

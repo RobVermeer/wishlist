@@ -14,13 +14,13 @@ export const ItemCard = ({ item }: Props) => {
   return (
     <Card
       className={clsx(
-        "flex items-center",
+        "flex items-center pr-12",
         boughtBy && "line-through decoration-primary decoration-2"
       )}
     >
       {url && (
-        <a href={url} className="inline-flex gap-2 items-center">
-          <Link size="16" strokeWidth="2.5" /> {title}
+        <a href={url} target="_blank">
+          <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
         </a>
       )}
 

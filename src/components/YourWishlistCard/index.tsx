@@ -14,7 +14,7 @@ export const YourWishlistCard = ({ wishlist, groups }: Props) => {
   const { id } = wishlist
 
   return (
-    <Card className="flex items-center">
+    <Card className="flex items-center pr-24">
       <Link href={`/wishlist/${id}`}>
         <WishlistTitle wishlist={wishlist} showGroups />
       </Link>

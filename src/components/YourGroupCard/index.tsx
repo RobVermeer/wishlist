@@ -12,7 +12,7 @@ export const YourGroupCard = ({ group }: Props) => {
   const { id, title, isOwnGroup } = group
 
   return (
-    <Card className="flex items-center">
+    <Card className="flex items-center pr-24">
       <Link href={`/group/${id}`}>{title}</Link>
 
       {isOwnGroup && <EditGroup group={group} />}
