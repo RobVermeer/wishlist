@@ -43,12 +43,6 @@ export const EditGroup = ({ group }: Props) => {
   }
 
   async function handleRemove() {
-    const confirm = window.confirm(
-      "Ben je er zeker van dat je deze groep wilt verwijderen?"
-    )
-
-    if (!confirm) return
-
     await deleteGroupById(id)
     setOpen(false)
   }

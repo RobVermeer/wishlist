@@ -43,12 +43,6 @@ export const EditItem = ({ item }: Props) => {
   }
 
   async function handleRemove() {
-    const confirm = window.confirm(
-      "Ben je er zeker van dat je deze wens wilt verwijderen?"
-    )
-
-    if (!confirm) return
-
     await deleteWishlistItemById(id)
     setOpen(false)
   }
