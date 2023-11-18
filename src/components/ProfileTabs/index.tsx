@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookUser, Group, List } from "lucide-react"
-import { ScrollArea, ScrollBar } from "../ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export const ProfileTabs = () => {
   const pathname = usePathname()

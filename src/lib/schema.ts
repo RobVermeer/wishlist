@@ -6,6 +6,7 @@ export const groupSchema = z.object({
     .trim()
     .min(2, { message: "Groep titel moet minimaal uit 2 tekens bestaan" })
     .max(40, { message: "Groep titel mag maximaal uit 40 tekens bestaan" }),
+  theme: z.string().trim().optional(),
 })
 
 export const wishlistSchema = z.object({

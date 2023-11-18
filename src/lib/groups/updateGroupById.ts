@@ -34,7 +34,10 @@ export const updateGroupById = async (id: string, formData: FormData) => {
 
     await prisma.group.update({
       where: { id },
-      data,
+      data: {
+        title: data.title,
+        theme: data.theme === "default" ? null : data.theme,
+      },
       select: groupProperties,
     })
 

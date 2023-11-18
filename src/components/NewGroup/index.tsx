@@ -15,6 +15,14 @@ import { createGroupForUser } from "@/lib/groups/createGroupForUser"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export const NewGroup = () => {
   const { toast } = useToast()
@@ -49,6 +57,20 @@ export const NewGroup = () => {
         <form action={handleSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">Naam</Label>
           <Input required id="title" name="title" />
+          <Label htmlFor="theme">Thema</Label>
+          <Select name="theme">
+            <SelectTrigger id="theme">
+              <SelectValue placeholder="Selecteer een thema" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="default">Geen thema</SelectItem>
+                <SelectItem value="sinterklaas">Sinterklaas</SelectItem>
+                <SelectItem value="christmas">Kerst</SelectItem>
+                <SelectItem value="birthday">Verjaardag</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </form>
         <DialogFooter>
           <Button type="submit" form="add">

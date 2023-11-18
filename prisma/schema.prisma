@@ -63,6 +63,7 @@ model Group {
   id        String     @id @default(cuid())
   title     String
   createdAt DateTime
+  theme     String?
   wishlist  Wishlist[]
   createdBy User       @relation(name: "OwnedGroups", fields: [userId], references: [id], onDelete: Cascade)
   userId    String

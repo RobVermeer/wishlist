@@ -2,7 +2,7 @@
 
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Button } from "@/components/ui/button"
-import { useToast } from "../ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { MessagesSquare } from "lucide-react"
 
 interface Props {

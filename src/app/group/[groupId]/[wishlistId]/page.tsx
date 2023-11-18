@@ -35,38 +35,36 @@ export default async function GroupWishlistPage({ params }: Props) {
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
 
   return (
-    <Layout>
-      <List>
-        <ListTitle>
-          <WishlistTitle wishlist={wishlist} />{" "}
-          <small className="text-secondary-foreground">
-            In{" "}
-            <Link
-              className="underline underline-offset-2"
-              href={`/group/${group.id}`}
-            >
-              {group.title}
-            </Link>
-          </small>
-        </ListTitle>
+    <List>
+      <ListTitle>
+        <WishlistTitle wishlist={wishlist} />{" "}
+        <small className="text-secondary-foreground">
+          In{" "}
+          <Link
+            className="underline underline-offset-2"
+            href={`/group/${group.id}`}
+          >
+            {group.title}
+          </Link>
+        </small>
+      </ListTitle>
 
-        {wishlist.wishlistItem.map((item) => {
-          if (wishlist.isOwnList) {
-            return <YourItemCard key={item.id} item={item} />
-          }
+      {wishlist.wishlistItem.map((item) => {
+        if (wishlist.isOwnList) {
+          return <YourItemCard key={item.id} item={item} />
+        }
 
-          return <ItemCard key={item.id} item={item} />
-        })}
+        return <ItemCard key={item.id} item={item} />
+      })}
 
-        {wishlist.wishlistItem.length === 0 && (
-          <EmptyState title="🫣 Dit lijstje is nog helemaal leeg 🫣">
-            Wel zo goedkoop, alleen misschien moeten we er toch maar wat van
-            gaan zeggen! 👮
-          </EmptyState>
-        )}
+      {wishlist.wishlistItem.length === 0 && (
+        <EmptyState title="🫣 Dit lijstje is nog helemaal leeg 🫣">
+          Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan
+          zeggen! 👮
+        </EmptyState>
+      )}
 
-        {canBeReminded && <RemindButton wishlist={wishlist} />}
-      </List>
-    </Layout>
+      {canBeReminded && <RemindButton wishlist={wishlist} />}
+    </List>
   )
 }

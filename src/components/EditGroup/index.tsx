@@ -17,6 +17,14 @@ import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Props {
   group: Awaited<ReturnType<typeof getGroupsForUser>>[0]
@@ -65,6 +73,20 @@ export const EditGroup = ({ group }: Props) => {
         >
           <Label htmlFor="title">Naam</Label>
           <Input required id="title" name="title" defaultValue={title} />
+          <Label htmlFor="theme">Thema</Label>
+          <Select name="theme" defaultValue={group.theme || undefined}>
+            <SelectTrigger id="theme">
+              <SelectValue placeholder="Selecteer een thema" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="default">Geen thema</SelectItem>
+                <SelectItem value="sinterklaas">Sinterklaas</SelectItem>
+                <SelectItem value="christmas">Kerst</SelectItem>
+                <SelectItem value="birthday">Verjaardag</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>

@@ -37,28 +37,26 @@ export default async function GroupPage({ params }: Props) {
   }
 
   return (
-    <Layout>
-      <List>
-        <ListTitle>{group.title}</ListTitle>
+    <List>
+      <ListTitle>{group.title}</ListTitle>
 
-        {group.wishlist.map((wishlist) => (
-          <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
-        ))}
+      {group.wishlist.map((wishlist) => (
+        <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
+      ))}
 
-        {group.wishlist.length === 0 && (
-          <EmptyState title="😵‍💫 Er zijn nog geen lijstjes! 😵‍💫">
-            Maak als eerste een lijstje aan in{" "}
-            <Link className="text-primary" href="/profile">
-              je profiel
-            </Link>
-            ! 🤑
-          </EmptyState>
-        )}
+      {group.wishlist.length === 0 && (
+        <EmptyState title="😵‍💫 Er zijn nog geen lijstjes! 😵‍💫">
+          Maak als eerste een lijstje aan in{" "}
+          <Link className="text-primary" href="/profile">
+            je profiel
+          </Link>
+          ! 🤑
+        </EmptyState>
+      )}
 
-        <Separator className="my-3" />
+      <Separator className="my-3" />
 
-        <ShareButton group={group} />
-      </List>
-    </Layout>
+      <ShareButton group={group} />
+    </List>
   )
 }

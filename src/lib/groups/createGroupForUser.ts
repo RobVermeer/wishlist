@@ -23,7 +23,8 @@ export const createGroupForUser = async (formData: FormData) => {
     await prisma.group.create({
       select: groupProperties,
       data: {
-        ...data,
+        title: data.title,
+        theme: data.theme === "default" ? null : data.theme,
         members: { connect: [{ id: userId }] },
         createdAt: new Date(),
         userId,

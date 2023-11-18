@@ -18,4 +18,5 @@ export const groupProperties = {
     select: wishlistProperties,
   },
   members: true,
+  theme: true,
 }
