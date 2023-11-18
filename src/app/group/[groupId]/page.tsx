@@ -5,6 +5,7 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
+import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
 import Link from "next/link"
@@ -53,6 +54,8 @@ export default async function GroupPage({ params }: Props) {
             ! 🤑
           </EmptyState>
         )}
+
+        <Separator className="my-3" />
 
         <ShareButton group={group} />
       </List>

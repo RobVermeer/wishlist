@@ -28,7 +28,7 @@ export const ShareButton = ({ group }: Props) => {
   return (
     <Button onClick={share}>
       <MessagesSquare size="16" className="mr-2" /> Nodig iemand uit voor de
-      group
+      groep
     </Button>
   )
 }
