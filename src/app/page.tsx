@@ -33,7 +33,7 @@ export default async function Home() {
               <Link
                 key={group.id}
                 href={`/group/${group.id}`}
-                className="relative overflow-hidden group aspect-square flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all bg-cover bg-center"
+                className="relative overflow-hidden group aspect-video flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all bg-cover bg-center"
                 style={{
                   backgroundImage:
                     typeof group.theme === "string"
@@ -69,12 +69,12 @@ export default async function Home() {
               <Link
                 key={wishlist.id}
                 href={`/wishlist/${wishlist.id}`}
-                className="group aspect-square flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
+                className="group aspect-video flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
               >
                 <ScrollText
-                  size="80"
+                  size="32"
                   strokeWidth="2"
-                  className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-2 transition-all"
+                  className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-4 transition-all"
                 />
                 <WishlistTitle
                   className="text-center px-2 absolute bottom-3"
