@@ -3,16 +3,21 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 interface Props {
   showGroups?: boolean
   wishlist: Awaited<ReturnType<typeof getWishlistById>>
+  className?: string
 }
 
-export const WishlistTitle = ({ wishlist, showGroups = false }: Props) => {
+export const WishlistTitle = ({
+  wishlist,
+  showGroups = false,
+  className = "",
+}: Props) => {
   const { title, user, groups, isOwnList } = wishlist
   const listTitle =
     title ||
     (isOwnList ? "Mijn lijstje" : user.firstName || user.name?.split(" ")[0])
 
   if (!showGroups) {
-    return <>{listTitle}</>
+    return <span className={className}>{listTitle}</span>
   }
 
   const inGroups = groups
@@ -21,7 +26,7 @@ export const WishlistTitle = ({ wishlist, showGroups = false }: Props) => {
     .replace(/,([^,]+)$/i, " & $1")
 
   return (
-    <span>
+    <span className={className}>
       {listTitle}{" "}
       {inGroups && (
         <small className="block text-muted-foreground">

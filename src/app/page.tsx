@@ -1,11 +1,11 @@
 import { EmptyState } from "@/components/EmptyState"
-import { GroupCard } from "@/components/GroupCard"
 import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
-import { WishlistCard } from "@/components/WishlistCard"
+import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
+import { ScrollText, Users2 } from "lucide-react"
 import Link from "next/link"
 
 export const metadata = {
@@ -20,9 +20,25 @@ export default async function Home() {
     <Layout>
       <List>
         <ListTitle>Groepen die je volgt</ListTitle>
-        {groups.map((group) => (
-          <GroupCard key={group.id} group={group} />
-        ))}
+
+        <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
+          {groups.map((group) => (
+            <Link
+              key={group.id}
+              href={`/group/${group.id}`}
+              className="group aspect-square flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
+            >
+              <Users2
+                size="80"
+                strokeWidth="2"
+                className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-2 transition-all"
+              />
+              <span className="text-center px-2 absolute bottom-3">
+                {group.title}
+              </span>
+            </Link>
+          ))}
+        </div>
 
         {groups.length === 0 && (
           <EmptyState title="Je volgt nog geen enkele groep 🥺">
@@ -38,9 +54,26 @@ export default async function Home() {
 
       <List>
         <ListTitle>Ga direct naar je eigen lijstjes</ListTitle>
-        {wishlists.map((wishlist) => (
-          <WishlistCard key={wishlist.id} wishlist={wishlist} />
-        ))}
+
+        <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
+          {wishlists.map((wishlist) => (
+            <Link
+              key={wishlist.id}
+              href={`/wishlist/${wishlist.id}`}
+              className="group aspect-square flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
+            >
+              <ScrollText
+                size="80"
+                strokeWidth="2"
+                className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-2 transition-all"
+              />
+              <WishlistTitle
+                className="text-center px-2 absolute bottom-3"
+                wishlist={wishlist}
+              />
+            </Link>
+          ))}
+        </div>
 
         {wishlists.length === 0 && (
           <EmptyState title="Je hebt nog geen lijstjes gemaakt 🥺">
