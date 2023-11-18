@@ -3,6 +3,7 @@ import { FollowGroup } from "@/components/FollowGroup"
 import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
+import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
@@ -52,6 +53,8 @@ export default async function GroupPage({ params }: Props) {
             ! 🤑
           </EmptyState>
         )}
+
+        <ShareButton group={group} />
       </List>
     </Layout>
   )

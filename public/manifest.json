@@ -10,6 +10,7 @@
   "description": "Making all your dreams come true.",
   "categories": ["productivity"],
   "orientation": "portrait",
+  "permissions": ["clipboardWrite"],
   "icons": [
     {
       "src": "windows11/SmallTile.scale-100.png",
