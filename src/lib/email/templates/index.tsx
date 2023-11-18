@@ -9,14 +9,14 @@ import { Preview } from "@react-email/preview"
 import { Section } from "@react-email/section"
 import { Text } from "@react-email/text"
 
+const baseUrl = process.env.BASE_URL!
+
 interface DrawUserEmailProps {
   userName: string
   forName: string
   groupId: string
   groupName: string
 }
-
-const baseUrl = process.env.BASE_URL!
 
 export const DrawUserEmail = ({
   userName,
@@ -75,7 +75,50 @@ export const DrawUserEmail = ({
   </Html>
 )
 
-export default DrawUserEmail
+interface RemindUserEmailProps {
+  userName: string
+}
+
+export const RemindUserEmail = ({ userName }: RemindUserEmailProps) => (
+  <Html>
+    <Head />
+    <Preview>Iemand vraagt of je jouw lijstje kan uitbreiden</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Img
+          src={`${baseUrl}/gift.png`}
+          width="32"
+          height="32"
+          alt="Wishlist"
+        />
+
+        <Text style={title}>
+          <strong>{userName}</strong>, heb je nog wat wensen?
+        </Text>
+
+        <Section style={section}>
+          <Text style={text}>
+            Hey <strong>{userName}</strong>,
+          </Text>
+          <Text style={text}>
+            Er is iemand die vraagt of je nog wat extra wensen op je lijstje
+            zet.
+          </Text>
+
+          <Button style={button} href={baseUrl}>
+            Doe het meteen
+          </Button>
+        </Section>
+
+        <Text style={footer}>
+          <Link style={link} href={baseUrl}>
+            Wishlist
+          </Link>
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+)
 
 const main = {
   backgroundColor: "#ffffff",

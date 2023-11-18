@@ -1,6 +1,6 @@
 "use server"
 
-import DrawUserEmail from "./templates"
+import { DrawUserEmail } from "./templates"
 import { prisma } from "@/lib/prisma"
 import { getErrorMessage, shuffle } from "@/lib/utils"
 import { User } from "@prisma/client"

@@ -3,9 +3,11 @@ import { ItemCard } from "@/components/ItemCard"
 import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
+import { RemindButton } from "@/components/RemindButton"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { YourItemCard } from "@/components/YourItemCard"
 import { getGroupById } from "@/lib/groups/getGroupById"
+import { canBeRemindedForUser } from "@/lib/reminders"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import Link from "next/link"
@@ -30,6 +32,7 @@ interface Props {
 export default async function GroupWishlistPage({ params }: Props) {
   const wishlist = await getWishlistById(params.wishlistId)
   const group = await getGroupById(params.groupId)
+  const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
 
   return (
     <Layout>
@@ -61,6 +64,8 @@ export default async function GroupWishlistPage({ params }: Props) {
             gaan zeggen! 👮
           </EmptyState>
         )}
+
+        {canBeReminded && <RemindButton wishlist={wishlist} />}
       </List>
     </Layout>
   )

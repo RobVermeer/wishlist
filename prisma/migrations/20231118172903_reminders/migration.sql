@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "Reminder" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "to" TEXT NOT NULL,
+    "from" TEXT NOT NULL
+);

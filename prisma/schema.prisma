@@ -89,3 +89,10 @@ model WishlistItem {
   wishlistId String
   wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
 }
+
+model Reminder {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  to        String
+  from      String
+}
