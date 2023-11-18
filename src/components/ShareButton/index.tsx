@@ -16,7 +16,7 @@ export const ShareButton = ({ group }: Props) => {
     try {
       await navigator.share({
         title: group.title,
-        text: `Je bent uitgenodigt om ${group.title} te joinen.`,
+        text: `Je bent uitgenodigd om ${group.title} te joinen.`,
         url: window.location.toString(),
       })
     } catch {
