@@ -18,6 +18,8 @@ import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Separator } from "@/components/ui/separator"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -28,6 +30,7 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { id, title } = wishlist
+  const [ownList, setOwnList] = useState(!title)
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await updateWishlistById(id, data)
@@ -65,21 +68,43 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >
-          <Label htmlFor="name">Naam (optioneel)</Label>
-          <Input id="name" name="name" defaultValue={title || ""} />
-          {groups.map((group) => (
-            <label key={group.id}>
-              <input
-                value={group.id}
-                type="checkbox"
-                name="groups"
-                defaultChecked={wishlist.groups
-                  .map((g) => g.id)
-                  .includes(group.id)}
-              />{" "}
-              {group.title}
-            </label>
-          ))}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="own-list"
+              name="own-list"
+              checked={ownList}
+              onCheckedChange={(checked) => setOwnList(Boolean(checked))}
+            />
+            <Label htmlFor="own-list">Dit is mijn eigen lijstje</Label>
+          </div>
+
+          {!ownList && (
+            <>
+              <Label htmlFor="name">
+                Naam van diegene voor wie je het lijstje beheert
+              </Label>
+              <Input id="name" name="name" defaultValue={title || ""} />
+            </>
+          )}
+
+          <Separator />
+
+          <div className="grid gap-1">
+            <h3>In welke groepen moet je lijstje komen</h3>
+            {groups.map((group) => (
+              <div key={group.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`group-${group.id}`}
+                  value={group.id}
+                  name="groups"
+                  defaultChecked={wishlist.groups
+                    .map((g) => g.id)
+                    .includes(group.id)}
+                />
+                <label htmlFor={`group-${group.id}`}>{group.title}</label>
+              </div>
+            ))}
+          </div>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
