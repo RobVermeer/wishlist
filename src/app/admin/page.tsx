@@ -4,6 +4,7 @@ import { BookUser, Group, List, Users } from "lucide-react"
 
 export default async function AdminDashboardPage() {
   const { userCount, wishlistCount, groupCount, itemCount } = await getStats()
+
   return (
     <div className="grid gap-4">
       <div className="flex gap-2 items-center text-lg">
