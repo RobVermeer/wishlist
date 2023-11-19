@@ -3,6 +3,7 @@ import { ItemCard } from "@/components/ItemCard"
 import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
+import { NewItem } from "@/components/NewItem"
 import { RemindButton } from "@/components/RemindButton"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { YourItemCard } from "@/components/YourItemCard"
@@ -64,7 +65,11 @@ export default async function GroupWishlistPage({ params }: Props) {
         </EmptyState>
       )}
 
-      {canBeReminded && <RemindButton wishlist={wishlist} />}
+      {wishlist.isOwnList && <NewItem id={wishlist.id} />}
+
+      {canBeReminded && !wishlist.isOwnList && (
+        <RemindButton wishlist={wishlist} />
+      )}
     </List>
   )
 }
