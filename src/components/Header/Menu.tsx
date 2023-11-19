@@ -1,11 +1,10 @@
 "use client"
 
 import { Session } from "next-auth"
-import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut } from "next-auth/react"
 import {
   BookUser,
-  ChevronDown,
   Group,
   Home,
   List,
@@ -48,13 +47,14 @@ export function Menu({ session }: Props) {
   return (
     <div className="flex gap-2">
       <Link href="/profile">
-        <Avatar className="relative border border-slate-500 cursor-pointer">
+        <Avatar className="border border-slate-500 cursor-pointer">
           {session.user.image && (
             <AvatarImage
               src={session.user.image}
               alt={`@${session.user.name}`}
             />
           )}
+          <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
       </Link>
       <Sheet open={open} onOpenChange={setOpen}>
