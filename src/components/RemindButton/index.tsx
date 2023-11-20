@@ -4,8 +4,24 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Button } from "@/components/ui/button"
 import { sendReminderToUser } from "@/lib/reminders"
 import { Separator } from "@/components/ui/separator"
-import { ShoppingBasket } from "lucide-react"
+import { Loader2, ShoppingBasket } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { useFormStatus } from "react-dom"
+
+const FormButton = () => {
+  const { pending } = useFormStatus()
+
+  return (
+    <Button className="w-full" type="submit" disabled={pending}>
+      {pending ? (
+        <Loader2 className="animate-spin mr-2" size="16" />
+      ) : (
+        <ShoppingBasket className="mr-2" size="16" />
+      )}{" "}
+      Vraag om meer cadeaus op de lijst
+    </Button>
+  )
+}
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistById>>
@@ -34,10 +50,7 @@ export const RemindButton = ({ wishlist }: Props) => {
       <Separator className="my-3" />
 
       <form action={sendReminder}>
-        <Button className="w-full" type="submit">
-          <ShoppingBasket className="mr-2" size="16" /> Vraag om meer cadeaus op
-          de lijst
-        </Button>
+        <FormButton />
       </form>
     </>
   )
