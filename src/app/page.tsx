@@ -37,8 +37,8 @@ export default async function Home() {
                 style={{
                   backgroundImage:
                     typeof group.theme === "string"
-                      ? `url('/${group.theme}.jpg')`
-                      : "url('/background.jpg')",
+                      ? `url('/${group.theme}.webp')`
+                      : "url('/background.webp')",
                 }}
               >
                 <div className="absolute inset-0 translate-y-1/3 bg-gradient-to-b from-transparent to-black" />
