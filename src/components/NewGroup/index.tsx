@@ -68,6 +68,7 @@ export const NewGroup = () => {
                 <SelectItem value="sinterklaas">Sinterklaas</SelectItem>
                 <SelectItem value="christmas">Kerst</SelectItem>
                 <SelectItem value="birthday">Verjaardag</SelectItem>
+                <SelectItem value="baby">Baby</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
