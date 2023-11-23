@@ -127,7 +127,7 @@ interface LoginWithEmailProps {
 export const LoginWithEmail = ({ url }: LoginWithEmailProps) => (
   <Html>
     <Head />
-    <Preview>Inloggen Wishlist</Preview>
+    <Preview>Inloggen bij Wishlist</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -137,15 +137,13 @@ export const LoginWithEmail = ({ url }: LoginWithEmailProps) => (
           alt="Wishlist"
         />
 
-        <Text style={title}>Inloggen Wishlist</Text>
-
         <Section style={section}>
           <Text style={text}>Hey,</Text>
           <Text style={text}>
-            Je hebt net gevraagd om in te loggen bij Wishlist. Om in te loggen
-            bij Wishlist moet je op de knop hieronder drukken. Als je dit niet
-            hebt gedaan, negeer dit emailtje dan.
+            Je hebt net aangevraagd om in te loggen bij Wishlist. Om in te
+            loggen moet je op de rode knop hieronder klikken.
           </Text>
+          <Text style={text}>Veel plezier bij het gebruik van Wishlist!</Text>
 
           <Button style={button} href={url}>
             Log nu in
