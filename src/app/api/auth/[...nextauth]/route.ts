@@ -3,6 +3,8 @@ import { updateFirstNameById } from "@/lib/users/updateFirstNameById"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import NextAuth, { AuthOptions, Session, User } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import EmailProvider from "next-auth/providers/email"
+import { sendVerificationRequest } from "@/utils/send-verification-request"
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -18,6 +20,11 @@ export const authOptions: AuthOptions = {
         emailVerified: profile.email_verified,
         image: profile.picture,
       }),
+    }),
+    EmailProvider({
+      server: "",
+      from: "Wishlist <no-reply@ru-coding.nl>",
+      sendVerificationRequest,
     }),
   ],
   callbacks: {

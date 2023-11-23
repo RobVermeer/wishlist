@@ -120,6 +120,48 @@ export const RemindUserEmail = ({ userName }: RemindUserEmailProps) => (
   </Html>
 )
 
+interface LoginWithEmailProps {
+  url: string
+}
+
+export const LoginWithEmail = ({ url }: LoginWithEmailProps) => (
+  <Html>
+    <Head />
+    <Preview>Inloggen Wishlist</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Img
+          src={`${baseUrl}/gift.png`}
+          width="32"
+          height="32"
+          alt="Wishlist"
+        />
+
+        <Text style={title}>Inloggen Wishlist</Text>
+
+        <Section style={section}>
+          <Text style={text}>Hey,</Text>
+          <Text style={text}>
+            Je hebt net gevraagd om in te loggen bij Wishlist. Om in te loggen
+            bij Wishlist moet je op de knop hieronder drukken. Als je dit niet
+            hebt gedaan, negeer dit emailtje dan.
+          </Text>
+
+          <Button style={button} href={url}>
+            Log nu in
+          </Button>
+        </Section>
+
+        <Text style={footer}>
+          <Link style={link} href={baseUrl}>
+            Wishlist
+          </Link>
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+)
+
 const main = {
   backgroundColor: "#ffffff",
   color: "#09090b",
