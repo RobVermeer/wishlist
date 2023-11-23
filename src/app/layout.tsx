@@ -7,6 +7,7 @@ import { Header } from "@/components/Header"
 import { Login } from "@/components/Login"
 import { Toaster } from "@/components/ui/toaster"
 import { headers } from "next/headers"
+import { UserInfoDialog } from "@/components/UserInfoDialog"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
@@ -45,6 +46,8 @@ export default async function RootLayout({
             <Login />
           </>
         )}
+
+        {session && <UserInfoDialog session={session} />}
         <Toaster />
       </body>
     </html>
