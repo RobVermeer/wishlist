@@ -2,7 +2,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 
 interface Props {
   showGroups?: boolean
-  wishlist: Awaited<ReturnType<typeof getWishlistById>>
+  wishlist: NonNullable<Awaited<ReturnType<typeof getWishlistById>>>
   className?: string
 }
 

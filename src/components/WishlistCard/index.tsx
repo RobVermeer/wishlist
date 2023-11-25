@@ -6,7 +6,7 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
-  group?: Awaited<ReturnType<typeof getGroupById>>
+  group?: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 
 export const WishlistCard = ({ wishlist, group }: Props) => {

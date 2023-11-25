@@ -6,7 +6,7 @@ import { followGroupById } from "@/lib/groups/followGroupById"
 import { UserPlus } from "lucide-react"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroupById>>
+  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 
 export const FollowGroup = ({ group }: Props) => {

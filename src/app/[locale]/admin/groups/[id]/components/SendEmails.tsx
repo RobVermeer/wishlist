@@ -9,7 +9,7 @@ import { Send } from "lucide-react"
 import { RedirectType, redirect } from "next/navigation"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroupById>>
+  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 
 export const SendEmails = ({ group }: Props) => {

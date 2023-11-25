@@ -4,7 +4,9 @@ import { Link } from "lucide-react"
 import { EditItem } from "@/components/EditItem"
 
 interface Props {
-  item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
+  item: NonNullable<
+    Awaited<ReturnType<typeof getWishlistById>>
+  >["wishlistItem"][0]
 }
 
 export const YourItemCard = ({ item }: Props) => {

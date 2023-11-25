@@ -24,7 +24,7 @@ const FormButton = () => {
 }
 
 interface Props {
-  wishlist: Awaited<ReturnType<typeof getWishlistById>>
+  wishlist: NonNullable<Awaited<ReturnType<typeof getWishlistById>>>
 }
 
 export const RemindButton = ({ wishlist }: Props) => {

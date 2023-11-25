@@ -46,7 +46,7 @@ export const UserInfoDialog = ({ session }: Props) => {
     if (!sent && !open && !session.user.firstName) {
       setOpen(true)
     }
-  }, [open, session.user.firstName])
+  }, [sent, open, session.user.firstName])
 
   async function handleSubmit(formData: FormData) {
     const firstName = formData.get("firstName")?.toString()

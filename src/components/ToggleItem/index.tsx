@@ -7,7 +7,9 @@ import { toggleWishlistItemById } from "@/lib/wishlistItems/toggleWishlistItemBy
 import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
-  item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
+  item: NonNullable<
+    Awaited<ReturnType<typeof getWishlistById>>
+  >["wishlistItem"][0]
 }
 
 export const ToggleItem = ({ item }: Props) => {

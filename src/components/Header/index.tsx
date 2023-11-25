@@ -5,7 +5,7 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 
 interface Props {
   session: Session | null
-  group?: Awaited<ReturnType<typeof getGroupById>>
+  group?: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 
 export function Header({ session, group }: Props) {

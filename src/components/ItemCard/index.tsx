@@ -5,7 +5,9 @@ import { Link } from "lucide-react"
 import { ToggleItem } from "@/components/ToggleItem"
 
 interface Props {
-  item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
+  item: NonNullable<
+    Awaited<ReturnType<typeof getWishlistById>>
+  >["wishlistItem"][0]
 }
 
 export const ItemCard = ({ item }: Props) => {

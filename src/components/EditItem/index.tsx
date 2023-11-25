@@ -19,7 +19,9 @@ import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
 
 interface Props {
-  item: Awaited<ReturnType<typeof getWishlistById>>["wishlistItem"][0]
+  item: NonNullable<
+    Awaited<ReturnType<typeof getWishlistById>>
+  >["wishlistItem"][0]
 }
 
 export const EditItem = ({ item }: Props) => {

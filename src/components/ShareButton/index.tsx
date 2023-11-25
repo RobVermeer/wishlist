@@ -6,7 +6,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { MessagesSquare } from "lucide-react"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroupById>>
+  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 
 export const ShareButton = ({ group }: Props) => {

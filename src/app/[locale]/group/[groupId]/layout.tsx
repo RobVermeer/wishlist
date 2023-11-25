@@ -14,6 +14,8 @@ export default async function GroupLayout({ children, params }: Props) {
   const group = await getGroupById(params.groupId)
   const session = await getServerSession(authOptions)
 
+  if (!group) return null
+
   return (
     <>
       <Header session={session} group={group} />
