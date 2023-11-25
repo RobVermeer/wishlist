@@ -47,7 +47,7 @@ export function Header({ session }: Props) {
     >
       <div
         className={clsx(
-          "absolute inset-0 p-4 bg-cover bg-center transition-all duration-1000 opacity-0",
+          "absolute inset-0 p-4 bg-cover bg-center transition-all duration-500 opacity-0",
           theme && "opacity-100"
         )}
         style={{
