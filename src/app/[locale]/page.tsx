@@ -10,15 +10,27 @@ import { ScrollText } from "lucide-react"
 import { getServerSession } from "next-auth"
 import Link from "next/link"
 import { authOptions } from "./api/auth/[...nextauth]/route"
+import { getTranslations } from "next-intl/server"
 
-export const metadata = {
-  title: "Overzicht - Wishlist",
+interface MetadataProps {
+  params: { locale: string }
+}
+
+export const generateMetadata = async ({
+  params: { locale },
+}: MetadataProps) => {
+  const t = await getTranslations({ locale, namespace: "Home" })
+
+  return {
+    title: t("title"),
+  }
 }
 
 export default async function Home() {
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()
   const session = await getServerSession(authOptions)
+  const t = await getTranslations("Home")
 
   return (
     <>
@@ -26,7 +38,7 @@ export default async function Home() {
 
       <Layout>
         <List>
-          <ListTitle>Groepen die je volgt</ListTitle>
+          <ListTitle>{t("groups.title")}</ListTitle>
 
           <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
             {groups.map((group) => (
@@ -50,19 +62,20 @@ export default async function Home() {
           </div>
 
           {groups.length === 0 && (
-            <EmptyState title="Je volgt nog geen enkele groep 🥺">
-              Om te zien wat anderen willen en om je eigen verlanglijstje te
-              kunnen toevoegen moet je als eerste een groep volgen. Ga naar{" "}
-              <Link href="/profile" className="text-primary">
-                je profiel
-              </Link>{" "}
-              om te beginnen! 🚀
+            <EmptyState title={t("groups.empty.title")}>
+              {t.rich("groups.empty.text", {
+                profile: (chunks) => (
+                  <Link href="/profile" className="text-primary">
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </EmptyState>
           )}
         </List>
 
         <List>
-          <ListTitle>Ga direct naar je eigen lijstjes</ListTitle>
+          <ListTitle>{t("wishlists.title")}</ListTitle>
 
           <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
             {wishlists.map((wishlist) => (
@@ -85,12 +98,14 @@ export default async function Home() {
           </div>
 
           {wishlists.length === 0 && (
-            <EmptyState title="Je hebt nog geen lijstjes gemaakt 🥺">
-              Doe dit snel op{" "}
-              <Link href="/profile" className="text-primary">
-                je profiel
-              </Link>
-              ! 🤩
+            <EmptyState title={t("wishlists.empty.title")}>
+              {t.rich("wishlists.empty.text", {
+                profile: (chunks) => (
+                  <Link href="/profile" className="text-primary">
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </EmptyState>
           )}
         </List>

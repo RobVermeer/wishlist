@@ -4,7 +4,7 @@ import { cache } from "react"
 import { prisma } from "@/lib/prisma"
 import { wishlistProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 
 export const getWishlistById = cache(
   async (id: string, isOwnList: boolean = false) => {

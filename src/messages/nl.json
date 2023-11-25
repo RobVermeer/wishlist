@@ -1,0 +1,19 @@
+{
+  "Home": {
+    "title": "Overzicht - Wishlist",
+    "groups": {
+      "title": "Groepen die je volgt",
+      "empty": {
+        "title": "Je volgt nog geen enkele groep 🥺",
+        "text": "Om te zien wat anderen willen en om je eigen verlanglijstje te kunnen toevoegen moet je als eerste een groep volgen. Ga naar <profile>je profiel</profile> om te beginnen! 🚀"
+      }
+    },
+    "wishlists": {
+      "title": "Ga direct naar je eigen lijstjes",
+      "empty": {
+        "title": "Je hebt nog geen lijstjes gemaakt 🥺",
+        "text": "Doe dit snel op <profile>je profiel</profile>! 🤩"
+      }
+    }
+  }
+}

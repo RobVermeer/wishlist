@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { groupProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 

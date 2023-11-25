@@ -1,8 +1,27 @@
-import { NextResponse, NextRequest } from "next/server"
+import createMiddleware from "next-intl/middleware"
+import { NextRequest } from "next/server"
 
-export function middleware(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
+  const handleI18nRouting = createMiddleware({
+    locales: ["nl"],
+    defaultLocale: "nl",
+    domains: [
+      {
+        domain:
+          process.env.NODE_ENV === "production"
+            ? "wishlist.ru-coding.nl"
+            : "localhost:3000",
+        defaultLocale: "nl",
+        locales: ["nl"],
+      },
+    ],
+    localePrefix: "never",
+    localeDetection: false,
+  })
+
+  const response = handleI18nRouting(request)
+
   if (request.headers.get("Accept")?.includes("text/html")) {
-    const response = NextResponse.next()
     response.headers.set(
       "Accept-CH",
       `Sec-CH-Prefers-Color-Scheme, Sec-CH-Prefers-Contrast`
@@ -12,5 +31,9 @@ export function middleware(request: NextRequest) {
     return response
   }
 
-  return NextResponse.next()
+  return response
+}
+
+export const config = {
+  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
 }
