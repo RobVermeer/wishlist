@@ -38,14 +38,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={ubuntu.className}>
-        {session ? (
-          children
-        ) : (
-          <>
-            <Header session={session} />
-            <Login />
-          </>
-        )}
+        <Header session={session} />
+
+        {session ? children : <Login />}
 
         {session && <UserInfoDialog session={session} />}
         <Toaster />

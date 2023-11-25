@@ -5,7 +5,6 @@ import { getServerSession } from "next-auth"
 import { ReactNode } from "react"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
-import { Header } from "@/components/Header"
 
 interface Props {
   children: ReactNode
@@ -19,16 +18,12 @@ export default async function ProfileLayout({ children }: Props) {
   }
 
   return (
-    <>
-      <Header session={session} />
+    <Layout>
+      <ListTitle>Admin</ListTitle>
 
-      <Layout>
-        <ListTitle>Admin</ListTitle>
+      <AdminTabs />
 
-        <AdminTabs />
-
-        {children}
-      </Layout>
-    </>
+      {children}
+    </Layout>
   )
 }
