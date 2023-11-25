@@ -5,6 +5,7 @@ import { Logo } from "@/components/Logo"
 import { Menu } from "./Menu"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { clsx } from "clsx"
 
 interface Props {
   session: Session | null
@@ -41,9 +42,18 @@ export function Header({ session }: Props) {
     <header
       className="relative p-4 flex h-64 bg-cover bg-center items-start justify-between"
       style={{
-        backgroundImage: `url('/theme/${theme || "background"}.jpg')`,
+        backgroundImage: "url('/theme/background.jpg')",
       }}
     >
+      <div
+        className={clsx(
+          "absolute inset-0 p-4 bg-cover bg-center transition-all duration-1000 opacity-0",
+          theme && "opacity-100"
+        )}
+        style={{
+          backgroundImage: `url('/theme/${theme || "background"}.jpg')`,
+        }}
+      />
       <div className="absolute inset-0 -translate-y-1/3 bg-gradient-to-b from-black to-transparent" />
       <Logo className="relative z-10 text-white" />
 
