@@ -50,7 +50,7 @@ export const NewWishlist = ({ groups }: Props) => {
           <Plus size="16" className="mr-2" /> Maak een nieuw verlanglijstje aan
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Nieuw verlanglijstje 🤩</DialogTitle>
         </DialogHeader>

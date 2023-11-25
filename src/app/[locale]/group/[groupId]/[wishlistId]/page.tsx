@@ -1,12 +1,12 @@
 import { EmptyState } from "@/components/EmptyState"
 import { ItemCard } from "@/components/ItemCard"
-import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { NewItem } from "@/components/NewItem"
 import { RemindButton } from "@/components/RemindButton"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { YourItemCard } from "@/components/YourItemCard"
+import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { canBeRemindedForUser } from "@/lib/reminders"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
@@ -72,6 +72,8 @@ export default async function GroupWishlistPage({ params }: Props) {
           zeggen! 👮
         </EmptyState>
       )}
+
+      {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}
 
       {wishlist.isOwnList && <NewItem id={wishlist.id} />}
 

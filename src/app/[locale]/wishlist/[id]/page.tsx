@@ -6,9 +6,8 @@ import { YourItemCard } from "@/components/YourItemCard"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { NewItem } from "@/components/NewItem"
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { notFound } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const wishlist = await getWishlistById(params.id, true)
@@ -26,7 +25,6 @@ interface Props {
 
 export default async function WishlistPage({ params }: Props) {
   const wishlist = await getWishlistById(params.id, true)
-  const session = await getServerSession(authOptions)
 
   if (!wishlist) {
     notFound()
@@ -47,6 +45,8 @@ export default async function WishlistPage({ params }: Props) {
           Maak er snel wat aan! 😎
         </EmptyState>
       )}
+
+      <Separator className="my-3" />
 
       <NewItem id={wishlist.id} />
     </List>

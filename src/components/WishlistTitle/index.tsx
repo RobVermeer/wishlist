@@ -29,7 +29,7 @@ export const WishlistTitle = ({
     <span className={className}>
       {listTitle}{" "}
       {inGroups && (
-        <small className="block text-muted-foreground">
+        <small className="text-muted-foreground">
           in groep{groups.length !== 1 && "en"} {inGroups}
         </small>
       )}
