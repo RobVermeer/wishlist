@@ -12,10 +12,13 @@ import { canBeRemindedForUser } from "@/lib/reminders"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const wishlist = await getWishlistById(params.wishlistId)
   const group = await getGroupById(params.groupId)
+
+  if (!wishlist || !group) return {}
 
   return {
     title: `${
@@ -33,6 +36,11 @@ interface Props {
 export default async function GroupWishlistPage({ params }: Props) {
   const wishlist = await getWishlistById(params.wishlistId)
   const group = await getGroupById(params.groupId)
+
+  if (!wishlist || !group) {
+    notFound()
+  }
+
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
 
   return (

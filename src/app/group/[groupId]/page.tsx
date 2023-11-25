@@ -9,9 +9,12 @@ import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
 import Link from "next/link"
+import { notFound } from "next/navigation"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const group = await getGroupById(params.groupId)
+
+  if (!group) return {}
 
   return {
     title: `${group.title} - Wishlist`,
@@ -24,6 +27,10 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
   const group = await getGroupById(params.groupId)
+
+  if (!group) {
+    notFound()
+  }
 
   if (!group.subscribed) {
     return (

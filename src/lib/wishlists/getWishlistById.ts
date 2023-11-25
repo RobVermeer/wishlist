@@ -8,26 +8,30 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
 export const getWishlistById = cache(
   async (id: string, isOwnList: boolean = false) => {
-    const session = await getServerSession(authOptions)
+    try {
+      const session = await getServerSession(authOptions)
 
-    if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      if (!session) {
+        throw new Error("Je bent niet ingelogd")
+      }
+
+      const userId = session.user.id
+      const data = await prisma.wishlist.findUnique({
+        select: wishlistProperties,
+        where: { id },
+      })
+
+      if (!data) {
+        throw new Error("Verlanglijst is niet gevonden")
+      }
+
+      if (isOwnList && data.user.id !== userId) {
+        throw new Error("Je hebt niet de juiste rechten om dit te doen")
+      }
+
+      return { ...data, isOwnList: data.user.id === userId }
+    } catch {
+      return null
     }
-
-    const userId = session.user.id
-    const data = await prisma.wishlist.findUnique({
-      select: wishlistProperties,
-      where: { id },
-    })
-
-    if (!data) {
-      throw new Error("Verlanglijst is niet gevonden")
-    }
-
-    if (isOwnList && data.user.id !== userId) {
-      throw new Error("Je hebt niet de juiste rechten om dit te doen")
-    }
-
-    return { ...data, isOwnList: data.user.id === userId }
   }
 )

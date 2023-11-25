@@ -2,6 +2,7 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { SendEmails } from "./components/SendEmails"
+import { notFound } from "next/navigation"
 
 interface Props {
   params: { id: string }
@@ -9,6 +10,10 @@ interface Props {
 
 export default async function AdminGroupsDrawPage({ params }: Props) {
   const group = await getGroupById(params.id)
+
+  if (!group) {
+    notFound()
+  }
 
   return (
     <List>
