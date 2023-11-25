@@ -15,10 +15,12 @@ export default async function AdminUsersPage() {
       {users.map((user) => (
         <Card key={user.id} className="flex gap-2 items-center">
           <Avatar>
-            <AvatarImage
-              src={user?.image || "/avatar.svg"}
-              alt={`Avatar of ${user.firstName || user?.name}`}
-            />
+            {user?.image && (
+              <AvatarImage
+                src={user.image}
+                alt={`Avatar of ${user.firstName || user?.name}`}
+              />
+            )}
             <AvatarFallback>
               {(user.firstName || user?.name)?.substring(0, 2).toUpperCase()}
             </AvatarFallback>
