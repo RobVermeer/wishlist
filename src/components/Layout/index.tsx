@@ -5,5 +5,5 @@ interface Props {
 }
 
 export const Layout = ({ children }: Props) => (
-  <div className="grid gap-6 p-4 mb-8 mx-auto md:max-w-xl">{children}</div>
+  <main className="grid gap-6 p-4 mb-8 mx-auto md:max-w-xl">{children}</main>
 )

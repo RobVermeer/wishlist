@@ -1,5 +1,4 @@
 import { EmptyState } from "@/components/EmptyState"
-import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
@@ -29,7 +28,7 @@ export default async function Home() {
   const t = await getTranslations("Home")
 
   return (
-    <Layout>
+    <>
       <List>
         <ListTitle>{t("groups.title")}</ListTitle>
 
@@ -101,6 +100,6 @@ export default async function Home() {
           </EmptyState>
         )}
       </List>
-    </Layout>
+    </>
   )
 }

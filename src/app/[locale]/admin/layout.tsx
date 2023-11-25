@@ -1,5 +1,4 @@
 import { AdminTabs } from "@/components/AdminTabs"
-import { Layout } from "@/components/Layout"
 import { ListTitle } from "@/components/ListTitle"
 import { getServerSession } from "next-auth"
 import { ReactNode } from "react"
@@ -18,12 +17,12 @@ export default async function ProfileLayout({ children }: Props) {
   }
 
   return (
-    <Layout>
+    <>
       <ListTitle>Admin</ListTitle>
 
       <AdminTabs />
 
       {children}
-    </Layout>
+    </>
   )
 }

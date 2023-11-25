@@ -1,6 +1,5 @@
 import { EmptyState } from "@/components/EmptyState"
 import { FollowGroup } from "@/components/FollowGroup"
-import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { ShareButton } from "@/components/ShareButton"
@@ -34,12 +33,12 @@ export default async function GroupPage({ params }: Props) {
 
   if (!group.subscribed) {
     return (
-      <Layout>
+      <>
         <EmptyState title="😵 Je volgt deze groep nog niet 😵">
           Volg de groep snel om alle lijstjes te kunnen zien! 😇
         </EmptyState>
         <FollowGroup group={group} />
-      </Layout>
+      </>
     )
   }
 

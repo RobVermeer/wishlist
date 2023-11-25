@@ -48,7 +48,7 @@ export function Login() {
   }
 
   return (
-    <main className="p-4 grid gap-3 mt-16 md:max-w-lg md:w-full md:mx-auto">
+    <div className="grid gap-3 mt-16">
       <Button onClick={() => signIn("google")}>
         <Chrome size="18" className="mr-2" /> Inloggen met Google
       </Button>
@@ -81,6 +81,6 @@ export function Login() {
           </form>
         </DialogContent>
       </Dialog>
-    </main>
+    </div>
   )
 }

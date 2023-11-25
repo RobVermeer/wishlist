@@ -1,5 +1,4 @@
 import { EmptyState } from "@/components/EmptyState"
-import { Layout } from "@/components/Layout"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
@@ -34,24 +33,22 @@ export default async function WishlistPage({ params }: Props) {
   }
 
   return (
-    <Layout>
-      <List>
-        <ListTitle>
-          <WishlistTitle wishlist={wishlist} />
-        </ListTitle>
+    <List>
+      <ListTitle>
+        <WishlistTitle wishlist={wishlist} />
+      </ListTitle>
 
-        {wishlist.wishlistItem.map((item) => (
-          <YourItemCard key={item.id} item={item} />
-        ))}
+      {wishlist.wishlistItem.map((item) => (
+        <YourItemCard key={item.id} item={item} />
+      ))}
 
-        {wishlist.wishlistItem.length === 0 && (
-          <EmptyState title="Je hebt nog geen wensen!">
-            Maak er snel wat aan! 😎
-          </EmptyState>
-        )}
+      {wishlist.wishlistItem.length === 0 && (
+        <EmptyState title="Je hebt nog geen wensen!">
+          Maak er snel wat aan! 😎
+        </EmptyState>
+      )}
 
-        <NewItem id={wishlist.id} />
-      </List>
-    </Layout>
+      <NewItem id={wishlist.id} />
+    </List>
   )
 }
