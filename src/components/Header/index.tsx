@@ -13,10 +13,7 @@ export function Header({ session, group }: Props) {
     <header
       className="relative p-4 flex h-64 bg-cover bg-center items-start justify-between"
       style={{
-        backgroundImage:
-          typeof group?.theme === "string"
-            ? `url('/${group.theme}.jpg')`
-            : "url('/background.jpg')",
+        backgroundImage: `url('/theme/${group?.theme || "background"}.jpg')`,
       }}
     >
       <div className="absolute inset-0 -translate-y-1/3 bg-gradient-to-b from-black to-transparent" />

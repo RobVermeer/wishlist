@@ -47,10 +47,9 @@ export default async function Home() {
                 href={`/group/${group.id}`}
                 className="relative overflow-hidden group aspect-video flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all bg-cover bg-center"
                 style={{
-                  backgroundImage:
-                    typeof group.theme === "string"
-                      ? `url('/${group.theme}.webp')`
-                      : "url('/background.webp')",
+                  backgroundImage: `url('/theme/${
+                    group?.theme || "background"
+                  }.webp')`,
                 }}
               >
                 <div className="absolute inset-0 translate-y-1/3 bg-gradient-to-b from-transparent to-black" />
