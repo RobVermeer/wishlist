@@ -1,20 +1,20 @@
 "use client"
 
-import { usePathname } from "next/navigation"
+import { useSelectedLayoutSegment } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookUser, Group, List } from "lucide-react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export const ProfileTabs = () => {
-  const pathname = usePathname()
+  const segment = useSelectedLayoutSegment()
 
   return (
     <ScrollArea className="whitespace-nowrap">
       <div className="flex gap-2">
         <Button
           className="shrink-0"
-          variant={pathname === "/profile" ? "default" : "outline"}
+          variant={segment === null ? "default" : "outline"}
           asChild
         >
           <Link href="/profile">
@@ -23,7 +23,7 @@ export const ProfileTabs = () => {
         </Button>
         <Button
           className="shrink-0"
-          variant={pathname === "/profile/groups" ? "default" : "outline"}
+          variant={segment === "groups" ? "default" : "outline"}
           asChild
         >
           <Link href="/profile/groups">
@@ -33,7 +33,7 @@ export const ProfileTabs = () => {
         </Button>
         <Button
           className="shrink-0"
-          variant={pathname === "/profile/bought" ? "default" : "outline"}
+          variant={segment === "bought" ? "default" : "outline"}
           asChild
         >
           <Link href="/profile/bought">
