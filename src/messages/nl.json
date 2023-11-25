@@ -15,5 +15,11 @@
         "text": "Doe dit snel op <profile>je profiel</profile>! 🤩"
       }
     }
+  },
+  "NotFound": {
+    "empty": {
+      "title": "Oeps, we konden deze pagina niet vinden! 🤯",
+      "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
+    }
   }
 }

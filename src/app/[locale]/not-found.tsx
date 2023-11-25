@@ -4,20 +4,25 @@ import { Layout } from "@/components/Layout"
 import { getServerSession } from "next-auth"
 import Link from "next/link"
 import { authOptions } from "./api/auth/[...nextauth]/route"
+import { getTranslations } from "next-intl/server"
 
 export default async function NotFound() {
   const session = await getServerSession(authOptions)
+  const t = await getTranslations("NotFound")
 
   return (
     <>
       <Header session={session} />
 
       <Layout>
-        <EmptyState title="Oeps, we konden deze pagina niet vinden! 🤯">
-          Ga terug naar{" "}
-          <Link className="text-primary" href="/">
-            het overzicht
-          </Link>
+        <EmptyState title={t("empty.title")}>
+          {t.rich("empty.text", {
+            dashboard: (chunks) => (
+              <Link href="/" className="text-primary">
+                {chunks}
+              </Link>
+            ),
+          })}
         </EmptyState>
       </Layout>
     </>
