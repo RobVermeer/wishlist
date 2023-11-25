@@ -17,7 +17,7 @@ export const getUsers = cache(async () => {
   }
 
   const data = await prisma.user.findMany({
-    orderBy: { name: "asc" },
+    orderBy: { id: "desc" },
   })
 
   return data
