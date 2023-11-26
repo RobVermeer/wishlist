@@ -8,19 +8,22 @@ import { NewItem } from "@/components/NewItem"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
+import { getTranslations } from "next-intl/server"
+
+interface Props {
+  params: { id: string; locale: string }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const wishlist = await getWishlistById(params.id, true)
+  const { id, locale } = params
+  const t = await getTranslations({ locale, namespace: "Common" })
+  const wishlist = await getWishlistById(id, true)
 
   if (!wishlist) return {}
 
   return {
-    title: `${wishlist.title || "Mijn lijstje"} - Wishlist`,
+    title: `${wishlist.title || t("myList")} - Wishlist`,
   }
-}
-
-interface Props {
-  params: { id: string }
 }
 
 export default async function WishlistPage({ params }: Props) {

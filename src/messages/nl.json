@@ -21,5 +21,8 @@
       "title": "Oeps, we konden deze pagina niet vinden! 🤯",
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
+  },
+  "Common": {
+    "myList": "Mijn lijstje"
   }
 }

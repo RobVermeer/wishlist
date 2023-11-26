@@ -8,13 +8,11 @@ import { ScrollText } from "lucide-react"
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 
-interface MetadataProps {
+interface Props {
   params: { locale: string }
 }
 
-export const generateMetadata = async ({
-  params: { locale },
-}: MetadataProps) => {
+export const generateMetadata = async ({ params: { locale } }: Props) => {
   const t = await getTranslations({ locale, namespace: "Home" })
 
   return {
