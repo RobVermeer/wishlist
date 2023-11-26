@@ -4,18 +4,28 @@ import { NewGroup } from "@/components/NewGroup"
 import { YourGroupCard } from "@/components/YourGroupCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import { getTranslations } from "next-intl/server"
 
-export const metadata = {
-  title: "Mijn groepen - Profiel - Wishlist",
+interface Props {
+  params: { locale: string }
+}
+
+export const generateMetadata = async ({ params: { locale } }: Props) => {
+  const t = await getTranslations({ locale, namespace: "ProfileGroups" })
+
+  return {
+    title: t("title"),
+  }
 }
 
 export default async function ProfileGroupPage() {
   const groups = await getGroupsForUser()
+  const t = await getTranslations("ProfileGroups")
 
   return (
     <List>
       {groups.length === 0 && (
-        <EmptyState title="Je volgt nog geen groepen, doe dit snel! 🧐" />
+        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
       {groups.map((group) => (

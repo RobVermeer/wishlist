@@ -1,9 +1,9 @@
 import { EmptyState } from "@/components/EmptyState"
 import Link from "next/link"
-import { getTranslations } from "next-intl/server"
+import { useTranslations } from "next-intl"
 
-export default async function NotFound() {
-  const t = await getTranslations("NotFound")
+export default function NotFound() {
+  const t = useTranslations("NotFound")
 
   return (
     <EmptyState title={t("empty.title")}>

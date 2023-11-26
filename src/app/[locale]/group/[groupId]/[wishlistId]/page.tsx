@@ -11,6 +11,7 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 import { canBeRemindedForUser } from "@/lib/reminders"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -36,6 +37,7 @@ interface Props {
 export default async function GroupWishlistPage({ params }: Props) {
   const wishlist = await getWishlistById(params.wishlistId)
   const group = await getGroupById(params.groupId)
+  const t = await getTranslations("GroupWishlist")
 
   if (!wishlist || !group) {
     notFound()
@@ -67,10 +69,7 @@ export default async function GroupWishlistPage({ params }: Props) {
       })}
 
       {wishlist.wishlistItem.length === 0 && (
-        <EmptyState title="🫣 Dit lijstje is nog helemaal leeg 🫣">
-          Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan
-          zeggen! 👮
-        </EmptyState>
+        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
       {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}

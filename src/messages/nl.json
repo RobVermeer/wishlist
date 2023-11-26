@@ -22,7 +22,60 @@
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
+  "Error": {
+    "empty": {
+      "title": "Oeps, er ging iets mis! 🤯",
+      "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
+    }
+  },
   "Common": {
     "myList": "Mijn lijstje"
+  },
+  "Wishlist": {
+    "empty": {
+      "title": "Je hebt nog geen wensen!",
+      "text": "Maak er snel wat aan! 😎"
+    }
+  },
+  "Group": {
+    "empty": {
+      "title": "😵‍💫 Er zijn nog geen lijstjes! 😵‍💫",
+      "text": "Maak als eerste een lijstje aan in <profile>je profiel</profile>! 🤑"
+    },
+    "noFollow": {
+      "title": "😵 Je volgt deze groep nog niet 😵",
+      "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😇"
+    }
+  },
+  "GroupWishlist": {
+    "empty": {
+      "title": "🫣 Dit lijstje is nog helemaal leeg 🫣",
+      "text": "Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
+    }
+  },
+  "Profile": {
+    "title": "Profiel"
+  },
+  "ProfileWishlists": {
+    "title": "Mijn verlanglijstjes - Profiel - Wishlist",
+    "empty": {
+      "title": "Je hebt nog geen lijstjes gemaakt.",
+      "text": "Doe dit snel! 🥳"
+    }
+  },
+  "ProfileGroups": {
+    "title": "Mijn groepen - Profiel - Wishlist",
+    "empty": {
+      "title": "Je volgt nog geen groepen.",
+      "text": "Doe dit snel! 🧐"
+    }
+  },
+  "ProfileBoughtPresents": {
+    "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
+    "empty": {
+      "title": "Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 🤨",
+      "text": "Doe dat eens heel snel!"
+    },
+    "boughtFor": "Gekocht voor {name}"
   }
 }

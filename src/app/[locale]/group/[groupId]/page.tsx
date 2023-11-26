@@ -7,6 +7,7 @@ import { WishlistCard } from "@/components/WishlistCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
+import { getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -26,6 +27,7 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
   const group = await getGroupById(params.groupId)
+  const t = await getTranslations("Group")
 
   if (!group) {
     notFound()
@@ -34,8 +36,8 @@ export default async function GroupPage({ params }: Props) {
   if (!group.subscribed) {
     return (
       <>
-        <EmptyState title="😵 Je volgt deze groep nog niet 😵">
-          Volg de groep snel om alle lijstjes te kunnen zien! 😇
+        <EmptyState title={t("noFollow.title")}>
+          {t("noFollow.text")}
         </EmptyState>
         <FollowGroup group={group} />
       </>
@@ -51,12 +53,14 @@ export default async function GroupPage({ params }: Props) {
       ))}
 
       {group.wishlist.length === 0 && (
-        <EmptyState title="😵‍💫 Er zijn nog geen lijstjes! 😵‍💫">
-          Maak als eerste een lijstje aan in{" "}
-          <Link className="text-primary" href="/profile">
-            je profiel
-          </Link>
-          ! 🤑
+        <EmptyState title={t("empty.title")}>
+          {t.rich("empty.text", {
+            profile: (chunks) => (
+              <Link href="/profile" className="text-primary">
+                {chunks}
+              </Link>
+            ),
+          })}
         </EmptyState>
       )}
 

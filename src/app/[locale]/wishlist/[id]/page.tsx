@@ -27,7 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function WishlistPage({ params }: Props) {
-  const wishlist = await getWishlistById(params.id, true)
+  const { id, locale } = params
+  const wishlist = await getWishlistById(id, true)
+  const t = await getTranslations({ locale, namespace: "Common" })
 
   if (!wishlist) {
     notFound()
@@ -44,9 +46,7 @@ export default async function WishlistPage({ params }: Props) {
       ))}
 
       {wishlist.wishlistItem.length === 0 && (
-        <EmptyState title="Je hebt nog geen wensen!">
-          Maak er snel wat aan! 😎
-        </EmptyState>
+        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
       <Separator className="my-3" />
