@@ -3,7 +3,6 @@
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Button } from "@/components/ui/button"
 import { sendReminderToUser } from "@/lib/reminders"
-import { Separator } from "@/components/ui/separator"
 import { Loader2, ShoppingBasket } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useFormStatus } from "react-dom"
@@ -46,12 +45,8 @@ export const RemindButton = ({ wishlist }: Props) => {
   }
 
   return (
-    <>
-      <Separator className="my-3" />
-
-      <form action={sendReminder}>
-        <FormButton />
-      </form>
-    </>
+    <form action={sendReminder}>
+      <FormButton />
+    </form>
   )
 }
