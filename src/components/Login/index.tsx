@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { Chrome, Loader2, Mail, Send } from "lucide-react"
+import { Chrome, Loader2, Mail, MailCheck, Send } from "lucide-react"
 import {
   Dialog,
   DialogTrigger,
@@ -13,7 +13,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { useToast } from "@/components/ui/use-toast"
 import { useState } from "react"
 import { useFormStatus } from "react-dom"
 
@@ -33,8 +32,7 @@ const EmailButton = () => {
 }
 
 export function Login() {
-  const [open, setOpen] = useState(false)
-  const { toast } = useToast()
+  const [emailSent, setEmailSent] = useState<string | null>(null)
 
   async function handleLogin(formData: FormData) {
     const email = formData.get("email")?.toString()
@@ -43,8 +41,7 @@ export function Login() {
 
     await signIn("email", { email, redirect: false })
 
-    setOpen(false)
-    toast({ title: "Controleer je email om in te loggen" })
+    setEmailSent(email)
   }
 
   return (
@@ -53,32 +50,49 @@ export function Login() {
         <Chrome size="18" className="mr-2" /> Inloggen met Google
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog>
         <DialogTrigger asChild>
           <Button>
             <Mail size="18" className="mr-2" /> Inloggen met email
           </Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Inloggen met email</DialogTitle>
-            <DialogDescription>
-              Als je wilt inloggen of registreren met email, vul dan je email
-              adres in en druk op de knop.
-            </DialogDescription>
-          </DialogHeader>
-          <form action={handleLogin} className="grid gap-4">
-            <Input
-              aria-label="Email"
-              id="email"
-              name="email"
-              required
-              placeholder="wishlist@ru-coding.nl"
-            />
-            <DialogFooter>
-              <EmailButton />
-            </DialogFooter>
-          </form>
+          {!emailSent && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Inloggen met email</DialogTitle>
+                <DialogDescription>
+                  Als je wilt inloggen of registreren met email, vul dan je
+                  email adres in en druk op de knop.
+                </DialogDescription>
+              </DialogHeader>
+              <form action={handleLogin} className="grid gap-4">
+                <Input
+                  aria-label="Email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="wishlist@ru-coding.nl"
+                />
+                <DialogFooter>
+                  <EmailButton />
+                </DialogFooter>
+              </form>
+            </>
+          )}
+          {Boolean(emailSent) && (
+            <DialogHeader>
+              <span className="bg-green-500 mx-auto p-3 mb-3 rounded-full ">
+                <MailCheck className="text-white" size="28" />
+              </span>
+              <DialogTitle className="text-center">Check je inbox</DialogTitle>
+              <DialogDescription className="text-center">
+                Druk op de link in de email die we hebben gestuurd naar{" "}
+                <strong className="text-primary">{emailSent}</strong> om in te
+                loggen.
+              </DialogDescription>
+            </DialogHeader>
+          )}
         </DialogContent>
       </Dialog>
     </div>
