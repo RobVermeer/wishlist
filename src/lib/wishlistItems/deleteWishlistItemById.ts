@@ -5,13 +5,15 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
+import { getTranslations } from "next-intl/server"
 
 export const deleteWishlistItemById = async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const userId = session.user.id
@@ -26,7 +28,7 @@ export const deleteWishlistItemById = async (id: string) => {
     })
 
     if (!wishlistItemToDelete) {
-      throw new Error("Wens is niet gevonden")
+      throw new Error(t("item.notFound"))
     }
 
     await prisma.wishlistItem.delete({

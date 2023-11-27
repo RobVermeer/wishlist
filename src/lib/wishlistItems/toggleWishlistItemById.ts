@@ -6,13 +6,15 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
+import { getTranslations } from "next-intl/server"
 
 export const toggleWishlistItemById = async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const userId = session.user.id
@@ -25,11 +27,11 @@ export const toggleWishlistItemById = async (id: string) => {
     })
 
     if (!wishlistItem) {
-      throw new Error("Wens is niet gevonden")
+      throw new Error(t("item.notFound"))
     }
 
     if (wishlistItem.boughtBy && wishlistItem.boughtBy.id !== userId) {
-      throw new Error("Deze wens is al door iemand anders gekocht")
+      throw new Error(t("item.alreadyBought"))
     }
 
     const boughtBy = wishlistItem.boughtBy

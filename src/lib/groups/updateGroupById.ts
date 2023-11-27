@@ -8,13 +8,15 @@ import { revalidatePath } from "next/cache"
 import { groupSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
 import { z } from "zod"
+import { getTranslations } from "next-intl/server"
 
 export const updateGroupById = async (id: string, formData: FormData) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const userId = session.user.id
@@ -27,7 +29,7 @@ export const updateGroupById = async (id: string, formData: FormData) => {
     })
 
     if (!groupToUpdate) {
-      throw new Error("Groep niet gevonden")
+      throw new Error(t("group.notFound"))
     }
 
     const data = groupSchema.parse(Object.fromEntries(formData.entries()))

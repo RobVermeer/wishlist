@@ -5,17 +5,19 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
+import { getTranslations } from "next-intl/server"
 
 export const deleteUserById = async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     if (!session.user.isAdmin) {
-      throw new Error("Je hebt niet de juiste rechten om dit te doen")
+      throw new Error(t("noAccess"))
     }
 
     await prisma.user.delete({

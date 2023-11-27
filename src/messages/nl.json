@@ -207,5 +207,19 @@
       "save": "Opslaan"
     },
     "toast": "Je gegevens zijn opgeslagen"
+  },
+  "Errors": {
+    "notLoggedIn": "Je bent niet ingelogd",
+    "noAccess": "Je hebt niet de juiste rechten om dit te doen",
+    "group": {
+      "notFound": "Groep niet gevonden"
+    },
+    "wishlist": {
+      "notFound": "Verlanglijst niet gevonden"
+    },
+    "item": {
+      "notFound": "Wens niet gevonden",
+      "alreadyBought": "Deze wens is al door iemand anders gekocht"
+    }
   }
 }

@@ -5,13 +5,15 @@ import { groupProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { cache } from "react"
+import { getTranslations } from "next-intl/server"
 
 export const getGroupById = cache(async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const userId = session.user.id
@@ -22,7 +24,7 @@ export const getGroupById = cache(async (id: string) => {
     })
 
     if (!data) {
-      throw new Error("Groep niet gevonden")
+      throw new Error(t("group.notFound"))
     }
 
     const wishlist = data.wishlist.map((wishlist) => ({

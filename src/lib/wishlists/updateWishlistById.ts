@@ -8,13 +8,15 @@ import { revalidatePath } from "next/cache"
 import { wishlistSchema } from "@/lib/schema"
 import { z } from "zod"
 import { getErrorMessage } from "@/lib//utils"
+import { getTranslations } from "next-intl/server"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const userId = session.user.id
@@ -27,7 +29,7 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
     })
 
     if (!wishlist) {
-      throw new Error("Verlanglijst is niet gevonden")
+      throw new Error(t("wishlist.notFound"))
     }
 
     const data = wishlistSchema.parse({
