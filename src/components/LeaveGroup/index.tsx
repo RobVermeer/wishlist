@@ -12,6 +12,7 @@ import {
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
 import { Pencil, UserMinus } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
 
 interface Props {
@@ -21,6 +22,7 @@ interface Props {
 export const LeaveGroup = ({ group }: Props) => {
   const [open, setOpen] = useState(false)
   const { id } = group
+  const t = useTranslations()
 
   async function handleLeave() {
     await leaveGroupById(id)
@@ -31,21 +33,18 @@ export const LeaveGroup = ({ group }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="absolute right-1" size="sm" variant="outline">
-          <Pencil size="12" className="mr-2" /> Wijzig
+          <Pencil size="12" className="mr-2" /> {t("LeaveGroup.button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Verlaat groep 🧐</DialogTitle>
+          <DialogTitle>{t("LeaveGroup.title")}</DialogTitle>
         </DialogHeader>
-        <p>
-          Als je uit de groep stapt heb je weer een invite nodig om erbij te
-          komen 🤕
-        </p>
+        <p>{t("LeaveGroup.text")}</p>
         <DialogFooter>
           <form action={handleLeave}>
             <Button className="w-full" type="submit">
-              <UserMinus size="16" className="mr-2" /> Stap uit de groep
+              <UserMinus size="16" className="mr-2" /> {t("LeaveGroup.leave")}
             </Button>
           </form>
         </DialogFooter>

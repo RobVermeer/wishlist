@@ -15,6 +15,7 @@ import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistIte
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface Props {
   id: string
@@ -23,6 +24,7 @@ interface Props {
 export const NewItem = ({ id }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await createWishlistItemForUser(id, data)
@@ -43,24 +45,26 @@ export const NewItem = ({ id }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus size="16" className="mr-2" /> Voeg een wens toe
+          <Plus size="16" className="mr-2" /> {t("NewItem.button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Voeg wens toe 🤠</DialogTitle>
+          <DialogTitle>{t("NewItem.title")}</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} id="add" className="grid gap-4 py-4">
-          <Label htmlFor="title">Wens</Label>
+          <Label htmlFor="title">{t("NewItem.form.title")}</Label>
           <Input required id="title" name="title" />
           <Label htmlFor="url">
-            Linkje <small>(optioneel)</small>
+            {t.rich("NewItem.form.url", {
+              small: (chunks) => <small>{chunks}</small>,
+            })}
           </Label>
           <Input id="url" name="url" />
         </form>
         <DialogFooter>
           <Button type="submit" form="add">
-            <Plus size="16" className="mr-2" /> Voeg wens toe
+            <Plus size="16" className="mr-2" /> {t("NewItem.form.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

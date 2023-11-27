@@ -6,8 +6,10 @@ import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
+import { pickMessages } from "@/utils/pick"
 import { Metadata } from "next"
-import { getTranslations } from "next-intl/server"
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages, getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -28,6 +30,7 @@ interface Props {
 export default async function GroupPage({ params }: Props) {
   const group = await getGroupById(params.groupId)
   const t = await getTranslations("Group")
+  const messages = await getMessages()
 
   if (!group) {
     notFound()
@@ -39,7 +42,7 @@ export default async function GroupPage({ params }: Props) {
         <EmptyState title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
-        <FollowGroup group={group} />
+        <FollowGroup group={group} text={t("follow")} />
       </>
     )
   }
@@ -66,7 +69,9 @@ export default async function GroupPage({ params }: Props) {
 
       <Separator className="my-3" />
 
-      <ShareButton group={group} />
+      <NextIntlClientProvider messages={pickMessages(messages, "Share")}>
+        <ShareButton group={group} />
+      </NextIntlClientProvider>
     </List>
   )
 }

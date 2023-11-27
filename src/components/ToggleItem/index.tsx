@@ -10,9 +10,11 @@ interface Props {
   item: NonNullable<
     Awaited<ReturnType<typeof getWishlistById>>
   >["wishlistItem"][0]
+  checked: string
+  undo: string
 }
 
-export const ToggleItem = ({ item }: Props) => {
+export const ToggleItem = ({ item, checked, undo }: Props) => {
   const { toast } = useToast()
   const { id, boughtBy } = item
 
@@ -29,9 +31,7 @@ export const ToggleItem = ({ item }: Props) => {
     }
 
     toast({
-      title: boughtBy
-        ? "Je hebt het afstrepen ongedaan gemaakt"
-        : "Je hebt deze wens afgestreept",
+      title: boughtBy ? undo : checked,
     })
   }
 

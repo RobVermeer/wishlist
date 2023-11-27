@@ -4,7 +4,9 @@ import { NewGroup } from "@/components/NewGroup"
 import { YourGroupCard } from "@/components/YourGroupCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { getTranslations } from "next-intl/server"
+import { pickMessages } from "@/utils/pick"
+import { NextIntlClientProvider } from "next-intl"
+import { getMessages, getTranslations } from "next-intl/server"
 
 interface Props {
   params: { locale: string }
@@ -21,6 +23,7 @@ export const generateMetadata = async ({ params: { locale } }: Props) => {
 export default async function ProfileGroupPage() {
   const groups = await getGroupsForUser()
   const t = await getTranslations("ProfileGroups")
+  const messages = await getMessages()
 
   return (
     <List>
@@ -34,7 +37,11 @@ export default async function ProfileGroupPage() {
 
       <Separator className="my-3" />
 
-      <NewGroup />
+      <NextIntlClientProvider
+        messages={pickMessages(messages, ["Common", "NewGroup"])}
+      >
+        <NewGroup />
+      </NextIntlClientProvider>
     </List>
   )
 }

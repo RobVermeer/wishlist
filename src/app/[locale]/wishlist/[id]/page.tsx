@@ -8,7 +8,9 @@ import { NewItem } from "@/components/NewItem"
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
-import { getTranslations } from "next-intl/server"
+import { getMessages, getTranslations } from "next-intl/server"
+import { NextIntlClientProvider } from "next-intl"
+import { pickMessages } from "@/utils/pick"
 
 interface Props {
   params: { id: string; locale: string }
@@ -30,6 +32,7 @@ export default async function WishlistPage({ params }: Props) {
   const { id, locale } = params
   const wishlist = await getWishlistById(id, true)
   const t = await getTranslations({ locale, namespace: "Common" })
+  const messages = await getMessages()
 
   if (!wishlist) {
     notFound()
@@ -51,7 +54,9 @@ export default async function WishlistPage({ params }: Props) {
 
       <Separator className="my-3" />
 
-      <NewItem id={wishlist.id} />
+      <NextIntlClientProvider messages={pickMessages(messages, "NewItem")}>
+        <NewItem id={wishlist.id} />
+      </NextIntlClientProvider>
     </List>
   )
 }

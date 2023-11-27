@@ -1,4 +1,5 @@
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import { useTranslations } from "next-intl"
 
 interface Props {
   showGroups?: boolean
@@ -11,10 +12,13 @@ export const WishlistTitle = ({
   showGroups = false,
   className = "",
 }: Props) => {
+  const t = useTranslations()
   const { title, user, groups, isOwnList } = wishlist
   const listTitle =
     title ||
-    (isOwnList ? "Mijn lijstje" : user.firstName || user.name?.split(" ")[0])
+    (isOwnList
+      ? t("Common.myList")
+      : user.firstName || user.name?.split(" ")[0])
 
   if (!showGroups) {
     return <span className={className}>{listTitle}</span>
@@ -30,7 +34,7 @@ export const WishlistTitle = ({
       {listTitle}{" "}
       {inGroups && (
         <small className="text-muted-foreground">
-          in groep{groups.length !== 1 && "en"} {inGroups}
+          {t("Common.inGroup", { count: groups.length, groups: inGroups })}
         </small>
       )}
     </span>

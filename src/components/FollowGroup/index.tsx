@@ -7,9 +7,10 @@ import { UserPlus } from "lucide-react"
 
 interface Props {
   group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
+  text: string
 }
 
-export const FollowGroup = ({ group }: Props) => {
+export const FollowGroup = ({ group, text }: Props) => {
   async function followGroup() {
     await followGroupById(group.id)
   }
@@ -17,7 +18,7 @@ export const FollowGroup = ({ group }: Props) => {
   return (
     <form action={followGroup}>
       <Button type="submit">
-        <UserPlus size="16" className="mr-2" /> Volg de groep
+        <UserPlus size="16" className="mr-2" /> {text}
       </Button>
     </form>
   )

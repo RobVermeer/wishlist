@@ -3,6 +3,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
 import { Link } from "lucide-react"
 import { ToggleItem } from "@/components/ToggleItem"
+import { useTranslations } from "next-intl"
 
 interface Props {
   item: NonNullable<
@@ -12,6 +13,7 @@ interface Props {
 
 export const ItemCard = ({ item }: Props) => {
   const { title, url, boughtBy } = item
+  const t = useTranslations("Toggle")
 
   return (
     <Card
@@ -28,7 +30,7 @@ export const ItemCard = ({ item }: Props) => {
 
       {!url && title}
 
-      <ToggleItem item={item} />
+      <ToggleItem item={item} checked={t("checked")} undo={t("undo")} />
     </Card>
   )
 }

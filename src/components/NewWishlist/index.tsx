@@ -18,6 +18,7 @@ import { Plus } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
+import { useTranslations } from "next-intl"
 
 interface Props {
   groups: Awaited<ReturnType<typeof getGroupsForUser>>
@@ -27,6 +28,7 @@ export const NewWishlist = ({ groups }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [ownList, setOwnList] = useState(true)
+  const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await createWishlistForUser(data)
@@ -47,12 +49,12 @@ export const NewWishlist = ({ groups }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus size="16" className="mr-2" /> Maak een nieuw verlanglijstje aan
+          <Plus size="16" className="mr-2" /> {t("NewWishlist.button")}
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Nieuw verlanglijstje 🤩</DialogTitle>
+          <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} id="add" className="grid gap-4 py-4">
           <div className="flex items-center space-x-2">
@@ -62,13 +64,15 @@ export const NewWishlist = ({ groups }: Props) => {
               checked={ownList}
               onCheckedChange={(checked) => setOwnList(Boolean(checked))}
             />
-            <Label htmlFor="own-list">Dit is mijn eigen lijstje</Label>
+            <Label htmlFor="own-list">
+              {t("NewWishlist.form.ownList.label")}
+            </Label>
           </div>
 
           {!ownList && (
             <>
               <Label htmlFor="name">
-                Naam van diegene voor wie je het lijstje beheert
+                {t("NewWishlist.form.ownList.title")}
               </Label>
               <Input id="name" name="name" />
             </>
@@ -77,7 +81,7 @@ export const NewWishlist = ({ groups }: Props) => {
           <Separator />
 
           <div className="grid gap-1">
-            <h3>In welke groepen moet je lijstje komen</h3>
+            <h3>{t("NewWishlist.form.groups")}</h3>
             {groups.map((group) => (
               <div key={group.id} className="flex items-center space-x-2">
                 <Checkbox
@@ -93,7 +97,7 @@ export const NewWishlist = ({ groups }: Props) => {
         </form>
         <DialogFooter>
           <Button type="submit" form="add">
-            <Plus size="16" className="mr-2" /> Maak aan
+            <Plus size="16" className="mr-2" /> {t("NewWishlist.form.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

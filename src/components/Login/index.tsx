@@ -15,9 +15,11 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { useFormStatus } from "react-dom"
+import { useTranslations } from "next-intl"
 
 const EmailButton = () => {
   const { pending } = useFormStatus()
+  const t = useTranslations()
 
   return (
     <Button type="submit" disabled={pending}>
@@ -26,13 +28,14 @@ const EmailButton = () => {
       ) : (
         <Send className="mr-2" size="16" />
       )}{" "}
-      Inloggen
+      {t("Login.emailDialog.form.submit")}
     </Button>
   )
 }
 
 export function Login() {
   const [emailSent, setEmailSent] = useState<string | null>(null)
+  const t = useTranslations()
 
   async function handleLogin(formData: FormData) {
     const email = formData.get("email")?.toString()
@@ -47,32 +50,31 @@ export function Login() {
   return (
     <div className="grid gap-3 mt-16">
       <Button onClick={() => signIn("google")}>
-        <Chrome size="18" className="mr-2" /> Inloggen met Google
+        <Chrome size="18" className="mr-2" /> {t("Login.google")}
       </Button>
 
       <Dialog>
         <DialogTrigger asChild>
           <Button>
-            <Mail size="18" className="mr-2" /> Inloggen met email
+            <Mail size="18" className="mr-2" /> {t("Login.email")}
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px]">
           {!emailSent && (
             <>
               <DialogHeader>
-                <DialogTitle>Inloggen met email</DialogTitle>
+                <DialogTitle>{t("Login.emailDialog.title")}</DialogTitle>
                 <DialogDescription>
-                  Als je wilt inloggen of registreren met email, vul dan je
-                  email adres in en druk op de knop.
+                  {t("Login.emailDialog.text")}
                 </DialogDescription>
               </DialogHeader>
               <form action={handleLogin} className="grid gap-4">
                 <Input
-                  aria-label="Email"
+                  aria-label={t("Login.emailDialog.form.email")}
                   id="email"
                   name="email"
                   required
-                  placeholder="wishlist@ru-coding.nl"
+                  placeholder={t("Login.emailDialog.form.placeholder")}
                 />
                 <DialogFooter>
                   <EmailButton />
@@ -85,11 +87,16 @@ export function Login() {
               <span className="bg-green-500 mx-auto p-3 mb-3 rounded-full ">
                 <MailCheck className="text-white" size="28" />
               </span>
-              <DialogTitle className="text-center">Check je inbox</DialogTitle>
+              <DialogTitle className="text-center">
+                {t("Login.emailDialog.success.title")}
+              </DialogTitle>
               <DialogDescription className="text-center">
-                Druk op de link in de email die we hebben gestuurd naar{" "}
-                <strong className="text-primary">{emailSent}</strong> om in te
-                loggen.
+                {t.rich("Login.emailDialog.success.text", {
+                  email: emailSent,
+                  strong: (chunks) => (
+                    <strong className="text-primary">{chunks}</strong>
+                  ),
+                })}
               </DialogDescription>
             </DialogHeader>
           )}

@@ -23,10 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useTranslations } from "next-intl"
 
 export const NewGroup = () => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await createGroupForUser(data)
@@ -47,35 +49,43 @@ export const NewGroup = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus size="16" className="mr-2" /> Maak een nieuwe groep aan
+          <Plus size="16" className="mr-2" /> {t("NewGroup.button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Nieuwe groep 👨‍👨‍👧‍👦</DialogTitle>
+          <DialogTitle>{t("NewGroup.title")}</DialogTitle>
         </DialogHeader>
         <form action={handleSubmit} id="add" className="grid gap-4 py-4">
-          <Label htmlFor="title">Naam</Label>
+          <Label htmlFor="title">{t("NewGroup.form.title")}</Label>
           <Input required id="title" name="title" />
-          <Label htmlFor="theme">Thema</Label>
+          <Label htmlFor="theme">{t("Common.theme.label")}</Label>
           <Select name="theme">
             <SelectTrigger id="theme">
-              <SelectValue placeholder="Selecteer een thema" />
+              <SelectValue placeholder={t("Common.theme.placeholder")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="default">Geen thema</SelectItem>
-                <SelectItem value="sinterklaas">Sinterklaas</SelectItem>
-                <SelectItem value="christmas">Kerst</SelectItem>
-                <SelectItem value="birthday">Verjaardag</SelectItem>
-                <SelectItem value="baby">Baby</SelectItem>
+                <SelectItem value="default">
+                  {t("Common.theme.none")}
+                </SelectItem>
+                <SelectItem value="sinterklaas">
+                  {t("Common.theme.sinterklaas")}
+                </SelectItem>
+                <SelectItem value="christmas">
+                  {t("Common.theme.christmas")}
+                </SelectItem>
+                <SelectItem value="birthday">
+                  {t("Common.theme.birthday")}
+                </SelectItem>
+                <SelectItem value="baby">{t("Common.theme.baby")}</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </form>
         <DialogFooter>
           <Button type="submit" form="add">
-            <Plus size="16" className="mr-2" /> Maak aan
+            <Plus size="16" className="mr-2" /> {t("NewGroup.form.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

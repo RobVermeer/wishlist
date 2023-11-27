@@ -17,9 +17,11 @@ import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { updateFirstNameById } from "@/lib/users/updateFirstNameById"
+import { useTranslations } from "next-intl"
 
 const AddInfoButton = () => {
   const { pending } = useFormStatus()
+  const t = useTranslations()
 
   return (
     <Button type="submit" disabled={pending}>
@@ -28,7 +30,7 @@ const AddInfoButton = () => {
       ) : (
         <UserPlus2 className="mr-2" size="16" />
       )}{" "}
-      Opslaan
+      {t("UserInfo.form.save")}
     </Button>
   )
 }
@@ -41,6 +43,7 @@ export const UserInfoDialog = ({ session }: Props) => {
   const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
   const { toast } = useToast()
+  const t = useTranslations()
 
   useEffect(() => {
     if (!sent && !open && !session.user.firstName) {
@@ -57,25 +60,24 @@ export const UserInfoDialog = ({ session }: Props) => {
     await updateFirstNameById(session.user.id, firstName, lastName)
     setOpen(false)
     setSent(true)
-    toast({ title: "Je gegevens zijn opgeslagen" })
+    toast({ title: t("UserInfo.toast") })
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Vul je naam in</DialogTitle>
-          <DialogDescription>
-            Voor het gebruik van deze website is het nodig dat we je naam weten.
-            Vul die hieronder in.
-          </DialogDescription>
+          <DialogTitle>{t("UserInfo.title")}</DialogTitle>
+          <DialogDescription>{t("UserInfo.text")}</DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="grid gap-4">
-          <Label htmlFor="firstName">Voornaam</Label>
+          <Label htmlFor="firstName">{t("UserInfo.form.firstName")}</Label>
           <Input id="firstName" name="firstName" required />
 
           <Label htmlFor="lastName">
-            Achternaam <small>(optioneel)</small>
+            {t.rich("UserInfo.form.lastName", {
+              small: (chunks) => <small>{chunks}</small>,
+            })}
           </Label>
           <Input id="lastName" name="lastName" />
           <DialogFooter>

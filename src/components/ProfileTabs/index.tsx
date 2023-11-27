@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookUser, Group, List } from "lucide-react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useTranslations } from "next-intl"
 
 export const ProfileTabs = () => {
   const segment = useSelectedLayoutSegment()
+  const t = useTranslations()
 
   return (
     <ScrollArea className="whitespace-nowrap">
@@ -18,7 +20,7 @@ export const ProfileTabs = () => {
           asChild
         >
           <Link href="/profile">
-            <List size="16" className="mr-2" /> Verlanglijstjes
+            <List size="16" className="mr-2" /> {t("ProfileTabs.wishlists")}
           </Link>
         </Button>
         <Button
@@ -28,7 +30,7 @@ export const ProfileTabs = () => {
         >
           <Link href="/profile/groups">
             <Group size="16" className="mr-2" />
-            Groepen
+            {t("ProfileTabs.groups")}
           </Link>
         </Button>
         <Button
@@ -38,7 +40,7 @@ export const ProfileTabs = () => {
         >
           <Link href="/profile/bought">
             <BookUser size="16" className="mr-2" />
-            Gekochte cadeaus
+            {t("ProfileTabs.boughtPresents")}
           </Link>
         </Button>
       </div>

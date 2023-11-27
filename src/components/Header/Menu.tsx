@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/Logo"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
+import { useTranslations } from "next-intl"
 
 interface Props {
   session: Session
@@ -37,6 +38,7 @@ export function Menu({ session }: Props) {
     .map((part: string) => part.at(0))
     .slice(0, 2)
     .join("")
+  const t = useTranslations()
 
   const close = () => setOpen(false)
   const logout = () => {
@@ -81,7 +83,7 @@ export function Menu({ session }: Props) {
               className="flex gap-2 items-center mt-4"
             >
               <Home className="text-emerald-500" size="18" strokeWidth="2.5" />{" "}
-              Overzicht
+              {t("Menu.dashboard")}
             </Link>
 
             <Separator />
@@ -93,7 +95,7 @@ export function Menu({ session }: Props) {
               className="flex gap-2 items-center"
             >
               <List className="text-orange-500" size="18" strokeWidth="2.5" />{" "}
-              Mijn verlanglijstjes
+              {t("Menu.wishlists")}
             </Link>
 
             <Link
@@ -103,7 +105,7 @@ export function Menu({ session }: Props) {
               className="flex gap-2 items-center"
             >
               <Group className="text-pink-500" size="18" strokeWidth="2.5" />{" "}
-              Mijn groepen
+              {t("Menu.groups")}
             </Link>
 
             <Link
@@ -117,7 +119,7 @@ export function Menu({ session }: Props) {
                 size="18"
                 strokeWidth="2.5"
               />{" "}
-              Mijn gekochte cadeaus
+              {t("Menu.boughtPresents")}
             </Link>
 
             <Separator />
@@ -151,7 +153,7 @@ export function Menu({ session }: Props) {
             )}
 
             <Button className="flex gap-2 items-center mt-5" onClick={logout}>
-              <LogOut size="16" /> Uitloggen
+              <LogOut size="16" /> {t("Menu.logout")}
             </Button>
           </div>
         </SheetContent>

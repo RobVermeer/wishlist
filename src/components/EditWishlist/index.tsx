@@ -20,6 +20,7 @@ import { Pencil, Save, Trash } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
+import { useTranslations } from "next-intl"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -31,6 +32,7 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
   const [open, setOpen] = useState(false)
   const { id, title } = wishlist
   const [ownList, setOwnList] = useState(!title)
+  const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await updateWishlistById(id, data)
@@ -56,12 +58,12 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="absolute right-1" size="sm" variant="outline">
-          <Pencil size="12" className="mr-2" /> Wijzig
+          <Pencil size="12" className="mr-2" /> {t("EditWishlist.button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Wijzig verlanglijstje 🧐</DialogTitle>
+          <DialogTitle>{t("EditWishlist.title")}</DialogTitle>
         </DialogHeader>
         <form
           action={handleSubmit}
@@ -75,13 +77,15 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
               checked={ownList}
               onCheckedChange={(checked) => setOwnList(Boolean(checked))}
             />
-            <Label htmlFor="own-list">Dit is mijn eigen lijstje</Label>
+            <Label htmlFor="own-list">
+              {t("EditWishlist.form.ownList.label")}
+            </Label>
           </div>
 
           {!ownList && (
             <>
               <Label htmlFor="name">
-                Naam van diegene voor wie je het lijstje beheert
+                {t("EditWishlist.form.ownList.title")}
               </Label>
               <Input id="name" name="name" defaultValue={title || ""} />
             </>
@@ -90,7 +94,7 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           <Separator />
 
           <div className="grid gap-1">
-            <h3>In welke groepen moet je lijstje komen</h3>
+            <h3>{t("EditWishlist.form.groups")}</h3>
             {groups.map((group) => (
               <div key={group.id} className="flex items-center space-x-2">
                 <Checkbox
@@ -109,11 +113,11 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
         <DialogFooter className="gap-2 md:gap-0">
           <form action={handleRemove}>
             <Button className="w-full" type="submit" variant="outline">
-              <Trash size="16" className="mr-2" /> Verwijder
+              <Trash size="16" className="mr-2" /> {t("EditWishlist.remove")}
             </Button>
           </form>
           <Button type="submit" form={`change-${id}`}>
-            <Save size="16" className="mr-2" /> Opslaan
+            <Save size="16" className="mr-2" /> {t("EditWishlist.form.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

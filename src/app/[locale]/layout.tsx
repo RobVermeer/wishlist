@@ -9,6 +9,9 @@ import { Toaster } from "@/components/ui/toaster"
 import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
+import { getMessages } from "next-intl/server"
+import { NextIntlClientProvider } from "next-intl"
+import { pickMessages } from "@/utils/pick"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
@@ -35,15 +38,31 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(authOptions)
+  const messages = await getMessages()
 
   return (
     <html lang="en">
       <body className={ubuntu.className}>
-        <Header session={session} />
+        <NextIntlClientProvider messages={pickMessages(messages, "Menu")}>
+          <Header session={session} />
+        </NextIntlClientProvider>
 
-        <Layout>{session ? children : <Login />}</Layout>
+        <Layout>
+          {session ? (
+            children
+          ) : (
+            <NextIntlClientProvider messages={pickMessages(messages, "Login")}>
+              <Login />
+            </NextIntlClientProvider>
+          )}
+        </Layout>
 
-        {session && <UserInfoDialog session={session} />}
+        {session && (
+          <NextIntlClientProvider messages={pickMessages(messages, "UserInfo")}>
+            <UserInfoDialog session={session} />
+          </NextIntlClientProvider>
+        )}
+
         <Toaster />
       </body>
     </html>

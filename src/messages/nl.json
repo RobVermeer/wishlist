@@ -29,7 +29,41 @@
     }
   },
   "Common": {
-    "myList": "Mijn lijstje"
+    "myList": "Mijn lijstje",
+    "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
+    "theme": {
+      "label": "Thema",
+      "placeholder": "Selecteer een thema",
+      "none": "Geen thema",
+      "sinterklaas": "Sinterklaas",
+      "christmas": "Kerst",
+      "birthday": "Verjaardag",
+      "baby": "Baby"
+    }
+  },
+  "Menu": {
+    "dashboard": "Overzicht",
+    "wishlists": "Mijn verlanglijstjes",
+    "groups": "Mijn groepen",
+    "boughtPresents": "Mijn gekochte cadeaus",
+    "logout": "Uitloggen"
+  },
+  "Login": {
+    "google": "Inloggen met Google",
+    "email": "Inloggen met email",
+    "emailDialog": {
+      "title": "Inloggen met email",
+      "text": "Als je wilt inloggen of registreren met email, vul dan je email adres in en druk op de knop.",
+      "form": {
+        "email": "Email",
+        "placeholder": "wishlist@ru-coding.nl",
+        "submit": "Inloggen"
+      },
+      "success": {
+        "title": "Check je inbox",
+        "text": "Druk op de link in de email die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
+      }
+    }
   },
   "Wishlist": {
     "empty": {
@@ -45,7 +79,8 @@
     "noFollow": {
       "title": "😵 Je volgt deze groep nog niet 😵",
       "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😇"
-    }
+    },
+    "follow": "Volg de groep"
   },
   "GroupWishlist": {
     "empty": {
@@ -77,5 +112,100 @@
       "text": "Doe dat eens heel snel!"
     },
     "boughtFor": "Gekocht voor {name}"
+  },
+  "NewGroup": {
+    "button": "Maak een nieuwe groep aan",
+    "title": "Nieuwe groep 👨‍👨‍👧‍👦",
+    "form": {
+      "title": "Naam",
+      "save": "Maak aan"
+    }
+  },
+  "EditGroup": {
+    "button": "Wijzig",
+    "title": "Wijzig groep 🧐",
+    "remove": "Verwijder",
+    "form": {
+      "title": "Naam",
+      "save": "Opslaan"
+    }
+  },
+  "LeaveGroup": {
+    "button": "Wijzig",
+    "title": "Verlaat groep 🧐",
+    "text": "Als je uit de groep stapt heb je weer een invite nodig om erbij te komen 🤕",
+    "leave": "Stap uit de groep"
+  },
+  "NewItem": {
+    "button": "Voeg een wens toe",
+    "title": "Voeg wens toe 🤠",
+    "form": {
+      "title": "Wens",
+      "url": "Linkje <small>(optioneel)</small>",
+      "save": "Voeg wens toe"
+    }
+  },
+  "EditItem": {
+    "button": "Wijzig",
+    "title": "Wijzig wens 🧐",
+    "remove": "Verwijder",
+    "form": {
+      "title": "Wens",
+      "url": "Linkje <small>(optioneel)</small>",
+      "save": "Opslaan"
+    }
+  },
+  "NewWishlist": {
+    "button": "Maak een nieuw verlanglijstje aan",
+    "title": "Nieuw verlanglijstje 🤩",
+    "form": {
+      "ownList": {
+        "label": "Dit is mijn eigen lijstje",
+        "title": "Naam van diegene voor wie je het lijstje beheert"
+      },
+      "groups": "In welke groepen moet je lijstje komen",
+      "save": "Maak aan"
+    }
+  },
+  "EditWishlist": {
+    "button": "Wijzig",
+    "title": "Wijzig verlanglijstje 🧐",
+    "remove": "Verwijder",
+    "form": {
+      "ownList": {
+        "label": "Dit is mijn eigen lijstje",
+        "title": "Naam van diegene voor wie je het lijstje beheert"
+      },
+      "groups": "In welke groepen moet je lijstje komen",
+      "save": "Opslaan"
+    }
+  },
+  "ProfileTabs": {
+    "wishlists": "Verlanglijstjes",
+    "groups": "Groepen",
+    "boughtPresents": "Gekochte cadeaus"
+  },
+  "Remind": {
+    "button": "Vraag om meer cadeaus op de lijst",
+    "toast": "We hebben het gevraagd!"
+  },
+  "Share": {
+    "button": "Nodig iemand uit voor de groep",
+    "copied": "Link van groep gekopieerd",
+    "text": "Je bent uitgenodigd om {group} te joinen."
+  },
+  "Toggle": {
+    "checked": "Je hebt deze wens afgestreept",
+    "undo": "Je hebt het afstrepen ongedaan gemaakt"
+  },
+  "UserInfo": {
+    "title": "Vul je naam in",
+    "text": "Voor het gebruik van deze website is het nodig dat we je naam weten. Vul die hieronder in.",
+    "form": {
+      "firstName": "Voornaam",
+      "lastName": "Achternaam <small>(optioneel)</small>",
+      "save": "Opslaan"
+    },
+    "toast": "Je gegevens zijn opgeslagen"
   }
 }
