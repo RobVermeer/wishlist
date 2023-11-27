@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
-import { sendEmailToUsers } from "@/lib/email"
+import { groupDraw } from "@/lib/groupDraw"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Send } from "lucide-react"
 import { RedirectType, redirect } from "next/navigation"
@@ -16,7 +16,7 @@ export const SendEmails = ({ group }: Props) => {
   const { toast } = useToast()
 
   async function handleSubmit(data: FormData) {
-    const { type, errors } = await sendEmailToUsers(group.id, data)
+    const { type, errors } = await groupDraw(group.id, data)
 
     if (type === "error") {
       return errors.map((title) => {

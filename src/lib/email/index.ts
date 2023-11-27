@@ -1,79 +1,64 @@
 "use server"
 
-import { DrawUserEmail } from "./templates"
-import { prisma } from "@/lib/prisma"
-import { getErrorMessage, shuffle } from "@/lib/utils"
-import { User } from "@prisma/client"
+import { getTranslations } from "next-intl/server"
+import { DrawUserEmail, RemindUserEmail } from "./templates"
 import { resend } from "@/lib/resend"
 
-export const sendEmailToUsers = async (groupId: string, formData: FormData) => {
-  try {
-    const group = await prisma.group.findUnique({
-      where: {
-        id: groupId,
-      },
-      include: {
-        members: true,
-      },
-    })
-
-    if (!group) {
-      throw new Error("No group found")
-    }
-
-    const groupName = group.title
-    const users = formData.getAll("users[]")
-    const usersInDrawingList = group.members.filter(({ id }) =>
-      users.includes(id)
-    )
-
-    const drawUsers = (users: User[]) => {
-      const shuffledUsers = shuffle([...users])
-
-      return users.map((user, index) => ({
-        person1: user,
-        person2: shuffledUsers[index],
-      }))
-    }
-
-    const getPairings = (users: User[]): { person1: User; person2: User }[] => {
-      const pairings = drawUsers(users)
-
-      if (pairings.some(({ person1, person2 }) => person1.id === person2.id)) {
-        return getPairings(users)
-      }
-
-      return pairings
-    }
-
-    const pairings = getPairings(usersInDrawingList)
-
-    pairings.forEach(async ({ person1, person2 }) => {
-      const userName = (person1.firstName ?? person1.name)!
-      const forName = (person2.firstName ?? person2.name)!
-
-      await resend.emails.send({
-        from: "Wishlist <no-reply@ru-coding.nl>",
-        to: [person1.email!],
-        subject: `${userName}, je hebt een lootje getrokken voor ${groupName}`,
-        react: DrawUserEmail({
-          userName,
-          forName,
-          groupId,
-          groupName,
-        }),
-      })
-    })
-
-    return {
-      type: "success" as const,
-    }
-  } catch (error) {
-    console.error("Send email to users", error)
-
-    return {
-      type: "error" as const,
-      errors: [getErrorMessage(error)],
-    }
+interface SendGroupDraw {
+  person1: {
+    firstName: string | null
+    name: string | null
+    email: string | null
   }
+  person2: {
+    firstName: string | null
+    name: string | null
+    email: string | null
+  }
+  groupId: string
+  groupName: string
+}
+
+export const sendGroupDraw = async ({
+  person1,
+  person2,
+  groupId,
+  groupName,
+}: SendGroupDraw) => {
+  const userName = (person1.firstName ?? person1.name)!
+  const forName = (person2.firstName ?? person2.name)!
+  const t = await getTranslations("EmailDraw")
+
+  await resend.emails.send({
+    from: "Wishlist <no-reply@ru-coding.nl>",
+    to: [person1.email!],
+    subject: t("subject", {
+      name: userName,
+      group: groupName,
+    }),
+    react: await DrawUserEmail({
+      userName,
+      forName,
+      groupId,
+      groupName,
+    }),
+  })
+}
+
+interface SendReminder {
+  toUser: {
+    email: string | null
+  }
+  userName: string
+}
+
+export const sendReminder = async ({ toUser, userName }: SendReminder) => {
+  const t = await getTranslations("EmailReminder")
+
+  await resend.emails.send({
+    from: "Wishlist <no-reply@ru-coding.nl>",
+    to: [toUser.email!],
+    subject: t("subject"),
+    react: await RemindUserEmail({ userName }),
+  })
 }

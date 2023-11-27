@@ -220,6 +220,39 @@
     "item": {
       "notFound": "Wens niet gevonden",
       "alreadyBought": "Deze wens is al door iemand anders gekocht"
+    },
+    "user": {
+      "notFound": "Gebruiker niet gevonden"
+    },
+    "reminder": {
+      "alreadySent": "Er is al een reminder verstuurd"
     }
+  },
+  "EmailDraw": {
+    "subject": "{name}, je hebt een lootje getrokken voor {group}",
+    "preview": "Je hebt een lootje getrokken!",
+    "title": "<strong>{name}</strong>, je hebt een lootje getrokken!",
+    "hello": "Hey <strong>{name}</strong>,",
+    "text1": "De lootjes voor <strong>{group}</strong> zijn getrokken. Kijk snel wie je hebt!",
+    "text2": "Voorkom dubbele cadeaus. Vink de cadeaus aan die je gaat geven. Dit is niet zichtbaar voor de vrager en kan op alle verlanglijstjes van de groep.",
+    "text3": "Je getrokken lootje: <strong>{name}</strong>",
+    "button": "Ga naar {group}",
+    "goodbye": "Liefs, <strong>Sinterklaas</strong>"
+  },
+  "EmailReminder": {
+    "subject": "Heb je nog wensen?",
+    "preview": "Iemand vraagt of je jouw lijstje kan uitbreiden",
+    "title": "<strong>{name}</strong>, heb je nog wat wensen?",
+    "hello": "Hey <strong>{name}</strong>,",
+    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje zet.",
+    "button": "Doe het meteen"
+  },
+  "EmailLogin": {
+    "subject": "Inloggen Wishlist",
+    "preview": "Inloggen bij Wishlist",
+    "hello": "Hey,",
+    "text1": "Je hebt net aangevraagd om in te loggen bij Wishlist. Om in te loggen moet je op de rode knop hieronder klikken.",
+    "text2": "Veel plezier bij het gebruik van Wishlist!",
+    "button": "Log nu in"
   }
 }

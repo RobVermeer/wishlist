@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { resend } from "@/lib/resend"
 import { RemindUserEmail } from "@/lib/email/templates"
+import { getTranslations } from "next-intl/server"
+import { sendReminder } from "../email"
 
 export const canBeRemindedForUser = async (to: string) => {
   const remindTimeout = new Date()
@@ -28,15 +30,16 @@ export const canBeRemindedForUser = async (to: string) => {
 export const sendReminderToUser = async (to: string) => {
   try {
     const session = await getServerSession(authOptions)
+    const t = await getTranslations("Errors")
 
     if (!session) {
-      throw new Error("Je bent niet ingelogd")
+      throw new Error(t("notLoggedIn"))
     }
 
     const canBeReminded = await canBeRemindedForUser(to)
 
     if (!canBeReminded) {
-      throw new Error("Er is al een reminder verstuurd")
+      throw new Error(t("reminder.alreadySent"))
     }
 
     const from = session.user.id
@@ -48,17 +51,12 @@ export const sendReminderToUser = async (to: string) => {
     })
 
     if (!toUser) {
-      throw new Error("Gebruiker niet gevonden")
+      throw new Error(t("user.notFound"))
     }
 
     const userName = (toUser.firstName ?? toUser.name)!
 
-    await resend.emails.send({
-      from: "Wishlist <no-reply@ru-coding.nl>",
-      to: [toUser.email!],
-      subject: "Heb je nog wensen?",
-      react: RemindUserEmail({ userName }),
-    })
+    await sendReminder({ toUser, userName })
 
     await prisma.reminder.create({
       data: {
