@@ -5,7 +5,7 @@
       "title": "Groepen die je volgt",
       "empty": {
         "title": "Je volgt nog geen enkele groep 🥺",
-        "text": "Om te zien wat anderen willen en om je eigen verlanglijstje te kunnen toevoegen moet je als eerste een groep volgen. Ga naar <profile>je profiel</profile> om te beginnen! 🚀"
+        "text": "Om te zien wat anderen wensen en om je eigen verlanglijstje te kunnen toevoegen moet je eerst een groep volgen. Ga naar <profile>je profiel</profile> om te beginnen! 🚀"
       }
     },
     "wishlists": {
@@ -50,18 +50,18 @@
   },
   "Login": {
     "google": "Inloggen met Google",
-    "email": "Inloggen met email",
+    "email": "Inloggen met e-mail",
     "emailDialog": {
-      "title": "Inloggen met email",
-      "text": "Als je wilt inloggen of registreren met email, vul dan je email adres in en druk op de knop.",
+      "title": "Inloggen met e-mail",
+      "text": "Als je wilt inloggen of registreren met e-mail, vul dan je e-mailadres in en druk op de knop.",
       "form": {
-        "email": "Email",
+        "email": "E-mail",
         "placeholder": "wishlist@ru-coding.nl",
         "submit": "Inloggen"
       },
       "success": {
         "title": "Check je inbox",
-        "text": "Druk op de link in de email die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
+        "text": "Druk op de link in de e-mail die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
       }
     }
   },
