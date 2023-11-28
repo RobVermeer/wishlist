@@ -60,7 +60,7 @@
         "submit": "Inloggen"
       },
       "success": {
-        "title": "Check je inbox",
+        "title": "Check je inbox 📨",
         "text": "Druk op de link in de e-mail die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
       }
     }
@@ -73,18 +73,18 @@
   },
   "Group": {
     "empty": {
-      "title": "😵‍💫 Er zijn nog geen lijstjes! 😵‍💫",
-      "text": "Maak als eerste een lijstje aan in <profile>je profiel</profile>! 🤑"
+      "title": "Er zijn nog geen lijstjes! 😵‍💫",
+      "text": "Maak als eerste een lijstje aan in <profile>je profiel</profile>! 📝"
     },
     "noFollow": {
-      "title": "😵 Je volgt deze groep nog niet 😵",
-      "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😇"
+      "title": "Je volgt deze groep nog niet 😵",
+      "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😊"
     },
     "follow": "Volg de groep"
   },
   "GroupWishlist": {
     "empty": {
-      "title": "🫣 Dit lijstje is nog helemaal leeg 🫣",
+      "title": "Dit lijstje is nog helemaal leeg 🫣",
       "text": "Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
     }
   },
@@ -102,14 +102,14 @@
     "title": "Mijn groepen - Profiel - Wishlist",
     "empty": {
       "title": "Je volgt nog geen groepen.",
-      "text": "Doe dit snel! 🧐"
+      "text": "Doe dit snel! 🤩"
     }
   },
   "ProfileBoughtPresents": {
     "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
     "empty": {
-      "title": "Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 🤨",
-      "text": "Doe dat eens heel snel!"
+      "title": "Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 😲",
+      "text": "Doe dat eens heel snel! 🤓"
     },
     "boughtFor": "Gekocht voor {name}"
   },
@@ -123,7 +123,7 @@
   },
   "EditGroup": {
     "button": "Wijzig",
-    "title": "Wijzig groep 🧐",
+    "title": "Wijzig groep",
     "remove": "Verwijder",
     "form": {
       "title": "Naam",
@@ -132,8 +132,8 @@
   },
   "LeaveGroup": {
     "button": "Wijzig",
-    "title": "Verlaat groep 🧐",
-    "text": "Als je uit de groep stapt heb je weer een invite nodig om erbij te komen 🤕",
+    "title": "Verlaat groep 🥺",
+    "text": "Als je uit de groep stapt, heb je weer een invite nodig om erbij te komen 🤓",
     "leave": "Stap uit de groep"
   },
   "NewItem": {
@@ -147,7 +147,7 @@
   },
   "EditItem": {
     "button": "Wijzig",
-    "title": "Wijzig wens 🧐",
+    "title": "Wijzig wens",
     "remove": "Verwijder",
     "form": {
       "title": "Wens",
@@ -169,7 +169,7 @@
   },
   "EditWishlist": {
     "button": "Wijzig",
-    "title": "Wijzig verlanglijstje 🧐",
+    "title": "Wijzig verlanglijstje",
     "remove": "Verwijder",
     "form": {
       "ownList": {
