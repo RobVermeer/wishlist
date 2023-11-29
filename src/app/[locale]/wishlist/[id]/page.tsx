@@ -43,7 +43,7 @@ export default async function WishlistPage({ params }: Props) {
   return (
     <List>
       <div className="text-center">
-        {wishlist.isOwnList && wishlist.user.image && (
+        {!wishlist.title && wishlist.user.image && (
           <Avatar className="inline-block w-14 h-14 border border-slate-500">
             <AvatarImage
               src={wishlist.user.image}
