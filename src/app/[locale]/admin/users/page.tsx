@@ -4,6 +4,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getUsers } from "@/lib/users/getUsers"
 import { RemoveUser } from "./components/RemoveUser"
+import { getInitials } from "@/utils/string"
 
 export default async function AdminUsersPage() {
   const users = await getUsers()
@@ -21,9 +22,7 @@ export default async function AdminUsersPage() {
                 alt={`Avatar of ${user.firstName || user?.name}`}
               />
             )}
-            <AvatarFallback>
-              {(user.firstName || user?.name)?.substring(0, 2).toUpperCase()}
-            </AvatarFallback>
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
 
           <span className="leading-none">

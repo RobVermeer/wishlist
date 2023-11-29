@@ -6,11 +6,13 @@ import { NewItem } from "@/components/NewItem"
 import { RemindButton } from "@/components/RemindButton"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { YourItemCard } from "@/components/YourItemCard"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { canBeRemindedForUser } from "@/lib/reminders"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { pickMessages } from "@/utils/pick"
+import { getInitials } from "@/utils/string"
 import { Metadata } from "next"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
@@ -50,18 +52,29 @@ export default async function GroupWishlistPage({ params }: Props) {
 
   return (
     <List>
-      <ListTitle>
-        <WishlistTitle wishlist={wishlist} />{" "}
-        <small className="text-secondary-foreground">
-          In{" "}
-          <Link
-            className="underline underline-offset-2"
-            href={`/group/${group.id}`}
-          >
-            {group.title}
-          </Link>
-        </small>
-      </ListTitle>
+      <div className="text-center">
+        {wishlist.isOwnList && wishlist.user.image && (
+          <Avatar className="inline-block w-14 h-14 border border-slate-500">
+            <AvatarImage
+              src={wishlist.user.image}
+              alt={`@${wishlist.user.name}`}
+            />
+            <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
+          </Avatar>
+        )}
+        <ListTitle>
+          <WishlistTitle wishlist={wishlist} />{" "}
+          <small className="text-base text-foreground">
+            In{" "}
+            <Link
+              className="underline underline-offset-2"
+              href={`/group/${group.id}`}
+            >
+              {group.title}
+            </Link>
+          </small>
+        </ListTitle>
+      </div>
 
       {wishlist.wishlistItem.map((item) => {
         if (wishlist.isOwnList) {

@@ -6,9 +6,13 @@ import { Separator } from "@/components/ui/separator"
 export default function LoadingWishlist() {
   return (
     <List>
-      <ListTitle>
-        <Skeleton className="w-[110px] h-[32px] rounded-md" />
-      </ListTitle>
+      <div className="text-center">
+        <Skeleton className="inline-block w-14 h-14 rounded-full" />
+
+        <ListTitle>
+          <Skeleton className="inline-block w-[110px] h-[27px] rounded-md" />
+        </ListTitle>
+      </div>
 
       <Skeleton className="w-full h-[48px] rounded-md" />
       <Skeleton className="w-full h-[48px] rounded-md" />

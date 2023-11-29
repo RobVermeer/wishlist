@@ -11,6 +11,8 @@ import { Separator } from "@/components/ui/separator"
 import { getMessages, getTranslations } from "next-intl/server"
 import { NextIntlClientProvider } from "next-intl"
 import { pickMessages } from "@/utils/pick"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getInitials } from "@/utils/string"
 
 interface Props {
   params: { id: string; locale: string }
@@ -40,9 +42,20 @@ export default async function WishlistPage({ params }: Props) {
 
   return (
     <List>
-      <ListTitle>
-        <WishlistTitle wishlist={wishlist} />
-      </ListTitle>
+      <div className="text-center">
+        {wishlist.isOwnList && wishlist.user.image && (
+          <Avatar className="inline-block w-14 h-14 border border-slate-500">
+            <AvatarImage
+              src={wishlist.user.image}
+              alt={`@${wishlist.user.name}`}
+            />
+            <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
+          </Avatar>
+        )}
+        <ListTitle>
+          <WishlistTitle wishlist={wishlist} />
+        </ListTitle>
+      </div>
 
       {wishlist.wishlistItem.map((item) => (
         <YourItemCard key={item.id} item={item} />
