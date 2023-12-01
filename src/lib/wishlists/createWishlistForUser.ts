@@ -22,6 +22,7 @@ export const createWishlistForUser = async (formData: FormData) => {
     const userId = session.user.id
     const data = wishlistSchema.parse({
       name: formData.get("name")?.toString() || undefined,
+      theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map((group) => group.toString()),
     })
 
@@ -29,6 +30,7 @@ export const createWishlistForUser = async (formData: FormData) => {
       select: wishlistProperties,
       data: {
         title: data.name || null,
+        theme: data.theme || null,
         groups: { connect: data.groups?.map((id) => ({ id })) },
         createdAt: new Date(),
         userId,
