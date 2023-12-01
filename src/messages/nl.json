@@ -31,14 +31,31 @@
   "Common": {
     "myList": "Mijn lijstje",
     "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
-    "theme": {
-      "label": "Thema",
-      "placeholder": "Selecteer een thema",
-      "none": "Geen thema",
-      "sinterklaas": "Sinterklaas",
-      "christmas": "Kerst",
-      "birthday": "Verjaardag",
-      "baby": "Baby"
+    "group": {
+      "theme": {
+        "label": "Thema",
+        "placeholder": "Selecteer een thema",
+        "none": "Geen thema",
+        "sinterklaas": "Sinterklaas",
+        "christmas": "Kerst",
+        "birthday": "Verjaardag",
+        "baby": "Baby"
+      }
+    },
+    "wishlist": {
+      "theme": {
+        "label": "Thema",
+        "placeholder": "Selecteer een thema",
+        "none": "Geen thema",
+        "birthday": "Verjaardag",
+        "holidays": "Feestdagen",
+        "home": "Huis",
+        "travel": "Reizen",
+        "clothing": "Kleding",
+        "sports": "Sporten",
+        "tools": "Gereedschap",
+        "pet": "Huisdier"
+      }
     }
   },
   "Menu": {

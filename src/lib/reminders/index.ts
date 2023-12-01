@@ -5,10 +5,8 @@ import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
-import { resend } from "@/lib/resend"
-import { RemindUserEmail } from "@/lib/email/templates"
 import { getTranslations } from "next-intl/server"
-import { sendReminder } from "../email"
+import { sendReminder } from "@/lib/email"
 
 export const canBeRemindedForUser = async (to: string) => {
   const remindTimeout = new Date()

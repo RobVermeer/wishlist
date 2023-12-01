@@ -43,7 +43,9 @@ export default async function ProfilePage() {
 
       <Separator className="my-3" />
 
-      <NextIntlClientProvider messages={pickMessages(messages, "NewWishlist")}>
+      <NextIntlClientProvider
+        messages={pickMessages(messages, ["NewWishlist", "Common"])}
+      >
         <NewWishlist groups={groups} />
       </NextIntlClientProvider>
     </List>

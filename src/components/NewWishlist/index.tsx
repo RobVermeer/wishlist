@@ -19,6 +19,14 @@ import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Props {
   groups: Awaited<ReturnType<typeof getGroupsForUser>>
@@ -94,6 +102,46 @@ export const NewWishlist = ({ groups }: Props) => {
               </div>
             ))}
           </div>
+
+          <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
+          <Select name="theme">
+            <SelectTrigger id="theme">
+              <SelectValue
+                placeholder={t("Common.wishlist.theme.placeholder")}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="default">
+                  {t("Common.wishlist.theme.none")}
+                </SelectItem>
+                <SelectItem value="birthday">
+                  {t("Common.wishlist.theme.birthday")}
+                </SelectItem>
+                <SelectItem value="holidays">
+                  {t("Common.wishlist.theme.holidays")}
+                </SelectItem>
+                <SelectItem value="home">
+                  {t("Common.wishlist.theme.home")}
+                </SelectItem>
+                <SelectItem value="travel">
+                  {t("Common.wishlist.theme.travel")}
+                </SelectItem>
+                <SelectItem value="clothing">
+                  {t("Common.wishlist.theme.clothing")}
+                </SelectItem>
+                <SelectItem value="sports">
+                  {t("Common.wishlist.theme.sports")}
+                </SelectItem>
+                <SelectItem value="tools">
+                  {t("Common.wishlist.theme.tools")}
+                </SelectItem>
+                <SelectItem value="pet">
+                  {t("Common.wishlist.theme.pet")}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </form>
         <DialogFooter>
           <Button type="submit" form="add">

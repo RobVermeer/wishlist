@@ -11,6 +11,7 @@ export interface WishlistProperties extends Wishlist {
 export const wishlistProperties = {
   id: true,
   title: true,
+  theme: true,
   user: {
     select: userProperties,
   },

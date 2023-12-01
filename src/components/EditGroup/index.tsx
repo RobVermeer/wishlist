@@ -75,26 +75,28 @@ export const EditGroup = ({ group }: Props) => {
         >
           <Label htmlFor="title">{t("EditGroup.form.title")}</Label>
           <Input required id="title" name="title" defaultValue={title} />
-          <Label htmlFor="theme">{t("Common.theme.label")}</Label>
+          <Label htmlFor="theme">{t("Common.group.theme.label")}</Label>
           <Select name="theme" defaultValue={group.theme || undefined}>
             <SelectTrigger id="theme">
-              <SelectValue placeholder={t("Common.theme.placeholder")} />
+              <SelectValue placeholder={t("Common.group.theme.placeholder")} />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectItem value="default">
-                  {t("Common.theme.none")}
+                  {t("Common.group.theme.none")}
                 </SelectItem>
                 <SelectItem value="sinterklaas">
-                  {t("Common.theme.sinterklaas")}
+                  {t("Common.group.theme.sinterklaas")}
                 </SelectItem>
                 <SelectItem value="christmas">
-                  {t("Common.theme.christmas")}
+                  {t("Common.group.theme.christmas")}
                 </SelectItem>
                 <SelectItem value="birthday">
-                  {t("Common.theme.birthday")}
+                  {t("Common.group.theme.birthday")}
                 </SelectItem>
-                <SelectItem value="baby">{t("Common.theme.baby")}</SelectItem>
+                <SelectItem value="baby">
+                  {t("Common.group.theme.baby")}
+                </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

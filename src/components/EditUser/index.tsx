@@ -1,14 +1,14 @@
 "use client"
 
 import { Loader2, Save } from "lucide-react"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useTranslations } from "next-intl"
 import { useFormStatus } from "react-dom"
 import { updateProfile } from "@/lib/users/updateProfile"
 import { useRef } from "react"
-import { useToast } from "../ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 
 const SubmitButton = () => {
   const t = useTranslations()

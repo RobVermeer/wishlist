@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { getErrorMessage, shuffle } from "@/lib/utils"
 import { User } from "@prisma/client"
-import { sendGroupDraw } from "../email"
+import { sendGroupDraw } from "@/lib/email"
 import { getTranslations } from "next-intl/server"
 
 export const groupDraw = async (groupId: string, formData: FormData) => {

@@ -74,6 +74,7 @@ model Wishlist {
   id           String         @id @default(cuid())
   title        String?
   createdAt    DateTime
+  theme        String?
   wishlistItem WishlistItem[]
   userId       String
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -22,7 +22,9 @@ export const YourWishlistCard = ({ wishlist, groups }: Props) => {
         <WishlistTitle wishlist={wishlist} showGroups />
       </Link>
 
-      <NextIntlClientProvider messages={pickMessages(messages, "EditWishlist")}>
+      <NextIntlClientProvider
+        messages={pickMessages(messages, ["EditWishlist", "Common"])}
+      >
         <EditWishlist wishlist={wishlist} groups={groups} />
       </NextIntlClientProvider>
     </Card>
