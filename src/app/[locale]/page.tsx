@@ -90,7 +90,7 @@ export default async function Home() {
           <EmptyState title={t("wishlists.empty.title")}>
             {t.rich("wishlists.empty.text", {
               profile: (chunks) => (
-                <Link href="/profile" className="text-primary">
+                <Link href="/profile/wishlists" className="text-primary">
                   {chunks}
                 </Link>
               ),

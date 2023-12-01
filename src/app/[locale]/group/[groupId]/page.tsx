@@ -59,7 +59,7 @@ export default async function GroupPage({ params }: Props) {
         <EmptyState title={t("empty.title")}>
           {t.rich("empty.text", {
             profile: (chunks) => (
-              <Link href="/profile" className="text-primary">
+              <Link href="/profile/wishlists" className="text-primary">
                 {chunks}
               </Link>
             ),

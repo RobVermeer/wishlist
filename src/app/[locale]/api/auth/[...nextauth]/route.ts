@@ -30,7 +30,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     session: ({ session, user }: { session: Session; user: User }) => {
       session.user.id = user.id
-      session.user.firstName = user.firstName || user.name?.split(" ")[0]
+      session.user.firstName = user.firstName
       session.user.isAdmin = user.id === process.env.ADMIN_USER_ID
 
       return session

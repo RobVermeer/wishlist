@@ -1,13 +1,10 @@
-import { EmptyState } from "@/components/EmptyState"
+import { EditUser } from "@/components/EditUser"
 import { List } from "@/components/List"
-import { NewWishlist } from "@/components/NewWishlist"
-import { YourWishlistCard } from "@/components/YourWishlistCard"
-import { Separator } from "@/components/ui/separator"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { pickMessages } from "@/utils/pick"
+import { getServerSession } from "next-auth"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
+import { authOptions } from "../api/auth/[...nextauth]/route"
 
 interface Props {
   params: { locale: string }
@@ -22,29 +19,15 @@ export const generateMetadata = async ({ params: { locale } }: Props) => {
 }
 
 export default async function ProfilePage() {
-  const wishlists = await getWishlistsForUser()
-  const groups = await getGroupsForUser()
-  const t = await getTranslations("ProfileWishlists")
+  const session = await getServerSession(authOptions)
   const messages = await getMessages()
+
+  const firstName = session?.user.firstName ?? ""
 
   return (
     <List>
-      {wishlists.length === 0 && (
-        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
-      )}
-
-      {wishlists.map((wishlist) => (
-        <YourWishlistCard
-          key={wishlist.id}
-          wishlist={wishlist}
-          groups={groups}
-        />
-      ))}
-
-      <Separator className="my-3" />
-
-      <NextIntlClientProvider messages={pickMessages(messages, "NewWishlist")}>
-        <NewWishlist groups={groups} />
+      <NextIntlClientProvider messages={pickMessages(messages, "EditUser")}>
+        <EditUser firstName={firstName} />
       </NextIntlClientProvider>
     </List>
   )

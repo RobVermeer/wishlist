@@ -53,11 +53,10 @@ export const UserInfoDialog = ({ session }: Props) => {
 
   async function handleSubmit(formData: FormData) {
     const firstName = formData.get("firstName")?.toString()
-    const lastName = formData.get("lastName")?.toString()
 
     if (!firstName) return
 
-    await updateFirstNameById(session.user.id, firstName, lastName)
+    await updateFirstNameById(session.user.id, firstName)
     setOpen(false)
     setSent(true)
     toast({ title: t("UserInfo.toast") })
@@ -74,12 +73,6 @@ export const UserInfoDialog = ({ session }: Props) => {
           <Label htmlFor="firstName">{t("UserInfo.form.firstName")}</Label>
           <Input id="firstName" name="firstName" required />
 
-          <Label htmlFor="lastName">
-            {t.rich("UserInfo.form.lastName", {
-              small: (chunks) => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input id="lastName" name="lastName" />
           <DialogFooter>
             <AddInfoButton />
           </DialogFooter>

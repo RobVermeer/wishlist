@@ -43,6 +43,7 @@
   },
   "Menu": {
     "dashboard": "Overzicht",
+    "profile": "Mijn profiel",
     "wishlists": "Mijn verlanglijstjes",
     "groups": "Mijn groepen",
     "boughtPresents": "Mijn gekochte cadeaus",
@@ -180,7 +181,16 @@
       "save": "Opslaan"
     }
   },
+  "EditUser": {
+    "form": {
+      "firstName": "Voornaam",
+      "avatar": "Profielfoto <small>(optioneel)</small>",
+      "save": "Opslaan"
+    },
+    "toast": "Je gegevens zijn opgeslagen"
+  },
   "ProfileTabs": {
+    "me": "Profiel",
     "wishlists": "Verlanglijstjes",
     "groups": "Groepen",
     "boughtPresents": "Gekochte cadeaus"
@@ -203,7 +213,6 @@
     "text": "Voor het gebruik van deze website is het nodig dat we je naam weten. Vul die hieronder in.",
     "form": {
       "firstName": "Voornaam",
-      "lastName": "Achternaam <small>(optioneel)</small>",
       "save": "Opslaan"
     },
     "toast": "Je gegevens zijn opgeslagen"
@@ -211,6 +220,7 @@
   "Errors": {
     "notLoggedIn": "Je bent niet ingelogd",
     "noAccess": "Je hebt niet de juiste rechten om dit te doen",
+    "nothingChanged": "Je hebt geen velden ingevuld",
     "group": {
       "notFound": "Groep niet gevonden"
     },

@@ -7,11 +7,7 @@ import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
 
-export const updateFirstNameById = async (
-  id: string,
-  firstName: string,
-  lastName?: string
-) => {
+export const updateFirstNameById = async (id: string, firstName: string) => {
   try {
     const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
@@ -24,14 +20,8 @@ export const updateFirstNameById = async (
       throw new Error(t("noAccess"))
     }
 
-    const user = await prisma.user.findUniqueOrThrow({
-      where: { id },
-    })
-
-    const name = user.name || [firstName, lastName].filter(Boolean).join(" ")
-
     await prisma.user.update({
-      data: { name, firstName },
+      data: { firstName },
       where: { id },
     })
 
