@@ -48,7 +48,10 @@ export function Login() {
   }
 
   return (
-    <div className="grid gap-3 mt-16">
+    <div className="grid gap-3 text-center">
+      <h2 className="text-primary text-2xl">{t("Login.title")}</h2>
+      <p className="text-lg mb-4">{t("Login.text")}</p>
+
       <Button onClick={() => signIn("google")}>
         <Chrome size="18" className="mr-2" /> {t("Login.google")}
       </Button>

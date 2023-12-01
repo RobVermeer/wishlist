@@ -50,6 +50,8 @@
     "logout": "Uitloggen"
   },
   "Login": {
+    "title": "Welkom bij Wishlist",
+    "text": "Wil je een wensenlijst delen met je familie of vrienden, of gewoon met jezelf? Log dan in en maak je wensenlijstje aan 🤩",
     "google": "Inloggen met Google",
     "email": "Inloggen met e-mail",
     "emailDialog": {
