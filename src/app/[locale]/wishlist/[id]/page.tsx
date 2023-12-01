@@ -31,9 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function WishlistPage({ params }: Props) {
-  const { id, locale } = params
+  const { id } = params
   const wishlist = await getWishlistById(id, true)
-  const t = await getTranslations({ locale, namespace: "Common" })
+  const t = await getTranslations("Wishlist")
   const messages = await getMessages()
 
   if (!wishlist) {
