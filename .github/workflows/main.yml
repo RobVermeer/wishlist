@@ -23,8 +23,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
       - name: Install dependencies ⏳
         run: npm ci
-      - name: Install sharp 🎨
-        run: npm install --os=linux --cpu=x64 sharp && npm install --force @img/sharp-linux-x64
       - name: Build website 👷‍♀️
         run: npm run build
       - name: Copy prisma folder 💾
