@@ -229,7 +229,7 @@
   },
   "UserInfo": {
     "title": "Vul je naam in",
-    "text": "Voor het gebruik van deze website is het nodig dat we je naam weten. Vul die hieronder in.",
+    "text": "Kan je je naam hieronder invullen? Dat is handig voor het aanmaken van je wensenlijstje 😊",
     "form": {
       "firstName": "Voornaam",
       "save": "Opslaan"
