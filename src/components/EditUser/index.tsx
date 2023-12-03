@@ -61,7 +61,7 @@ export const EditUser = ({ firstName }: Props) => {
           small: (chunks) => <small>{chunks}</small>,
         })}
       </Label>
-      <Input id="avatar" name="avatar" type="file" accept="image/*" disabled />
+      <Input id="avatar" name="avatar" type="file" accept="image/*" />
 
       <SubmitButton />
     </form>

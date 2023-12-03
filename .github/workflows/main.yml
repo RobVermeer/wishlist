@@ -21,8 +21,12 @@ jobs:
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+      - name: Use Node v20
+        uses: actions/setup-node@v1
+        with:
+          node-version: 20.x
       - name: Install dependencies ⏳
-        run: npm ci
+        run: npm ci --os=linux
       - name: Build website 👷‍♀️
         run: npm run build
       - name: Copy prisma folder 💾
