@@ -58,7 +58,10 @@ export const EditItem = ({ item }: Props) => {
           <Pencil size="12" className="mr-2" /> {t("EditItem.button")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
         </DialogHeader>

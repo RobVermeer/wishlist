@@ -69,7 +69,10 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           <Pencil size="12" className="mr-2" /> {t("EditWishlist.button")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{t("EditWishlist.title")}</DialogTitle>
         </DialogHeader>

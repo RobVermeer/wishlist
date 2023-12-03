@@ -64,7 +64,10 @@ export const EditGroup = ({ group }: Props) => {
           <Pencil size="12" className="mr-2" /> {t("EditGroup.button")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>
         </DialogHeader>
