@@ -270,11 +270,11 @@
   },
   "EmailReminder": {
     "subject": "Heb je nog wensen?",
-    "preview": "Iemand vraagt of je jouw lijstje kan uitbreiden",
-    "title": "<strong>{name}</strong>, heb je nog wat wensen?",
+    "preview": "Er is iemand die vraagt of je jouw lijstje kan uitbreiden",
+    "title": "<strong>{name}</strong>, heb je nog wensen?",
     "hello": "Hey <strong>{name}</strong>,",
-    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje zet.",
-    "button": "Doe het meteen"
+    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje kan zetten 🤩🎁 Klik op de rode knop hieronder om dit direct te gaan doen.",
+    "button": "Naar Wishlist"
   },
   "EmailLogin": {
     "subject": "Inloggen Wishlist",
