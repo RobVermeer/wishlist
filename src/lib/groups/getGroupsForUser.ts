@@ -24,6 +24,7 @@ export const getGroupsForUser = cache(async () => {
       members: {
         some: { id: userId },
       },
+      removed: false,
     },
   })
 

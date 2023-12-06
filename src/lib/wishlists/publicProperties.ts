@@ -17,8 +17,10 @@ export const wishlistProperties = {
   },
   groups: {
     select: { id: true, title: true },
+    where: { removed: false },
   },
   wishlistItem: {
     select: wishlistItemProperties,
+    where: { removed: false },
   },
 }

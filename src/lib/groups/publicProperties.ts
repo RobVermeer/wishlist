@@ -16,6 +16,7 @@ export const groupProperties = {
   },
   wishlist: {
     select: wishlistProperties,
+    where: { removed: false },
   },
   members: true,
   theme: true,

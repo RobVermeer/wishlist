@@ -22,6 +22,7 @@ export const toggleWishlistItemById = async (id: string) => {
     const wishlistItem = await prisma.wishlistItem.findUnique({
       where: {
         id,
+        removed: false,
       },
       select: wishlistItemProperties,
     })

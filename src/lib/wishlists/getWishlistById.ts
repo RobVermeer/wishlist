@@ -20,7 +20,7 @@ export const getWishlistById = cache(
       const userId = session.user.id
       const data = await prisma.wishlist.findUnique({
         select: wishlistProperties,
-        where: { id },
+        where: { id, removed: false },
       })
 
       if (!data) {

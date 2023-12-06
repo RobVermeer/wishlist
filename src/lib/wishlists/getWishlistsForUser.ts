@@ -20,7 +20,7 @@ export const getWishlistsForUser = cache(async () => {
   const data = await prisma.wishlist.findMany({
     orderBy: { createdAt: "asc" },
     select: wishlistProperties,
-    where: { userId },
+    where: { userId, removed: false },
   })
 
   const wishlists = data.map((wishlist) => ({

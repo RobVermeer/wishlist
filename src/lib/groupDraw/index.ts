@@ -13,6 +13,7 @@ export const groupDraw = async (groupId: string, formData: FormData) => {
     const group = await prisma.group.findUnique({
       where: {
         id: groupId,
+        removed: false,
       },
       include: {
         members: true,

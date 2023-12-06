@@ -64,6 +64,7 @@ model Group {
   title     String
   createdAt DateTime
   theme     String?
+  removed   Boolean    @default(false)
   wishlist  Wishlist[]
   createdBy User       @relation(name: "OwnedGroups", fields: [userId], references: [id], onDelete: Cascade)
   userId    String
@@ -75,6 +76,7 @@ model Wishlist {
   title        String?
   createdAt    DateTime
   theme        String?
+  removed      Boolean        @default(false)
   wishlistItem WishlistItem[]
   userId       String
   user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -86,6 +88,7 @@ model WishlistItem {
   title      String
   url        String?
   createdAt  DateTime
+  removed    Boolean  @default(false)
   userId     String?
   boughtBy   User?    @relation(fields: [userId], references: [id])
   wishlistId String

@@ -20,7 +20,7 @@ export const getGroupById = cache(async (id: string) => {
 
     const data = await prisma.group.findUnique({
       select: groupProperties,
-      where: { id },
+      where: { id, removed: false },
     })
 
     if (!data) {

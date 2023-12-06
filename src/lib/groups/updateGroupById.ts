@@ -25,6 +25,7 @@ export const updateGroupById = async (id: string, formData: FormData) => {
       where: {
         id,
         createdBy: { id: userId },
+        removed: false,
       },
     })
 

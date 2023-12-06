@@ -22,6 +22,7 @@ export const followGroupById = async (id: string) => {
     const groupToFollow = await prisma.group.findUnique({
       where: {
         id,
+        removed: false,
       },
     })
 

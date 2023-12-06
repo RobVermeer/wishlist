@@ -22,6 +22,7 @@ export const leaveGroupById = async (id: string) => {
     const groupToLeave = await prisma.group.findUnique({
       where: {
         id,
+        removed: false,
       },
     })
 

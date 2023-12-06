@@ -22,6 +22,7 @@ export const deleteWishlistById = async (id: string) => {
       where: {
         id,
         userId,
+        removed: false,
       },
     })
 
@@ -29,7 +30,10 @@ export const deleteWishlistById = async (id: string) => {
       throw new Error(t("wishlist.notFound"))
     }
 
-    await prisma.wishlist.delete({
+    await prisma.wishlist.update({
+      data: {
+        removed: true,
+      },
       where: { id },
     })
 

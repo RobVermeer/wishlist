@@ -32,7 +32,8 @@ export const deleteGroupById = async (id: string) => {
       throw new Error(t("noAccess"))
     }
 
-    await prisma.group.delete({
+    await prisma.group.update({
+      data: { removed: true },
       where: { id },
     })
 

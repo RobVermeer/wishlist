@@ -25,6 +25,7 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       where: {
         id,
         userId,
+        removed: false,
       },
     })
 

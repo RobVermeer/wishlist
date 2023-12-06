@@ -30,6 +30,7 @@ export const updateWishlistItemById = async (
         wishlist: {
           userId,
         },
+        removed: false,
       },
     })
 
