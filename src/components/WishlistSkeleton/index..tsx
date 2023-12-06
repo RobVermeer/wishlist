@@ -3,7 +3,7 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { Separator } from "@/components/ui/separator"
 
-export default function LoadingWishlist() {
+export function WishlistSkeleton() {
   return (
     <List>
       <div className="text-center">
