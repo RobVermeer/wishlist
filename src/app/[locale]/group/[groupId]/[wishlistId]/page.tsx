@@ -1,9 +1,7 @@
 import { Wishlist } from "@/components/Wishlist"
-import { WishlistSkeleton } from "@/components/WishlistSkeleton/index."
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
-import { Suspense } from "react"
 
 interface Props {
   params: { wishlistId: string; groupId: string }
@@ -27,9 +25,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function GroupWishlistPage({ params }: Props) {
   const { wishlistId, groupId } = params
 
-  return (
-    <Suspense fallback={<WishlistSkeleton />}>
-      <Wishlist id={wishlistId} groupId={groupId} />
-    </Suspense>
-  )
+  return <Wishlist id={wishlistId} groupId={groupId} />
 }

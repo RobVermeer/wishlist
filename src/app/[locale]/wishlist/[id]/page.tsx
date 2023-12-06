@@ -2,8 +2,6 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { Wishlist } from "@/components/Wishlist"
-import { Suspense } from "react"
-import { WishlistSkeleton } from "@/components/WishlistSkeleton/index."
 
 interface Props {
   params: { id: string; locale: string }
@@ -24,9 +22,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function WishlistPage({ params }: Props) {
   const { id } = params
 
-  return (
-    <Suspense fallback={<WishlistSkeleton />}>
-      <Wishlist id={id} />
-    </Suspense>
-  )
+  return <Wishlist id={id} />
 }
