@@ -5,6 +5,7 @@ import NextAuth, { AuthOptions, Session, User } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email"
 import { sendVerificationRequest } from "@/utils/send-verification-request"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -38,14 +39,14 @@ export const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ profile, user, isNewUser }) => {
-      console.log("User sign in", { ...user, isNewUser })
+      trackIssue("User sign in", "info", { ...user, isNewUser })
 
       if (!isNewUser && !user.firstName && profile?.firstName) {
         await updateFirstNameById(user.id, profile.firstName)
       }
     },
     signOut: ({ session }) => {
-      console.log("User sign out", session)
+      trackIssue("User sign out", "info", session.user)
     },
   },
 }
