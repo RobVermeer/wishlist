@@ -1,6 +1,7 @@
 "use server"
 
-const trackIssueUrl = process.env.TRACK_ISSUE_URL
+const url = process.env.TRACK_ISSUE_URL
+const secret = process.env.TRACK_ISSUE_SECRET
 
 type Level = "error" | "debug" | "info" | "warn" | "fatal"
 
@@ -9,15 +10,18 @@ export async function trackIssue(
   level: Level = "error",
   extra?: Record<string, any>
 ) {
-  if (!trackIssueUrl) return
+  if (!url || !secret) return
 
-  await fetch(trackIssueUrl, {
-    method: "post",
-    body: JSON.stringify({
-      message,
-      level,
-      extra,
-    }),
-    cache: "no-cache",
-  })
+  try {
+    await fetch(url, {
+      method: "post",
+      body: JSON.stringify({
+        message,
+        level,
+        extra,
+        secret,
+      }),
+      cache: "no-cache",
+    })
+  } catch {}
 }
