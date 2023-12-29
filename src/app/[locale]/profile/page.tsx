@@ -4,7 +4,7 @@ import { pickMessages } from "@/utils/pick"
 import { getServerSession } from "next-auth"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {

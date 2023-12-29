@@ -2,7 +2,7 @@
 
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"

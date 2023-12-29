@@ -6,7 +6,7 @@ import { getUsers } from "@/lib/users/getUsers"
 import { RemoveUser } from "./components/RemoveUser"
 import { getInitials } from "@/utils/string"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 export default async function AdminUsersPage() {

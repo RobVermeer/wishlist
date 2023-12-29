@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { Wishlist } from "@/components/Wishlist"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {

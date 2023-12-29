@@ -2,7 +2,7 @@ import { AdminTabs } from "@/components/AdminTabs"
 import { ListTitle } from "@/components/ListTitle"
 import { getServerSession } from "next-auth"
 import { ReactNode } from "react"
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {

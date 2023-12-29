@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { Wishlist } from "@/components/Wishlist"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"

@@ -4,7 +4,7 @@ import { List } from "@/components/List"
 import { getBoughtWishlistItemsForUser } from "@/lib/wishlistItems/getBoughtWishlistItemsForUser"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {

@@ -4,7 +4,7 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 
 interface Props {
   params: { id: string }

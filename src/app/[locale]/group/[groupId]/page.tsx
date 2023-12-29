@@ -13,7 +13,7 @@ import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const group = await getGroupById(params.groupId)
