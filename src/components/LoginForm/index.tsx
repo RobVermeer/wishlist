@@ -33,7 +33,7 @@ const EmailButton = () => {
   )
 }
 
-export function Login() {
+export function LoginForm() {
   const [emailSent, setEmailSent] = useState<string | null>(null)
   const t = useTranslations()
 

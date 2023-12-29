@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
+import { redirect } from "next/navigation"
 
 interface Props {
   params: { locale: string }
@@ -20,8 +21,10 @@ export const generateMetadata = async ({ params: { locale } }: Props) => {
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions)
-  const messages = await getMessages()
 
+  if (!session) redirect(`/login?callbackUrl=${encodeURIComponent("/profile")}`)
+
+  const messages = await getMessages()
   const firstName = session?.user.firstName ?? ""
 
   return (

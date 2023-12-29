@@ -1,8 +1,15 @@
 import { Separator } from "@/components/ui/separator"
 import { getStats } from "@/lib/stats"
 import { BookUser, Group, List, Users } from "lucide-react"
+import { getServerSession } from "next-auth"
+import { authOptions } from "../api/auth/[...nextauth]/route"
+import { redirect } from "next/navigation"
 
 export default async function AdminDashboardPage() {
+  const session = await getServerSession(authOptions)
+
+  if (!session) redirect("/login")
+
   const { userCount, wishlistCount, groupCount, itemCount } = await getStats()
 
   return (

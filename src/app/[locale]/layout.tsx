@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth"
 import { Ubuntu } from "next/font/google"
 import { authOptions } from "@/app/[locale]/api/auth/[...nextauth]/route"
 import { Header } from "@/components/Header"
-import { Login } from "@/components/Login"
 import { Toaster } from "@/components/ui/toaster"
 import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
@@ -47,15 +46,7 @@ export default async function RootLayout({
           <Header session={session} />
         </NextIntlClientProvider>
 
-        <Layout>
-          {session ? (
-            children
-          ) : (
-            <NextIntlClientProvider messages={pickMessages(messages, "Login")}>
-              <Login />
-            </NextIntlClientProvider>
-          )}
-        </Layout>
+        <Layout>{children}</Layout>
 
         {session && (
           <NextIntlClientProvider messages={pickMessages(messages, "UserInfo")}>

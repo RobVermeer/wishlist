@@ -4,10 +4,12 @@ import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
-import { ScrollText } from "lucide-react"
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import { WishlistIcon } from "@/components/WishlistIcon"
+import { getServerSession } from "next-auth"
+import { authOptions } from "./api/auth/[...nextauth]/route"
+import { redirect } from "next/navigation"
 
 interface Props {
   params: { locale: string }
@@ -22,6 +24,10 @@ export const generateMetadata = async ({ params: { locale } }: Props) => {
 }
 
 export default async function Home() {
+  const session = await getServerSession(authOptions)
+
+  if (!session) redirect("/login")
+
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()
   const t = await getTranslations("Home")

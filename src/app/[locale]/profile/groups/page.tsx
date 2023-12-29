@@ -5,8 +5,11 @@ import { YourGroupCard } from "@/components/YourGroupCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { pickMessages } from "@/utils/pick"
+import { getServerSession } from "next-auth"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
+import { authOptions } from "../../api/auth/[...nextauth]/route"
+import { redirect } from "next/navigation"
 
 interface Props {
   params: { locale: string }
@@ -21,6 +24,12 @@ export const generateMetadata = async ({ params: { locale } }: Props) => {
 }
 
 export default async function ProfileGroupPage() {
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    redirect(`/login?callbackUrl=${encodeURIComponent("/profile/groups")}`)
+  }
+
   const groups = await getGroupsForUser()
   const t = await getTranslations("ProfileGroups")
   const messages = await getMessages()

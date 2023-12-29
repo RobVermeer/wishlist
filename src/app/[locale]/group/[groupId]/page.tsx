@@ -8,10 +8,12 @@ import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { pickMessages } from "@/utils/pick"
 import { Metadata } from "next"
+import { getServerSession } from "next-auth"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, getTranslations } from "next-intl/server"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
+import { authOptions } from "../../api/auth/[...nextauth]/route"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const group = await getGroupById(params.groupId)
@@ -28,7 +30,14 @@ interface Props {
 }
 
 export default async function GroupPage({ params }: Props) {
-  const group = await getGroupById(params.groupId)
+  const { groupId } = params
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    redirect(`/login?callbackUrl=${encodeURIComponent(`/group/${groupId}`)}`)
+  }
+
+  const group = await getGroupById(groupId)
   const t = await getTranslations("Group")
   const messages = await getMessages()
 
