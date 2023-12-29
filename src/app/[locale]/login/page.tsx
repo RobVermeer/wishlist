@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl"
 import { pickMessages } from "@/utils/pick"
 import { getMessages } from "next-intl/server"
 import { LoginForm } from "@/components/LoginForm"
-import { authOptions } from "../api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/nextAuth"
 
 interface Props {
   searchParams: { callbackUrl?: string }
