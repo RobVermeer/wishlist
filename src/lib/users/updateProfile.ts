@@ -1,14 +1,14 @@
 "use server"
 
-// import { mkdir, writeFile } from "fs/promises"
-// import { join } from "path"
+import { mkdir } from "fs/promises"
+import { join } from "path"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/nextAuth"
 import { getServerSession } from "next-auth"
-// import sharp from "sharp"
+import Jimp from "jimp"
 
 export async function updateProfile(data: FormData) {
   try {
@@ -28,30 +28,27 @@ export async function updateProfile(data: FormData) {
 
     let uploadedImage
 
-    // if (avatar?.size) {
-    //   const bytes = await avatar.arrayBuffer()
-    //   const buffer = Buffer.from(bytes)
+    if (avatar?.size) {
+      const bytes = await avatar.arrayBuffer()
+      const buffer = Buffer.from(bytes)
 
-    //   await mkdir(join("./public/avatars", session.user.id), {
-    //     recursive: true,
-    //   })
-    //   const imagePath = join(
-    //     "./public/avatars",
-    //     session.user.id,
-    //     `${performance.now()}-${avatar.name}`
-    //   )
+      await mkdir(join("./public/avatars", session.user.id), {
+        recursive: true,
+      })
+      const imagePath = join(
+        "./public/avatars",
+        session.user.id,
+        `${performance.now()}-${avatar.name}`
+      )
 
-    //   const resizedBuffer = await sharp(buffer)
-    //     .resize({ fit: "cover", height: 96, width: 96 })
-    //     .toBuffer()
+      const image = await Jimp.read(buffer)
+      await image.cover(96, 96).writeAsync(imagePath)
 
-    //   await writeFile(imagePath, resizedBuffer)
-
-    //   uploadedImage = `${process.env.BASE_URL}/${imagePath.replace(
-    //     "public/",
-    //     ""
-    //   )}`
-    // }
+      uploadedImage = `${process.env.BASE_URL}/${imagePath.replace(
+        "public/",
+        ""
+      )}`
+    }
 
     await prisma.user.update({
       data: {
