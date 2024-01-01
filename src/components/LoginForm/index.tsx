@@ -76,6 +76,7 @@ export function LoginForm() {
                   aria-label={t("Login.emailDialog.form.email")}
                   id="email"
                   name="email"
+                  type="email"
                   required
                   placeholder={t("Login.emailDialog.form.placeholder")}
                 />
