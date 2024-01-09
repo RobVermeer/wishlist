@@ -9,6 +9,7 @@ import { groupSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
 import { z } from "zod"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const createGroupForUser = async (formData: FormData) => {
   try {
@@ -46,7 +47,7 @@ export const createGroupForUser = async (formData: FormData) => {
       }
     }
 
-    console.error("Create group for user", error)
+    trackIssue("Create group for user", "error", { error })
 
     return {
       type: "error" as const,

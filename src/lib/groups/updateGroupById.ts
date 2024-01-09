@@ -9,6 +9,7 @@ import { groupSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
 import { z } from "zod"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const updateGroupById = async (id: string, formData: FormData) => {
   try {
@@ -57,7 +58,7 @@ export const updateGroupById = async (id: string, formData: FormData) => {
       }
     }
 
-    console.error("Update group by ID", error)
+    trackIssue("Update group by ID", "error", { error })
 
     return {
       type: "error" as const,

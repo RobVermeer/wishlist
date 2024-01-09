@@ -3,6 +3,7 @@
 import { getTranslations } from "next-intl/server"
 import { DrawUserEmail, RemindUserEmail } from "./templates"
 import { resend } from "@/lib/resend"
+import { trackIssue } from "@/lib/trackIssue"
 
 interface SendGroupDraw {
   person1: {
@@ -25,24 +26,34 @@ export const sendGroupDraw = async ({
   groupId,
   groupName,
 }: SendGroupDraw) => {
-  const userName = (person1.firstName ?? person1.name)!
-  const forName = (person2.firstName ?? person2.name)!
-  const t = await getTranslations("EmailDraw")
+  try {
+    const userName = (person1.firstName ?? person1.name)!
+    const forName = (person2.firstName ?? person2.name)!
+    const t = await getTranslations("EmailDraw")
 
-  await resend.emails.send({
-    from: "Wishlist <no-reply@ru-coding.nl>",
-    to: [person1.email!],
-    subject: t("subject", {
-      name: userName,
-      group: groupName,
-    }),
-    react: await DrawUserEmail({
-      userName,
-      forName,
+    await resend.emails.send({
+      from: "Wishlist <no-reply@ru-coding.nl>",
+      to: [person1.email!],
+      subject: t("subject", {
+        name: userName,
+        group: groupName,
+      }),
+      react: await DrawUserEmail({
+        userName,
+        forName,
+        groupId,
+        groupName,
+      }),
+    })
+  } catch (error) {
+    trackIssue("Email group draw error", "error", {
+      error,
       groupId,
       groupName,
-    }),
-  })
+      person1,
+      person2,
+    })
+  }
 }
 
 interface SendReminder {
@@ -53,12 +64,18 @@ interface SendReminder {
 }
 
 export const sendReminder = async ({ toUser, userName }: SendReminder) => {
-  const t = await getTranslations("EmailReminder")
+  try {
+    const t = await getTranslations("EmailReminder")
 
-  await resend.emails.send({
-    from: "Wishlist <no-reply@ru-coding.nl>",
-    to: [toUser.email!],
-    subject: t("subject"),
-    react: await RemindUserEmail({ userName }),
-  })
+    await resend.emails.send({
+      from: "Wishlist <no-reply@ru-coding.nl>",
+      to: [toUser.email!],
+      subject: t("subject"),
+      react: await RemindUserEmail({ userName }),
+    })
+
+    trackIssue("Email reminder sent", "info", { toUser, userName })
+  } catch (error) {
+    trackIssue("Email reminder error", "error", { toUser, userName, error })
+  }
 }

@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/nextAuth"
 import { getServerSession } from "next-auth"
 import Jimp from "jimp"
+import { trackIssue } from "@/lib/trackIssue"
 
 export async function updateProfile(data: FormData) {
   try {
@@ -65,7 +66,7 @@ export async function updateProfile(data: FormData) {
       type: "success" as const,
     }
   } catch (error) {
-    console.error("Update first name by ID", error)
+    trackIssue("Update first name by ID", "error", { error })
 
     return {
       type: "error" as const,

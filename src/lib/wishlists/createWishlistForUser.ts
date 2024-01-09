@@ -9,6 +9,7 @@ import { wishlistSchema } from "@/lib/schema"
 import { z } from "zod"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const createWishlistForUser = async (formData: FormData) => {
   try {
@@ -50,7 +51,7 @@ export const createWishlistForUser = async (formData: FormData) => {
       }
     }
 
-    console.error("Create wishlist for user", error)
+    trackIssue("Create wishlist for user", "error", { error })
 
     return {
       type: "error" as const,

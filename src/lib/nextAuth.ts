@@ -39,7 +39,11 @@ export const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ profile, user, isNewUser }) => {
-      trackIssue("User sign in", "info", { ...user, isNewUser })
+      if (isNewUser) {
+        trackIssue("User registered", "info", user)
+      } else {
+        trackIssue("User sign in", "info", user)
+      }
 
       if (!isNewUser && !user.firstName && profile?.firstName) {
         await updateFirstNameById(user.id, profile.firstName)

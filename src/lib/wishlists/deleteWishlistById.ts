@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const deleteWishlistById = async (id: string) => {
   try {
@@ -43,7 +44,7 @@ export const deleteWishlistById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    console.error("Delete wishlist by ID", error)
+    trackIssue("Delete wishlist by ID", "error", { error })
 
     return {
       type: "error" as const,

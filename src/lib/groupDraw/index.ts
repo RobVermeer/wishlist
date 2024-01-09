@@ -5,6 +5,7 @@ import { getErrorMessage, shuffle } from "@/lib/utils"
 import { User } from "@prisma/client"
 import { sendGroupDraw } from "@/lib/email"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const groupDraw = async (groupId: string, formData: FormData) => {
   try {
@@ -55,11 +56,13 @@ export const groupDraw = async (groupId: string, formData: FormData) => {
       await sendGroupDraw({ person1, person2, groupId, groupName })
     })
 
+    trackIssue("Email group draw sent", "info", { groupId, groupName })
+
     return {
       type: "success" as const,
     }
   } catch (error) {
-    console.error("Send email to users", error)
+    trackIssue("Email group draw error", "error", { error, groupId })
 
     return {
       type: "error" as const,

@@ -7,8 +7,9 @@ import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { wishlistSchema } from "@/lib/schema"
 import { z } from "zod"
-import { getErrorMessage } from "@/lib//utils"
+import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
   try {
@@ -62,7 +63,7 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       }
     }
 
-    console.error("Update wishlist by ID", error)
+    trackIssue("Update wishlist by ID", "error", { error })
 
     return {
       type: "error" as const,

@@ -6,6 +6,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
+import { trackIssue } from "@/lib/trackIssue"
 
 export const updateFirstNameById = async (id: string, firstName: string) => {
   try {
@@ -31,7 +32,7 @@ export const updateFirstNameById = async (id: string, firstName: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    console.error("Update first name by ID", error)
+    trackIssue("Update first name by ID", "error", { error })
 
     return {
       type: "error" as const,
