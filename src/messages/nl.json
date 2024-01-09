@@ -168,7 +168,13 @@
   "EditItem": {
     "button": "Wijzig",
     "title": "Wijzig wens",
-    "remove": "Verwijder",
+    "remove": {
+      "button": "Verwijder",
+      "title": "Weet je het zeker?",
+      "description": "Verwijderen van je wens is permanent.",
+      "cancel": "Toch niet",
+      "confirm": "Verwijder"
+    },
     "form": {
       "title": "Wens",
       "url": "Linkje <small>(optioneel)</small>",

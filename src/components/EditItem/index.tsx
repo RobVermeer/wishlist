@@ -16,8 +16,19 @@ import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemBy
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash } from "lucide-react"
+import { Pencil, Save, Trash, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 interface Props {
   item: NonNullable<
@@ -80,11 +91,38 @@ export const EditItem = ({ item }: Props) => {
           <Input id="url" name="url" defaultValue={url || ""} />
         </form>
         <DialogFooter className="gap-2 md:gap-0">
-          <form action={handleRemove}>
-            <Button className="w-full" type="submit" variant="outline">
-              <Trash size="16" className="mr-2" /> {t("EditItem.remove")}
-            </Button>
-          </form>
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="w-full" type="submit" variant="outline">
+                  <Trash size="16" className="mr-2" />{" "}
+                  {t("EditItem.remove.button")}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    {t("EditItem.remove.title")}
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    {t("EditItem.remove.description")}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>
+                    {t("EditItem.remove.cancel")}
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="flex gap-2"
+                    onClick={handleRemove}
+                  >
+                    <Trash2 size="16" />
+                    {t("EditItem.remove.confirm")}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           <Button type="submit" form={`change-${id}`}>
             <Save size="16" className="mr-2" /> {t("EditItem.form.save")}
           </Button>
