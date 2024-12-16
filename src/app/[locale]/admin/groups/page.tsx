@@ -32,7 +32,7 @@ export default async function AdminUsersPage() {
 
           <div className="absolute right-2 flex gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href={`/admin/groups/${group.id}`}>Draw</Link>
+              <Link href={`/admin/groups/${group.id}`}>Edit</Link>
             </Button>
 
             <RemoveGroup id={group.id} />
