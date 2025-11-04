@@ -199,6 +199,7 @@
     "title": "Wijzig verlanglijstje",
     "remove": "Verwijder",
     "form": {
+      "description": "Beschrijving wensenlijstje (optioneel)",
       "ownList": {
         "label": "Dit is mijn eigen lijstje",
         "title": "Naam van diegene voor wie je het lijstje beheert"
