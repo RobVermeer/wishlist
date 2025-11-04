@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,19 +8,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
-import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
-import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
-import { useState } from "react"
-import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash } from "lucide-react"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Separator } from "@/components/ui/separator"
-import { useTranslations } from "next-intl"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById";
+import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser";
+import { updateWishlistById } from "@/lib/wishlists/updateWishlistById";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { Pencil, Save, Trash } from "lucide-react";
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 import {
   Select,
   SelectContent,
@@ -28,38 +28,38 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 interface Props {
-  wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
-  groups: Awaited<ReturnType<typeof getGroupsForUser>>
+  wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0];
+  groups: Awaited<ReturnType<typeof getGroupsForUser>>;
 }
 
 export const EditWishlist = ({ wishlist, groups }: Props) => {
-  const { toast } = useToast()
-  const [open, setOpen] = useState(false)
-  const { id, title } = wishlist
-  const [ownList, setOwnList] = useState(!title)
-  const t = useTranslations()
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const { id, title, description } = wishlist;
+  const [ownList, setOwnList] = useState(!title);
+  const t = useTranslations();
 
   async function handleSubmit(data: FormData) {
-    const { type, errors } = await updateWishlistById(id, data)
+    const { type, errors } = await updateWishlistById(id, data);
 
     if (type === "error") {
       return errors.map((title) => {
         toast({
           variant: "destructive",
           title,
-        })
-      })
+        });
+      });
     }
 
-    setOpen(false)
+    setOpen(false);
   }
 
   async function handleRemove() {
-    await deleteWishlistById(id)
-    setOpen(false)
+    await deleteWishlistById(id);
+    setOpen(false);
   }
 
   return (
@@ -101,6 +101,15 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
               <Input id="name" name="name" defaultValue={title || ""} />
             </>
           )}
+
+          <Label htmlFor="description">
+            {t("EditWishlist.form.description")}
+          </Label>
+          <Input
+            id="description"
+            name="description"
+            defaultValue={description || ""}
+          />
 
           <Separator />
 
@@ -173,5 +182,5 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
