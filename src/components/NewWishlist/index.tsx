@@ -86,6 +86,11 @@ export const NewWishlist = ({ groups }: Props) => {
             </>
           )}
 
+          <Label htmlFor="description">
+            {t("NewWishlist.form.description")}
+          </Label>
+          <Input id="description" name="description" />
+
           <Separator />
 
           <div className="grid gap-1">
