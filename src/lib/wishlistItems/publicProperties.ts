@@ -9,6 +9,7 @@ export interface WishlistItemProperties extends WishlistItem {
 export const wishlistItemProperties = {
   id: true,
   title: true,
+  unlimited: true,
   url: true,
   boughtBy: {
     select: userProperties,
