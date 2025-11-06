@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Checkbox } from "../ui/checkbox"
 
 interface Props {
   item: NonNullable<
@@ -39,14 +40,14 @@ interface Props {
 export const EditItem = ({ item }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
-  const { id, title, url } = item
+  const { id, title, url, unlimited } = item
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await updateWishlistItemById(id, data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      return errors.map(title => {
         toast({
           variant: "destructive",
           title,
@@ -71,7 +72,7 @@ export const EditItem = ({ item }: Props) => {
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
-        onOpenAutoFocus={(event) => event.preventDefault()}
+        onOpenAutoFocus={event => event.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
@@ -83,9 +84,19 @@ export const EditItem = ({ item }: Props) => {
         >
           <Label htmlFor="title">{t("EditItem.form.title")}</Label>
           <Input required id="title" name="title" defaultValue={title} />
+
+          <div className="flex items-center gap-3">
+            <Checkbox
+              id="unlimited"
+              name="unlimited"
+              defaultChecked={unlimited}
+            />
+            <Label htmlFor="unlimited">{t("EditItem.form.unlimited")}</Label>
+          </div>
+
           <Label htmlFor="url">
             {t.rich("EditItem.form.url", {
-              small: (chunks) => <small>{chunks}</small>,
+              small: chunks => <small>{chunks}</small>,
             })}
           </Label>
           <Input id="url" name="url" defaultValue={url || ""} />
