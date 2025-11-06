@@ -161,6 +161,7 @@
     "title": "Voeg wens toe 🤠",
     "form": {
       "title": "Wens",
+      "unlimited": "Deze wens mag onbeperkt vervuld worden",
       "url": "Linkje <small>(optioneel)</small>",
       "save": "Voeg wens toe"
     }

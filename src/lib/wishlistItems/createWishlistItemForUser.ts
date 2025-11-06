@@ -38,6 +38,7 @@ export const createWishlistItemForUser = async (
 
     const data = wishlistItemSchema.parse({
       title: formData.get("title")?.toString(),
+      unlimited: formData.get("unlimited")?.toString() === "on",
       url: formData.get("url")?.toString() || undefined,
     })
 
@@ -45,6 +46,7 @@ export const createWishlistItemForUser = async (
       select: wishlistItemProperties,
       data: {
         title: data.title,
+        unlimited: data.unlimited,
         url: data.url || null,
         createdAt: new Date(),
         wishlistId,
@@ -60,7 +62,7 @@ export const createWishlistItemForUser = async (
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map((issue) => issue.message),
+        errors: error.issues.map(issue => issue.message),
       }
     }
 

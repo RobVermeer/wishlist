@@ -16,6 +16,7 @@ import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface Props {
   id: string
@@ -30,7 +31,7 @@ export const NewItem = ({ id }: Props) => {
     const { type, errors } = await createWishlistItemForUser(id, data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      return errors.map(title => {
         toast({
           variant: "destructive",
           title,
@@ -55,9 +56,15 @@ export const NewItem = ({ id }: Props) => {
         <form action={handleSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">{t("NewItem.form.title")}</Label>
           <Input required id="title" name="title" />
+
+          <div className="flex items-center gap-3">
+            <Checkbox id="unlimited" name="unlimited" />
+            <Label htmlFor="unlimited">{t("NewItem.form.unlimited")}</Label>
+          </div>
+
           <Label htmlFor="url">
             {t.rich("NewItem.form.url", {
-              small: (chunks) => <small>{chunks}</small>,
+              small: chunks => <small>{chunks}</small>,
             })}
           </Label>
           <Input id="url" name="url" />
