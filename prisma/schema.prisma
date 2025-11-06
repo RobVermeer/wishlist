@@ -87,6 +87,7 @@ model Wishlist {
 model WishlistItem {
   id         String   @id @default(cuid())
   title      String
+  unlimited  Boolean  @default(false)
   url        String?
   createdAt  DateTime
   removed    Boolean  @default(false)

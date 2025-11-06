@@ -161,6 +161,7 @@
     "title": "Voeg wens toe 🤠",
     "form": {
       "title": "Wens",
+      "unlimited": "Deze wens mag onbeperkt vervuld worden",
       "url": "Linkje <small>(optioneel)</small>",
       "save": "Voeg wens toe"
     }
@@ -177,6 +178,7 @@
     },
     "form": {
       "title": "Wens",
+      "unlimited": "Deze wens mag onbeperkt vervuld worden",
       "url": "Linkje <small>(optioneel)</small>",
       "save": "Opslaan"
     }
@@ -232,6 +234,7 @@
     "text": "Je bent uitgenodigd om {group} te joinen."
   },
   "Toggle": {
+    "unlimited": "Deze wens kan onbeperkt vervuld worden.",
     "checked": "Je hebt deze wens afgestreept",
     "undo": "Je hebt het afstrepen ongedaan gemaakt"
   },

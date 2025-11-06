@@ -1,11 +1,11 @@
-import { Group, User, Wishlist, WishlistItem } from "@prisma/client";
-import { userProperties } from "@/lib/users/publicProperties";
-import { wishlistItemProperties } from "@/lib/wishlistItems/publicProperties";
+import { Group, User, Wishlist, WishlistItem } from "@prisma/client"
+import { userProperties } from "@/lib/users/publicProperties"
+import { wishlistItemProperties } from "@/lib/wishlistItems/publicProperties"
 
 export interface WishlistProperties extends Wishlist {
-  user: User;
-  groups: Group[];
-  wishlistItem: WishlistItem[];
+  user: User
+  groups: Group[]
+  wishlistItem: WishlistItem[]
 }
 
 export const wishlistProperties = {
@@ -24,4 +24,4 @@ export const wishlistProperties = {
     select: wishlistItemProperties,
     where: { removed: false },
   },
-};
+}

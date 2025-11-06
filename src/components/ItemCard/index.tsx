@@ -1,9 +1,15 @@
 import { Card } from "@/components/Card"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
-import { Link } from "lucide-react"
+import { InfinityIcon, Link } from "lucide-react"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { ToggleItem } from "@/components/ToggleItem"
 import { useTranslations } from "next-intl"
+import { UnlimitedItem } from "../UnlimitedItem"
 
 interface Props {
   item: NonNullable<
@@ -12,7 +18,7 @@ interface Props {
 }
 
 export const ItemCard = ({ item }: Props) => {
-  const { title, url, boughtBy } = item
+  const { title, url, boughtBy, unlimited } = item
   const t = useTranslations("Toggle")
 
   return (
@@ -30,7 +36,11 @@ export const ItemCard = ({ item }: Props) => {
 
       {!url && title}
 
-      <ToggleItem item={item} checked={t("checked")} undo={t("undo")} />
+      {unlimited ? (
+        <UnlimitedItem />
+      ) : (
+        <ToggleItem item={item} checked={t("checked")} undo={t("undo")} />
+      )}
     </Card>
   )
 }
