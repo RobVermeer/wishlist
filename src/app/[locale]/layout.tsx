@@ -11,7 +11,6 @@ import { Layout } from "@/components/Layout"
 import { getMessages } from "next-intl/server"
 import { NextIntlClientProvider } from "next-intl"
 import { pickMessages } from "@/utils/pick"
-import { TooltipProvider } from "@/components/ui/tooltip"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
@@ -47,9 +46,7 @@ export default async function RootLayout({
           <Header session={session} />
         </NextIntlClientProvider>
 
-        <Layout>
-          <TooltipProvider delayDuration={300}> {children}</TooltipProvider>
-        </Layout>
+        <Layout>{children}</Layout>
 
         {session && (
           <NextIntlClientProvider messages={pickMessages(messages, "UserInfo")}>

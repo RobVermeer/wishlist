@@ -1,4 +1,5 @@
 import {
+  Baby,
   Backpack,
   Bone,
   Cake,
@@ -27,6 +28,8 @@ export const WishlistIcon = ({ theme, className }: Props) => {
       return <Backpack size="32" strokeWidth="2" className={className} />
     case "clothing":
       return <Shirt size="32" strokeWidth="2" className={className} />
+    case "baby":
+      return <Baby size="32" strokeWidth="2" className={className} />
     case "sports":
       return <Trophy size="32" strokeWidth="2" className={className} />
     case "tools":
