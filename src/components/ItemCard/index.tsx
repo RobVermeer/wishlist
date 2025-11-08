@@ -1,12 +1,7 @@
 import { Card } from "@/components/Card"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
-import { InfinityIcon, Link } from "lucide-react"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import { Link } from "lucide-react"
 import { ToggleItem } from "@/components/ToggleItem"
 import { useTranslations } from "next-intl"
 import { UnlimitedItem } from "../UnlimitedItem"
