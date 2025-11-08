@@ -20,7 +20,7 @@ export const ItemCard = ({ item }: Props) => {
     <Card
       className={clsx(
         "flex items-center pr-12",
-        boughtBy && "line-through decoration-primary decoration-2"
+        boughtBy && !unlimited && "line-through decoration-primary decoration-2"
       )}
     >
       {url && (
