@@ -30,6 +30,16 @@ createServer(async (request, response) => {
     return json(response, 200, { id })
   }
 
+  if (request.method === "POST" && request.url === "/__issues") {
+    const { message, level, extra } = JSON.parse(await readBody(request))
+
+    if (level === "error") {
+      console.error(`[issue] ${message}`, JSON.stringify(extra))
+    }
+
+    return json(response, 200, { ok: true })
+  }
+
   if (request.method === "GET" && request.url === "/__emails") {
     return json(response, 200, emails)
   }
