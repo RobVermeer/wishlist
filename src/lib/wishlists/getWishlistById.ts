@@ -6,6 +6,7 @@ import { wishlistProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { getTranslations } from "next-intl/server"
+import { visibleToUser } from "./visibility"
 
 export const getWishlistById = cache(
   async (id: string, isOwnList: boolean = false) => {
@@ -20,7 +21,7 @@ export const getWishlistById = cache(
       const userId = session.user.id
       const data = await prisma.wishlist.findUnique({
         select: wishlistProperties,
-        where: { id, removed: false },
+        where: { id, removed: false, ...visibleToUser(userId) },
       })
 
       if (!data) {

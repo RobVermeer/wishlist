@@ -9,6 +9,7 @@ import { getTranslations } from "next-intl/server"
 import { sendReminder } from "@/lib/email"
 import { trackIssue } from "@/lib/trackIssue"
 import { canBeRemindedForUser } from "./canBeRemindedForUser"
+import { sharedWithUser } from "@/lib/wishlists/visibility"
 
 export const sendReminderToUser = async (to: string) => {
   try {
@@ -19,13 +20,25 @@ export const sendReminderToUser = async (to: string) => {
       throw new Error(t("notLoggedIn"))
     }
 
+    const from = session.user.id
+
+    const sharedWishlist = await prisma.wishlist.findFirst({
+      where: {
+        userId: { equals: to, not: from },
+        removed: false,
+        ...sharedWithUser(from),
+      },
+    })
+
+    if (!sharedWishlist) {
+      throw new Error(t("user.notFound"))
+    }
+
     const canBeReminded = await canBeRemindedForUser(to)
 
     if (!canBeReminded) {
       throw new Error(t("reminder.alreadySent"))
     }
-
-    const from = session.user.id
 
     const toUser = await prisma.user.findUnique({
       where: {
