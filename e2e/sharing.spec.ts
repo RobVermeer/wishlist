@@ -194,3 +194,48 @@ test("unknown or removed shared wishlists are not found", async ({ page }) => {
     await expect(page.getByText(notFound)).toBeVisible()
   }
 })
+
+test("followed wishlists are on the dashboard and can be unfollowed", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const follower = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [follower] })
+  const page = await signIn(follower)
+
+  await page.goto("/")
+  await expect(
+    page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
+  ).toBeVisible()
+  await page.getByRole("link", { name: "Olga" }).click()
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+
+  await page.getByRole("button", { name: "Stop met volgen" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Je volgt dit verlanglijstje niet meer"
+  )
+  await expect(page).toHaveURL("/")
+  await expect(
+    page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
+  ).toHaveCount(0)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await expect(page.getByText(notFound)).toBeVisible()
+})
+
+test("only followers can unfollow a wishlist", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+
+  for (const user of [owner, member]) {
+    const page = await signIn(user)
+    await page.goto(`/wishlist/${wishlist.id}`)
+    await expect(page.getByRole("heading", { level: 2 })).toBeVisible()
+    await expect(
+      page.getByRole("button", { name: "Stop met volgen" })
+    ).toHaveCount(0)
+  }
+})

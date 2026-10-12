@@ -14,6 +14,9 @@
         "title": "Je hebt nog geen lijstjes gemaakt 🥺",
         "text": "Doe dit snel op <profile>je profiel</profile>! 🤩"
       }
+    },
+    "followed": {
+      "title": "Verlanglijstjes die je volgt"
     }
   },
   "NotFound": {
@@ -432,5 +435,9 @@
       "text": "Volg het verlanglijstje om de wensen te zien en af te strepen. Je vindt het daarna terug op je overzicht.",
       "button": "Volg dit verlanglijstje"
     }
+  },
+  "UnfollowWishlist": {
+    "button": "Stop met volgen",
+    "toast": "Je volgt dit verlanglijstje niet meer"
   }
 }
