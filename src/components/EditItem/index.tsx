@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { CategoryCombobox } from "@/components/CategoryCombobox"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
@@ -35,9 +36,10 @@ interface Props {
   item: NonNullable<
     Awaited<ReturnType<typeof getWishlistById>>
   >["wishlistItem"][0]
+  categories: string[]
 }
 
-export const EditItem = ({ item }: Props) => {
+export const EditItem = ({ item, categories }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { id, title, url, unlimited } = item
@@ -107,6 +109,17 @@ export const EditItem = ({ item }: Props) => {
             })}
           </Label>
           <Input id="url" name="url" defaultValue={url || ""} />
+          <Label htmlFor="category">
+            {t.rich("EditItem.form.category", {
+              small: chunks => <small>{chunks}</small>,
+            })}
+          </Label>
+          <CategoryCombobox
+            id="category"
+            name="category"
+            categories={categories}
+            defaultValue={item.category?.title ?? ""}
+          />
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <div>

@@ -1,6 +1,7 @@
 import { Group, User, Wishlist, WishlistItem } from "@/generated/prisma/client"
 import { userProperties } from "@/lib/users/publicProperties"
 import { wishlistItemProperties } from "@/lib/wishlistItems/publicProperties"
+import { categoryProperties } from "@/lib/wishlistCategories"
 
 export interface WishlistProperties extends Wishlist {
   user: User
@@ -23,5 +24,9 @@ export const wishlistProperties = {
   wishlistItem: {
     select: wishlistItemProperties,
     where: { removed: false },
+  },
+  categories: {
+    select: categoryProperties,
+    orderBy: { position: "asc" as const },
   },
 }

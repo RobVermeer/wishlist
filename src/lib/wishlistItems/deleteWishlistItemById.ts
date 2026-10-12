@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { removeEmptyCategories } from "@/lib/wishlistCategories"
 
 export const deleteWishlistItemById = async (id: string) => {
   try {
@@ -33,9 +34,13 @@ export const deleteWishlistItemById = async (id: string) => {
       throw new Error(t("item.notFound"))
     }
 
-    await prisma.wishlistItem.update({
-      data: { removed: true },
-      where: { id },
+    await prisma.$transaction(async tx => {
+      await tx.wishlistItem.update({
+        data: { removed: true },
+        where: { id },
+      })
+
+      await removeEmptyCategories(tx, wishlistItemToDelete.wishlistId)
     })
 
     revalidatePath("/")

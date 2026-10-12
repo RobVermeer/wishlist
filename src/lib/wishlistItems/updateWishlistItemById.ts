@@ -10,6 +10,10 @@ import { getErrorMessage } from "@/lib/utils"
 import * as z from "zod"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import {
+  findOrCreateCategory,
+  removeEmptyCategories,
+} from "@/lib/wishlistCategories"
 
 export const updateWishlistItemById = async (
   id: string,
@@ -43,16 +47,28 @@ export const updateWishlistItemById = async (
       title: formData.get("title")?.toString(),
       unlimited: formData.get("unlimited")?.toString() === "on",
       url: formData.get("url")?.toString() || undefined,
+      category: formData.get("category")?.toString() || undefined,
     })
 
-    await prisma.wishlistItem.update({
-      where: { id },
-      data: {
-        title: data.title,
-        unlimited: data.unlimited,
-        url: data.url || null,
-      },
-      select: wishlistItemProperties,
+    await prisma.$transaction(async tx => {
+      const categoryId = await findOrCreateCategory(
+        tx,
+        wishlistItem.wishlistId,
+        data.category
+      )
+
+      await tx.wishlistItem.update({
+        where: { id },
+        data: {
+          title: data.title,
+          unlimited: data.unlimited,
+          url: data.url || null,
+          categoryId,
+        },
+        select: wishlistItemProperties,
+      })
+
+      await removeEmptyCategories(tx, wishlistItem.wishlistId)
     })
 
     revalidatePath("/")

@@ -15,6 +15,7 @@ import { canBeRemindedForUser } from "@/lib/reminders";
 import { RemindButton } from "../RemindButton";
 import { ItemCard } from "../ItemCard";
 import Link from "next/link";
+import { CategoryList } from "../CategoryList";
 
 interface Props {
   id: string;
@@ -31,6 +32,35 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   }
 
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id);
+  const categoryTitles = wishlist.categories.map(({ title }) => title);
+
+  const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
+    if (wishlist.isOwnList) {
+      return (
+        <YourItemCard key={item.id} item={item} categories={categoryTitles} />
+      );
+    }
+
+    return <ItemCard key={item.id} item={item} />;
+  };
+
+  const uncategorizedItems = wishlist.wishlistItem.filter(
+    (item) => !item.category
+  );
+  const categories = wishlist.categories
+    .map((category) => {
+      const items = wishlist.wishlistItem.filter(
+        (item) => item.category?.id === category.id
+      );
+
+      return {
+        id: category.id,
+        title: category.title,
+        count: items.length,
+        items: items.map(renderItem),
+      };
+    })
+    .filter(({ count }) => count > 0);
 
   return (
     <List>
@@ -64,13 +94,11 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         )}
       </div>
 
-      {wishlist.wishlistItem.map((item) => {
-        if (wishlist.isOwnList) {
-          return <YourItemCard key={item.id} item={item} />;
-        }
+      {uncategorizedItems.map(renderItem)}
 
-        return <ItemCard key={item.id} item={item} />;
-      })}
+      {categories.length > 0 && (
+        <CategoryList categories={categories} />
+      )}
 
       {wishlist.wishlistItem.length === 0 && (
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
@@ -79,7 +107,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}
 
       {wishlist.isOwnList && (
-        <NewItem id={wishlist.id} />
+        <NewItem id={wishlist.id} categories={categoryTitles} />
       )}
 
       {canBeReminded && !wishlist.isOwnList && (
