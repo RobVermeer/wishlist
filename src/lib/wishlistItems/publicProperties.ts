@@ -1,4 +1,4 @@
-import { User, Wishlist, WishlistItem } from "@prisma/client"
+import { User, Wishlist, WishlistItem } from "@/generated/prisma/client"
 import { userProperties } from "@/lib/users/publicProperties"
 
 export interface WishlistItemProperties extends WishlistItem {

@@ -1,4 +1,4 @@
-import { Group, User, Wishlist, WishlistItem } from "@prisma/client"
+import { Group, User, Wishlist, WishlistItem } from "@/generated/prisma/client"
 import { userProperties } from "@/lib/users/publicProperties"
 import { wishlistItemProperties } from "@/lib/wishlistItems/publicProperties"
 

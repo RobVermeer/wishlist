@@ -1,4 +1,4 @@
-import testEnv from "./env.json"
+import testEnv from "./env.json" with { type: "json" }
 
 export { testEnv }
 

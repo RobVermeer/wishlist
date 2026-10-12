@@ -1,5 +1,7 @@
+import tailwindcssAnimate from "tailwindcss-animate"
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     container: {
@@ -66,5 +68,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 }
+
+export default config
