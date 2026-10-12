@@ -8,7 +8,7 @@ import { getTranslations } from "next-intl/server"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/nextAuth"
 import { getServerSession } from "next-auth"
-import Jimp from "jimp"
+import { Jimp } from "jimp"
 import { trackIssue } from "@/lib/trackIssue"
 
 export async function updateProfile(data: FormData) {
@@ -40,10 +40,10 @@ export async function updateProfile(data: FormData) {
         "./public/avatars",
         session.user.id,
         `${performance.now()}-${avatar.name}`
-      )
+      ) as `${string}.${string}`
 
       const image = await Jimp.read(buffer)
-      await image.cover(96, 96).writeAsync(imagePath)
+      await image.cover({ w: 96, h: 96 }).write(imagePath)
 
       uploadedImage = `${process.env.BASE_URL}/${imagePath.replace(
         "public/",
