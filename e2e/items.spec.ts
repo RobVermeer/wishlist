@@ -106,6 +106,8 @@ test("wish validation errors are shown", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
   await expect(toasts(page)).toContainText("Vul een geldige URL in")
+  await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue("Xbox")
+  await expect(dialog.getByLabel("Linkje")).toHaveValue("geen-url")
   await expect(dialog).toBeVisible()
   expect(
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })

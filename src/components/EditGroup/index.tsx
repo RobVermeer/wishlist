@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteGroupById } from "@/lib/groups/deleteGroupById"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
@@ -53,6 +53,12 @@ export const EditGroup = ({ group }: Props) => {
     setOpen(false)
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   async function handleRemove() {
     await deleteGroupById(id)
     setOpen(false)
@@ -73,7 +79,7 @@ export const EditGroup = ({ group }: Props) => {
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>
         </DialogHeader>
         <form
-          action={handleSubmit}
+          onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >

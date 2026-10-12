@@ -69,6 +69,7 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
     "Groep titel moet minimaal uit 2 tekens bestaan"
   )
   await expect(dialog).toBeVisible()
+  await expect(dialog.getByLabel("Naam")).toHaveValue("A")
   expect(await prisma.group.count({ where: { userId: user.id } })).toBe(0)
 })
 

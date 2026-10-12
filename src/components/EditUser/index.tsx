@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslations } from "next-intl"
-import { useFormStatus } from "react-dom"
 import { updateProfile } from "@/lib/users/updateProfile"
-import { useRef } from "react"
+import { FormEvent, useRef, useTransition } from "react"
 import { useToast } from "@/components/ui/use-toast"
 
-const SubmitButton = () => {
+const SubmitButton = ({ pending }: { pending: boolean }) => {
   const t = useTranslations()
-  const { pending } = useFormStatus()
 
   return (
     <Button type="submit" className="mt-2" disabled={pending}>
@@ -34,6 +32,7 @@ export const EditUser = ({ firstName }: Props) => {
   const t = useTranslations()
   const { toast } = useToast()
   const formRef = useRef<HTMLFormElement>(null)
+  const [pending, startTransition] = useTransition()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await updateProfile(data)
@@ -52,8 +51,14 @@ export const EditUser = ({ firstName }: Props) => {
     toast({ title: t("EditUser.toast") })
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   return (
-    <form action={handleSubmit} ref={formRef} className="grid gap-4 py-4">
+    <form onSubmit={onSubmit} ref={formRef} className="grid gap-4 py-4">
       <Label htmlFor="firstName">{t("EditUser.form.firstName")}</Label>
       <Input id="firstName" name="firstName" defaultValue={firstName} />
 
@@ -64,7 +69,7 @@ export const EditUser = ({ firstName }: Props) => {
       </Label>
       <Input id="avatar" name="avatar" type="file" accept="image/*" />
 
-      <SubmitButton />
+      <SubmitButton pending={pending} />
     </form>
   )
 }
