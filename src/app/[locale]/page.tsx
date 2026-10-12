@@ -51,7 +51,7 @@ export default async function Home() {
                 }.webp')`,
               }}
             >
-              <div className="absolute inset-0 translate-y-1/3 bg-gradient-to-b from-transparent to-black" />
+              <div className="absolute inset-0 translate-y-1/3 bg-linear-to-b from-transparent to-black" />
               <span className="text-center px-2 absolute bottom-3 text-primary-foreground">
                 {group.title}
               </span>
