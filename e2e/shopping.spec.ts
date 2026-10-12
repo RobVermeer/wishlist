@@ -45,7 +45,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(page).toHaveURL(`/group/${group.id}/${wishlist.id}`)
   await expect(page).toHaveTitle("Olga - Familie - Wishlist")
   await expect(
-    page.getByRole("heading", { name: "Olga In Familie" })
+    page.getByRole("heading", { name: "Olga in Familie" })
   ).toBeVisible()
   await expect(page.getByText("Alles is welkom")).toBeVisible()
   await expect(itemCard(page, "Sokken")).toBeVisible()
@@ -110,7 +110,7 @@ test("check off a wish and undo it", async ({ signIn }) => {
   await page.goto("/profile/bought")
   await expect(
     page.getByText(
-      "Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 😲"
+      "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲"
     )
   ).toBeVisible()
 })
@@ -176,11 +176,9 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
   const page = await signIn(shopper)
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
-  await page
-    .getByRole("button", { name: "Vraag om meer cadeaus op de lijst" })
-    .click()
+  await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
 
-  await expect(toasts(page)).toContainText("We hebben het gevraagd!")
+  await expect(toasts(page)).toContainText("We hebben om meer wensen gevraagd!")
 
   await expect.poll(async () => (await emailsTo(owner.email!)).length).toBe(1)
   const [reminder] = await emailsTo(owner.email!)
@@ -194,7 +192,7 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
 
   await page.reload()
   await expect(
-    page.getByRole("button", { name: "Vraag om meer cadeaus op de lijst" })
+    page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeHidden()
 })
 
@@ -211,7 +209,7 @@ test("a reminder can only be sent once per 24 hours", async ({ signIn }) => {
   })
   await page.goto(`/group/${group.id}/${wishlist.id}`)
   await expect(
-    page.getByRole("button", { name: "Vraag om meer cadeaus op de lijst" })
+    page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeHidden()
 
   await prisma.reminder.updateMany({
@@ -220,7 +218,7 @@ test("a reminder can only be sent once per 24 hours", async ({ signIn }) => {
   })
   await page.reload()
   await expect(
-    page.getByRole("button", { name: "Vraag om meer cadeaus op de lijst" })
+    page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeVisible()
 })
 

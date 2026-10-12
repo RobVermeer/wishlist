@@ -26,7 +26,7 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
     page.getByText("Dit lijstje is nog helemaal leeg 🫣")
   ).toBeVisible()
   await expect(
-    page.getByRole("button", { name: "Vraag om meer cadeaus op de lijst" })
+    page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeHidden()
 })
 

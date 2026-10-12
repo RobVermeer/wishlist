@@ -78,13 +78,17 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           <WishlistTitle wishlist={wishlist} />{" "}
           {group && (
             <small className="text-base text-foreground">
-              In{" "}
-              <Link
-                className="underline underline-offset-2"
-                href={`/group/${group.id}`}
-              >
-                {group.title}
-              </Link>
+              {t.rich("inGroup", {
+                group: group.title,
+                link: chunks => (
+                  <Link
+                    className="underline underline-offset-2"
+                    href={`/group/${group.id}`}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
             </small>
           )}
         </ListTitle>

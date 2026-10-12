@@ -9,7 +9,7 @@
       }
     },
     "wishlists": {
-      "title": "Ga direct naar je eigen lijstjes",
+      "title": "Je verlanglijstjes",
       "empty": {
         "title": "Je hebt nog geen lijstjes gemaakt 🥺",
         "text": "Doe dit snel op <profile>je profiel</profile>! 🤩"
@@ -34,7 +34,7 @@
     "group": {
       "theme": {
         "label": "Thema",
-        "placeholder": "Selecteer een thema",
+        "placeholder": "Kies een thema",
         "none": "Geen thema",
         "sinterklaas": "Sinterklaas",
         "christmas": "Kerst",
@@ -45,7 +45,7 @@
     "wishlist": {
       "theme": {
         "label": "Thema",
-        "placeholder": "Selecteer een thema",
+        "placeholder": "Kies een thema",
         "none": "Geen thema",
         "birthday": "Verjaardag",
         "holidays": "Feestdagen",
@@ -68,7 +68,7 @@
   },
   "Login": {
     "title": "Welkom bij Wishlist",
-    "text": "Wil je een wensenlijst delen met je familie of vrienden, of gewoon met jezelf? Log dan in en maak je wensenlijstje aan 🤩",
+    "text": "Wil je een verlanglijstje delen met je familie of vrienden, of gewoon voor jezelf bijhouden? Log in en maak je verlanglijstje aan 🤩",
     "google": "Inloggen met Google",
     "email": "Inloggen met e-mail",
     "emailDialog": {
@@ -76,7 +76,7 @@
       "text": "Als je wilt inloggen of registreren met e-mail, vul dan je e-mailadres in en druk op de knop.",
       "form": {
         "email": "E-mail",
-        "placeholder": "wishlist@ru-coding.nl",
+        "placeholder": "jij@voorbeeld.nl",
         "submit": "Inloggen"
       },
       "success": {
@@ -100,7 +100,8 @@
     "empty": {
       "title": "Dit lijstje is nog helemaal leeg 🫣",
       "text": "Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
-    }
+    },
+    "inGroup": "in <link>{group}</link>"
   },
   "Profile": {
     "title": "Profiel",
@@ -123,7 +124,7 @@
   "ProfileBoughtPresents": {
     "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
     "empty": {
-      "title": "Het ziet er naar uit dat je nog geen cadeaus hebt afgestreept 😲",
+      "title": "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲",
       "text": "Doe dat eens heel snel! 🤓"
     },
     "boughtFor": "Gekocht voor {name}"
@@ -148,9 +149,9 @@
     }
   },
   "LeaveGroup": {
-    "button": "Wijzig",
+    "button": "Verlaat",
     "title": "Verlaat groep 🥺",
-    "text": "Als je uit de groep stapt, heb je weer een invite nodig om erbij te komen 🤓",
+    "text": "Als je uit de groep stapt, heb je een nieuwe uitnodiging nodig om weer mee te doen 🤓",
     "leave": "Stap uit de groep"
   },
   "NewItem": {
@@ -182,12 +183,12 @@
     "button": "Maak een nieuw verlanglijstje aan",
     "title": "Nieuw verlanglijstje 🤩",
     "form": {
-      "description": "Beschrijving wensenlijstje (optioneel)",
+      "description": "Beschrijving <small>(optioneel)</small>",
       "ownList": {
         "label": "Dit is mijn eigen lijstje",
-        "title": "Naam van diegene voor wie je het lijstje beheert"
+        "title": "Voor wie is dit verlanglijstje?"
       },
-      "groups": "In welke groepen moet je lijstje komen",
+      "groups": "In welke groepen moet je verlanglijstje komen?",
       "save": "Maak aan"
     }
   },
@@ -198,12 +199,12 @@
       "description": "Je verlanglijstje wordt met alle wensen verwijderd."
     },
     "form": {
-      "description": "Beschrijving wensenlijstje (optioneel)",
+      "description": "Beschrijving <small>(optioneel)</small>",
       "ownList": {
         "label": "Dit is mijn eigen lijstje",
-        "title": "Naam van diegene voor wie je het lijstje beheert"
+        "title": "Voor wie is dit verlanglijstje?"
       },
-      "groups": "In welke groepen moet je lijstje komen",
+      "groups": "In welke groepen moet je verlanglijstje komen?",
       "save": "Opslaan"
     }
   },
@@ -222,13 +223,13 @@
     "boughtPresents": "Gekochte cadeaus"
   },
   "Remind": {
-    "button": "Vraag om meer cadeaus op de lijst",
-    "toast": "We hebben het gevraagd!"
+    "button": "Vraag om meer wensen",
+    "toast": "We hebben om meer wensen gevraagd!"
   },
   "Share": {
     "button": "Nodig iemand uit voor de groep",
     "copied": "Link van groep gekopieerd",
-    "text": "Je bent uitgenodigd om {group} te joinen."
+    "text": "Je bent uitgenodigd voor de groep {group} op Wishlist."
   },
   "Toggle": {
     "unlimited": "Deze wens kan onbeperkt vervuld worden.",
@@ -237,7 +238,7 @@
   },
   "UserInfo": {
     "title": "Vul je naam in",
-    "text": "Kan je je naam hieronder invullen? Dat is handig voor het aanmaken van je wensenlijstje 😊",
+    "text": "Vul je voornaam in, dan weten anderen van wie het verlanglijstje is 😊",
     "form": {
       "firstName": "Voornaam",
       "save": "Opslaan"
@@ -252,7 +253,7 @@
       "notFound": "Groep niet gevonden"
     },
     "wishlist": {
-      "notFound": "Verlanglijst niet gevonden"
+      "notFound": "Verlanglijstje niet gevonden"
     },
     "item": {
       "notFound": "Wens niet gevonden",
@@ -262,7 +263,7 @@
       "notFound": "Gebruiker niet gevonden"
     },
     "reminder": {
-      "alreadySent": "Er is al een reminder verstuurd"
+      "alreadySent": "Er is vandaag al om meer wensen gevraagd"
     },
     "category": {
       "notFound": "Categorie niet gevonden"
@@ -277,7 +278,7 @@
     "title": "<strong>{name}</strong>, je hebt een lootje getrokken!",
     "hello": "Hey <strong>{name}</strong>,",
     "text1": "De lootjes voor <strong>{group}</strong> zijn getrokken. Kijk snel wie je hebt!",
-    "text2": "Voorkom dubbele cadeaus. Vink de cadeaus aan die je gaat geven. Dit is niet zichtbaar voor de vrager en kan op alle verlanglijstjes van de groep.",
+    "text2": "Voorkom dubbele cadeaus: streep de wensen af die je gaat geven. De eigenaar van het verlanglijstje ziet dat niet. Dit kan op alle verlanglijstjes van de groep.",
     "text3": "Je getrokken lootje: <strong>{name}</strong>",
     "button": "Ga naar {group}",
     "goodbye": "Liefs, <strong>Sinterklaas</strong>"
