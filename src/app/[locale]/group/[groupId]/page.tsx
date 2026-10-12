@@ -4,6 +4,7 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
+import { Wishlist } from "@/components/Wishlist"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
@@ -54,13 +55,21 @@ export default async function GroupPage({ params }: Props) {
     )
   }
 
+  const [onlyWishlist] = group.wishlist
+  const showOnlyWishlist =
+    group.wishlist.length === 1 && !onlyWishlist.isOwnList
+
   return (
     <List>
       <ListTitle>{group.title}</ListTitle>
 
-      {group.wishlist.map(wishlist => (
-        <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
-      ))}
+      {showOnlyWishlist ? (
+        <Wishlist id={onlyWishlist.id} />
+      ) : (
+        group.wishlist.map(wishlist => (
+          <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
+        ))
+      )}
 
       {group.wishlist.length === 0 && (
         <EmptyState title={t("empty.title")}>
