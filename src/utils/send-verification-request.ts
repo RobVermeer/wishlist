@@ -10,12 +10,14 @@ export const sendVerificationRequest = async (
   const t = await getTranslations("EmailLogin")
 
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Wishlist <no-reply@ru-coding.nl>",
       to: params.identifier,
       subject: t("subject"),
       react: await LoginWithEmail({ url }),
     })
+
+    if (error) throw error
   } catch (error) {
     console.log({ error })
   }
