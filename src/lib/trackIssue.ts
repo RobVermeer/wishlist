@@ -5,6 +5,11 @@ const secret = process.env.TRACK_ISSUE_SECRET
 
 type Level = "error" | "debug" | "info" | "warn" | "fatal"
 
+const serializeErrors = (_key: string, value: unknown) =>
+  value instanceof Error
+    ? { name: value.name, message: value.message, stack: value.stack }
+    : value
+
 export async function trackIssue(
   message: string,
   level: Level = "error",
@@ -15,12 +20,15 @@ export async function trackIssue(
   try {
     await fetch(url, {
       method: "post",
-      body: JSON.stringify({
-        message,
-        level,
-        extra,
-        secret,
-      }),
+      body: JSON.stringify(
+        {
+          message,
+          level,
+          extra,
+          secret,
+        },
+        serializeErrors
+      ),
       cache: "no-cache",
     })
   } catch {}
