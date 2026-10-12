@@ -18,16 +18,25 @@ export const getWishlistById = cache(async (id: string) => {
     }
 
     const userId = session.user.id
-    const data = await prisma.wishlist.findUnique({
-      select: wishlistProperties,
+    const result = await prisma.wishlist.findUnique({
+      select: {
+        ...wishlistProperties,
+        followers: { where: { id: userId }, select: { id: true } },
+      },
       where: { id, removed: false, ...visibleToUser(userId) },
     })
 
-    if (!data) {
+    if (!result) {
       throw new Error(t("wishlist.notFound"))
     }
 
-    return { ...data, isOwnList: data.user.id === userId }
+    const { followers, ...data } = result
+
+    return {
+      ...data,
+      isOwnList: data.user.id === userId,
+      isFollowing: followers.length > 0,
+    }
   } catch {
     return null
   }

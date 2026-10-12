@@ -1,9 +1,13 @@
-import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { useTranslations } from "next-intl"
 
 interface Props {
   showGroups?: boolean
-  wishlist: NonNullable<Awaited<ReturnType<typeof getWishlistById>>>
+  wishlist: {
+    title: string | null
+    isOwnList: boolean
+    user: { firstName: string | null; name: string | null }
+    groups: { title: string }[]
+  }
   className?: string
 }
 

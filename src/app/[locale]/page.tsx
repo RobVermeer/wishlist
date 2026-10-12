@@ -4,6 +4,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
+import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlistsForUser"
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import { WishlistIcon } from "@/components/WishlistIcon"
@@ -32,7 +33,27 @@ export default async function Home() {
 
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()
+  const followedWishlists = await getFollowedWishlistsForUser()
   const t = await getTranslations("Home")
+
+  const renderWishlist = (
+    wishlist: (typeof wishlists)[number] | (typeof followedWishlists)[number]
+  ) => (
+    <Link
+      key={wishlist.id}
+      href={`/wishlist/${wishlist.id}`}
+      className="group aspect-video flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
+    >
+      <WishlistIcon
+        theme={wishlist.theme}
+        className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-4 transition-all"
+      />
+      <WishlistTitle
+        className="text-center px-2 absolute bottom-3"
+        wishlist={wishlist}
+      />
+    </Link>
+  )
 
   return (
     <>
@@ -76,22 +97,7 @@ export default async function Home() {
         <ListTitle>{t("wishlists.title")}</ListTitle>
 
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
-          {wishlists.map(wishlist => (
-            <Link
-              key={wishlist.id}
-              href={`/wishlist/${wishlist.id}`}
-              className="group aspect-video flex gap-3 flex-col items-center justify-center font-semibold relative rounded-md p-3 bg-secondary hover:ring-2 ring-inset ring-primary transition-all"
-            >
-              <WishlistIcon
-                theme={wishlist.theme}
-                className="absolute group-hover:text-primary opacity-20 group-hover:opacity-100 relative -top-4 transition-all"
-              />
-              <WishlistTitle
-                className="text-center px-2 absolute bottom-3"
-                wishlist={wishlist}
-              />
-            </Link>
-          ))}
+          {wishlists.map(renderWishlist)}
         </div>
 
         {wishlists.length === 0 && (
@@ -106,6 +112,16 @@ export default async function Home() {
           </EmptyState>
         )}
       </List>
+
+      {followedWishlists.length > 0 && (
+        <List>
+          <ListTitle>{t("followed.title")}</ListTitle>
+
+          <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
+            {followedWishlists.map(renderWishlist)}
+          </div>
+        </List>
+      )}
     </>
   )
 }

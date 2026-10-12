@@ -17,6 +17,7 @@ import { ItemCard } from "../ItemCard"
 import Link from "next/link"
 import { CategoryList } from "../CategoryList"
 import { ShareWishlist } from "@/components/ShareWishlist"
+import { UnfollowWishlist } from "@/components/UnfollowWishlist"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 
@@ -107,7 +108,9 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
-      {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}
+      {(wishlist.isOwnList || canBeReminded || wishlist.isFollowing) && (
+        <Separator className="my-3" />
+      )}
 
       {wishlist.isOwnList && (
         <>
@@ -122,6 +125,8 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       {canBeReminded && !wishlist.isOwnList && (
         <RemindButton wishlist={wishlist} />
       )}
+
+      {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
     </List>
   )
 }
