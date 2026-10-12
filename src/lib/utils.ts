@@ -38,3 +38,11 @@ export function getInitials(name?: string | null) {
     .slice(0, 2)
     .join("")
 }
+
+export function getLocalPath(url: string, fallback = "/") {
+  const path = decodeURIComponent(url)
+  const isLocal =
+    path.startsWith("/") && !path.startsWith("//") && !path.startsWith("/\\")
+
+  return isLocal ? path : fallback
+}
