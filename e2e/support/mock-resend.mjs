@@ -2,6 +2,7 @@ import { createServer } from "node:http"
 
 const port = Number(process.env.MOCK_RESEND_PORT ?? 3101)
 const emails = []
+const issues = []
 
 const readBody = request =>
   new Promise(resolve => {
@@ -33,11 +34,17 @@ createServer(async (request, response) => {
   if (request.method === "POST" && request.url === "/__issues") {
     const { message, level, extra } = JSON.parse(await readBody(request))
 
+    issues.push({ message, level, extra })
+
     if (level === "error") {
-      console.error(`[issue] ${message}`, JSON.stringify(extra))
+      console.error(`[issue] ${message}: ${extra?.error?.message}`)
     }
 
     return json(response, 200, { ok: true })
+  }
+
+  if (request.method === "GET" && request.url === "/__issues") {
+    return json(response, 200, issues)
   }
 
   if (request.method === "GET" && request.url === "/__emails") {
