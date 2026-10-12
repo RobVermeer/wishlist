@@ -48,7 +48,7 @@
     "next": "^16.4.0",
     "next-auth": "^4.24.5",
     "next-intl": "^4.14.9",
-    "nodemailer": "^7.0.13",
+    "nodemailer": "^10.1.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "resend": "^6.32.1",
@@ -74,5 +74,10 @@
     "@prisma/engines": true,
     "better-sqlite3": true,
     "prisma": true
+  },
+  "overrides": {
+    "deepmerge-ts": "^8.0.2",
+    "mysql2": "^3.24.5",
+    "nodemailer": "$nodemailer"
   }
 }
