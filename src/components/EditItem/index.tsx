@@ -16,7 +16,7 @@ import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemBy
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash, Trash2 } from "lucide-react"
+import { Pencil, Save, Trash } from "lucide-react"
 import { useTranslations } from "next-intl"
 import {
   AlertDialog,
@@ -134,7 +134,7 @@ export const EditItem = ({ item }: Props) => {
                     className="flex gap-2"
                     onClick={handleRemove}
                   >
-                    <Trash2 size="16" />
+                    <Trash size="16" />
                     {t("EditItem.remove.confirm")}
                   </AlertDialogAction>
                 </AlertDialogFooter>

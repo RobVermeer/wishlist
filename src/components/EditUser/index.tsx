@@ -1,6 +1,6 @@
 "use client"
 
-import { Loader2, Save } from "lucide-react"
+import { LoaderCircle, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,7 +15,7 @@ const SubmitButton = ({ pending }: { pending: boolean }) => {
   return (
     <Button type="submit" className="mt-2" disabled={pending}>
       {pending ? (
-        <Loader2 className="animate-spin mr-2" size="16" />
+        <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
         <Save size="16" className="mr-2" />
       )}{" "}

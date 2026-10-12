@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckSquare, Square } from "lucide-react"
+import { SquareCheckBig, Square } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { toggleWishlistItemById } from "@/lib/wishlistItems/toggleWishlistItemById"
@@ -40,7 +40,7 @@ export const ToggleItem = ({ item, checked, undo }: Props) => {
     <form action={onToggle} className="absolute right-1">
       <Button type="submit" variant="ghost" size="icon">
         {boughtBy ? (
-          <CheckSquare className="text-primary" strokeWidth="2.5" />
+          <SquareCheckBig className="text-primary" strokeWidth="2.5" />
         ) : (
           <Square className="text-secondary-foreground" strokeWidth="2.5" />
         )}

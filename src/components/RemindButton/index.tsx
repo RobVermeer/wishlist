@@ -3,7 +3,7 @@
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Button } from "@/components/ui/button"
 import { sendReminderToUser } from "@/lib/reminders"
-import { Loader2, ShoppingBasket } from "lucide-react"
+import { LoaderCircle, ShoppingBasket } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useFormStatus } from "react-dom"
 import { useTranslations } from "next-intl"
@@ -15,7 +15,7 @@ const FormButton = () => {
   return (
     <Button className="w-full" type="submit" disabled={pending}>
       {pending ? (
-        <Loader2 className="animate-spin mr-2" size="16" />
+        <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
         <ShoppingBasket className="mr-2" size="16" />
       )}{" "}
