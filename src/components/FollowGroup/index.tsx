@@ -1,6 +1,6 @@
 "use client"
 
-import { getGroupById } from "@/lib/groups/getGroupById"
+import type { getGroupById } from "@/lib/groups/getGroupById"
 import { Button } from "@/components/ui/button"
 import { followGroupById } from "@/lib/groups/followGroupById"
 import { UserPlus } from "lucide-react"

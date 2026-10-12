@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card"
-import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { clsx } from "clsx"
 import { Link } from "lucide-react"
 import { ToggleItem } from "@/components/ToggleItem"

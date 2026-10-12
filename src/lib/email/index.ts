@@ -1,4 +1,4 @@
-"use server"
+import "server-only"
 
 import { getTranslations } from "next-intl/server"
 import { DrawUserEmail, RemindUserEmail } from "./templates"

@@ -8,23 +8,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { sendReminder } from "@/lib/email"
 import { trackIssue } from "@/lib/trackIssue"
-
-export const canBeRemindedForUser = async (to: string) => {
-  const remindTimeout = new Date()
-
-  remindTimeout.setHours(remindTimeout.getHours() - 24)
-
-  const count = await prisma.reminder.count({
-    where: {
-      createdAt: {
-        gte: remindTimeout,
-      },
-      to,
-    },
-  })
-
-  return count === 0
-}
+import { canBeRemindedForUser } from "./canBeRemindedForUser"
 
 export const sendReminderToUser = async (to: string) => {
   try {

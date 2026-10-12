@@ -2,7 +2,7 @@
 
 import { SquareCheckBig, Square } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { toggleWishlistItemById } from "@/lib/wishlistItems/toggleWishlistItemById"
 import { useToast } from "@/components/ui/use-toast"
 
