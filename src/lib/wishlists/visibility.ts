@@ -1,11 +1,19 @@
 import "server-only"
 
-export const sharedWithUser = (userId: string) => ({
+const inGroupOfUser = (userId: string) => ({
   groups: {
     some: { removed: false, members: { some: { id: userId } } },
   },
 })
 
+const followedByUser = (userId: string) => ({
+  followers: { some: { id: userId } },
+})
+
+export const sharedWithUser = (userId: string) => ({
+  OR: [inGroupOfUser(userId), followedByUser(userId)],
+})
+
 export const visibleToUser = (userId: string) => ({
-  OR: [{ userId }, sharedWithUser(userId)],
+  OR: [{ userId }, inGroupOfUser(userId), followedByUser(userId)],
 })
