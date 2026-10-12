@@ -9,13 +9,16 @@ import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
 import { NextIntlClientProvider } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
 export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Metadata")
+
   return {
     title: "Wishlist",
-    description: "Making all your dreams come true.",
+    description: t("description"),
     manifest: "/manifest.json",
   }
 }
