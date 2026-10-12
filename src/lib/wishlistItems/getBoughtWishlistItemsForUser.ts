@@ -1,6 +1,5 @@
 "use server"
 
-import { User, Wishlist, WishlistItem } from "@/generated/prisma/client"
 import { prisma } from "@/lib/prisma"
 import { wishlistProperties } from "@/lib/wishlists/publicProperties"
 import { wishlistItemProperties } from "./publicProperties"
@@ -8,14 +7,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { cache } from "react"
 import { getTranslations } from "next-intl/server"
-
-interface BoughtWishlistProperties extends Wishlist {
-  user: User
-}
-
-export interface BoughtWishlistItemProperties extends WishlistItem {
-  wishlist: BoughtWishlistProperties
-}
 
 export const getBoughtWishlistItemsForUser = cache(async () => {
   const session = await getServerSession(authOptions)
