@@ -10,6 +10,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { wishlistItemSchema } from "@/lib/schema"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { findOrCreateCategory } from "@/lib/wishlistCategories"
 
 export const createWishlistItemForUser = async (
   wishlistId: string,
@@ -40,17 +41,27 @@ export const createWishlistItemForUser = async (
       title: formData.get("title")?.toString(),
       unlimited: formData.get("unlimited")?.toString() === "on",
       url: formData.get("url")?.toString() || undefined,
+      category: formData.get("category")?.toString() || undefined,
     })
 
-    await prisma.wishlistItem.create({
-      select: wishlistItemProperties,
-      data: {
-        title: data.title,
-        unlimited: data.unlimited,
-        url: data.url || null,
-        createdAt: new Date(),
+    await prisma.$transaction(async tx => {
+      const categoryId = await findOrCreateCategory(
+        tx,
         wishlistId,
-      },
+        data.category
+      )
+
+      await tx.wishlistItem.create({
+        select: wishlistItemProperties,
+        data: {
+          title: data.title,
+          unlimited: data.unlimited,
+          url: data.url || null,
+          createdAt: new Date(),
+          wishlistId,
+          categoryId,
+        },
+      })
     })
 
     revalidatePath("/")

@@ -114,6 +114,16 @@ export async function createWishlist(
   })
 }
 
+export async function createCategory(
+  wishlist: { id: string },
+  title: string,
+  position: number
+) {
+  return prisma.wishlistCategory.create({
+    data: { title, position, wishlistId: wishlist.id },
+  })
+}
+
 export async function createItem(
   wishlist: { id: string },
   {
@@ -121,11 +131,13 @@ export async function createItem(
     url = null,
     unlimited = false,
     boughtBy = null,
+    category = null,
   }: {
     title?: string
     url?: string | null
     unlimited?: boolean
     boughtBy?: User | null
+    category?: { id: string } | null
   } = {}
 ) {
   return prisma.wishlistItem.create({
@@ -136,6 +148,7 @@ export async function createItem(
       createdAt: new Date(),
       wishlistId: wishlist.id,
       userId: boughtBy?.id ?? null,
+      categoryId: category?.id ?? null,
     },
   })
 }

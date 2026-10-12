@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { CategoryCombobox } from "@/components/CategoryCombobox"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
@@ -20,9 +21,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 interface Props {
   id: string
+  categories: string[]
 }
 
-export const NewItem = ({ id }: Props) => {
+export const NewItem = ({ id, categories }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const t = useTranslations()
@@ -75,6 +77,16 @@ export const NewItem = ({ id }: Props) => {
             })}
           </Label>
           <Input id="url" name="url" />
+          <Label htmlFor="category">
+            {t.rich("NewItem.form.category", {
+              small: chunks => <small>{chunks}</small>,
+            })}
+          </Label>
+          <CategoryCombobox
+            id="category"
+            name="category"
+            categories={categories}
+          />
         </form>
         <DialogFooter>
           <Button type="submit" form="add">

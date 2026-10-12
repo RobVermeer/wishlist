@@ -14,6 +14,9 @@ export const wishlistItemProperties = {
   boughtBy: {
     select: userProperties,
   },
+  category: {
+    select: { id: true, title: true },
+  },
   wishlist: {
     select: {
       id: true,

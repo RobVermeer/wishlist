@@ -72,29 +72,43 @@ model Group {
 }
 
 model Wishlist {
-  id           String         @id @default(cuid())
+  id           String             @id @default(cuid())
   title        String?
   description  String?
   createdAt    DateTime
   theme        String?
-  removed      Boolean        @default(false)
+  removed      Boolean            @default(false)
   wishlistItem WishlistItem[]
+  categories   WishlistCategory[]
   userId       String
-  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   groups       Group[]
 }
 
+model WishlistCategory {
+  id           String         @id @default(cuid())
+  title        String
+  position     Int
+  wishlistId   String
+  wishlist     Wishlist       @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  wishlistItem WishlistItem[]
+
+  @@unique([wishlistId, title])
+}
+
 model WishlistItem {
-  id         String   @id @default(cuid())
+  id         String            @id @default(cuid())
   title      String
-  unlimited  Boolean  @default(false)
+  unlimited  Boolean           @default(false)
   url        String?
   createdAt  DateTime
-  removed    Boolean  @default(false)
+  removed    Boolean           @default(false)
   userId     String?
-  boughtBy   User?    @relation(fields: [userId], references: [id])
+  boughtBy   User?             @relation(fields: [userId], references: [id])
   wishlistId String
-  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  wishlist   Wishlist          @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   WishlistCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 }
 
 model Reminder {

@@ -7,9 +7,10 @@ interface Props {
   item: NonNullable<
     Awaited<ReturnType<typeof getWishlistById>>
   >["wishlistItem"][0]
+  categories: string[]
 }
 
-export const YourItemCard = ({ item }: Props) => {
+export const YourItemCard = ({ item, categories }: Props) => {
   const { title, url, unlimited } = item
 
   return (
@@ -23,7 +24,7 @@ export const YourItemCard = ({ item }: Props) => {
 
       {!url && title}
 
-      <EditItem item={item} />
+      <EditItem item={item} categories={categories} />
     </Card>
   )
 }
