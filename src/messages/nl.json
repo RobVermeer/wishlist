@@ -269,6 +269,9 @@
     },
     "reminder": {
       "alreadySent": "Er is al een reminder verstuurd"
+    },
+    "category": {
+      "notFound": "Categorie niet gevonden"
     }
   },
   "EmailDraw": {
@@ -297,6 +300,14 @@
     "text1": "Je hebt net aangevraagd om in te loggen bij Wishlist. Om in te loggen moet je op de rode knop hieronder klikken.",
     "text2": "Veel plezier bij het gebruik van Wishlist!",
     "button": "Log nu in"
+  },
+  "Category": {
+    "move": "Verplaats categorie {category}",
+    "instructions": "Druk op spatie om de categorie op te pakken. Gebruik de pijltjestoetsen om te verplaatsen, spatie om neer te zetten en escape om te annuleren.",
+    "pickedUp": "Categorie {category} opgepakt, positie {position} van {total}.",
+    "movedOver": "Categorie {category} verplaatst naar positie {position} van {total}.",
+    "dropped": "Categorie {category} neergezet op positie {position} van {total}.",
+    "cancelled": "Verplaatsen van categorie {category} geannuleerd."
   },
   "CategoryCombobox": {
     "placeholder": "Kies een categorie",

@@ -97,7 +97,11 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       {uncategorizedItems.map(renderItem)}
 
       {categories.length > 0 && (
-        <CategoryList categories={categories} />
+        <CategoryList
+          wishlistId={wishlist.id}
+          categories={categories}
+          sortable={wishlist.isOwnList}
+        />
       )}
 
       {wishlist.wishlistItem.length === 0 && (
