@@ -13,12 +13,18 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id, locale } = await params
   const t = await getTranslations({ locale, namespace: "Common" })
-  const wishlist = await getWishlistById(id, true)
+  const wishlist = await getWishlistById(id)
 
   if (!wishlist) return {}
 
+  const title =
+    wishlist.title ||
+    (wishlist.isOwnList
+      ? t("myList")
+      : wishlist.user.firstName || wishlist.user.name?.split(" ")[0])
+
   return {
-    title: `${wishlist.title || t("myList")} - Wishlist`,
+    title: `${title} - Wishlist`,
   }
 }
 
