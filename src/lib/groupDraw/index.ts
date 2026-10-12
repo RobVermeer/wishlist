@@ -38,30 +38,28 @@ export const groupDraw = async (groupId: string, formData: FormData) => {
       users.includes(id)
     )
 
-    const drawUsers = (users: User[]) => {
-      const shuffledUsers = shuffle([...users])
-
-      return users.map((user, index) => ({
-        person1: user,
-        person2: shuffledUsers[index],
-      }))
+    if (usersInDrawingList.length < 2) {
+      throw new Error(t("draw.tooFewParticipants"))
     }
 
-    const getPairings = (users: User[]): { person1: User; person2: User }[] => {
-      const pairings = drawUsers(users)
+    let receivers: User[]
 
-      if (pairings.some(({ person1, person2 }) => person1.id === person2.id)) {
-        return getPairings(users)
-      }
+    do {
+      receivers = shuffle([...usersInDrawingList])
+    } while (
+      receivers.some(({ id }, index) => id === usersInDrawingList[index].id)
+    )
 
-      return pairings
-    }
-
-    const pairings = getPairings(usersInDrawingList)
-
-    pairings.forEach(async ({ person1, person2 }) => {
-      await sendGroupDraw({ person1, person2, groupId, groupName })
-    })
+    await Promise.all(
+      usersInDrawingList.map((person1, index) =>
+        sendGroupDraw({
+          person1,
+          person2: receivers[index],
+          groupId,
+          groupName,
+        })
+      )
+    )
 
     trackIssue("Email group draw sent", "info", { groupId, groupName })
 
