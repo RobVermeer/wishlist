@@ -7,6 +7,16 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # eslint-config-next's plugins support up to ESLint 9
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # typescript-eslint supports TypeScript below 6.1
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      # Follows the Node version on the server (.nvmrc)
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule:
