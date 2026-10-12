@@ -40,6 +40,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
     "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "jimp": "^0.22.10",
@@ -50,7 +51,7 @@
     "nodemailer": "^7.0.13",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "resend": "^2.1.0",
+    "resend": "^6.32.1",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.6.7"
