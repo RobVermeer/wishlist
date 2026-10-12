@@ -283,3 +283,36 @@ test("unknown group shows not found", async ({ signIn }) => {
     page.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
   ).toBeVisible()
 })
+
+test("cancelling the share sheet doesn't copy the link", async ({ signIn }) => {
+  const user = await createUser()
+  const group = await createGroup(user)
+  const page = await signIn(user)
+
+  await page.addInitScript(() => {
+    const state = window as unknown as { copied: boolean; settled: boolean }
+    state.copied = false
+    state.settled = false
+    Object.defineProperty(navigator, "share", {
+      value: () => {
+        setTimeout(() => (state.settled = true))
+        return Promise.reject(new DOMException("Share canceled", "AbortError"))
+      },
+    })
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText: async () => void (state.copied = true) },
+    })
+  })
+  await page.goto(`/group/${group.id}`)
+  await page
+    .getByRole("button", { name: "Nodig iemand uit voor de groep" })
+    .click()
+
+  await page.waitForFunction(
+    () => (window as unknown as { settled: boolean }).settled
+  )
+  expect(
+    await page.evaluate(() => (window as unknown as { copied: boolean }).copied)
+  ).toBe(false)
+  await expect(toasts(page)).toHaveText("")
+})

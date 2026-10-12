@@ -14,16 +14,25 @@ export const ShareButton = ({ title }: Props) => {
   const t = useTranslations()
 
   async function share() {
-    try {
-      await navigator.share({
-        title,
-        text: t("Share.text", { group: title }),
-        url: window.location.toString(),
-      })
-    } catch {
-      navigator.clipboard.writeText(window.location.toString())
-      toast({ title: t("Share.copied") })
+    const url = window.location.toString()
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title,
+          text: t("Share.text", { group: title }),
+          url,
+        })
+        return
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return
+        }
+      }
     }
+
+    await navigator.clipboard.writeText(url)
+    toast({ title: t("Share.copied") })
   }
 
   return (
