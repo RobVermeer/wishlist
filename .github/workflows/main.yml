@@ -6,13 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    name: Test 🧪
-    uses: ./.github/workflows/test.yml
+  ci:
+    name: CI ✅
+    uses: ./.github/workflows/ci.yml
 
   deploy:
     name: Do it 💪
-    needs: test
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest code 🚚
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node 🟢
         uses: actions/setup-node@v7
         with:
-          node-version: 24.15.0
+          node-version-file: .nvmrc
       - name: Restore cache 📀
         uses: actions/cache@v6
         with:

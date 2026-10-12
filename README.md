@@ -27,4 +27,4 @@ node e2e/support/mock-resend.mjs
 node e2e/support/server.mjs               # add --skip-build to reuse the last build
 ```
 
-CI runs the suite on every pull request (`.github/workflows/test.yml`), and deploys on `main` only happen when it passes.
+CI (`.github/workflows/ci.yml`) runs lint, formatting, typecheck, knip, a dependency audit and this suite on every pull request, and deploys on `main` only happen when it passes.
