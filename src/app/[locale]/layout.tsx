@@ -8,9 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
-import { getMessages } from "next-intl/server"
 import { NextIntlClientProvider } from "next-intl"
-import { pickMessages } from "@/utils/pick"
 
 const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
 
@@ -33,28 +31,26 @@ export async function generateViewport(): Promise<Metadata> {
 
 export default async function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode
+  params: Promise<{ locale: string }>
 }) {
+  const { locale } = await params
   const session = await getServerSession(authOptions)
-  const messages = await getMessages()
 
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={ubuntu.className}>
-        <NextIntlClientProvider messages={pickMessages(messages, "Menu")}>
+        <NextIntlClientProvider>
           <Header session={session} />
+
+          <Layout>{children}</Layout>
+
+          {session && <UserInfoDialog session={session} />}
+
+          <Toaster />
         </NextIntlClientProvider>
-
-        <Layout>{children}</Layout>
-
-        {session && (
-          <NextIntlClientProvider messages={pickMessages(messages, "UserInfo")}>
-            <UserInfoDialog session={session} />
-          </NextIntlClientProvider>
-        )}
-
-        <Toaster />
       </body>
     </html>
   )

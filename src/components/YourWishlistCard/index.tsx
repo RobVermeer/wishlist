@@ -4,8 +4,6 @@ import { WishlistTitle } from "@/components/WishlistTitle"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { EditWishlist } from "@/components/EditWishlist"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { NextIntlClientProvider, useMessages } from "next-intl"
-import { pickMessages } from "@/utils/pick"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
@@ -14,7 +12,6 @@ interface Props {
 
 export const YourWishlistCard = ({ wishlist, groups }: Props) => {
   const { id } = wishlist
-  const messages = useMessages()
 
   return (
     <Card className="flex items-center pr-24">
@@ -22,11 +19,7 @@ export const YourWishlistCard = ({ wishlist, groups }: Props) => {
         <WishlistTitle wishlist={wishlist} showGroups />
       </Link>
 
-      <NextIntlClientProvider
-        messages={pickMessages(messages, ["EditWishlist", "Common"])}
-      >
-        <EditWishlist wishlist={wishlist} groups={groups} />
-      </NextIntlClientProvider>
+      <EditWishlist wishlist={wishlist} groups={groups} />
     </Card>
   )
 }
