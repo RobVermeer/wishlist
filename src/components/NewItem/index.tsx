@@ -31,12 +31,13 @@ export const NewItem = ({ id }: Props) => {
     const { type, errors } = await createWishlistItemForUser(id, data)
 
     if (type === "error") {
-      return errors.map(title => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     setOpen(false)

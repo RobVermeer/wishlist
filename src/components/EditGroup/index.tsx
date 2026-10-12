@@ -41,12 +41,13 @@ export const EditGroup = ({ group }: Props) => {
     const { type, errors } = await updateGroupById(id, data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     setOpen(false)

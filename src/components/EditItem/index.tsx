@@ -47,12 +47,13 @@ export const EditItem = ({ item }: Props) => {
     const { type, errors } = await updateWishlistItemById(id, data)
 
     if (type === "error") {
-      return errors.map(title => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     setOpen(false)
