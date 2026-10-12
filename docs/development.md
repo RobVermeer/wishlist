@@ -85,3 +85,5 @@ CI runs the same checks. Keep commits small: the subject says what changed, the 
 ## Dependencies
 
 Dependabot proposes updates every week. Upgrade one major version per commit, follow the official upgrade guide and its codemods, and keep the result close to what a fresh project would look like.
+
+Some major updates are ignored in `.github/dependabot.yml` because the tooling around them doesn't support them yet, the comments there say why. Remove the ignore once that changes.
