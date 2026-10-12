@@ -237,7 +237,91 @@ test("categories can be closed and stay closed after a reload", async ({
   await expect(page.getByText("Trui")).toBeVisible()
 })
 
-test("group members see categories", async ({
+test("owner can reorder categories with the keyboard", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const books = await createCategory(wishlist, "Boeken", 0)
+  const clothes = await createCategory(wishlist, "Kleding", 1)
+  const games = await createCategory(wishlist, "Spellen", 2)
+  await createItem(wishlist, { title: "Roman", category: books })
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Schaakbord", category: games })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  const handle = page.getByRole("button", {
+    name: "Verplaats categorie Boeken",
+  })
+  const announcement = page.locator('[role="status"][id^="DndLiveRegion"]')
+
+  await handle.focus()
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText(
+    "Categorie Boeken opgepakt, positie 1 van 3."
+  )
+  await expect(async () => {
+    await page.keyboard.press("ArrowDown")
+    await expect(announcement).toHaveText(
+      "Categorie Boeken verplaatst naar positie 2 van 3.",
+      { timeout: 500 }
+    )
+  }).toPass()
+  await page.keyboard.press("ArrowDown")
+  await expect(announcement).toHaveText(
+    "Categorie Boeken verplaatst naar positie 3 van 3."
+  )
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText(
+    "Categorie Boeken neergezet op positie 3 van 3."
+  )
+
+  await expect
+    .poll(async () =>
+      (await categoriesOf(wishlist.id)).map(({ title }) => title)
+    )
+    .toEqual(["Kleding", "Spellen", "Boeken"])
+
+  await page.reload()
+  expect(await itemOrder(page, ["Boeken", "Kleding", "Spellen"])).toEqual([
+    "Kleding",
+    "Spellen",
+    "Boeken",
+  ])
+})
+
+test("owner can reorder categories by dragging", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const books = await createCategory(wishlist, "Boeken", 0)
+  const clothes = await createCategory(wishlist, "Kleding", 1)
+  await createItem(wishlist, { title: "Roman", category: books })
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  const handle = page.getByRole("button", {
+    name: "Verplaats categorie Kleding",
+  })
+  const target = categoryToggle(page, "Boeken")
+  const from = (await handle.boundingBox())!
+  const to = (await target.boundingBox())!
+
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(from.x + from.width / 2, to.y, { steps: 10 })
+  await page.mouse.move(from.x + from.width / 2, to.y - 10, { steps: 5 })
+  await page.mouse.up()
+
+  await expect
+    .poll(async () =>
+      (await categoriesOf(wishlist.id)).map(({ title }) => title)
+    )
+    .toEqual(["Kleding", "Boeken"])
+})
+
+test("group members see categories but cannot reorder them", async ({
   signIn,
 }) => {
   const owner = await createUser({ firstName: "Olga" })
@@ -252,6 +336,9 @@ test("group members see categories", async ({
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
   await expect(categoryToggle(page, "Kleding")).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: /Verplaats categorie/ })
+  ).toHaveCount(0)
   expect(await itemOrder(page, ["Trui", "Fiets"])).toEqual(["Fiets", "Trui"])
 
   const card = page.locator("div.rounded-md").filter({ hasText: "Trui" })
