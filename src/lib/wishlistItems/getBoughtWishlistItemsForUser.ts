@@ -25,7 +25,7 @@ export const getBoughtWishlistItemsForUser = cache(async () => {
         select: wishlistProperties,
       },
     },
-    where: { userId },
+    where: { userId, removed: false, wishlist: { removed: false } },
   })
 
   return data
