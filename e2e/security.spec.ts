@@ -137,3 +137,25 @@ test("wish links must be http or https", async ({ signIn }) => {
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
   ).toBe(0)
 })
+
+test("login only redirects to paths within the app", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.route(
+    url => url.hostname === "example.com",
+    route => route.fulfill({ body: "Extern" })
+  )
+
+  for (const callbackUrl of [
+    "https://example.com",
+    "//example.com",
+    "/\\example.com",
+  ]) {
+    await page.goto(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`)
+    await expect(page, callbackUrl).toHaveURL("/")
+  }
+
+  await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile")}`)
+  await expect(page).toHaveURL("/profile")
+})
