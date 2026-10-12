@@ -195,3 +195,16 @@ test("avatar file names can't escape the avatar folder", async ({ signIn }) => {
     })
   }
 })
+
+test("responses include security headers", async ({ request }) => {
+  const response = await request.get("/login")
+  const headers = response.headers()
+
+  expect(headers).toMatchObject({
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(), microphone=(), geolocation=()",
+  })
+  expect(headers["x-powered-by"]).toBeUndefined()
+})
