@@ -94,7 +94,9 @@ export const NewWishlist = ({ groups }: Props) => {
           )}
 
           <Label htmlFor="description">
-            {t("NewWishlist.form.description")}
+            {t.rich("NewWishlist.form.description", {
+              small: chunks => <small>{chunks}</small>,
+            })}
           </Label>
           <Input id="description" name="description" />
 

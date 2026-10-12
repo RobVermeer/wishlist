@@ -174,11 +174,11 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
 
   await page.goto("/profile/groups")
   await groupCard(page, "Vriendengroep")
-    .getByRole("button", { name: "Wijzig" })
+    .getByRole("button", { name: "Verlaat" })
     .click()
 
   const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
-  await expect(dialog).toContainText("heb je weer een invite nodig")
+  await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
   await expect(dialog.getByLabel("Naam")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 

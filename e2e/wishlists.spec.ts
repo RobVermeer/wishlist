@@ -49,9 +49,7 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await expect(dialog.getByLabel("Vrienden")).toBeChecked()
 
   await dialog.getByLabel("Vrienden").click()
-  await dialog
-    .getByLabel("Beschrijving wensenlijstje")
-    .fill("Voor mijn verjaardag")
+  await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Verjaardag" }).click()
   await dialog.getByRole("button", { name: "Maak aan" }).click()
@@ -88,9 +86,7 @@ test("create a wishlist for someone else", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Dit is mijn eigen lijstje").click()
-  await dialog
-    .getByLabel("Naam van diegene voor wie je het lijstje beheert")
-    .fill("Baby Bram")
+  await dialog.getByLabel("Voor wie is dit verlanglijstje?").fill("Baby Bram")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
@@ -117,9 +113,7 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Dit is mijn eigen lijstje").click()
-  await dialog
-    .getByLabel("Naam van diegene voor wie je het lijstje beheert")
-    .fill("B")
+  await dialog.getByLabel("Voor wie is dit verlanglijstje?").fill("B")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -127,13 +121,11 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
   )
   await expect(dialog.getByLabel("Dit is mijn eigen lijstje")).not.toBeChecked()
   await expect(
-    dialog.getByLabel("Naam van diegene voor wie je het lijstje beheert")
+    dialog.getByLabel("Voor wie is dit verlanglijstje?")
   ).toHaveValue("B")
 
-  await dialog
-    .getByLabel("Naam van diegene voor wie je het lijstje beheert")
-    .fill("Bram")
-  await dialog.getByLabel("Beschrijving wensenlijstje").fill("x")
+  await dialog.getByLabel("Voor wie is dit verlanglijstje?").fill("Bram")
+  await dialog.getByLabel("Beschrijving").fill("x")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -160,12 +152,8 @@ test("edit a wishlist", async ({ signIn }) => {
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
   await dialog.getByLabel("Dit is mijn eigen lijstje").click()
-  await dialog
-    .getByLabel("Naam van diegene voor wie je het lijstje beheert")
-    .fill("Opa Jan")
-  await dialog
-    .getByLabel("Beschrijving wensenlijstje")
-    .fill("Zijn 80e verjaardag")
+  await dialog.getByLabel("Voor wie is dit verlanglijstje?").fill("Opa Jan")
+  await dialog.getByLabel("Beschrijving").fill("Zijn 80e verjaardag")
   await dialog.getByLabel("Familie").click()
   await dialog.getByLabel("Vrienden").click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
