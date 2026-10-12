@@ -26,7 +26,7 @@ import { Logo } from "@/components/Logo"
 import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
-import { getInitials } from "@/utils/string"
+import { getInitials } from "@/lib/utils"
 
 interface Props {
   session: Session
