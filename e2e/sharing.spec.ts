@@ -239,3 +239,50 @@ test("only followers can unfollow a wishlist", async ({ signIn }) => {
     ).toHaveCount(0)
   }
 })
+
+test("making a new link stops the old one, followers keep access", async ({
+  signIn,
+  browser,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const follower = await createUser()
+  const wishlist = await createWishlist(owner, {
+    followers: [follower],
+    shareToken: `old-${owner.id}`,
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Deel je verlanglijstje" })
+  const link = dialog.getByLabel("Link naar je verlanglijstje")
+  await expect(link).toHaveValue(
+    `http://localhost:3100/lijstje/old-${owner.id}`
+  )
+  await expect(dialog).toContainText(
+    "Maak je een nieuwe link, dan werkt de oude niet meer."
+  )
+
+  await dialog.getByRole("button", { name: "Maak een nieuwe link" }).click()
+
+  await expect(toasts(page)).toContainText("Er is een nieuwe link gemaakt")
+  await expect(link).not.toHaveValue(/old-/)
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  await expect(link).toHaveValue(`http://localhost:3100/lijstje/${shareToken}`)
+
+  const visitor = await browser.newPage({ baseURL: "http://localhost:3100" })
+  await visitor.goto(`/lijstje/old-${owner.id}`)
+  await expect(visitor.getByText(notFound)).toBeVisible()
+  await visitor.goto(`/lijstje/${shareToken}`)
+  await expect(visitor.getByRole("heading", { name: "Olga" })).toBeVisible()
+  await visitor.close()
+
+  const followerPage = await signIn(follower)
+  await followerPage.goto(`/wishlist/${wishlist.id}`)
+  await expect(
+    followerPage.getByRole("heading", { name: "Olga" })
+  ).toBeVisible()
+})

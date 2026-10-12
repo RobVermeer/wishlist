@@ -1,6 +1,6 @@
 "use client"
 
-import { Share2 } from "lucide-react"
+import { RefreshCw, Share2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { startTransition, useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/components/ui/use-toast"
 import { getShareTokenForWishlist } from "@/lib/wishlists/getShareTokenForWishlist"
+import { resetShareTokenForWishlist } from "@/lib/wishlists/resetShareTokenForWishlist"
 import { useShareOrCopy } from "@/lib/useShareOrCopy"
 
 interface Props {
@@ -29,11 +30,12 @@ export const ShareWishlist = ({ wishlistId, name }: Props) => {
   const shareOrCopy = useShareOrCopy()
   const [url, setUrl] = useState<string | null>(null)
 
-  function onOpenChange(open: boolean) {
-    if (!open || url) return
-
+  function loadLink(
+    getToken: typeof getShareTokenForWishlist,
+    success?: string
+  ) {
     startTransition(async () => {
-      const result = await getShareTokenForWishlist(wishlistId)
+      const result = await getToken(wishlistId)
 
       if (result.type === "error") {
         result.errors.forEach(title => {
@@ -43,7 +45,13 @@ export const ShareWishlist = ({ wishlistId, name }: Props) => {
       }
 
       setUrl(`${window.location.origin}/lijstje/${result.shareToken}`)
+
+      if (success) toast({ title: success })
     })
+  }
+
+  function onOpenChange(open: boolean) {
+    if (open && !url) loadLink(getShareTokenForWishlist)
   }
 
   return (
@@ -64,7 +72,17 @@ export const ShareWishlist = ({ wishlistId, name }: Props) => {
           value={url ?? ""}
           onFocus={event => event.target.select()}
         />
-        <DialogFooter>
+        <p className="text-sm text-muted-foreground">{t("resetText")}</p>
+        <DialogFooter className="gap-2 md:gap-0">
+          <Button
+            variant="outline"
+            disabled={!url}
+            onClick={() =>
+              loadLink(resetShareTokenForWishlist, t("resetToast"))
+            }
+          >
+            <RefreshCw size="16" className="mr-2" /> {t("reset")}
+          </Button>
           <Button
             disabled={!url}
             onClick={() =>

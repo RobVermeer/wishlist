@@ -421,7 +421,10 @@
     "link": "Link naar je verlanglijstje",
     "share": "Deel de link",
     "shareText": "Bekijk het verlanglijstje van {name} op Wishlist.",
-    "copied": "Link van verlanglijstje gekopieerd"
+    "copied": "Link van verlanglijstje gekopieerd",
+    "reset": "Maak een nieuwe link",
+    "resetText": "Maak je een nieuwe link, dan werkt de oude niet meer. Wie je verlanglijstje al volgt, houdt toegang.",
+    "resetToast": "Er is een nieuwe link gemaakt"
   },
   "SharedWishlist": {
     "intro": "{name} heeft een verlanglijstje met je gedeeld 🎁",
