@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { Chrome, Loader2, Mail, MailCheck, Send } from "lucide-react"
+import { LogIn, LoaderCircle, Mail, MailCheck, Send } from "lucide-react"
 import {
   Dialog,
   DialogTrigger,
@@ -24,7 +24,7 @@ const EmailButton = () => {
   return (
     <Button type="submit" disabled={pending}>
       {pending ? (
-        <Loader2 className="animate-spin mr-2" size="16" />
+        <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
         <Send className="mr-2" size="16" />
       )}{" "}
@@ -53,7 +53,7 @@ export function LoginForm() {
       <p className="text-lg mb-4">{t("Login.text")}</p>
 
       <Button onClick={() => signIn("google")}>
-        <Chrome size="18" className="mr-2" /> {t("Login.google")}
+        <LogIn size="18" className="mr-2" /> {t("Login.google")}
       </Button>
 
       <Dialog>

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
-import { Loader2, UserPlus2 } from "lucide-react"
+import { LoaderCircle, UserRoundPlus } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
@@ -26,9 +26,9 @@ const AddInfoButton = () => {
   return (
     <Button type="submit" disabled={pending}>
       {pending ? (
-        <Loader2 className="animate-spin mr-2" size="16" />
+        <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
-        <UserPlus2 className="mr-2" size="16" />
+        <UserRoundPlus className="mr-2" size="16" />
       )}{" "}
       {t("UserInfo.form.save")}
     </Button>

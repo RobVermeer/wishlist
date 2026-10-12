@@ -4,7 +4,7 @@ import {
   Bone,
   Cake,
   CandyCane,
-  Home,
+  House,
   ScrollText,
   Shirt,
   Trophy,
@@ -23,7 +23,7 @@ export const WishlistIcon = ({ theme, className }: Props) => {
     case "holidays":
       return <CandyCane size="32" strokeWidth="2" className={className} />
     case "home":
-      return <Home size="32" strokeWidth="2" className={className} />
+      return <House size="32" strokeWidth="2" className={className} />
     case "travel":
       return <Backpack size="32" strokeWidth="2" className={className} />
     case "clothing":

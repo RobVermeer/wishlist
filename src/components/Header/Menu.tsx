@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react"
 import {
   BookUser,
   Group,
-  Home,
+  House,
   List,
   ListTodo,
   Lock,
@@ -79,7 +79,7 @@ export function Menu({ session }: Props) {
               onClick={close}
               className="flex gap-2 items-center mt-4"
             >
-              <Home className="text-emerald-500" size="18" strokeWidth="2.5" />{" "}
+              <House className="text-emerald-500" size="18" strokeWidth="2.5" />{" "}
               {t("Menu.dashboard")}
             </Link>
 
