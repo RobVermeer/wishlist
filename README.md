@@ -26,3 +26,5 @@ To iterate faster, keep the servers running in separate terminals and Playwright
 node e2e/support/mock-resend.mjs
 node e2e/support/server.mjs               # add --skip-build to reuse the last build
 ```
+
+CI runs the suite on every pull request (`.github/workflows/test.yml`), and deploys on `main` only happen when it passes.
