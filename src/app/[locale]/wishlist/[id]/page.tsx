@@ -7,11 +7,11 @@ import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {
-  params: { id: string; locale: string }
+  params: Promise<{ id: string; locale: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id, locale } = params
+  const { id, locale } = await params
   const t = await getTranslations({ locale, namespace: "Common" })
   const wishlist = await getWishlistById(id, true)
 
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function WishlistPage({ params }: Props) {
-  const { id } = params
+  const { id } = await params
   const session = await getServerSession(authOptions)
 
   if (!session) {

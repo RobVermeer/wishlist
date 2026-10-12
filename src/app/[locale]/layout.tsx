@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export async function generateViewport(): Promise<Metadata> {
-  const headersList = headers()
+  const headersList = await headers()
   const colorScheme = headersList.get("sec-ch-prefers-color-scheme")
 
   return {

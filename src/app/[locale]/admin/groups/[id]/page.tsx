@@ -8,15 +8,16 @@ import { authOptions } from "@/lib/nextAuth"
 import { UnDeleteGroup } from "./components/UnDeleteGroup"
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function AdminGroupsDrawPage({ params }: Props) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
 
   if (!session) redirect("/login")
 
-  const group = await getGroupById(params.id, true)
+  const group = await getGroupById(id, true)
 
   if (!group) {
     notFound()

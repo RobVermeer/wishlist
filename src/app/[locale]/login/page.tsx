@@ -7,13 +7,13 @@ import { LoginForm } from "@/components/LoginForm"
 import { authOptions } from "@/lib/nextAuth"
 
 interface Props {
-  searchParams: { callbackUrl?: string }
+  searchParams: Promise<{ callbackUrl?: string }>
 }
 
 export default async function Login({ searchParams }: Props) {
   const session = await getServerSession(authOptions)
   const messages = await getMessages()
-  const { callbackUrl = "/" } = searchParams
+  const { callbackUrl = "/" } = await searchParams
   const redirectTo = decodeURIComponent(callbackUrl).startsWith("/")
     ? callbackUrl
     : "/"
