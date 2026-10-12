@@ -215,7 +215,21 @@ test("remove a wishlist", async ({ signIn }) => {
     .getByRole("button", { name: "Wijzig" })
     .click()
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
+
   await dialog.getByRole("button", { name: "Verwijder" }).click()
+  await expect(confirm).toContainText(
+    "Je verlanglijstje wordt met alle wensen verwijderd."
+  )
+  await confirm.getByRole("button", { name: "Toch niet" }).click()
+  await expect(confirm).toBeHidden()
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .removed
+  ).toBe(false)
+
+  await dialog.getByRole("button", { name: "Verwijder" }).click()
+  await confirm.getByRole("button", { name: "Verwijder" }).click()
 
   await expect(dialog).toBeHidden()
   await expect(wishlistCard(page, "Weg lijst")).toBeHidden()

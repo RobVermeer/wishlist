@@ -146,7 +146,9 @@
   "EditGroup": {
     "button": "Wijzig",
     "title": "Wijzig groep",
-    "remove": "Verwijder",
+    "remove": {
+      "description": "De groep wordt voor alle leden verwijderd."
+    },
     "form": {
       "title": "Naam",
       "save": "Opslaan"
@@ -173,11 +175,7 @@
     "button": "Wijzig",
     "title": "Wijzig wens",
     "remove": {
-      "button": "Verwijder",
-      "title": "Weet je het zeker?",
-      "description": "Verwijderen van je wens is permanent.",
-      "cancel": "Toch niet",
-      "confirm": "Verwijder"
+      "description": "Je wens wordt definitief verwijderd."
     },
     "form": {
       "title": "Wens",
@@ -203,7 +201,9 @@
   "EditWishlist": {
     "button": "Wijzig",
     "title": "Wijzig verlanglijstje",
-    "remove": "Verwijder",
+    "remove": {
+      "description": "Je verlanglijstje wordt met alle wensen verwijderd."
+    },
     "form": {
       "description": "Beschrijving wensenlijstje (optioneel)",
       "ownList": {
@@ -319,5 +319,11 @@
     "empty": "Typ een naam om een categorie te maken",
     "none": "Geen categorie",
     "create": "Nieuwe categorie: {category}"
+  },
+  "Remove": {
+    "button": "Verwijder",
+    "title": "Weet je het zeker?",
+    "cancel": "Toch niet",
+    "confirm": "Verwijder"
   }
 }
