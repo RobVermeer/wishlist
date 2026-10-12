@@ -16,6 +16,7 @@ import { RemindButton } from "../RemindButton"
 import { ItemCard } from "../ItemCard"
 import Link from "next/link"
 import { CategoryList } from "../CategoryList"
+import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 
 interface Props {
   id: string
@@ -44,23 +45,10 @@ export const Wishlist = async ({ id, groupId }: Props) => {
     return <ItemCard key={item.id} item={item} />
   }
 
-  const uncategorizedItems = wishlist.wishlistItem.filter(
-    item => !item.category
+  const { uncategorized, categories } = groupByCategory(
+    wishlist.wishlistItem,
+    wishlist.categories
   )
-  const categories = wishlist.categories
-    .map(category => {
-      const items = wishlist.wishlistItem.filter(
-        item => item.category?.id === category.id
-      )
-
-      return {
-        id: category.id,
-        title: category.title,
-        count: items.length,
-        items: items.map(renderItem),
-      }
-    })
-    .filter(({ count }) => count > 0)
 
   return (
     <List>
@@ -98,12 +86,17 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         )}
       </div>
 
-      {uncategorizedItems.map(renderItem)}
+      {uncategorized.map(renderItem)}
 
       {categories.length > 0 && (
         <CategoryList
           wishlistId={wishlist.id}
-          categories={categories}
+          categories={categories.map(({ id, title, items }) => ({
+            id,
+            title,
+            count: items.length,
+            items: items.map(renderItem),
+          }))}
           sortable={wishlist.isOwnList}
         />
       )}
