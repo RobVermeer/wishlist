@@ -34,12 +34,13 @@ export const NewGroup = () => {
     const { type, errors } = await createGroupForUser(data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     setOpen(false)

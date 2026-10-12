@@ -22,12 +22,13 @@ export const ToggleItem = ({ item, checked, undo }: Props) => {
     const { type, errors } = await toggleWishlistItemById(id)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     toast({

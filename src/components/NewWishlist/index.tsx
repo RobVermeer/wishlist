@@ -42,12 +42,13 @@ export const NewWishlist = ({ groups }: Props) => {
     const { type, errors } = await createWishlistForUser(data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     setOpen(false)

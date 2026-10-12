@@ -36,12 +36,13 @@ export const RemindButton = ({ wishlist }: Props) => {
     const { type, errors } = await sendReminderToUser(wishlist.user.id)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     toast({ title: t("Remind.toast") })

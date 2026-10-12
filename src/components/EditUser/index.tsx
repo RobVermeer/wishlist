@@ -39,12 +39,13 @@ export const EditUser = ({ firstName }: Props) => {
     const { type, errors } = await updateProfile(data)
 
     if (type === "error") {
-      return errors.map((title) => {
+      errors.forEach((title) => {
         toast({
           variant: "destructive",
           title,
         })
       })
+      return
     }
 
     formRef.current?.reset()
