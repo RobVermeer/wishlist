@@ -4,7 +4,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { AuthOptions, Session, User } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email"
-import { sendVerificationRequest } from "@/utils/send-verification-request"
+import { sendVerificationRequest } from "@/lib/email/sendVerificationRequest"
 import { trackIssue } from "@/lib/trackIssue"
 
 export const authOptions: AuthOptions = {
