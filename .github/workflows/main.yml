@@ -6,8 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  test:
+    name: Test 🧪
+    uses: ./.github/workflows/test.yml
+
   deploy:
     name: Do it 💪
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest code 🚚
