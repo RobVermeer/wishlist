@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
@@ -58,6 +58,12 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
     setOpen(false)
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   async function handleRemove() {
     await deleteWishlistById(id)
     setOpen(false)
@@ -78,7 +84,7 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           <DialogTitle>{t("EditWishlist.title")}</DialogTitle>
         </DialogHeader>
         <form
-          action={handleSubmit}
+          onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >

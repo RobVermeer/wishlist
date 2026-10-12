@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
@@ -54,6 +54,12 @@ export const NewWishlist = ({ groups }: Props) => {
     setOpen(false)
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -65,7 +71,7 @@ export const NewWishlist = ({ groups }: Props) => {
         <DialogHeader>
           <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
         </DialogHeader>
-        <form action={handleSubmit} id="add" className="grid gap-4 py-4">
+        <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <div className="flex items-center space-x-2">
             <Checkbox
               id="own-list"

@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -59,6 +59,12 @@ export const EditItem = ({ item }: Props) => {
     setOpen(false)
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   async function handleRemove() {
     await deleteWishlistItemById(id)
     setOpen(false)
@@ -79,7 +85,7 @@ export const EditItem = ({ item }: Props) => {
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
         </DialogHeader>
         <form
-          action={handleSubmit}
+          onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createGroupForUser } from "@/lib/groups/createGroupForUser"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import {
@@ -46,6 +46,12 @@ export const NewGroup = () => {
     setOpen(false)
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -57,7 +63,7 @@ export const NewGroup = () => {
         <DialogHeader>
           <DialogTitle>{t("NewGroup.title")}</DialogTitle>
         </DialogHeader>
-        <form action={handleSubmit} id="add" className="grid gap-4 py-4">
+        <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">{t("NewGroup.form.title")}</Label>
           <Input required id="title" name="title" />
           <Label htmlFor="theme">{t("Common.group.theme.label")}</Label>
