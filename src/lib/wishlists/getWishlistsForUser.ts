@@ -23,7 +23,7 @@ export const getWishlistsForUser = cache(async () => {
     where: { userId, removed: false },
   })
 
-  const wishlists = data.map((wishlist) => ({
+  const wishlists = data.map(wishlist => ({
     ...wishlist,
     isOwnList: true,
   }))

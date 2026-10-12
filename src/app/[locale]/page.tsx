@@ -40,7 +40,7 @@ export default async function Home() {
         <ListTitle>{t("groups.title")}</ListTitle>
 
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
-          {groups.map((group) => (
+          {groups.map(group => (
             <Link
               key={group.id}
               href={`/group/${group.id}`}
@@ -62,7 +62,7 @@ export default async function Home() {
         {groups.length === 0 && (
           <EmptyState title={t("groups.empty.title")}>
             {t.rich("groups.empty.text", {
-              profile: (chunks) => (
+              profile: chunks => (
                 <Link href="/profile" className="text-primary">
                   {chunks}
                 </Link>
@@ -76,7 +76,7 @@ export default async function Home() {
         <ListTitle>{t("wishlists.title")}</ListTitle>
 
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
-          {wishlists.map((wishlist) => (
+          {wishlists.map(wishlist => (
             <Link
               key={wishlist.id}
               href={`/wishlist/${wishlist.id}`}
@@ -97,7 +97,7 @@ export default async function Home() {
         {wishlists.length === 0 && (
           <EmptyState title={t("wishlists.empty.title")}>
             {t.rich("wishlists.empty.text", {
-              profile: (chunks) => (
+              profile: chunks => (
                 <Link href="/profile/wishlists" className="text-primary">
                   {chunks}
                 </Link>

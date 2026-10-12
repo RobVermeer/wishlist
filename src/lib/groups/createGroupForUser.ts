@@ -43,7 +43,7 @@ export const createGroupForUser = async (formData: FormData) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map((issue) => issue.message),
+        errors: error.issues.map(issue => issue.message),
       }
     }
 

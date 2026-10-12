@@ -39,7 +39,7 @@ export default async function ProfileGroupPage() {
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
-      {groups.map((group) => (
+      {groups.map(group => (
         <YourGroupCard key={group.id} group={group} />
       ))}
 

@@ -1,66 +1,66 @@
-import { EmptyState } from "@/components/EmptyState";
-import { List } from "@/components/List";
-import { ListTitle } from "@/components/ListTitle";
-import { WishlistTitle } from "@/components/WishlistTitle";
-import { YourItemCard } from "@/components/YourItemCard";
-import { getWishlistById } from "@/lib/wishlists/getWishlistById";
-import { NewItem } from "@/components/NewItem";
-import { notFound } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
-import { getTranslations } from "next-intl/server";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "@/utils/string";
-import { getGroupById } from "@/lib/groups/getGroupById";
-import { canBeRemindedForUser } from "@/lib/reminders";
-import { RemindButton } from "../RemindButton";
-import { ItemCard } from "../ItemCard";
-import Link from "next/link";
-import { CategoryList } from "../CategoryList";
+import { EmptyState } from "@/components/EmptyState"
+import { List } from "@/components/List"
+import { ListTitle } from "@/components/ListTitle"
+import { WishlistTitle } from "@/components/WishlistTitle"
+import { YourItemCard } from "@/components/YourItemCard"
+import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import { NewItem } from "@/components/NewItem"
+import { notFound } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
+import { getTranslations } from "next-intl/server"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getInitials } from "@/utils/string"
+import { getGroupById } from "@/lib/groups/getGroupById"
+import { canBeRemindedForUser } from "@/lib/reminders"
+import { RemindButton } from "../RemindButton"
+import { ItemCard } from "../ItemCard"
+import Link from "next/link"
+import { CategoryList } from "../CategoryList"
 
 interface Props {
-  id: string;
-  groupId?: string;
+  id: string
+  groupId?: string
 }
 
 export const Wishlist = async ({ id, groupId }: Props) => {
-  const wishlist = await getWishlistById(id);
-  const group = groupId ? await getGroupById(groupId) : null;
-  const t = await getTranslations("GroupWishlist");
+  const wishlist = await getWishlistById(id)
+  const group = groupId ? await getGroupById(groupId) : null
+  const t = await getTranslations("GroupWishlist")
 
   if (!wishlist) {
-    notFound();
+    notFound()
   }
 
-  const canBeReminded = await canBeRemindedForUser(wishlist.user.id);
-  const categoryTitles = wishlist.categories.map(({ title }) => title);
+  const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
+  const categoryTitles = wishlist.categories.map(({ title }) => title)
 
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
     if (wishlist.isOwnList) {
       return (
         <YourItemCard key={item.id} item={item} categories={categoryTitles} />
-      );
+      )
     }
 
-    return <ItemCard key={item.id} item={item} />;
-  };
+    return <ItemCard key={item.id} item={item} />
+  }
 
   const uncategorizedItems = wishlist.wishlistItem.filter(
-    (item) => !item.category
-  );
+    item => !item.category
+  )
   const categories = wishlist.categories
-    .map((category) => {
+    .map(category => {
       const items = wishlist.wishlistItem.filter(
-        (item) => item.category?.id === category.id
-      );
+        item => item.category?.id === category.id
+      )
 
       return {
         id: category.id,
         title: category.title,
         count: items.length,
         items: items.map(renderItem),
-      };
+      }
     })
-    .filter(({ count }) => count > 0);
+    .filter(({ count }) => count > 0)
 
   return (
     <List>
@@ -118,5 +118,5 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         <RemindButton wishlist={wishlist} />
       )}
     </List>
-  );
-};
+  )
+}

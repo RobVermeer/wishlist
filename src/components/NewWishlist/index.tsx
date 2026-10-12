@@ -42,7 +42,7 @@ export const NewWishlist = ({ groups }: Props) => {
     const { type, errors } = await createWishlistForUser(data)
 
     if (type === "error") {
-      errors.forEach((title) => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
@@ -77,7 +77,7 @@ export const NewWishlist = ({ groups }: Props) => {
               id="own-list"
               name="own-list"
               checked={ownList}
-              onCheckedChange={(checked) => setOwnList(Boolean(checked))}
+              onCheckedChange={checked => setOwnList(Boolean(checked))}
             />
             <Label htmlFor="own-list">
               {t("NewWishlist.form.ownList.label")}
@@ -102,7 +102,7 @@ export const NewWishlist = ({ groups }: Props) => {
 
           <div className="grid gap-1">
             <h3>{t("NewWishlist.form.groups")}</h3>
-            {groups.map((group) => (
+            {groups.map(group => (
               <div key={group.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={`group-${group.id}`}

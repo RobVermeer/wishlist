@@ -29,7 +29,7 @@ export const getGroupById = cache(async (id: string, removed = false) => {
       throw new Error(t("group.notFound"))
     }
 
-    const wishlist = data.wishlist.map((wishlist) => ({
+    const wishlist = data.wishlist.map(wishlist => ({
       ...wishlist,
       isOwnList: wishlist.user.id === userId,
     }))

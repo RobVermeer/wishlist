@@ -20,7 +20,7 @@ export default async function AdminUsersPage() {
     <List>
       <ListTitle>Users</ListTitle>
 
-      {users.map((user) => (
+      {users.map(user => (
         <Card key={user.id} className="flex gap-2 items-center">
           <Avatar>
             {user?.image && (

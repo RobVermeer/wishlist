@@ -41,7 +41,7 @@ export const EditGroup = ({ group }: Props) => {
     const { type, errors } = await updateGroupById(id, data)
 
     if (type === "error") {
-      errors.forEach((title) => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
@@ -73,7 +73,7 @@ export const EditGroup = ({ group }: Props) => {
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
-        onOpenAutoFocus={(event) => event.preventDefault()}
+        onOpenAutoFocus={event => event.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>
