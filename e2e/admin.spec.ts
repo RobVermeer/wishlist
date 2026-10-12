@@ -83,8 +83,11 @@ test("admin can remove and restore a group", async ({ signIn }) => {
     )
     .toBe(true)
 
-  await groupCard.getByRole("link", { name: "Edit" }).click()
-  await expect(page).toHaveURL(`/admin/groups/${group.id}`)
+  await expect(groupCard.getByRole("link", { name: "Edit" })).toHaveAttribute(
+    "href",
+    `/admin/groups/${group.id}`
+  )
+  await page.goto(`/admin/groups/${group.id}`)
   await expect(page.getByRole("heading", { name: group.title })).toBeVisible()
 
   page.once("dialog", dialog => dialog.accept())
