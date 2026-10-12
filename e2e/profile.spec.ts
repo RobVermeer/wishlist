@@ -82,6 +82,9 @@ test("upload a profile picture", async ({ signIn }) => {
       )
     )
   } finally {
-    await rm(`public/avatars/${user.id}`, { recursive: true, force: true })
+    await rm(`.next/standalone/public/avatars/${user.id}`, {
+      recursive: true,
+      force: true,
+    })
   }
 })
