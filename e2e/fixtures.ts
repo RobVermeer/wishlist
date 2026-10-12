@@ -95,11 +95,15 @@ export async function createWishlist(
     description = null,
     theme = null,
     groups = [],
+    followers = [],
+    shareToken = null,
   }: {
     title?: string | null
     description?: string | null
     theme?: string | null
     groups?: { id: string }[]
+    followers?: { id: string }[]
+    shareToken?: string | null
   } = {}
 ) {
   return prisma.wishlist.create({
@@ -107,9 +111,11 @@ export async function createWishlist(
       title,
       description,
       theme,
+      shareToken,
       createdAt: new Date(),
       userId: owner.id,
       groups: { connect: groups.map(({ id }) => ({ id })) },
+      followers: { connect: followers.map(({ id }) => ({ id })) },
     },
   })
 }

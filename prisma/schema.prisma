@@ -49,6 +49,7 @@ model User {
   wishlistItem  WishlistItem[]
   groups        Group[]        @relation(name: "OwnedGroups")
   subscribed    Group[]        @relation(name: "Subscribed")
+  following     Wishlist[]     @relation(name: "FollowedWishlists")
 }
 
 model VerificationToken {
@@ -83,6 +84,8 @@ model Wishlist {
   userId       String
   user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   groups       Group[]
+  shareToken   String?            @unique
+  followers    User[]             @relation(name: "FollowedWishlists")
 }
 
 model WishlistCategory {

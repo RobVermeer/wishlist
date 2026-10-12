@@ -210,3 +210,31 @@ test("responses include security headers", async ({ request }) => {
   })
   expect(headers["x-powered-by"]).toBeUndefined()
 })
+
+test("followers of a wishlist can see it and check off its wishes", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const follower = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [follower] })
+  const page = await signIn(follower)
+  const { id } = await prisma.wishlistItem.create({
+    data: { title: "Fiets", createdAt: new Date(), wishlistId: wishlist.id },
+  })
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await expect(page.getByRole("heading", { name: "Olga" })).toBeVisible()
+
+  await page
+    .locator("div.rounded-md")
+    .filter({ hasText: "Fiets" })
+    .getByRole("button")
+    .click()
+  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+  await expect
+    .poll(
+      async () =>
+        (await prisma.wishlistItem.findUniqueOrThrow({ where: { id } })).userId
+    )
+    .toBe(follower.id)
+})
