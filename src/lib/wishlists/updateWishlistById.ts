@@ -10,6 +10,7 @@ import * as z from "zod"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { assertGroupsOfUser } from "./assertGroupsOfUser"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
   try {
@@ -40,6 +41,8 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map(group => group.toString()),
     })
+
+    await assertGroupsOfUser(userId, data.groups, t("group.notFound"))
 
     await prisma.wishlist.update({
       where: { id },
