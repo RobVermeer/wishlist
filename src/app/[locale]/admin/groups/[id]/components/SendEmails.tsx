@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { groupDraw } from "@/lib/groupDraw"
 import type { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { Send } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { RedirectType, redirect } from "next/navigation"
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 export const SendEmails = ({ group }: Props) => {
   const { toast } = useToast()
+  const t = useTranslations("Admin")
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await groupDraw(group.id, data)
@@ -28,7 +30,7 @@ export const SendEmails = ({ group }: Props) => {
       return
     }
 
-    toast({ title: "Lootjes zijn getrokken" })
+    toast({ title: t("group.drawn") })
     redirect("/admin/groups", RedirectType.push)
   }
 
@@ -44,7 +46,7 @@ export const SendEmails = ({ group }: Props) => {
       ))}
 
       <Button type="submit">
-        <Send size="16" className="mr-2" /> Send emails
+        <Send size="16" className="mr-2" /> {t("group.draw")}
       </Button>
     </form>
   )

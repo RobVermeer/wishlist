@@ -3,6 +3,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { UnDeleteGroup } from "./components/UnDeleteGroup"
@@ -18,6 +19,7 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
   if (!session) redirect("/login")
 
   const group = await getGroupForAdmin(id)
+  const t = await getTranslations("Admin")
 
   if (!group) {
     notFound()
@@ -26,10 +28,10 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
   return (
     <List>
       <ListTitle>{group.title}</ListTitle>
-      <p>Undo delete group</p>
+      <p>{t("group.restoreText")}</p>
       <UnDeleteGroup id={group.id} />
 
-      <p>Select users to draw lootjes for.</p>
+      <p>{t("group.drawText")}</p>
       <SendEmails group={group} />
     </List>
   )

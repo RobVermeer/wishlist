@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "next-intl"
 import { deleteUserById } from "@/lib/users/deleteUserById"
 
 interface Props {
@@ -8,8 +9,10 @@ interface Props {
 }
 
 export const RemoveUser = ({ id }: Props) => {
+  const t = useTranslations("Admin")
+
   const removeUser = async (id: string) => {
-    const confirm = window.confirm("Are you sure?")
+    const confirm = window.confirm(t("confirm"))
 
     if (!confirm) return
 
@@ -23,7 +26,7 @@ export const RemoveUser = ({ id }: Props) => {
       variant="destructive"
       onClick={() => removeUser(id)}
     >
-      Remove
+      {t("users.remove")}
     </Button>
   )
 }

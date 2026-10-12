@@ -32,13 +32,10 @@ test("admin can open the admin from the menu", async ({ signIn }) => {
   await page.getByRole("link", { name: "Admin" }).click()
 
   await expect(page).toHaveURL("/admin")
-  for (const label of [
-    "Total users:",
-    "Total wishlists:",
-    "Total groups:",
-    "Total wishlist items:",
-  ]) {
-    await expect(page.getByText(label)).toBeVisible()
+  for (const label of ["Gebruikers", "Verlanglijstjes", "Groepen", "Wensen"]) {
+    await expect(
+      page.locator("div.text-lg").filter({ hasText: label })
+    ).toHaveText(new RegExp(`^\\s*${label}\\s*\\d+$`))
   }
 })
 
@@ -52,12 +49,12 @@ test("admin can remove a user", async ({ signIn }) => {
   await expect(userCard).toContainText("Weg Gebruiker")
 
   page.once("dialog", dialog => dialog.dismiss())
-  await userCard.getByRole("button", { name: "Remove" }).click()
+  await userCard.getByRole("button", { name: "Verwijder" }).click()
   await expect(userCard).toBeVisible()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(1)
 
   page.once("dialog", dialog => dialog.accept())
-  await userCard.getByRole("button", { name: "Remove" }).click()
+  await userCard.getByRole("button", { name: "Verwijder" }).click()
 
   await expect(userCard).toBeHidden()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(0)
@@ -74,7 +71,7 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   await expect(groupCard).toContainText("Groep Eigenaar")
 
   page.once("dialog", dialog => dialog.accept())
-  await groupCard.getByRole("button", { name: "Remove" }).click()
+  await groupCard.getByRole("button", { name: "Verwijder" }).click()
   await expect
     .poll(
       async () =>
@@ -83,7 +80,7 @@ test("admin can remove and restore a group", async ({ signIn }) => {
     )
     .toBe(true)
 
-  await expect(groupCard.getByRole("link", { name: "Edit" })).toHaveAttribute(
+  await expect(groupCard.getByRole("link", { name: "Bekijk" })).toHaveAttribute(
     "href",
     `/admin/groups/${group.id}`
   )
@@ -91,7 +88,7 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   await expect(page.getByRole("heading", { name: group.title })).toBeVisible()
 
   page.once("dialog", dialog => dialog.accept())
-  await page.getByRole("button", { name: "Undo delete" }).click()
+  await page.getByRole("button", { name: "Zet groep terug" }).click()
   await expect
     .poll(
       async () =>
@@ -119,9 +116,9 @@ test("admin can draw lots for a group", async ({ signIn }) => {
 
   await page.goto(`/admin/groups/${group.id}`)
   await page.getByLabel(new RegExp(skipped.email!)).click()
-  await page.getByRole("button", { name: "Send emails" }).click()
+  await page.getByRole("button", { name: "Trek lootjes" }).click()
 
-  await expect(toasts(page)).toContainText("Lootjes zijn getrokken")
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
   await expect(page).toHaveURL("/admin/groups")
 
   for (const participant of participants) {
@@ -163,7 +160,7 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
 
   await page.goto(`/admin/groups/${group.id}`)
   await page.getByLabel(new RegExp(member.email!)).click()
-  await page.getByRole("button", { name: "Send emails" }).click()
+  await page.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
     "Kies minimaal twee deelnemers voor de loting"
