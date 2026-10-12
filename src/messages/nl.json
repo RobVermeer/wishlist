@@ -272,6 +272,9 @@
     },
     "category": {
       "notFound": "Categorie niet gevonden"
+    },
+    "draw": {
+      "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting"
     }
   },
   "EmailDraw": {

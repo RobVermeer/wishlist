@@ -122,6 +122,7 @@ test("admin can draw lots for a group", async ({ signIn }) => {
   await page.getByRole("button", { name: "Send emails" }).click()
 
   await expect(toasts(page)).toContainText("Lootjes zijn getrokken")
+  await expect(page).toHaveURL("/admin/groups")
 
   for (const participant of participants) {
     await expect
@@ -151,4 +152,22 @@ test("admin can draw lots for a group", async ({ signIn }) => {
   expect(drawn.sort()).toEqual(
     participants.map(({ firstName }) => firstName).sort()
   )
+})
+
+test("drawing lots needs at least two participants", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser({ firstName: "Anna" })
+  const member = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [member] })
+  const page = await signIn(admin)
+
+  await page.goto(`/admin/groups/${group.id}`)
+  await page.getByLabel(new RegExp(member.email!)).click()
+  await page.getByRole("button", { name: "Send emails" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Kies minimaal twee deelnemers voor de loting"
+  )
+  await expect(page).toHaveURL(`/admin/groups/${group.id}`)
+  expect(await emailsTo(owner.email!)).toHaveLength(0)
 })
