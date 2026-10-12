@@ -5,6 +5,7 @@ import {
   createGroup,
   createWishlist,
   prisma,
+  toasts,
 } from "./fixtures"
 
 test("pages don't contain the email addresses of other users", async ({
@@ -86,4 +87,28 @@ test("wishlists are only visible to their owner and the members of their groups"
   })
   await memberPage.reload()
   await expect(memberPage.getByText(notFound)).toBeVisible()
+})
+
+test("wishlists can only be added to groups you are a member of", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const stranger = await createUser()
+  const ownGroup = await createGroup(user, { title: "Eigen groep" })
+  const foreignGroup = await createGroup(stranger, { title: "Andere groep" })
+  const page = await signIn(user)
+
+  await page.goto("/profile/wishlists")
+  await page
+    .getByRole("button", { name: "Maak een nieuw verlanglijstje aan" })
+    .click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
+  await dialog
+    .locator(`input[name="groups"][value="${ownGroup.id}"]`)
+    .evaluate((input, id) => input.setAttribute("value", id), foreignGroup.id)
+  await dialog.getByRole("button", { name: "Maak aan" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
 })
