@@ -16,7 +16,7 @@ import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save, Trash } from "lucide-react"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import {
   Select,
   SelectContent,

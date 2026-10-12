@@ -1,5 +1,5 @@
 import { Card } from "@/components/Card"
-import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { InfinityIcon, Link } from "lucide-react"
 import { EditItem } from "@/components/EditItem"
 

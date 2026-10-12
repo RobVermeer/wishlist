@@ -1,4 +1,4 @@
-"use server"
+import "server-only"
 
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"

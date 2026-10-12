@@ -1,8 +1,8 @@
 import { Card } from "@/components/Card"
 import Link from "next/link"
 import { WishlistTitle } from "@/components/WishlistTitle"
-import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
-import { getGroupById } from "@/lib/groups/getGroupById"
+import type { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
+import type { getGroupById } from "@/lib/groups/getGroupById"
 
 interface Props {
   wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]

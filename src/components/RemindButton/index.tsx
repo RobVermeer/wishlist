@@ -1,6 +1,6 @@
 "use client"
 
-import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Button } from "@/components/ui/button"
 import { sendReminderToUser } from "@/lib/reminders"
 import { LoaderCircle, ShoppingBasket } from "lucide-react"

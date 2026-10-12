@@ -1,4 +1,4 @@
-"use server"
+import "server-only"
 
 const url = process.env.TRACK_ISSUE_URL
 const secret = process.env.TRACK_ISSUE_SECRET

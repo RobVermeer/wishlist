@@ -1,6 +1,6 @@
 "use client"
 
-import { getGroupById } from "@/lib/groups/getGroupById"
+import type { getGroupById } from "@/lib/groups/getGroupById"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { MessagesSquare } from "lucide-react"

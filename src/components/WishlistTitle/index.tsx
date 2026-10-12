@@ -1,4 +1,4 @@
-import { getWishlistById } from "@/lib/wishlists/getWishlistById"
+import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { useTranslations } from "next-intl"
 
 interface Props {

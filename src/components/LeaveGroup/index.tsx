@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
 import { Pencil, UserMinus } from "lucide-react"
 import { useTranslations } from "next-intl"
