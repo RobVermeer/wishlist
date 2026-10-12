@@ -15,6 +15,10 @@ export const getGroups = cache(async () => {
     throw new Error(t("notLoggedIn"))
   }
 
+  if (!session.user.isAdmin) {
+    throw new Error(t("noAccess"))
+  }
+
   const data = await prisma.group.findMany({
     orderBy: { createdAt: "desc" },
     select: groupProperties,

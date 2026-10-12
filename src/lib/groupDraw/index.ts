@@ -6,10 +6,17 @@ import { User } from "@/generated/prisma/client"
 import { sendGroupDraw } from "@/lib/email"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/nextAuth"
 
 export const groupDraw = async (groupId: string, formData: FormData) => {
   try {
+    const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
+
+    if (!session?.user.isAdmin) {
+      throw new Error(t("noAccess"))
+    }
 
     const group = await prisma.group.findUnique({
       where: {
