@@ -1,6 +1,6 @@
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
-import { getGroupById } from "@/lib/groups/getGroupById"
+import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
@@ -17,7 +17,7 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
 
   if (!session) redirect("/login")
 
-  const group = await getGroupById(id, true)
+  const group = await getGroupForAdmin(id)
 
   if (!group) {
     notFound()

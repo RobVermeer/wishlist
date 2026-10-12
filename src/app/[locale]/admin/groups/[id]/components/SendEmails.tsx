@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import { groupDraw } from "@/lib/groupDraw"
-import type { getGroupById } from "@/lib/groups/getGroupById"
+import type { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { Send } from "lucide-react"
 import { RedirectType, redirect } from "next/navigation"
 
 interface Props {
-  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
+  group: NonNullable<Awaited<ReturnType<typeof getGroupForAdmin>>>
 }
 
 export const SendEmails = ({ group }: Props) => {

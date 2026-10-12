@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/nextAuth"
 import { cache } from "react"
 import { getTranslations } from "next-intl/server"
 
-export const getGroupById = cache(async (id: string, removed = false) => {
+export const getGroupById = cache(async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
@@ -18,11 +18,9 @@ export const getGroupById = cache(async (id: string, removed = false) => {
 
     const userId = session.user.id
 
-    const where = removed ? { id } : { id, removed }
-
     const data = await prisma.group.findUnique({
       select: groupProperties,
-      where,
+      where: { id, removed: false },
     })
 
     if (!data) {
