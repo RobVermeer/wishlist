@@ -1,18 +1,17 @@
 "use client"
 
-import type { getGroupById } from "@/lib/groups/getGroupById"
 import { Button } from "@/components/ui/button"
 import { followGroupById } from "@/lib/groups/followGroupById"
 import { UserPlus } from "lucide-react"
 
 interface Props {
-  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
+  groupId: string
   text: string
 }
 
-export const FollowGroup = ({ group, text }: Props) => {
+export const FollowGroup = ({ groupId, text }: Props) => {
   async function followGroup() {
-    await followGroupById(group.id)
+    await followGroupById(groupId)
   }
 
   return (

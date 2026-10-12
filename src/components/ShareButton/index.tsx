@@ -1,24 +1,23 @@
 "use client"
 
-import type { getGroupById } from "@/lib/groups/getGroupById"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { MessagesSquare } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 interface Props {
-  group: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
+  title: string
 }
 
-export const ShareButton = ({ group }: Props) => {
+export const ShareButton = ({ title }: Props) => {
   const { toast } = useToast()
   const t = useTranslations()
 
   async function share() {
     try {
       await navigator.share({
-        title: group.title,
-        text: t("Share.text", { group: group.title }),
+        title,
+        text: t("Share.text", { group: title }),
         url: window.location.toString(),
       })
     } catch {

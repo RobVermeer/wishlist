@@ -49,7 +49,7 @@ export default async function GroupPage({ params }: Props) {
         <EmptyState title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
-        <FollowGroup group={group} text={t("follow")} />
+        <FollowGroup groupId={group.id} text={t("follow")} />
       </>
     )
   }
@@ -76,7 +76,7 @@ export default async function GroupPage({ params }: Props) {
 
       <Separator className="my-3" />
 
-      <ShareButton group={group} />
+      <ShareButton title={group.title} />
     </List>
   )
 }
