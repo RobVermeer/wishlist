@@ -48,7 +48,8 @@ export default async function ProfileBoughtPage() {
               name:
                 item.wishlist.title ||
                 item.wishlist.user.firstName ||
-                item.wishlist.user.name?.split(" ")[0],
+                item.wishlist.user.name?.split(" ")[0] ||
+                "",
             })}
           </small>
         </Card>

@@ -1,24 +1,10 @@
 import createMiddleware from "next-intl/middleware"
 import { NextRequest } from "next/server"
+import { routing } from "@/i18n/routing"
+
+const handleI18nRouting = createMiddleware(routing)
 
 export default async function middleware(request: NextRequest) {
-  const handleI18nRouting = createMiddleware({
-    locales: ["nl"],
-    defaultLocale: "nl",
-    domains: [
-      {
-        domain:
-          process.env.NODE_ENV === "production"
-            ? "wishlist.ru-coding.nl"
-            : "localhost:3000",
-        defaultLocale: "nl",
-        locales: ["nl"],
-      },
-    ],
-    localePrefix: "never",
-    localeDetection: false,
-  })
-
   const response = handleI18nRouting(request)
 
   if (request.headers.get("Accept")?.includes("text/html")) {

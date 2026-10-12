@@ -96,7 +96,7 @@ export function LoginForm() {
               </DialogTitle>
               <DialogDescription className="text-center">
                 {t.rich("Login.emailDialog.success.text", {
-                  email: emailSent,
+                  email: emailSent ?? "",
                   strong: (chunks) => (
                     <strong className="text-primary">{chunks}</strong>
                   ),
