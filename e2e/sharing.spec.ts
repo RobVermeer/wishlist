@@ -1,0 +1,196 @@
+import {
+  test,
+  expect,
+  createUser,
+  createGroup,
+  createWishlist,
+  createItem,
+  emailsTo,
+  prisma,
+  toasts,
+} from "./fixtures"
+import { Page } from "@playwright/test"
+
+const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
+
+const itemCard = (page: Page, title: string) =>
+  page.locator("div.rounded-md").filter({ hasText: title })
+
+test("share your wishlist with a link", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner)
+  const page = await signIn(owner)
+
+  await page.context().grantPermissions(["clipboard-read", "clipboard-write"])
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", { value: undefined })
+  })
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Deel je verlanglijstje" })
+  const link = dialog.getByLabel("Link naar je verlanglijstje")
+  await expect(link).toHaveValue(/\/lijstje\/[\w-]{22}$/)
+
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  await expect(link).toHaveValue(`http://localhost:3100/lijstje/${shareToken}`)
+
+  await dialog.getByRole("button", { name: "Deel de link" }).click()
+  await expect(toasts(page)).toContainText("Link van verlanglijstje gekopieerd")
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    `http://localhost:3100/lijstje/${shareToken}`
+  )
+
+  await page.reload()
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+  await expect(link).toHaveValue(`http://localhost:3100/lijstje/${shareToken}`)
+})
+
+test("only the owner can share a wishlist", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await expect(
+    page.getByRole("button", { name: "Vraag om meer wensen" })
+  ).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Deel dit verlanglijstje" })
+  ).toHaveCount(0)
+})
+
+test("a shared wishlist asks to log in before showing anything", async ({
+  page,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const buyer = await createUser({ firstName: "Bob" })
+  const wishlist = await createWishlist(owner, {
+    description: "Voor mijn verjaardag",
+    shareToken: `token-${owner.id}`,
+  })
+  const secretWish = `Geheime wens ${owner.id}`
+  const boughtWish = `Gekochte wens ${owner.id}`
+  await createItem(wishlist, {
+    title: secretWish,
+    url: `https://example.com/${owner.id}`,
+  })
+  await createItem(wishlist, { title: boughtWish, boughtBy: buyer })
+
+  await page.goto(`/lijstje/token-${owner.id}`)
+
+  await expect(page).toHaveTitle("Olga - Wishlist")
+  await expect(page.getByRole("heading", { name: "Olga" })).toBeVisible()
+  await expect(
+    page.getByText("Olga heeft een verlanglijstje met je gedeeld 🎁")
+  ).toBeVisible()
+  await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
+
+  const html = await page.content()
+  for (const hidden of [
+    secretWish,
+    boughtWish,
+    `example.com/${owner.id}`,
+    buyer.id,
+    buyer.email!,
+    owner.email!,
+  ]) {
+    expect(html).not.toContain(hidden)
+  }
+
+  await page.getByRole("link", { name: "Log in om te bekijken" }).click()
+  await expect(page).toHaveURL(
+    `/login?callbackUrl=${encodeURIComponent(`/lijstje/token-${owner.id}`)}`
+  )
+})
+
+test("log in from a shared wishlist, follow it and check off a wish", async ({
+  page,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner, {
+    shareToken: `token-${owner.id}`,
+  })
+  const item = await createItem(wishlist, { title: "Fiets" })
+  const email = `guest-${Date.now()}@e2e.test`
+
+  await page.goto(`/lijstje/token-${owner.id}`)
+  await page.getByRole("link", { name: "Log in om te bekijken" }).click()
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+  await page.getByRole("dialog").getByLabel("E-mail").fill(email)
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Inloggen" })
+    .click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+  const [loginEmail] = await emailsTo(email)
+  const link = loginEmail.html
+    .match(/href="([^"]*\/api\/auth\/callback\/email[^"]*)"/)?.[1]
+    ?.replaceAll("&amp;", "&")
+  await page.goto(link!)
+
+  await expect(page).toHaveURL(`/lijstje/token-${owner.id}`)
+  await page
+    .getByRole("dialog", { name: "Vul je naam in" })
+    .getByLabel("Voornaam")
+    .fill("Gast")
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: "Opslaan" })
+    .click()
+
+  await expect(page.getByText("Fiets")).toHaveCount(0)
+  await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
+
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+  await itemCard(page, "Fiets").getByRole("button").click()
+  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+
+  const guest = await prisma.user.findUniqueOrThrow({ where: { email } })
+  const followed = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+    include: { followers: true },
+  })
+  expect(followed.followers.map(({ id }) => id)).toEqual([guest.id])
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBe(guest.id)
+})
+
+test("people who can already see a wishlist go straight to it", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, {
+    groups: [group],
+    shareToken: `token-${owner.id}`,
+  })
+
+  for (const user of [owner, member]) {
+    const page = await signIn(user)
+    await page.goto(`/lijstje/token-${owner.id}`)
+    await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+  }
+})
+
+test("unknown or removed shared wishlists are not found", async ({ page }) => {
+  const owner = await createUser()
+  await createWishlist(owner, { shareToken: `removed-${owner.id}` })
+  await prisma.wishlist.updateMany({
+    where: { shareToken: `removed-${owner.id}` },
+    data: { removed: true },
+  })
+
+  for (const token of ["does-not-exist", `removed-${owner.id}`]) {
+    await page.goto(`/lijstje/${token}`)
+    await expect(page.getByText(notFound)).toBeVisible()
+  }
+})

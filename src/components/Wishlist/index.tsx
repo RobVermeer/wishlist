@@ -16,6 +16,8 @@ import { RemindButton } from "../RemindButton"
 import { ItemCard } from "../ItemCard"
 import Link from "next/link"
 import { CategoryList } from "../CategoryList"
+import { ShareWishlist } from "@/components/ShareWishlist"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 
 interface Props {
@@ -108,7 +110,13 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}
 
       {wishlist.isOwnList && (
-        <NewItem id={wishlist.id} categories={categoryTitles} />
+        <>
+          <NewItem id={wishlist.id} categories={categoryTitles} />
+          <ShareWishlist
+            wishlistId={wishlist.id}
+            name={getWishlistName(wishlist)}
+          />
+        </>
       )}
 
       {canBeReminded && !wishlist.isOwnList && (

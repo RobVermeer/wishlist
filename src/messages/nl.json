@@ -410,5 +410,27 @@
       "title": "Klaar om te beginnen? 🎁",
       "button": "Maak je verlanglijstje"
     }
+  },
+  "ShareWishlist": {
+    "button": "Deel dit verlanglijstje",
+    "title": "Deel je verlanglijstje",
+    "text": "Iedereen met deze link kan je verlanglijstje bekijken nadat ze zijn ingelogd en het volgen. Wat er al gekocht is, zie je zelf nooit.",
+    "link": "Link naar je verlanglijstje",
+    "share": "Deel de link",
+    "shareText": "Bekijk het verlanglijstje van {name} op Wishlist.",
+    "copied": "Link van verlanglijstje gekopieerd"
+  },
+  "SharedWishlist": {
+    "intro": "{name} heeft een verlanglijstje met je gedeeld 🎁",
+    "loggedOut": {
+      "title": "Log in om het te bekijken",
+      "text": "Na het inloggen zie je de wensen en wat er al gekocht is, zodat niemand iets dubbel geeft.",
+      "button": "Log in om te bekijken"
+    },
+    "follow": {
+      "title": "Volg dit verlanglijstje",
+      "text": "Volg het verlanglijstje om de wensen te zien en af te strepen. Je vindt het daarna terug op je overzicht.",
+      "button": "Volg dit verlanglijstje"
+    }
   }
 }
