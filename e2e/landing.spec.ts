@@ -22,7 +22,7 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   await expect(example).toContainText("Sanne ziet dat niet")
 
   for (const feature of [
-    "Samen in een groep",
+    "Deel met wie je wilt",
     "Stiekem afstrepen",
     "Overzichtelijk",
     "Ook voor een ander",
@@ -47,7 +47,7 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   ).toHaveText([
     /Log in met Google of je e-mailadres/,
     /Maak je verlanglijstje/,
-    /Nodig je familie of vrienden uit/,
+    /Deel de link of nodig je familie en vrienden uit/,
   ])
 })
 

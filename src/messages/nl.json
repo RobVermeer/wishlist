@@ -372,8 +372,8 @@
     "features": {
       "title": "Wat kun je allemaal?",
       "groups": {
-        "title": "Samen in een groep",
-        "text": "Maak een groep voor je familie, vrienden of collega's en zie elkaars verlanglijstjes."
+        "title": "Deel met wie je wilt",
+        "text": "Stuur een link naar je verlanglijstje, of maak een groep voor je familie, vrienden of collega's."
       },
       "secret": {
         "title": "Stiekem afstrepen",
@@ -407,7 +407,7 @@
       "title": "In drie stappen klaar",
       "login": "Log in met Google of je e-mailadres",
       "wishlist": "Maak je verlanglijstje en zet je wensen erop",
-      "group": "Nodig je familie of vrienden uit in een groep"
+      "group": "Deel de link of nodig je familie en vrienden uit in een groep"
     },
     "cta": {
       "title": "Klaar om te beginnen? 🎁",
