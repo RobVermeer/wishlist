@@ -12,10 +12,12 @@ import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
 interface Props {
-  params: { locale: string }
+  params: Promise<{ locale: string }>
 }
 
-export const generateMetadata = async ({ params: { locale } }: Props) => {
+export const generateMetadata = async ({ params }: Props) => {
+  const { locale } = await params
+
   const t = await getTranslations({ locale, namespace: "ProfileGroups" })
 
   return {

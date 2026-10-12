@@ -16,7 +16,8 @@ import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const group = await getGroupById(params.groupId)
+  const { groupId } = await params
+  const group = await getGroupById(groupId)
 
   if (!group) return {}
 
@@ -26,11 +27,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 interface Props {
-  params: { groupId: string }
+  params: Promise<{ groupId: string }>
 }
 
 export default async function GroupPage({ params }: Props) {
-  const { groupId } = params
+  const { groupId } = await params
   const session = await getServerSession(authOptions)
 
   if (!session) {

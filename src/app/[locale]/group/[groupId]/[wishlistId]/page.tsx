@@ -7,11 +7,11 @@ import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 
 interface Props {
-  params: { wishlistId: string; groupId: string }
+  params: Promise<{ wishlistId: string; groupId: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { groupId, wishlistId } = params
+  const { groupId, wishlistId } = await params
 
   const wishlist = await getWishlistById(wishlistId)
   const group = await getGroupById(groupId)
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function GroupWishlistPage({ params }: Props) {
-  const { wishlistId, groupId } = params
+  const { wishlistId, groupId } = await params
   const session = await getServerSession(authOptions)
 
   if (!session) {
