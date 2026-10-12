@@ -4,10 +4,8 @@ import { NewGroup } from "@/components/NewGroup"
 import { YourGroupCard } from "@/components/YourGroupCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { pickMessages } from "@/utils/pick"
 import { getServerSession } from "next-auth"
-import { NextIntlClientProvider } from "next-intl"
-import { getMessages, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
@@ -34,7 +32,6 @@ export default async function ProfileGroupPage() {
 
   const groups = await getGroupsForUser()
   const t = await getTranslations("ProfileGroups")
-  const messages = await getMessages()
 
   return (
     <List>
@@ -48,11 +45,7 @@ export default async function ProfileGroupPage() {
 
       <Separator className="my-3" />
 
-      <NextIntlClientProvider
-        messages={pickMessages(messages, ["Common", "NewGroup"])}
-      >
-        <NewGroup />
-      </NextIntlClientProvider>
+      <NewGroup />
     </List>
   )
 }

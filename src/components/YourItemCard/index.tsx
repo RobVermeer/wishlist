@@ -2,8 +2,6 @@ import { Card } from "@/components/Card"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { InfinityIcon, Link } from "lucide-react"
 import { EditItem } from "@/components/EditItem"
-import { NextIntlClientProvider, useMessages } from "next-intl"
-import { pickMessages } from "@/utils/pick"
 
 interface Props {
   item: NonNullable<
@@ -13,7 +11,6 @@ interface Props {
 
 export const YourItemCard = ({ item }: Props) => {
   const { title, url, unlimited } = item
-  const messages = useMessages()
 
   return (
     <Card className="flex items-center pr-24">
@@ -26,9 +23,7 @@ export const YourItemCard = ({ item }: Props) => {
 
       {!url && title}
 
-      <NextIntlClientProvider messages={pickMessages(messages, "EditItem")}>
-        <EditItem item={item} />
-      </NextIntlClientProvider>
+      <EditItem item={item} />
     </Card>
   )
 }

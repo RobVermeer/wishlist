@@ -5,10 +5,8 @@ import { YourWishlistCard } from "@/components/YourWishlistCard"
 import { Separator } from "@/components/ui/separator"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
-import { pickMessages } from "@/utils/pick"
 import { getServerSession } from "next-auth"
-import { NextIntlClientProvider } from "next-intl"
-import { getMessages, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
 
@@ -36,7 +34,6 @@ export default async function ProfilePage() {
   const wishlists = await getWishlistsForUser()
   const groups = await getGroupsForUser()
   const t = await getTranslations("ProfileWishlists")
-  const messages = await getMessages()
 
   return (
     <List>
@@ -54,11 +51,7 @@ export default async function ProfilePage() {
 
       <Separator className="my-3" />
 
-      <NextIntlClientProvider
-        messages={pickMessages(messages, ["NewWishlist", "Common"])}
-      >
-        <NewWishlist groups={groups} />
-      </NextIntlClientProvider>
+      <NewWishlist groups={groups} />
     </List>
   )
 }

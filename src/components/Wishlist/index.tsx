@@ -7,9 +7,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById";
 import { NewItem } from "@/components/NewItem";
 import { notFound } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
-import { getMessages, getTranslations } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
-import { pickMessages } from "@/utils/pick";
+import { getTranslations } from "next-intl/server";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getInitials } from "@/utils/string";
 import { getGroupById } from "@/lib/groups/getGroupById";
@@ -27,7 +25,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const wishlist = await getWishlistById(id);
   const group = groupId ? await getGroupById(groupId) : null;
   const t = await getTranslations("GroupWishlist");
-  const messages = await getMessages();
 
   if (!wishlist) {
     notFound();
@@ -82,15 +79,11 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       {(wishlist.isOwnList || canBeReminded) && <Separator className="my-3" />}
 
       {wishlist.isOwnList && (
-        <NextIntlClientProvider messages={pickMessages(messages, "NewItem")}>
-          <NewItem id={wishlist.id} />
-        </NextIntlClientProvider>
+        <NewItem id={wishlist.id} />
       )}
 
       {canBeReminded && !wishlist.isOwnList && (
-        <NextIntlClientProvider messages={pickMessages(messages, "Remind")}>
-          <RemindButton wishlist={wishlist} />
-        </NextIntlClientProvider>
+        <RemindButton wishlist={wishlist} />
       )}
     </List>
   );
