@@ -27,7 +27,7 @@ export default async function WishlistPage({ params }: Props) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    redirect(`/login?callbackUrl=${encodeURIComponent(`/whislist/${id}`)}`)
+    redirect(`/login?callbackUrl=${encodeURIComponent(`/wishlist/${id}`)}`)
   }
 
   return <Wishlist id={id} />
