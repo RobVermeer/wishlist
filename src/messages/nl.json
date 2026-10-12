@@ -353,5 +353,62 @@
   },
   "Metadata": {
     "description": "Deel je verlanglijstjes met familie en vrienden, en streep stiekem af wat je gaat kopen."
+  },
+  "Landing": {
+    "example": {
+      "title": "Zo werkt het",
+      "owner": "Sanne",
+      "items": {
+        "bike": "Fiets",
+        "books": "Boeken",
+        "lego": "Lego kasteel",
+        "socks": "Warme sokken"
+      },
+      "caption": "Iemand uit de groep heeft het Lego kasteel afgestreept. Sanne ziet dat niet, dus de verrassing blijft 🤫"
+    },
+    "features": {
+      "title": "Wat kun je allemaal?",
+      "groups": {
+        "title": "Samen in een groep",
+        "text": "Maak een groep voor je familie, vrienden of collega's en zie elkaars verlanglijstjes."
+      },
+      "secret": {
+        "title": "Stiekem afstrepen",
+        "text": "Streep af wat je gaat kopen. De groep ziet het, degene die het wenst niet. Zo krijgt niemand iets dubbel."
+      },
+      "categories": {
+        "title": "Overzichtelijk",
+        "text": "Zet je wensen in categorieën en sleep ze in de volgorde die jij wilt."
+      },
+      "managed": {
+        "title": "Ook voor een ander",
+        "text": "Beheer naast je eigen lijstje ook een verlanglijstje voor je kinderen of de baby."
+      },
+      "unlimited": {
+        "title": "Onbeperkte wensen",
+        "text": "Boeken of een cadeaubon? Zulke wensen blijven open, hoe vaak ze ook gekocht worden."
+      },
+      "remind": {
+        "title": "Vraag om meer wensen",
+        "text": "Is een lijstje bijna leeg? Met één klik vraag je om meer wensen."
+      }
+    },
+    "occasions": {
+      "title": "Voor elke gelegenheid",
+      "sinterklaas": "Sinterklaas",
+      "christmas": "Kerst",
+      "birthday": "Verjaardag",
+      "baby": "Baby"
+    },
+    "steps": {
+      "title": "In drie stappen klaar",
+      "login": "Log in met Google of je e-mailadres",
+      "wishlist": "Maak je verlanglijstje en zet je wensen erop",
+      "group": "Nodig je familie of vrienden uit in een groep"
+    },
+    "cta": {
+      "title": "Klaar om te beginnen? 🎁",
+      "button": "Maak je verlanglijstje"
+    }
   }
 }
