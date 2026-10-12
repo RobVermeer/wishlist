@@ -8,7 +8,7 @@ type Level = "error" | "debug" | "info" | "warn" | "fatal"
 export async function trackIssue(
   message: string,
   level: Level = "error",
-  extra?: Record<string, any>
+  extra?: object
 ) {
   if (!url || !secret) return
 

@@ -12,7 +12,7 @@ import {
 import { useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Loader2, UserPlus2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -40,16 +40,10 @@ interface Props {
 }
 
 export const UserInfoDialog = ({ session }: Props) => {
-  const [open, setOpen] = useState(false)
   const [sent, setSent] = useState(false)
   const { toast } = useToast()
   const t = useTranslations()
-
-  useEffect(() => {
-    if (!sent && !open && !session.user.firstName) {
-      setOpen(true)
-    }
-  }, [sent, open, session.user.firstName])
+  const open = !sent && !session.user.firstName
 
   async function handleSubmit(formData: FormData) {
     const firstName = formData.get("firstName")?.toString()
@@ -57,13 +51,12 @@ export const UserInfoDialog = ({ session }: Props) => {
     if (!firstName) return
 
     await updateFirstNameById(session.user.id, firstName)
-    setOpen(false)
     setSent(true)
     toast({ title: t("UserInfo.toast") })
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("UserInfo.title")}</DialogTitle>
