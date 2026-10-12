@@ -7,7 +7,7 @@ import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { wishlistItemSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
-import { z } from "zod"
+import * as z from "zod"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 
