@@ -8,6 +8,7 @@ import { getInitials } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions)
@@ -15,10 +16,11 @@ export default async function AdminUsersPage() {
   if (!session) redirect("/login")
 
   const users = await getUsers()
+  const t = await getTranslations("Admin")
 
   return (
     <List>
-      <ListTitle>Users</ListTitle>
+      <ListTitle>{t("users.title")}</ListTitle>
 
       {users.map(user => (
         <Card key={user.id} className="flex gap-2 items-center">

@@ -318,5 +318,36 @@
     "title": "Weet je het zeker?",
     "cancel": "Toch niet",
     "confirm": "Verwijder"
+  },
+  "Admin": {
+    "title": "Admin",
+    "confirm": "Weet je het zeker?",
+    "tabs": {
+      "dashboard": "Overzicht",
+      "groups": "Groepen",
+      "users": "Gebruikers"
+    },
+    "stats": {
+      "users": "Gebruikers",
+      "wishlists": "Verlanglijstjes",
+      "groups": "Groepen",
+      "items": "Wensen"
+    },
+    "groups": {
+      "title": "Groepen",
+      "view": "Bekijk",
+      "remove": "Verwijder"
+    },
+    "group": {
+      "restoreText": "Is deze groep per ongeluk verwijderd?",
+      "restore": "Zet groep terug",
+      "drawText": "Kies wie er meedoet aan de loting.",
+      "draw": "Trek lootjes",
+      "drawn": "De lootjes zijn getrokken"
+    },
+    "users": {
+      "title": "Gebruikers",
+      "remove": "Verwijder"
+    }
   }
 }

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth"
 import { ReactNode } from "react"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 
 interface Props {
   children: ReactNode
@@ -16,9 +17,11 @@ export default async function ProfileLayout({ children }: Props) {
     redirect("/")
   }
 
+  const t = await getTranslations("Admin")
+
   return (
     <>
-      <ListTitle>Admin</ListTitle>
+      <ListTitle>{t("title")}</ListTitle>
 
       <AdminTabs />
 

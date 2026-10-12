@@ -8,6 +8,7 @@ import Link from "next/link"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
+import { getTranslations } from "next-intl/server"
 
 export default async function AdminUsersPage() {
   const session = await getServerSession(authOptions)
@@ -15,10 +16,11 @@ export default async function AdminUsersPage() {
   if (!session) redirect("/login")
 
   const groups = await getGroups()
+  const t = await getTranslations("Admin")
 
   return (
     <List>
-      <ListTitle>Groups</ListTitle>
+      <ListTitle>{t("groups.title")}</ListTitle>
 
       {groups.map(group => (
         <Card key={group.id} className="flex gap-2 items-center">
@@ -32,7 +34,7 @@ export default async function AdminUsersPage() {
 
           <div className="absolute right-2 flex gap-2">
             <Button asChild variant="outline" size="sm">
-              <Link href={`/admin/groups/${group.id}`}>Edit</Link>
+              <Link href={`/admin/groups/${group.id}`}>{t("groups.view")}</Link>
             </Button>
 
             <RemoveGroup id={group.id} />
