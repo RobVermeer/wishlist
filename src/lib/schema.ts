@@ -33,7 +33,9 @@ export const wishlistItemSchema = z.object({
     .min(2, { error: "Je wens moet minimaal uit 2 tekens bestaan" })
     .max(100, { error: "Je wens mag maximaal uit 100 tekens bestaan" }),
   unlimited: z.boolean(),
-  url: z.url({ error: "Vul een geldige URL in" }).optional(),
+  url: z
+    .url({ protocol: /^https?$/, error: "Vul een geldige URL in" })
+    .optional(),
   category: z
     .string()
     .trim()

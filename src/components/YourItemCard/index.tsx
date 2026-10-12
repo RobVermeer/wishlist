@@ -17,7 +17,7 @@ export const YourItemCard = ({ item, categories }: Props) => {
     <Card className="flex items-center pr-24">
       {unlimited && <InfinityIcon className="mr-1" />}
       {url && (
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noopener noreferrer">
           <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
         </a>
       )}

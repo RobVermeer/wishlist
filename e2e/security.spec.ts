@@ -112,3 +112,28 @@ test("wishlists can only be added to groups you are a member of", async ({
   await expect(toasts(page)).toContainText("Groep niet gevonden")
   expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
 })
+
+test("wish links must be http or https", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Verrassing")
+
+  for (const url of [
+    "javascript:alert(document.cookie)",
+    "data:text/html,hoi",
+  ]) {
+    await dialog.getByLabel("Linkje").fill(url)
+    await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+    await expect(toasts(page)).toContainText("Vul een geldige URL in")
+  }
+
+  expect(
+    await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
+  ).toBe(0)
+})
