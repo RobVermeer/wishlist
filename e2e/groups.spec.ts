@@ -140,6 +140,12 @@ test("owner can remove a group", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByRole("button", { name: "Verwijder" }).click()
 
+  const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
+  await expect(confirm).toContainText(
+    "De groep wordt voor alle leden verwijderd."
+  )
+  await confirm.getByRole("button", { name: "Verwijder" }).click()
+
   await expect(dialog).toBeHidden()
   await expect(groupCard(page, "Weg ermee")).toBeHidden()
   await expect(page.getByText("Je volgt nog geen groepen.")).toBeVisible()

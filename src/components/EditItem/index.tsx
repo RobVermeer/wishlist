@@ -12,24 +12,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
+import { RemoveButton } from "@/components/RemoveButton"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
 import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash } from "lucide-react"
+import { Pencil, Save } from "lucide-react"
 import { useTranslations } from "next-intl"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Checkbox } from "../ui/checkbox"
 
 interface Props {
@@ -123,36 +113,10 @@ export const EditItem = ({ item, categories }: Props) => {
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="w-full" type="submit" variant="outline">
-                  <Trash size="16" className="mr-2" />{" "}
-                  {t("EditItem.remove.button")}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {t("EditItem.remove.title")}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t("EditItem.remove.description")}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>
-                    {t("EditItem.remove.cancel")}
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    className="flex gap-2"
-                    onClick={handleRemove}
-                  >
-                    <Trash size="16" />
-                    {t("EditItem.remove.confirm")}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <RemoveButton
+              description={t("EditItem.remove.description")}
+              onConfirm={handleRemove}
+            />
           </div>
           <Button type="submit" form={`change-${id}`}>
             <Save size="16" className="mr-2" /> {t("EditItem.form.save")}

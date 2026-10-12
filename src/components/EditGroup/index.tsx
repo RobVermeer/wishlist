@@ -15,7 +15,8 @@ import { deleteGroupById } from "@/lib/groups/deleteGroupById"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash } from "lucide-react"
+import { RemoveButton } from "@/components/RemoveButton"
+import { Pencil, Save } from "lucide-react"
 import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import {
   Select,
@@ -112,11 +113,10 @@ export const EditGroup = ({ group }: Props) => {
           </Select>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
-          <form action={handleRemove}>
-            <Button className="w-full" type="submit" variant="outline">
-              <Trash size="16" className="mr-2" /> {t("EditGroup.remove")}
-            </Button>
-          </form>
+          <RemoveButton
+            description={t("EditGroup.remove.description")}
+            onConfirm={handleRemove}
+          />
           <Button type="submit" form={`change-${id}`}>
             <Save size="16" className="mr-2" /> {t("EditGroup.form.save")}
           </Button>

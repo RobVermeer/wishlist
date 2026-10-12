@@ -16,7 +16,8 @@ import type { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
-import { Pencil, Save, Trash } from "lucide-react"
+import { RemoveButton } from "@/components/RemoveButton"
+import { Pencil, Save } from "lucide-react"
 import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
@@ -181,11 +182,10 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           </Select>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
-          <form action={handleRemove}>
-            <Button className="w-full" type="submit" variant="outline">
-              <Trash size="16" className="mr-2" /> {t("EditWishlist.remove")}
-            </Button>
-          </form>
+          <RemoveButton
+            description={t("EditWishlist.remove.description")}
+            onConfirm={handleRemove}
+          />
           <Button type="submit" form={`change-${id}`}>
             <Save size="16" className="mr-2" /> {t("EditWishlist.form.save")}
           </Button>

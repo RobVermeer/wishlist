@@ -166,7 +166,7 @@ test("removing a wish asks for confirmation", async ({ signIn }) => {
   const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
 
   await dialog.getByRole("button", { name: "Verwijder" }).click()
-  await expect(confirm).toContainText("Verwijderen van je wens is permanent.")
+  await expect(confirm).toContainText("Je wens wordt definitief verwijderd.")
   await confirm.getByRole("button", { name: "Toch niet" }).click()
   await expect(confirm).toBeHidden()
   expect(
