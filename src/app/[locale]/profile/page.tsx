@@ -12,10 +12,10 @@ interface Props {
 export const generateMetadata = async ({ params }: Props) => {
   const { locale } = await params
 
-  const t = await getTranslations({ locale, namespace: "ProfileWishlists" })
+  const t = await getTranslations({ locale, namespace: "Profile" })
 
   return {
-    title: t("title"),
+    title: t("metaTitle"),
   }
 }
 
