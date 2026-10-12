@@ -1,10 +1,4 @@
-import { User, Wishlist, WishlistItem } from "@/generated/prisma/client"
 import { userProperties } from "@/lib/users/publicProperties"
-
-export interface WishlistItemProperties extends WishlistItem {
-  wishlist: Wishlist
-  boughtBy: User
-}
 
 export const wishlistItemProperties = {
   id: true,

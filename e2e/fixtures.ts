@@ -11,7 +11,7 @@ export const prisma = new PrismaClient({
   ),
 })
 
-export type TestUser = User & { sessionToken: string }
+type TestUser = User & { sessionToken: string }
 
 const uniqueId = () => randomUUID().slice(0, 8)
 
@@ -153,7 +153,7 @@ export async function createItem(
   })
 }
 
-export type SentEmail = {
+type SentEmail = {
   id: string
   to: string[]
   subject: string
