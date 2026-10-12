@@ -31,7 +31,7 @@ export const sendGroupDraw = async ({
     const forName = (person2.firstName ?? person2.name)!
     const t = await getTranslations("EmailDraw")
 
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Wishlist <no-reply@ru-coding.nl>",
       to: [person1.email!],
       subject: t("subject", {
@@ -45,6 +45,8 @@ export const sendGroupDraw = async ({
         groupName,
       }),
     })
+
+    if (error) throw error
   } catch (error) {
     trackIssue("Email group draw error", "error", {
       error,
@@ -67,12 +69,14 @@ export const sendReminder = async ({ toUser, userName }: SendReminder) => {
   try {
     const t = await getTranslations("EmailReminder")
 
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Wishlist <no-reply@ru-coding.nl>",
       to: [toUser.email!],
       subject: t("subject"),
       react: await RemindUserEmail({ userName }),
     })
+
+    if (error) throw error
 
     trackIssue("Email reminder sent", "info", { toUser, userName })
   } catch (error) {
