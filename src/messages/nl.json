@@ -61,7 +61,6 @@
   },
   "Menu": {
     "dashboard": "Overzicht",
-    "profile": "Mijn profiel",
     "wishlists": "Mijn verlanglijstjes",
     "groups": "Mijn groepen",
     "boughtPresents": "Mijn gekochte cadeaus",
@@ -84,12 +83,6 @@
         "title": "Check je inbox 📨",
         "text": "Druk op de link in de e-mail die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
       }
-    }
-  },
-  "Wishlist": {
-    "empty": {
-      "title": "Je hebt nog geen wensen!",
-      "text": "Maak er snel wat aan! 😎"
     }
   },
   "Group": {
