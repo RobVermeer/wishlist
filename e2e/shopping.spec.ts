@@ -233,3 +233,32 @@ test("bought presents page lists what you bought for whom", async ({
   )
   await expect(page.getByText("Knuffel")).toBeHidden()
 })
+
+test("bought presents page leaves out removed wishes and wishlists", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  const other = await createUser({ firstName: "Piet" })
+  const removedList = await createWishlist(other, { title: "Oud lijstje" })
+  await createItem(wishlist, { title: "Sokken", boughtBy: shopper })
+  const removedItem = await createItem(wishlist, {
+    title: "Weggehaald",
+    boughtBy: shopper,
+  })
+  await createItem(removedList, { title: "Van oud lijstje", boughtBy: shopper })
+  await prisma.wishlistItem.update({
+    where: { id: removedItem.id },
+    data: { removed: true },
+  })
+  await prisma.wishlist.update({
+    where: { id: removedList.id },
+    data: { removed: true },
+  })
+  const page = await signIn(shopper)
+
+  await page.goto("/profile/bought")
+
+  await expect(itemCard(page, "Sokken")).toBeVisible()
+  await expect(page.getByText("Weggehaald")).toBeHidden()
+  await expect(page.getByText("Van oud lijstje")).toBeHidden()
+})
