@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { getErrorMessage, shuffle } from "@/lib/utils"
-import { User } from "@prisma/client"
+import { User } from "@/generated/prisma/client"
 import { sendGroupDraw } from "@/lib/email"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"

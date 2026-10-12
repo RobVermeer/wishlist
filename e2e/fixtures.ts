@@ -1,9 +1,15 @@
 import { test as base, expect, Page } from "@playwright/test"
-import { PrismaClient, User } from "@prisma/client"
+import { PrismaClient, User } from "../src/generated/prisma/client"
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
 import { randomUUID } from "node:crypto"
-import { adminUserId, baseURL, mailURL } from "./support/env"
+import { adminUserId, baseURL, mailURL, testEnv } from "./support/env"
 
-export const prisma = new PrismaClient()
+export const prisma = new PrismaClient({
+  adapter: new PrismaBetterSqlite3(
+    { url: testEnv.DATABASE_URL, fileMustExist: true },
+    { timestampFormat: "unixepoch-ms" }
+  ),
+})
 
 export type TestUser = User & { sessionToken: string }
 
