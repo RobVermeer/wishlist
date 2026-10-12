@@ -211,7 +211,9 @@ test("visiting a group you don't follow lets you follow it", async ({
   await page.getByRole("button", { name: "Volg de groep" }).click()
 
   await expect(page.getByRole("heading", { name: "Uitnodiging" })).toBeVisible()
-  await expect(page.getByRole("link", { name: "Olga" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Olga", exact: true })
+  ).toBeVisible()
 
   await page.goto("/")
   await expect(page.getByRole("link", { name: "Uitnodiging" })).toBeVisible()
@@ -321,4 +323,80 @@ test("cancelling the share sheet doesn't copy the link", async ({ signIn }) => {
     await page.evaluate(() => (window as unknown as { copied: boolean }).copied)
   ).toBe(false)
   await expect(toasts(page)).toHaveText("")
+})
+
+test("a group with only someone else's wishlist shows it right away", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const guest = await createUser()
+  const group = await createGroup(owner, {
+    title: "Verjaardag Olga",
+    members: [guest],
+  })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const item = await prisma.wishlistItem.create({
+    data: { title: "Fiets", createdAt: new Date(), wishlistId: wishlist.id },
+  })
+  const page = await signIn(guest)
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(
+    page.getByRole("heading", { name: "Verjaardag Olga" })
+  ).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Olga", exact: true })
+  ).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Nodig iemand uit voor de groep" })
+  ).toBeVisible()
+
+  await page
+    .locator("div.rounded-md")
+    .filter({ hasText: "Fiets" })
+    .getByRole("button")
+    .click()
+  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+  await expect
+    .poll(
+      async () =>
+        (
+          await prisma.wishlistItem.findUniqueOrThrow({
+            where: { id: item.id },
+          })
+        ).userId
+    )
+    .toBe(guest.id)
+})
+
+test("a group shows cards when it has more lists or only your own", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const ownGroup = await createGroup(owner, { title: "Eigen lijst" })
+  await createWishlist(owner, { groups: [ownGroup] })
+  const sharedGroup = await createGroup(owner, {
+    title: "Twee lijsten",
+    members: [member],
+  })
+  await createWishlist(owner, { groups: [sharedGroup] })
+  await createWishlist(member, { groups: [sharedGroup] })
+
+  const ownerPage = await signIn(owner)
+  await ownerPage.goto(`/group/${ownGroup.id}`)
+  await expect(
+    ownerPage.getByRole("link", { name: "Mijn lijstje" })
+  ).toBeVisible()
+  await expect(
+    ownerPage.getByRole("button", { name: "Voeg een wens toe" })
+  ).toHaveCount(0)
+
+  const memberPage = await signIn(member)
+  await memberPage.goto(`/group/${sharedGroup.id}`)
+  await expect(memberPage.getByRole("link", { name: "Olga" })).toBeVisible()
+  await expect(
+    memberPage.getByRole("link", { name: "Mijn lijstje" })
+  ).toBeVisible()
 })

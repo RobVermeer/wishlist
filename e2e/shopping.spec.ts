@@ -32,6 +32,7 @@ async function setup() {
 
 test("view a wishlist of a group member", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
+  await createWishlist(shopper, { groups: [group] })
   await createItem(wishlist, { title: "Sokken" })
   await createItem(wishlist, {
     title: "Koptelefoon",
