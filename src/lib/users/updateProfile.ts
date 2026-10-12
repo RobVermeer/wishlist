@@ -2,6 +2,7 @@
 
 import { mkdir } from "fs/promises"
 import { join } from "path"
+import { randomUUID } from "crypto"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
@@ -39,8 +40,8 @@ export async function updateProfile(data: FormData) {
       const imagePath = join(
         "./public/avatars",
         session.user.id,
-        `${performance.now()}-${avatar.name}`
-      ) as `${string}.${string}`
+        `${randomUUID()}.png`
+      ) as `${string}.png`
 
       const image = await Jimp.read(buffer)
       await image.cover({ w: 96, h: 96 }).write(imagePath)

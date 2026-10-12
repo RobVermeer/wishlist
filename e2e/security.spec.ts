@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs"
+import { rm } from "node:fs/promises"
 import {
   test,
   expect,
@@ -158,4 +160,38 @@ test("login only redirects to paths within the app", async ({ signIn }) => {
 
   await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile")}`)
   await expect(page).toHaveURL("/profile")
+})
+
+test("avatar file names can't escape the avatar folder", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+  const escaped = ".next/standalone/public/avatars/evil.png"
+
+  try {
+    await page.goto("/profile")
+    await page.getByLabel("Profielfoto").setInputFiles({
+      name: "../../../evil.png",
+      mimeType: "image/png",
+      buffer: Buffer.from(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+        "base64"
+      ),
+    })
+    await page.getByRole("button", { name: "Opslaan" }).click()
+    await expect(toasts(page)).toContainText("Je gegevens zijn opgeslagen")
+
+    const { image } = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+    })
+    expect(image).toMatch(
+      new RegExp(`/avatars/${user.id}/[0-9a-f-]{36}\\.png$`)
+    )
+    expect(existsSync(escaped)).toBe(false)
+  } finally {
+    await rm(escaped, { force: true })
+    await rm(`.next/standalone/public/avatars/${user.id}`, {
+      recursive: true,
+      force: true,
+    })
+  }
 })

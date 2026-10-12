@@ -77,9 +77,7 @@ test("upload a profile picture", async ({ signIn }) => {
       where: { id: user.id },
     })
     expect(image).toMatch(
-      new RegExp(
-        `^${testEnv.BASE_URL}/avatars/${user.id}/[\\d.]+-avatar\\.png$`
-      )
+      new RegExp(`^${testEnv.BASE_URL}/avatars/${user.id}/[0-9a-f-]{36}\\.png$`)
     )
   } finally {
     await rm(`.next/standalone/public/avatars/${user.id}`, {
