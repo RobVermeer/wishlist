@@ -25,7 +25,7 @@ export const createWishlistForUser = async (formData: FormData) => {
       name: formData.get("name")?.toString() || undefined,
       description: formData.get("description")?.toString() || undefined,
       theme: formData.get("theme")?.toString() || undefined,
-      groups: formData.getAll("groups").map((group) => group.toString()),
+      groups: formData.getAll("groups").map(group => group.toString()),
     })
 
     await prisma.wishlist.create({
@@ -34,7 +34,7 @@ export const createWishlistForUser = async (formData: FormData) => {
         title: data.name || null,
         description: data.description || null,
         theme: data.theme || null,
-        groups: { connect: data.groups?.map((id) => ({ id })) },
+        groups: { connect: data.groups?.map(id => ({ id })) },
         createdAt: new Date(),
         userId,
       },
@@ -49,7 +49,7 @@ export const createWishlistForUser = async (formData: FormData) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map((issue) => issue.message),
+        errors: error.issues.map(issue => issue.message),
       }
     }
 

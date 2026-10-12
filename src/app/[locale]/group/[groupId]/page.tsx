@@ -58,14 +58,14 @@ export default async function GroupPage({ params }: Props) {
     <List>
       <ListTitle>{group.title}</ListTitle>
 
-      {group.wishlist.map((wishlist) => (
+      {group.wishlist.map(wishlist => (
         <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
       ))}
 
       {group.wishlist.length === 0 && (
         <EmptyState title={t("empty.title")}>
           {t.rich("empty.text", {
-            profile: (chunks) => (
+            profile: chunks => (
               <Link href="/profile/wishlists" className="text-primary">
                 {chunks}
               </Link>

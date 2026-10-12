@@ -8,7 +8,7 @@ export default function NotFound() {
   return (
     <EmptyState title={t("empty.title")}>
       {t.rich("empty.text", {
-        dashboard: (chunks) => (
+        dashboard: chunks => (
           <Link href="/" className="text-primary">
             {chunks}
           </Link>

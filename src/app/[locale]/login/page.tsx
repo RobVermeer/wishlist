@@ -18,7 +18,5 @@ export default async function Login({ searchParams }: Props) {
     redirect(decodeURIComponent(redirectTo))
   }
 
-  return (
-    <LoginForm />
-  )
+  return <LoginForm />
 }

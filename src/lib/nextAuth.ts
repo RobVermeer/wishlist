@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      profile: (profile) => ({
+      profile: profile => ({
         id: profile.sub,
         name: profile.name,
         firstName: profile.given_name,

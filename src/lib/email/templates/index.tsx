@@ -44,7 +44,7 @@ export const DrawUserEmail = async ({
 
           <Text style={title}>
             {t.rich("title", {
-              strong: (chunks) => <strong>{chunks}</strong>,
+              strong: chunks => <strong>{chunks}</strong>,
               name: userName,
             })}
           </Text>
@@ -52,20 +52,20 @@ export const DrawUserEmail = async ({
           <Section style={section}>
             <Text style={text}>
               {t.rich("hello", {
-                strong: (chunks) => <strong>{chunks}</strong>,
+                strong: chunks => <strong>{chunks}</strong>,
                 name: userName,
               })}
             </Text>
             <Text style={text}>
               {t.rich("text1", {
-                strong: (chunks) => <strong>{chunks}</strong>,
+                strong: chunks => <strong>{chunks}</strong>,
                 group: groupName,
               })}
             </Text>
             <Text style={text}>{t("text2")}</Text>
             <Text style={text}>
               {t.rich("text3", {
-                strong: (chunks) => <strong>{chunks}</strong>,
+                strong: chunks => <strong>{chunks}</strong>,
                 name: forName,
               })}
             </Text>
@@ -76,7 +76,7 @@ export const DrawUserEmail = async ({
           </Section>
           <Text style={links}>
             {t.rich("goodbye", {
-              strong: (chunks) => <strong>{chunks}</strong>,
+              strong: chunks => <strong>{chunks}</strong>,
             })}
           </Text>
 
@@ -113,7 +113,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
 
           <Text style={title}>
             {t.rich("title", {
-              strong: (chunks) => <strong>{chunks}</strong>,
+              strong: chunks => <strong>{chunks}</strong>,
               name: userName,
             })}
           </Text>
@@ -121,7 +121,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
           <Section style={section}>
             <Text style={text}>
               {t.rich("hello", {
-                strong: (chunks) => <strong>{chunks}</strong>,
+                strong: chunks => <strong>{chunks}</strong>,
                 name: userName,
               })}
             </Text>

@@ -28,7 +28,7 @@ export const getGroupsForUser = cache(async () => {
     },
   })
 
-  return groups.map((group) => ({
+  return groups.map(group => ({
     ...group,
     isOwnGroup: group.createdBy.id === userId,
   }))

@@ -40,7 +40,7 @@ export default async function ProfileBoughtPage() {
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
-      {boughtWishlistItems.map((item) => (
+      {boughtWishlistItems.map(item => (
         <Card key={item.id}>
           {item.title}{" "}
           <small className="block text-muted-foreground">

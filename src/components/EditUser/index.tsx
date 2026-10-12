@@ -38,7 +38,7 @@ export const EditUser = ({ firstName }: Props) => {
     const { type, errors } = await updateProfile(data)
 
     if (type === "error") {
-      errors.forEach((title) => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
@@ -64,7 +64,7 @@ export const EditUser = ({ firstName }: Props) => {
 
       <Label htmlFor="avatar">
         {t.rich("EditUser.form.avatar", {
-          small: (chunks) => <small>{chunks}</small>,
+          small: chunks => <small>{chunks}</small>,
         })}
       </Label>
       <Input id="avatar" name="avatar" type="file" accept="image/*" />

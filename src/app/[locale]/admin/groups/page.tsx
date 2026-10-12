@@ -20,7 +20,7 @@ export default async function AdminUsersPage() {
     <List>
       <ListTitle>Groups</ListTitle>
 
-      {groups.map((group) => (
+      {groups.map(group => (
         <Card key={group.id} className="flex gap-2 items-center">
           <span className="leading-none">
             {group.title}

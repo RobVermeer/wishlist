@@ -41,7 +41,7 @@ export default async function ProfilePage() {
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
-      {wishlists.map((wishlist) => (
+      {wishlists.map(wishlist => (
         <YourWishlistCard
           key={wishlist.id}
           wishlist={wishlist}

@@ -19,7 +19,7 @@ export const SendEmails = ({ group }: Props) => {
     const { type, errors } = await groupDraw(group.id, data)
 
     if (type === "error") {
-      errors.forEach((title) => {
+      errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
