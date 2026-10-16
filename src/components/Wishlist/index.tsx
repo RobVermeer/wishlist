@@ -70,7 +70,10 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           </Avatar>
         )}
         <ListTitle>
-          <WishlistTitle wishlist={wishlist} />{" "}
+          <WishlistTitle
+            wishlist={wishlist}
+            showGroups={wishlist.isOwnList && !group}
+          />{" "}
           {group && (
             <small className="text-base text-foreground">
               {t.rich("inGroup", {

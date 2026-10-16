@@ -33,7 +33,7 @@ interface Props {
   className?: string
 }
 
-export const EditGroup = ({ group, className = "absolute right-1" }: Props) => {
+export const EditGroup = ({ group, className }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)

@@ -28,8 +28,7 @@ test("pages don't contain the email addresses of other users", async ({
     "/",
     `/group/${group.id}`,
     `/group/${group.id}/${ownerList.id}`,
-    "/profile/wishlists",
-    "/profile/groups",
+    "/profile",
   ]) {
     await memberPage.goto(path)
     const html = await memberPage.content()
@@ -103,10 +102,8 @@ test("wishlists can only be added to groups you are a member of", async ({
   const foreignGroup = await createGroup(stranger, { title: "Andere groep" })
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await page
-    .getByRole("button", { name: "Maak een nieuw verlanglijstje aan" })
-    .click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog

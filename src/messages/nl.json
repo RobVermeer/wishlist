@@ -73,8 +73,6 @@
   },
   "Menu": {
     "dashboard": "Overzicht",
-    "wishlists": "Mijn verlanglijstjes",
-    "groups": "Mijn groepen",
     "boughtPresents": "Mijn gekochte cadeaus",
     "logout": "Uitloggen"
   },
@@ -131,20 +129,6 @@
     "title": "Profiel",
     "metaTitle": "Profiel - Wishlist"
   },
-  "ProfileWishlists": {
-    "title": "Mijn verlanglijstjes - Profiel - Wishlist",
-    "empty": {
-      "title": "Je hebt nog geen lijstjes gemaakt.",
-      "text": "Doe dit snel! 🥳"
-    }
-  },
-  "ProfileGroups": {
-    "title": "Mijn groepen - Profiel - Wishlist",
-    "empty": {
-      "title": "Je volgt nog geen groepen.",
-      "text": "Doe dit snel! 🤩"
-    }
-  },
   "ProfileBoughtPresents": {
     "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
     "empty": {
@@ -154,7 +138,6 @@
     "boughtFor": "Gekocht voor {name}"
   },
   "NewGroup": {
-    "button": "Maak een nieuwe groep aan",
     "title": "Nieuwe groep 👨‍👨‍👧‍👦",
     "form": {
       "title": "Naam",
@@ -204,7 +187,6 @@
     }
   },
   "NewWishlist": {
-    "button": "Maak een nieuw verlanglijstje aan",
     "title": "Nieuw verlanglijstje 🤩",
     "form": {
       "description": "Beschrijving <small>(optioneel)</small>",
@@ -235,8 +217,6 @@
   },
   "ProfileTabs": {
     "me": "Profiel",
-    "wishlists": "Verlanglijstjes",
-    "groups": "Groepen",
     "boughtPresents": "Gekochte cadeaus"
   },
   "Remind": {

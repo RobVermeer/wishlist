@@ -32,7 +32,7 @@ import {
 interface Props {
   groups: Awaited<ReturnType<typeof getGroupsForUser>>
   defaultGroupIds?: string[]
-  trigger?: ReactNode
+  trigger: ReactNode
 }
 
 export const NewWishlist = ({ groups, defaultGroupIds, trigger }: Props) => {
@@ -65,13 +65,7 @@ export const NewWishlist = ({ groups, defaultGroupIds, trigger }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <Button>
-            <Plus size="16" className="mr-2" /> {t("NewWishlist.button")}
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
