@@ -100,13 +100,21 @@
   "Group": {
     "empty": {
       "title": "Er zijn nog geen lijstjes! 😵‍💫",
-      "text": "Maak als eerste een lijstje aan in <profile>je profiel</profile>! 📝"
+      "text": "Voeg als eerste je verlanglijstje toe 📝"
     },
     "noFollow": {
       "title": "Je volgt deze groep nog niet 😵",
       "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😊"
     },
-    "follow": "Volg de groep"
+    "follow": "Volg de groep",
+    "addWishlist": {
+      "button": "Voeg mijn verlanglijstje toe",
+      "title": "Voeg je verlanglijstje toe",
+      "text": "Kies welk verlanglijstje je in {group} wilt laten zien.",
+      "submit": "Voeg toe",
+      "toast": "Je verlanglijstje staat nu in de groep 🎉"
+    },
+    "newWishlist": "Nieuw verlanglijstje voor deze groep"
   },
   "GroupWishlist": {
     "empty": {
