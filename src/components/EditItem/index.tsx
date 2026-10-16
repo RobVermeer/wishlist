@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
+import { MoreOptions } from "@/components/MoreOptions"
 import { RemoveButton } from "@/components/RemoveButton"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
@@ -84,32 +85,34 @@ export const EditItem = ({ item, categories }: Props) => {
           <Label htmlFor="title">{t("EditItem.form.title")}</Label>
           <Input required id="title" name="title" defaultValue={title} />
 
-          <div className="flex items-center gap-3">
-            <Checkbox
-              id="unlimited"
-              name="unlimited"
-              defaultChecked={unlimited}
+          <MoreOptions defaultOpen={Boolean(url || item.category || unlimited)}>
+            <Label htmlFor="url">
+              {t.rich("EditItem.form.url", {
+                small: chunks => <small>{chunks}</small>,
+              })}
+            </Label>
+            <Input id="url" name="url" defaultValue={url || ""} />
+            <Label htmlFor="category">
+              {t.rich("EditItem.form.category", {
+                small: chunks => <small>{chunks}</small>,
+              })}
+            </Label>
+            <CategoryCombobox
+              id="category"
+              name="category"
+              categories={categories}
+              defaultValue={item.category?.title ?? ""}
             />
-            <Label htmlFor="unlimited">{t("EditItem.form.unlimited")}</Label>
-          </div>
 
-          <Label htmlFor="url">
-            {t.rich("EditItem.form.url", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input id="url" name="url" defaultValue={url || ""} />
-          <Label htmlFor="category">
-            {t.rich("EditItem.form.category", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <CategoryCombobox
-            id="category"
-            name="category"
-            categories={categories}
-            defaultValue={item.category?.title ?? ""}
-          />
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="unlimited"
+                name="unlimited"
+                defaultChecked={unlimited}
+              />
+              <Label htmlFor="unlimited">{t("EditItem.form.unlimited")}</Label>
+            </div>
+          </MoreOptions>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <div>
