@@ -13,28 +13,35 @@ interface Props {
 }
 
 export const ItemCard = ({ item }: Props) => {
-  const { title, url, boughtBy, unlimited } = item
+  const { id, title, url, boughtBy, boughtByMe, unlimited } = item
   const t = useTranslations("Toggle")
+  const bought = Boolean(boughtBy) && !unlimited
 
   return (
-    <Card
-      className={clsx(
-        "flex items-center pr-12",
-        boughtBy && !unlimited && "line-through decoration-primary decoration-2"
-      )}
-    >
-      {url && (
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
-        </a>
-      )}
-
-      {!url && title}
+    <Card className="flex items-center gap-2">
+      <span
+        className={clsx(
+          "flex-1",
+          bought && "line-through decoration-primary decoration-2"
+        )}
+      >
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
+          </a>
+        ) : (
+          title
+        )}
+      </span>
 
       {unlimited ? (
         <UnlimitedItem />
+      ) : bought && !boughtByMe ? (
+        <span className="shrink-0 text-sm text-muted-foreground">
+          {t("boughtByOther")}
+        </span>
       ) : (
-        <ToggleItem item={item} checked={t("checked")} undo={t("undo")} />
+        <ToggleItem id={id} boughtByMe={boughtByMe} />
       )}
     </Card>
   )

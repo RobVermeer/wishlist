@@ -234,9 +234,14 @@
     "copied": "Link van groep gekopieerd"
   },
   "Toggle": {
-    "unlimited": "Deze wens kan onbeperkt vervuld worden.",
-    "checked": "Je hebt deze wens afgestreept",
-    "undo": "Je hebt het afstrepen ongedaan gemaakt"
+    "buy": "Ik koop dit",
+    "cancel": "Toch niet",
+    "boughtByMe": "Jij koopt dit",
+    "boughtByOther": "Wordt al gekocht",
+    "unlimitedLabel": "Onbeperkt",
+    "unlimited": "Deze wens kan door meer mensen gekocht worden, hij blijft altijd open.",
+    "checked": "Leuk, jij koopt dit! 🎁",
+    "undo": "Je koopt dit toch niet"
   },
   "UserInfo": {
     "title": "Vul je naam in",
@@ -366,7 +371,8 @@
         "lego": "Lego kasteel",
         "socks": "Warme sokken"
       },
-      "caption": "Iemand uit de groep heeft het Lego kasteel afgestreept. Sanne ziet dat niet, dus de verrassing blijft 🤫"
+      "caption": "Iemand uit de groep koopt het Lego kasteel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
+      "buy": "Ik koop dit"
     },
     "features": {
       "title": "Wat kun je allemaal?",

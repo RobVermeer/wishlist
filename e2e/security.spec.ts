@@ -228,9 +228,9 @@ test("followers of a wishlist can see it and check off its wishes", async ({
   await page
     .locator("div.rounded-md")
     .filter({ hasText: "Fiets" })
-    .getByRole("button")
+    .getByRole("button", { name: "Ik koop dit" })
     .click()
-  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
   await expect
     .poll(
       async () =>

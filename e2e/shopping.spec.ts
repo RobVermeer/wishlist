@@ -74,7 +74,7 @@ test("empty wishlist of someone else", async ({ signIn }) => {
   ).toBeVisible()
 })
 
-test("check off a wish and undo it", async ({ signIn }) => {
+test("buy a wish and change your mind", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
   const item = await createItem(wishlist, { title: "Sokken" })
   const page = await signIn(shopper)
@@ -82,11 +82,11 @@ test("check off a wish and undo it", async ({ signIn }) => {
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
   const card = itemCard(page, "Sokken")
-  await expect(card).not.toHaveClass(/line-through/)
-  await card.getByRole("button").click()
+  await card.getByRole("button", { name: "Ik koop dit" }).click()
 
-  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
-  await expect(card).toHaveClass(/line-through/)
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
+  await expect(card).toContainText("Jij koopt dit")
+  await expect(card.getByText("Sokken")).toHaveClass(/line-through/)
   expect(
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .userId
@@ -97,12 +97,11 @@ test("check off a wish and undo it", async ({ signIn }) => {
   await expect(page.getByText("Gekocht voor Olga")).toBeVisible()
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
-  await card.getByRole("button").click()
+  await card.getByRole("button", { name: "Toch niet" }).click()
 
-  await expect(toasts(page)).toContainText(
-    "Je hebt het afstrepen ongedaan gemaakt"
-  )
-  await expect(card).not.toHaveClass(/line-through/)
+  await expect(toasts(page)).toContainText("Je koopt dit toch niet")
+  await expect(card.getByRole("button", { name: "Ik koop dit" })).toBeVisible()
+  await expect(card).not.toContainText("Jij koopt dit")
   expect(
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .userId
@@ -116,7 +115,25 @@ test("check off a wish and undo it", async ({ signIn }) => {
   ).toBeVisible()
 })
 
-test("a wish bought by someone else cannot be checked off again", async ({
+test("a wish someone else buys shows as already bought", async ({ signIn }) => {
+  const { shopper, group, wishlist } = await setup()
+  const otherShopper = await createUser()
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { members: { connect: { id: otherShopper.id } } },
+  })
+  await createItem(wishlist, { title: "Sokken", boughtBy: shopper })
+  const page = await signIn(otherShopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const card = itemCard(page, "Sokken")
+  await expect(card).toContainText("Wordt al gekocht")
+  await expect(card.getByText("Sokken")).toHaveClass(/line-through/)
+  await expect(card.getByRole("button")).toHaveCount(0)
+})
+
+test("buying a wish someone else just bought shows an error", async ({
   signIn,
 }) => {
   const { shopper, group, wishlist } = await setup()
@@ -125,17 +142,17 @@ test("a wish bought by someone else cannot be checked off again", async ({
     where: { id: group.id },
     data: { members: { connect: { id: otherShopper.id } } },
   })
-  const item = await createItem(wishlist, {
-    title: "Sokken",
-    boughtBy: shopper,
-  })
+  const item = await createItem(wishlist, { title: "Sokken" })
   const page = await signIn(otherShopper)
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
-
-  const card = itemCard(page, "Sokken")
-  await expect(card).toHaveClass(/line-through/)
-  await card.getByRole("button").click()
+  await prisma.wishlistItem.update({
+    where: { id: item.id },
+    data: { userId: shopper.id },
+  })
+  await itemCard(page, "Sokken")
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
 
   await expect(toasts(page)).toContainText(
     "Deze wens is al door iemand anders gekocht"
@@ -156,7 +173,7 @@ test("a wish bought by someone else cannot be checked off again", async ({
   ).toBe(shopper.id)
 })
 
-test("unlimited wishes cannot be checked off", async ({ signIn }) => {
+test("unlimited wishes can't be bought exclusively", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
   await createItem(wishlist, { title: "Boeken", unlimited: true })
   const page = await signIn(shopper)
@@ -164,12 +181,12 @@ test("unlimited wishes cannot be checked off", async ({ signIn }) => {
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
   const card = itemCard(page, "Boeken")
-  await card.getByRole("button").click()
+  await expect(card.getByRole("button", { name: "Ik koop dit" })).toHaveCount(0)
+  await card.getByRole("button", { name: "Onbeperkt" }).click()
 
   await expect(page.getByRole("dialog")).toContainText(
-    "Deze wens kan onbeperkt vervuld worden."
+    "Deze wens kan door meer mensen gekocht worden, hij blijft altijd open."
   )
-  await expect(card).not.toHaveClass(/line-through/)
 })
 
 test("ask the owner to add more wishes", async ({ signIn }) => {

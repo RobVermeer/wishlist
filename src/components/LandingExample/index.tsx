@@ -1,5 +1,5 @@
 import { clsx } from "clsx"
-import { InfinityIcon, Link, Square, SquareCheckBig } from "lucide-react"
+import { InfinityIcon, Link } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ListTitle } from "@/components/ListTitle"
 
@@ -12,6 +12,7 @@ const items = [
 
 export const LandingExample = () => {
   const t = useTranslations("Landing.example")
+  const tToggle = useTranslations("Toggle")
 
   return (
     <section className="grid gap-2">
@@ -24,32 +25,32 @@ export const LandingExample = () => {
           {items.map(item => (
             <li
               key={item.key}
-              className={clsx(
-                "flex items-center justify-between rounded-md bg-secondary p-3 font-semibold",
-                "bought" in item &&
-                  "line-through decoration-primary decoration-2"
-              )}
+              className="flex items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
             >
-              <span>
+              <span
+                className={clsx(
+                  "bought" in item &&
+                    "line-through decoration-primary decoration-2"
+                )}
+              >
                 {"link" in item && (
                   <Link size="16" strokeWidth="2.5" className="inline mr-1" />
                 )}
                 {t(`items.${item.key}`)}
               </span>
               {"unlimited" in item ? (
-                <InfinityIcon aria-hidden />
+                <span className="flex items-center gap-1 text-sm font-normal text-muted-foreground">
+                  <InfinityIcon aria-hidden size="18" />{" "}
+                  {tToggle("unlimitedLabel")}
+                </span>
               ) : "bought" in item ? (
-                <SquareCheckBig
-                  aria-hidden
-                  className="text-primary"
-                  strokeWidth="2.5"
-                />
+                <span className="text-sm font-normal text-muted-foreground no-underline">
+                  {tToggle("boughtByOther")}
+                </span>
               ) : (
-                <Square
-                  aria-hidden
-                  className="text-secondary-foreground"
-                  strokeWidth="2.5"
-                />
+                <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
+                  {t("buy")}
+                </span>
               )}
             </li>
           ))}

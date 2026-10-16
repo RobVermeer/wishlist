@@ -1,22 +1,19 @@
 "use client"
 
-import { SquareCheckBig, Square } from "lucide-react"
+import { Check } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
-import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { toggleWishlistItemById } from "@/lib/wishlistItems/toggleWishlistItemById"
 import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
-  item: NonNullable<
-    Awaited<ReturnType<typeof getWishlistById>>
-  >["wishlistItem"][0]
-  checked: string
-  undo: string
+  id: string
+  boughtByMe: boolean
 }
 
-export const ToggleItem = ({ item, checked, undo }: Props) => {
+export const ToggleItem = ({ id, boughtByMe }: Props) => {
   const { toast } = useToast()
-  const { id, boughtBy } = item
+  const t = useTranslations("Toggle")
 
   async function onToggle() {
     const { type, errors } = await toggleWishlistItemById(id)
@@ -31,19 +28,18 @@ export const ToggleItem = ({ item, checked, undo }: Props) => {
       return
     }
 
-    toast({
-      title: boughtBy ? undo : checked,
-    })
+    toast({ title: boughtByMe ? t("undo") : t("checked") })
   }
 
   return (
-    <form action={onToggle} className="absolute right-1">
-      <Button type="submit" variant="ghost" size="icon">
-        {boughtBy ? (
-          <SquareCheckBig className="text-primary" strokeWidth="2.5" />
-        ) : (
-          <Square className="text-secondary-foreground" strokeWidth="2.5" />
-        )}
+    <form action={onToggle} className="flex shrink-0 items-center gap-2">
+      {boughtByMe && (
+        <span className="flex items-center gap-1 text-sm text-primary">
+          <Check size="16" strokeWidth="2.5" /> {t("boughtByMe")}
+        </span>
+      )}
+      <Button type="submit" variant="outline" size="sm">
+        {boughtByMe ? t("cancel") : t("buy")}
       </Button>
     </form>
   )

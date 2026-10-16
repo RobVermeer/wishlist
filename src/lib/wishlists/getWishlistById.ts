@@ -34,6 +34,10 @@ export const getWishlistById = cache(async (id: string) => {
 
     return {
       ...data,
+      wishlistItem: data.wishlistItem.map(item => ({
+        ...item,
+        boughtByMe: item.boughtBy?.id === userId,
+      })),
       isOwnList: data.user.id === userId,
       isFollowing: followers.length > 0,
     }

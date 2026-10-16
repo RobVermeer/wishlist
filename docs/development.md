@@ -55,13 +55,13 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 
 All user facing text goes through next-intl, also on admin pages. Write informal Dutch (`je`, not `u`) and use the same words everywhere:
 
-| Concept                         | Word           |
-| ------------------------------- | -------------- |
-| A list of wishes                | verlanglijstje |
-| An item on it                   | wens           |
-| Marking a wish as bought        | afstrepen      |
-| Something you bought            | cadeau         |
-| A group of people sharing lists | groep          |
+| Concept                         | Word                                     |
+| ------------------------------- | ---------------------------------------- |
+| A list of wishes                | verlanglijstje                           |
+| An item on it                   | wens                                     |
+| Marking a wish as bought        | afstrepen, the button says `Ik koop dit` |
+| Something you bought            | cadeau                                   |
+| A group of people sharing lists | groep                                    |
 
 ## Database changes
 

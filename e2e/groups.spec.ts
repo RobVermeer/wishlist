@@ -355,9 +355,9 @@ test("a group with only someone else's wishlist shows it right away", async ({
   await page
     .locator("div.rounded-md")
     .filter({ hasText: "Fiets" })
-    .getByRole("button")
+    .getByRole("button", { name: "Ik koop dit" })
     .click()
-  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
   await expect
     .poll(
       async () =>

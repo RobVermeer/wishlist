@@ -148,8 +148,10 @@ test("log in from a shared wishlist, follow it and check off a wish", async ({
   await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
 
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
-  await itemCard(page, "Fiets").getByRole("button").click()
-  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
+  await itemCard(page, "Fiets")
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
 
   const guest = await prisma.user.findUniqueOrThrow({ where: { email } })
   const followed = await prisma.wishlist.findUniqueOrThrow({
