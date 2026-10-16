@@ -286,3 +286,54 @@ test("making a new link stops the old one, followers keep access", async ({
     followerPage.getByRole("heading", { name: "Olga" })
   ).toBeVisible()
 })
+
+for (const { name, open } of [
+  {
+    name: "wishlist",
+    open: async (page: Page, ids: { wishlist: string; group: string }) => {
+      await page.goto(`/wishlist/${ids.wishlist}`)
+      await page
+        .getByRole("button", { name: "Deel dit verlanglijstje" })
+        .click()
+      await page.getByLabel("Link naar je verlanglijstje").waitFor()
+      await expect(page.getByLabel("Link naar je verlanglijstje")).toHaveValue(
+        /lijstje/
+      )
+      await page.getByRole("button", { name: "Deel de link" }).click()
+    },
+  },
+  {
+    name: "group",
+    open: async (page: Page, ids: { wishlist: string; group: string }) => {
+      await page.goto(`/group/${ids.group}`)
+      await page
+        .getByRole("button", { name: "Nodig iemand uit voor de groep" })
+        .click()
+    },
+  },
+]) {
+  test(`sharing a ${name} only shares the link`, async ({ signIn }) => {
+    const owner = await createUser()
+    const group = await createGroup(owner)
+    const wishlist = await createWishlist(owner, { groups: [group] })
+    const page = await signIn(owner)
+
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, "share", {
+        value: async (data: ShareData) => {
+          ;(window as unknown as { shared: ShareData }).shared = data
+        },
+      })
+    })
+    await open(page, { wishlist: wishlist.id, group: group.id })
+
+    await page.waitForFunction(
+      () => (window as unknown as { shared?: ShareData }).shared
+    )
+    const shared = await page.evaluate(
+      () => (window as unknown as { shared: ShareData }).shared
+    )
+    expect(Object.keys(shared).sort()).toEqual(["title", "url"])
+    expect(shared.url).toMatch(/^http:\/\/localhost:3100\/(lijstje|group)\//)
+  })
+}

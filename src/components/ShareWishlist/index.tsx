@@ -89,7 +89,6 @@ export const ShareWishlist = ({ wishlistId, name }: Props) => {
               url &&
               shareOrCopy({
                 title: name,
-                text: t("shareText", { name }),
                 url,
                 copied: t("copied"),
               })
