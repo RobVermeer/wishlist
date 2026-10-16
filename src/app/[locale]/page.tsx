@@ -8,6 +8,9 @@ import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlist
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import { WishlistIcon } from "@/components/WishlistIcon"
+import { AddTile } from "@/components/AddTile"
+import { NewGroup } from "@/components/NewGroup"
+import { NewWishlist } from "@/components/NewWishlist"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
@@ -78,17 +81,12 @@ export default async function Home() {
               </span>
             </Link>
           ))}
+          <NewGroup trigger={<AddTile label={t("groups.new")} />} />
         </div>
 
         {groups.length === 0 && (
           <EmptyState title={t("groups.empty.title")}>
-            {t.rich("groups.empty.text", {
-              profile: chunks => (
-                <Link href="/profile" className="text-primary">
-                  {chunks}
-                </Link>
-              ),
-            })}
+            {t("groups.empty.text")}
           </EmptyState>
         )}
       </List>
@@ -98,17 +96,15 @@ export default async function Home() {
 
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
           {wishlists.map(renderWishlist)}
+          <NewWishlist
+            groups={groups}
+            trigger={<AddTile label={t("wishlists.new")} />}
+          />
         </div>
 
         {wishlists.length === 0 && (
           <EmptyState title={t("wishlists.empty.title")}>
-            {t.rich("wishlists.empty.text", {
-              profile: chunks => (
-                <Link href="/profile/wishlists" className="text-primary">
-                  {chunks}
-                </Link>
-              ),
-            })}
+            {t("wishlists.empty.text")}
           </EmptyState>
         )}
       </List>

@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createGroupForUser } from "@/lib/groups/createGroupForUser"
-import { FormEvent, startTransition, useState } from "react"
+import { FormEvent, ReactNode, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import {
@@ -25,7 +25,11 @@ import {
 } from "@/components/ui/select"
 import { useTranslations } from "next-intl"
 
-export const NewGroup = () => {
+interface Props {
+  trigger?: ReactNode
+}
+
+export const NewGroup = ({ trigger }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const t = useTranslations()
@@ -55,9 +59,11 @@ export const NewGroup = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus size="16" className="mr-2" /> {t("NewGroup.button")}
-        </Button>
+        {trigger ?? (
+          <Button>
+            <Plus size="16" className="mr-2" /> {t("NewGroup.button")}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
