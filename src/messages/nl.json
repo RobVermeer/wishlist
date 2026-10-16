@@ -231,8 +231,7 @@
   },
   "Share": {
     "button": "Nodig iemand uit voor de groep",
-    "copied": "Link van groep gekopieerd",
-    "text": "Je bent uitgenodigd voor de groep {group} op Wishlist."
+    "copied": "Link van groep gekopieerd"
   },
   "Toggle": {
     "unlimited": "Deze wens kan onbeperkt vervuld worden.",
@@ -420,7 +419,6 @@
     "text": "Iedereen met deze link kan je verlanglijstje bekijken nadat ze zijn ingelogd en het volgen. Wat er al gekocht is, zie je zelf nooit.",
     "link": "Link naar je verlanglijstje",
     "share": "Deel de link",
-    "shareText": "Bekijk het verlanglijstje van {name} op Wishlist.",
     "copied": "Link van verlanglijstje gekopieerd",
     "reset": "Maak een nieuwe link",
     "resetText": "Maak je een nieuwe link, dan werkt de oude niet meer. Wie je verlanglijstje al volgt, houdt toegang.",

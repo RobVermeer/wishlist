@@ -7,18 +7,16 @@ export function useShareOrCopy() {
 
   return async function shareOrCopy({
     title,
-    text,
     url,
     copied,
   }: {
     title: string
-    text: string
     url: string
     copied: string
   }) {
     if (navigator.share) {
       try {
-        await navigator.share({ title, text, url })
+        await navigator.share({ title, url })
         return
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {

@@ -18,7 +18,6 @@ export const ShareButton = ({ title }: Props) => {
       onClick={() =>
         shareOrCopy({
           title,
-          text: t("Share.text", { group: title }),
           url: window.location.toString(),
           copied: t("Share.copied"),
         })
