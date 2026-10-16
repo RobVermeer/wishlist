@@ -79,7 +79,7 @@ test("owner can edit a group", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByLabel("Naam").fill("Nieuwe naam")
@@ -103,7 +103,7 @@ test("choosing no theme clears the group theme", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByLabel("Thema").click()
@@ -130,7 +130,7 @@ test("owner can remove a group", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByRole("button", { name: "Verwijder" }).click()
 
@@ -166,7 +166,9 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   const page = await signIn(member)
 
   await page.goto(`/group/${group.id}`)
-  await expect(page.getByRole("button", { name: "Wijzig" })).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Wijzig", exact: true })
+  ).toHaveCount(0)
   await page.getByRole("button", { name: "Verlaat" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })

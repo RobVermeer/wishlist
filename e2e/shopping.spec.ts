@@ -52,6 +52,9 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(
     page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
   ).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Wijzig verlanglijstje" })
+  ).toHaveCount(0)
   await expect(itemCard(page, "Sokken")).toBeVisible()
   await expect(page.getByRole("link", { name: "Koptelefoon" })).toHaveAttribute(
     "href",
@@ -60,7 +63,9 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(
     page.getByRole("button", { name: "Voeg een wens toe" })
   ).toBeHidden()
-  await expect(page.getByRole("button", { name: "Wijzig" })).toBeHidden()
+  await expect(
+    page.getByRole("button", { name: "Wijzig", exact: true })
+  ).toBeHidden()
 
   await page.getByRole("link", { name: "Familie" }).click()
   await expect(page).toHaveURL(`/group/${group.id}`)
