@@ -7,12 +7,17 @@ import { WishlistCard } from "@/components/WishlistCard"
 import { Wishlist } from "@/components/Wishlist"
 import { EditGroup } from "@/components/EditGroup"
 import { LeaveGroup } from "@/components/LeaveGroup"
+import { AddWishlistToGroup } from "@/components/AddWishlistToGroup"
+import { NewWishlist } from "@/components/NewWishlist"
+import { Button } from "@/components/ui/button"
+import { Plus } from "lucide-react"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
-import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 
@@ -41,6 +46,7 @@ export default async function GroupPage({ params }: Props) {
 
   const group = await getGroupById(groupId)
   const t = await getTranslations("Group")
+  const tCommon = await getTranslations("Common")
 
   if (!group) {
     notFound()
@@ -57,6 +63,10 @@ export default async function GroupPage({ params }: Props) {
     )
   }
 
+  const ownGroups = await getGroupsForUser()
+  const wishlistsToAdd = (await getWishlistsForUser()).filter(
+    wishlist => !wishlist.groups.some(({ id }) => id === group.id)
+  )
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
     group.wishlist.length === 1 && !onlyWishlist.isOwnList
@@ -81,19 +91,29 @@ export default async function GroupPage({ params }: Props) {
       )}
 
       {group.wishlist.length === 0 && (
-        <EmptyState title={t("empty.title")}>
-          {t.rich("empty.text", {
-            profile: chunks => (
-              <Link href="/profile/wishlists" className="text-primary">
-                {chunks}
-              </Link>
-            ),
-          })}
-        </EmptyState>
+        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
       <Separator className="my-3" />
 
+      {wishlistsToAdd.length > 0 && (
+        <AddWishlistToGroup
+          group={group}
+          wishlists={wishlistsToAdd.map(wishlist => ({
+            id: wishlist.id,
+            name: wishlist.title || tCommon("myList"),
+          }))}
+        />
+      )}
+      <NewWishlist
+        groups={ownGroups}
+        defaultGroupIds={[group.id]}
+        trigger={
+          <Button variant="outline">
+            <Plus size="16" className="mr-2" /> {t("newWishlist")}
+          </Button>
+        }
+      />
       <ShareButton title={group.title} />
     </List>
   )
