@@ -49,6 +49,9 @@ test("view a wishlist of a group member", async ({ signIn }) => {
     page.getByRole("heading", { name: "Olga in Familie" })
   ).toBeVisible()
   await expect(page.getByText("Alles is welkom")).toBeVisible()
+  await expect(
+    page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
+  ).toBeVisible()
   await expect(itemCard(page, "Sokken")).toBeVisible()
   await expect(page.getByRole("link", { name: "Koptelefoon" })).toHaveAttribute(
     "href",
