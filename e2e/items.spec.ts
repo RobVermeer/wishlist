@@ -24,6 +24,11 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
     page.getByRole("heading", { name: "Mijn lijstje" })
   ).toBeVisible()
   await expect(
+    page.getByText(
+      "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁"
+    )
+  ).toBeVisible()
+  await expect(
     page.getByText("Dit lijstje is nog helemaal leeg 🫣")
   ).toBeVisible()
   await expect(

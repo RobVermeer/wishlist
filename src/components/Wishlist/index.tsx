@@ -87,6 +87,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         {wishlist.description && (
           <small className="italic text-sm">{wishlist.description}</small>
         )}
+
+        <p className="mt-2 text-sm text-muted-foreground">
+          {wishlist.isOwnList
+            ? t("hint.own")
+            : t("hint.other", { name: getWishlistName(wishlist) })}
+        </p>
       </div>
 
       {uncategorized.map(renderItem)}

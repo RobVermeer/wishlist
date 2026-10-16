@@ -111,7 +111,11 @@
       "title": "Dit lijstje is nog helemaal leeg 🫣",
       "text": "Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
     },
-    "inGroup": "in <link>{group}</link>"
+    "inGroup": "in <link>{group}</link>",
+    "hint": {
+      "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
+      "other": "{name} ziet niet wat er wordt gekocht 🤫"
+    }
   },
   "Profile": {
     "title": "Profiel",
