@@ -127,7 +127,7 @@ test("move a wish between categories", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
   await expect(dialog.getByLabel("Categorie")).toHaveText("Kleding")
@@ -141,7 +141,7 @@ test("move a wish between categories", async ({ signIn }) => {
   const categories = await categoriesOf(wishlist.id)
   expect(categories.map(({ title }) => title)).toEqual(["Winter"])
 
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   await dialog.getByLabel("Categorie").click()
   await page.getByRole("option", { name: "Geen categorie" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -167,7 +167,7 @@ test("removing the last wish of a category removes the category", async ({
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Wijzig" }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   await page
     .getByRole("dialog", { name: "Wijzig wens" })
     .getByRole("button", { name: "Verwijder" })

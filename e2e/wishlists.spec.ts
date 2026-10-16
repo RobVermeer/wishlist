@@ -7,12 +7,6 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
-import { Page } from "@playwright/test"
-
-const wishlistCard = (page: Page, name: string) =>
-  page.locator("div.rounded-md").filter({
-    has: page.locator("a").getByText(name),
-  })
 
 test("new user sees empty states for wishlists", async ({ signIn }) => {
   const user = await createUser()
@@ -139,10 +133,8 @@ test("edit a wishlist", async ({ signIn }) => {
   const wishlist = await createWishlist(user, { groups: [family] })
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await wishlistCard(page, "Mijn lijstje")
-    .getByRole("button", { name: "Wijzig" })
-    .click()
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
   await expect(dialog.getByLabel("Familie")).toBeChecked()
@@ -156,9 +148,8 @@ test("edit a wishlist", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(
-    page.getByRole("link", { name: "Opa Jan in groep Vrienden" })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Opa Jan" })).toBeVisible()
+  await expect(page.getByText("Zijn 80e verjaardag")).toBeVisible()
 
   const updated = await prisma.wishlist.findUniqueOrThrow({
     where: { id: wishlist.id },
@@ -195,10 +186,8 @@ test("remove a wishlist", async ({ signIn }) => {
   })
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await wishlistCard(page, "Weg lijst")
-    .getByRole("button", { name: "Wijzig" })
-    .click()
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
   const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
 
@@ -216,10 +205,9 @@ test("remove a wishlist", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Verwijder" }).click()
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
-  await expect(dialog).toBeHidden()
-  await expect(wishlistCard(page, "Weg lijst")).toBeHidden()
+  await expect(page).toHaveURL("/")
   await expect(
-    page.getByText("Je hebt nog geen lijstjes gemaakt.")
+    page.getByText("Je hebt nog geen verlanglijstje 🥺")
   ).toBeVisible()
 
   const removed = await prisma.wishlist.findUniqueOrThrow({

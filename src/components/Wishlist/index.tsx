@@ -17,6 +17,8 @@ import { ItemCard } from "../ItemCard"
 import Link from "next/link"
 import { CategoryList } from "../CategoryList"
 import { ShareWishlist } from "@/components/ShareWishlist"
+import { EditWishlist } from "@/components/EditWishlist"
+import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { UnfollowWishlist } from "@/components/UnfollowWishlist"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
@@ -30,12 +32,14 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const t = await getTranslations("GroupWishlist")
+  const tEdit = await getTranslations("EditWishlist")
 
   if (!wishlist) {
     notFound()
   }
 
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
+  const ownGroups = wishlist.isOwnList ? await getGroupsForUser() : []
   const categoryTitles = wishlist.categories.map(({ title }) => title)
 
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
@@ -93,6 +97,15 @@ export const Wishlist = async ({ id, groupId }: Props) => {
             ? t("hint.own")
             : t("hint.other", { name: getWishlistName(wishlist) })}
         </p>
+
+        {wishlist.isOwnList && (
+          <EditWishlist
+            wishlist={wishlist}
+            groups={ownGroups}
+            label={tEdit("pageButton")}
+            className="mt-3"
+          />
+        )}
       </div>
 
       {uncategorized.map(renderItem)}

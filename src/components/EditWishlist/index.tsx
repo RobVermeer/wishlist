@@ -12,13 +12,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
-import type { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 import { RemoveButton } from "@/components/RemoveButton"
 import { Pencil, Save } from "lucide-react"
-import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
@@ -33,12 +32,26 @@ import {
 } from "@/components/ui/select"
 
 interface Props {
-  wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
-  groups: Awaited<ReturnType<typeof getGroupsForUser>>
+  wishlist: {
+    id: string
+    title: string | null
+    description: string | null
+    theme: string | null
+    groups: { id: string }[]
+  }
+  groups: { id: string; title: string }[]
+  label?: string
+  className?: string
 }
 
-export const EditWishlist = ({ wishlist, groups }: Props) => {
+export const EditWishlist = ({
+  wishlist,
+  groups,
+  label,
+  className = "absolute right-1",
+}: Props) => {
   const { toast } = useToast()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const { id, title, description } = wishlist
   const [ownList, setOwnList] = useState(!title)
@@ -67,15 +80,25 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
   }
 
   async function handleRemove() {
-    await deleteWishlistById(id)
+    const { type, errors } = await deleteWishlistById(id)
+
+    if (type === "error") {
+      errors.forEach(title => {
+        toast({ variant: "destructive", title })
+      })
+      return
+    }
+
     setOpen(false)
+    router.push("/")
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="absolute right-1" size="sm" variant="outline">
-          <Pencil size="12" className="mr-2" /> {t("EditWishlist.button")}
+        <Button className={className} size="sm" variant="outline">
+          <Pencil size="12" className="mr-2" />{" "}
+          {label ?? t("EditWishlist.button")}
         </Button>
       </DialogTrigger>
       <DialogContent
