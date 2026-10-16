@@ -15,9 +15,9 @@ import { deleteGroupById } from "@/lib/groups/deleteGroupById"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 import { RemoveButton } from "@/components/RemoveButton"
 import { Pencil, Save } from "lucide-react"
-import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import {
   Select,
   SelectContent,
@@ -29,11 +29,13 @@ import {
 import { useTranslations } from "next-intl"
 
 interface Props {
-  group: Awaited<ReturnType<typeof getGroupsForUser>>[0]
+  group: { id: string; title: string; theme: string | null }
+  className?: string
 }
 
-export const EditGroup = ({ group }: Props) => {
+export const EditGroup = ({ group, className = "absolute right-1" }: Props) => {
   const { toast } = useToast()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const { id, title } = group
   const t = useTranslations()
@@ -61,14 +63,23 @@ export const EditGroup = ({ group }: Props) => {
   }
 
   async function handleRemove() {
-    await deleteGroupById(id)
+    const { type, errors } = await deleteGroupById(id)
+
+    if (type === "error") {
+      errors.forEach(title => {
+        toast({ variant: "destructive", title })
+      })
+      return
+    }
+
     setOpen(false)
+    router.push("/")
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="absolute right-1" size="sm" variant="outline">
+        <Button className={className} size="sm" variant="outline">
           <Pencil size="12" className="mr-2" /> {t("EditGroup.button")}
         </Button>
       </DialogTrigger>

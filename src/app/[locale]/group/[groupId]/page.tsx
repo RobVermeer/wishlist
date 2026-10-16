@@ -5,6 +5,8 @@ import { ListTitle } from "@/components/ListTitle"
 import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
 import { Wishlist } from "@/components/Wishlist"
+import { EditGroup } from "@/components/EditGroup"
+import { LeaveGroup } from "@/components/LeaveGroup"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
@@ -61,7 +63,14 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <List>
-      <ListTitle>{group.title}</ListTitle>
+      <div className="flex items-start justify-between gap-2">
+        <ListTitle>{group.title}</ListTitle>
+        {group.createdBy.id === session.user.id ? (
+          <EditGroup group={group} className="shrink-0" />
+        ) : (
+          <LeaveGroup group={group} className="shrink-0" />
+        )}
+      </div>
 
       {showOnlyWishlist ? (
         <Wishlist id={onlyWishlist.id} />

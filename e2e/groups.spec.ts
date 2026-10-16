@@ -78,10 +78,8 @@ test("owner can edit a group", async ({ signIn }) => {
   const group = await createGroup(user, { title: "Oude naam" })
   const page = await signIn(user)
 
-  await page.goto("/profile/groups")
-  await groupCard(page, "Oude naam")
-    .getByRole("button", { name: "Wijzig" })
-    .click()
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Wijzig" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByLabel("Naam").fill("Nieuwe naam")
@@ -90,7 +88,7 @@ test("owner can edit a group", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(groupCard(page, "Nieuwe naam")).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Nieuwe naam" })).toBeVisible()
 
   const updated = await prisma.group.findUniqueOrThrow({
     where: { id: group.id },
@@ -104,10 +102,8 @@ test("choosing no theme clears the group theme", async ({ signIn }) => {
   const group = await createGroup(user, { title: "Thema groep", theme: "baby" })
   const page = await signIn(user)
 
-  await page.goto("/profile/groups")
-  await groupCard(page, "Thema groep")
-    .getByRole("button", { name: "Wijzig" })
-    .click()
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Wijzig" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByLabel("Thema").click()
@@ -133,10 +129,8 @@ test("owner can remove a group", async ({ signIn }) => {
   })
   const page = await signIn(owner)
 
-  await page.goto("/profile/groups")
-  await groupCard(page, "Weg ermee")
-    .getByRole("button", { name: "Wijzig" })
-    .click()
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Wijzig" }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
   await dialog.getByRole("button", { name: "Verwijder" }).click()
 
@@ -146,9 +140,8 @@ test("owner can remove a group", async ({ signIn }) => {
   )
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
-  await expect(dialog).toBeHidden()
-  await expect(groupCard(page, "Weg ermee")).toBeHidden()
-  await expect(page.getByText("Je volgt nog geen groepen.")).toBeVisible()
+  await expect(page).toHaveURL("/")
+  await expect(page.getByRole("link", { name: "Weg ermee" })).toHaveCount(0)
   expect(
     (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).removed
   ).toBe(true)
@@ -172,19 +165,17 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   })
   const page = await signIn(member)
 
-  await page.goto("/profile/groups")
-  await groupCard(page, "Vriendengroep")
-    .getByRole("button", { name: "Verlaat" })
-    .click()
+  await page.goto(`/group/${group.id}`)
+  await expect(page.getByRole("button", { name: "Wijzig" })).toHaveCount(0)
+  await page.getByRole("button", { name: "Verlaat" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
   await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
   await expect(dialog.getByLabel("Naam")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
-  await expect(dialog).toBeHidden()
-  await expect(groupCard(page, "Vriendengroep")).toBeHidden()
-  await expect(page.getByText("Je volgt nog geen groepen.")).toBeVisible()
+  await expect(page).toHaveURL("/")
+  await expect(page.getByRole("link", { name: "Vriendengroep" })).toHaveCount(0)
 
   const left = await prisma.group.findUniqueOrThrow({
     where: { id: group.id },
