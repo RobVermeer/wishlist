@@ -59,6 +59,13 @@
         "sports": "Sporten",
         "tools": "Gereedschap",
         "pet": "Huisdier"
+      },
+      "for": {
+        "label": "Voor wie is dit verlanglijstje?",
+        "me": "Voor mezelf",
+        "other": "Voor iemand anders",
+        "name": "Naam",
+        "placeholder": "Bijvoorbeeld de naam van je kind"
       }
     }
   },
@@ -187,10 +194,6 @@
     "title": "Nieuw verlanglijstje 🤩",
     "form": {
       "description": "Beschrijving <small>(optioneel)</small>",
-      "ownList": {
-        "label": "Dit is mijn eigen lijstje",
-        "title": "Voor wie is dit verlanglijstje?"
-      },
       "groups": "In welke groepen moet je verlanglijstje komen?",
       "save": "Maak aan"
     }
@@ -203,10 +206,6 @@
     },
     "form": {
       "description": "Beschrijving <small>(optioneel)</small>",
-      "ownList": {
-        "label": "Dit is mijn eigen lijstje",
-        "title": "Voor wie is dit verlanglijstje?"
-      },
       "groups": "In welke groepen moet je verlanglijstje komen?",
       "save": "Opslaan"
     }

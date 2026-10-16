@@ -22,6 +22,7 @@ import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
+import { WishlistOwnerField } from "@/components/WishlistOwnerField"
 import {
   Select,
   SelectContent,
@@ -89,26 +90,11 @@ export const EditWishlist = ({ wishlist, groups }: Props) => {
           id={`change-${id}`}
           className="grid gap-4 py-4"
         >
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="own-list"
-              name="own-list"
-              checked={ownList}
-              onCheckedChange={checked => setOwnList(Boolean(checked))}
-            />
-            <Label htmlFor="own-list">
-              {t("EditWishlist.form.ownList.label")}
-            </Label>
-          </div>
-
-          {!ownList && (
-            <>
-              <Label htmlFor="name">
-                {t("EditWishlist.form.ownList.title")}
-              </Label>
-              <Input id="name" name="name" defaultValue={title || ""} />
-            </>
-          )}
+          <WishlistOwnerField
+            ownList={ownList}
+            onOwnListChange={setOwnList}
+            defaultName={title || ""}
+          />
 
           <Label htmlFor="description">
             {t.rich("EditWishlist.form.description", {
