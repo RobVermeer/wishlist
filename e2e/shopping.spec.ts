@@ -10,10 +10,15 @@ import {
   toasts,
   trackedIssues,
 } from "./fixtures"
-import { Page } from "@playwright/test"
+import { Locator, Page } from "@playwright/test"
 
-const itemCard = (page: Page, title: string) =>
-  page.locator("div.rounded-md").filter({ hasText: title })
+const itemCard = (scope: Page | Locator, title: string) =>
+  scope.locator("div.rounded-md").filter({ hasText: title })
+
+const presentsFor = (page: Page, name: string) =>
+  page.locator("section").filter({
+    has: page.getByRole("heading", { name: `Voor ${name}`, exact: true }),
+  })
 
 async function setup() {
   const owner = await createUser({ firstName: "Olga" })
@@ -100,9 +105,8 @@ test("buy a wish and change your mind", async ({ signIn }) => {
       .userId
   ).toBe(shopper.id)
 
-  await page.goto("/profile/bought")
-  await expect(page.getByText("Sokken")).toBeVisible()
-  await expect(page.getByText("Gekocht voor Olga")).toBeVisible()
+  await page.goto("/presents")
+  await expect(presentsFor(page, "Olga")).toContainText("Sokken")
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
   await card.getByRole("button", { name: "Toch niet" }).click()
@@ -115,12 +119,8 @@ test("buy a wish and change your mind", async ({ signIn }) => {
       .userId
   ).toBeNull()
 
-  await page.goto("/profile/bought")
-  await expect(
-    page.getByText(
-      "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲"
-    )
-  ).toBeVisible()
+  await page.goto("/presents")
+  await expect(page.getByText("Je koopt nog geen cadeaus 🎁")).toBeVisible()
 })
 
 test("a wish someone else buys shows as already bought", async ({ signIn }) => {
@@ -248,28 +248,67 @@ test("a reminder can only be sent once per 24 hours", async ({ signIn }) => {
   ).toBeVisible()
 })
 
-test("bought presents page lists what you bought for whom", async ({
-  signIn,
-}) => {
+test("presents page groups what you buy per person", async ({ signIn }) => {
   const { shopper, wishlist } = await setup()
   const other = await createUser({ firstName: "Piet" })
   const managedList = await createWishlist(other, { title: "Baby Bo" })
   await createItem(wishlist, { title: "Sokken", boughtBy: shopper })
+  await createItem(wishlist, {
+    title: "Koptelefoon",
+    url: "https://example.com/koptelefoon",
+    boughtBy: shopper,
+  })
+  await createItem(wishlist, { title: "Sjaal" })
   await createItem(managedList, { title: "Rammelaar", boughtBy: shopper })
   await createItem(managedList, { title: "Knuffel", boughtBy: other })
   const page = await signIn(shopper)
 
-  await page.goto("/profile/bought")
+  await page.goto("/presents")
 
-  await expect(page).toHaveTitle("Mijn gekochte cadeaus - Profiel - Wishlist")
-  await expect(itemCard(page, "Sokken")).toContainText("Gekocht voor Olga")
-  await expect(itemCard(page, "Rammelaar")).toContainText(
-    "Gekocht voor Baby Bo"
-  )
+  await expect(page).toHaveTitle("Cadeaus - Wishlist")
+  await expect(
+    page.getByRole("heading", { name: "Cadeaus die je koopt" })
+  ).toBeVisible()
+
+  const forOlga = presentsFor(page, "Olga")
+  await expect(itemCard(forOlga, "Sokken")).toBeVisible()
+  await expect(
+    forOlga.getByRole("link", { name: "Koptelefoon" })
+  ).toHaveAttribute("href", "https://example.com/koptelefoon")
+  await expect(forOlga.getByText("Sjaal")).toBeHidden()
+
+  const forBabyBo = presentsFor(page, "Baby Bo")
+  await expect(itemCard(forBabyBo, "Rammelaar")).toBeVisible()
   await expect(page.getByText("Knuffel")).toBeHidden()
+
+  await forOlga.getByRole("link", { name: "Bekijk verlanglijstje" }).click()
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
 })
 
-test("bought presents page leaves out removed wishes and wishlists", async ({
+test("change your mind on the presents page", async ({ signIn }) => {
+  const { shopper, wishlist } = await setup()
+  const item = await createItem(wishlist, {
+    title: "Sokken",
+    boughtBy: shopper,
+  })
+  await createItem(wishlist, { title: "Sjaal", boughtBy: shopper })
+  const page = await signIn(shopper)
+
+  await page.goto("/presents")
+  await itemCard(page, "Sokken")
+    .getByRole("button", { name: "Toch niet" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Je koopt dit toch niet")
+  await expect(page.getByText("Sokken")).toBeHidden()
+  await expect(itemCard(page, "Sjaal")).toBeVisible()
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBeNull()
+})
+
+test("presents page leaves out removed wishes and wishlists", async ({
   signIn,
 }) => {
   const { shopper, wishlist } = await setup()
@@ -291,7 +330,7 @@ test("bought presents page leaves out removed wishes and wishlists", async ({
   })
   const page = await signIn(shopper)
 
-  await page.goto("/profile/bought")
+  await page.goto("/presents")
 
   await expect(itemCard(page, "Sokken")).toBeVisible()
   await expect(page.getByText("Weggehaald")).toBeHidden()

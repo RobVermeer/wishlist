@@ -77,7 +77,7 @@ export function Menu({ session }: Props) {
             <Separator />
 
             <Link
-              href="/profile/bought"
+              href="/presents"
               scroll={false}
               onClick={close}
               className="flex gap-2 items-center"

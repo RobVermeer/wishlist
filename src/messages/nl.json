@@ -73,7 +73,7 @@
   },
   "Menu": {
     "dashboard": "Overzicht",
-    "boughtPresents": "Mijn gekochte cadeaus",
+    "boughtPresents": "Cadeaus",
     "logout": "Uitloggen"
   },
   "Login": {
@@ -129,13 +129,15 @@
     "title": "Profiel",
     "metaTitle": "Profiel - Wishlist"
   },
-  "ProfileBoughtPresents": {
-    "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
+  "Presents": {
+    "metaTitle": "Cadeaus - Wishlist",
+    "title": "Cadeaus die je koopt",
+    "for": "Voor {name}",
+    "viewWishlist": "Bekijk verlanglijstje",
     "empty": {
-      "title": "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲",
-      "text": "Doe dat eens heel snel! 🤓"
-    },
-    "boughtFor": "Gekocht voor {name}"
+      "title": "Je koopt nog geen cadeaus 🎁",
+      "text": "Kies op een verlanglijstje van iemand anders een wens en klik op Ik koop dit, dan zie je hem hier terug."
+    }
   },
   "NewGroup": {
     "title": "Nieuwe groep 👨‍👨‍👧‍👦",
@@ -214,10 +216,6 @@
       "save": "Opslaan"
     },
     "toast": "Je gegevens zijn opgeslagen"
-  },
-  "ProfileTabs": {
-    "me": "Profiel",
-    "boughtPresents": "Gekochte cadeaus"
   },
   "Remind": {
     "button": "Vraag om meer wensen",

@@ -7,11 +7,11 @@ const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
   async redirects() {
-    return ["/profile/wishlists", "/profile/groups"].map(source => ({
-      source,
-      destination: "/",
-      permanent: false,
-    }))
+    return [
+      { source: "/profile/wishlists", destination: "/" },
+      { source: "/profile/groups", destination: "/" },
+      { source: "/profile/bought", destination: "/presents" },
+    ].map(redirect => ({ ...redirect, permanent: false }))
   },
   async headers() {
     return [

@@ -7,21 +7,15 @@ const pixel = Buffer.from(
   "base64"
 )
 
-test("profile tabs navigate between profile pages", async ({ signIn }) => {
+test("profile page shows your account settings", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
   await page.goto("/profile")
+
   await expect(page.getByRole("heading", { name: "Profiel" })).toBeVisible()
   await expect(page).toHaveTitle("Profiel - Wishlist")
-
-  for (const [name, path] of [
-    ["Gekochte cadeaus", "/profile/bought"],
-    ["Profiel", "/profile"],
-  ]) {
-    await page.getByRole("link", { name, exact: true }).click()
-    await expect(page).toHaveURL(path)
-  }
+  await expect(page.getByLabel("Voornaam")).toBeVisible()
 })
 
 test("change your first name", async ({ signIn }) => {

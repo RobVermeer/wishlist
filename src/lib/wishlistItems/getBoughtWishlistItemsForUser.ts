@@ -1,8 +1,6 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { wishlistProperties } from "@/lib/wishlists/publicProperties"
-import { wishlistItemProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { cache } from "react"
@@ -16,17 +14,40 @@ export const getBoughtWishlistItemsForUser = cache(async () => {
     throw new Error(t("notLoggedIn"))
   }
 
-  const userId = session.user.id
-
-  const data = await prisma.wishlistItem.findMany({
+  const items = await prisma.wishlistItem.findMany({
+    orderBy: [{ wishlist: { createdAt: "asc" } }, { createdAt: "asc" }],
     select: {
-      ...wishlistItemProperties,
+      id: true,
+      title: true,
+      url: true,
       wishlist: {
-        select: wishlistProperties,
+        select: {
+          id: true,
+          title: true,
+          user: { select: { firstName: true, name: true } },
+        },
       },
     },
-    where: { userId, removed: false, wishlist: { removed: false } },
+    where: {
+      userId: session.user.id,
+      removed: false,
+      wishlist: { removed: false },
+    },
   })
 
-  return data
+  const wishlists = new Map<
+    string,
+    { wishlist: (typeof items)[number]["wishlist"]; items: typeof items }
+  >()
+
+  for (const item of items) {
+    const entry = wishlists.get(item.wishlist.id) ?? {
+      wishlist: item.wishlist,
+      items: [],
+    }
+    entry.items.push(item)
+    wishlists.set(item.wishlist.id, entry)
+  }
+
+  return [...wishlists.values()]
 })
