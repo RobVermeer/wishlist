@@ -4,14 +4,22 @@ import {
   createUser,
   createWishlist,
   createItem,
-  showMoreOptions,
   prisma,
   toasts,
 } from "./fixtures"
-import { Page } from "@playwright/test"
+import { Locator, Page } from "@playwright/test"
 
 const itemCard = (page: Page, title: string) =>
   page.locator("div.rounded-md").filter({ hasText: title })
+
+async function expectAllFields(dialog: Locator) {
+  await expect(dialog.getByLabel("Wens", { exact: true })).toBeVisible()
+  await expect(dialog.getByLabel("Linkje")).toBeVisible()
+  await expect(dialog.getByLabel("Categorie")).toBeVisible()
+  await expect(
+    dialog.getByLabel("Deze wens mag onbeperkt vervuld worden")
+  ).toBeVisible()
+}
 
 test("empty wishlist invites you to add wishes", async ({ signIn }) => {
   const user = await createUser()
@@ -36,6 +44,24 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
   ).toBeHidden()
 })
 
+test("all fields of a wish show right away", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createItem(wishlist, { title: "Sokken" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  const newDialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await expectAllFields(newDialog)
+  await page.keyboard.press("Escape")
+
+  await itemCard(page, "Sokken").getByRole("button", { name: "Wijzig" }).click()
+  await expectAllFields(page.getByRole("dialog", { name: "Wijzig wens" }))
+  await expect(page.getByRole("button", { name: "Meer opties" })).toHaveCount(0)
+})
+
 test("add a wish with a link", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)
@@ -46,7 +72,6 @@ test("add a wish with a link", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Lego kasteel")
-  await showMoreOptions(dialog)
   await dialog.getByLabel("Linkje").fill("https://example.com/lego")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
@@ -76,7 +101,6 @@ test("add an unlimited wish without a link", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Boeken")
-  await showMoreOptions(dialog)
   await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
@@ -110,7 +134,6 @@ test("wish validation errors are shown", async ({ signIn }) => {
   )
 
   await dialog.getByLabel("Wens", { exact: true }).fill("Xbox")
-  await showMoreOptions(dialog)
   await dialog.getByLabel("Linkje").fill("geen-url")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
@@ -209,47 +232,4 @@ test("owner does not see which wishes have been bought", async ({ signIn }) => {
   await expect(card).toBeVisible()
   await expect(card).not.toHaveClass(/line-through/)
   await expect(card.getByRole("button")).toHaveText(/Wijzig/)
-})
-
-test("extra wish options are folded away but keep their values", async ({
-  signIn,
-}) => {
-  const user = await createUser()
-  const wishlist = await createWishlist(user)
-  const page = await signIn(user)
-
-  await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
-
-  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
-  const toggle = dialog.getByRole("button", { name: "Meer opties" })
-  await expect(toggle).toHaveAttribute("aria-expanded", "false")
-  await expect(dialog.getByLabel("Linkje")).toBeHidden()
-  await expect(dialog.getByLabel("Categorie")).toBeHidden()
-
-  await dialog.getByLabel("Wens", { exact: true }).fill("Fiets")
-  await toggle.click()
-  await dialog.getByLabel("Linkje").fill("https://example.com/fiets")
-  await toggle.click()
-  await expect(dialog.getByLabel("Linkje")).toBeHidden()
-  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
-
-  await expect(dialog).toBeHidden()
-  await expect(page.getByRole("link", { name: "Fiets" })).toHaveAttribute(
-    "href",
-    "https://example.com/fiets"
-  )
-
-  await page
-    .locator("div.rounded-md")
-    .filter({ hasText: "Fiets" })
-    .getByRole("button", { name: "Wijzig" })
-    .click()
-  const edit = page.getByRole("dialog", { name: "Wijzig wens" })
-  await expect(
-    edit.getByRole("button", { name: "Meer opties" })
-  ).toHaveAttribute("aria-expanded", "true")
-  await expect(edit.getByLabel("Linkje")).toHaveValue(
-    "https://example.com/fiets"
-  )
 })

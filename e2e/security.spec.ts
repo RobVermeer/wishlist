@@ -8,7 +8,6 @@ import {
   createWishlist,
   prisma,
   toasts,
-  showMoreOptions,
 } from "./fixtures"
 
 test("pages don't contain the email addresses of other users", async ({
@@ -128,8 +127,6 @@ test("wish links must be http or https", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Verrassing")
-
-  await showMoreOptions(dialog)
 
   for (const url of [
     "javascript:alert(document.cookie)",
