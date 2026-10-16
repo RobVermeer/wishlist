@@ -17,11 +17,6 @@ test("new user sees empty states for wishlists", async ({ signIn }) => {
   await expect(
     page.getByText("Je hebt nog geen verlanglijstje 🥺")
   ).toBeVisible()
-
-  await page.goto("/profile/wishlists")
-  await expect(
-    page.getByText("Je hebt nog geen lijstjes gemaakt.")
-  ).toBeVisible()
 })
 
 test("create your own wishlist in your groups", async ({ signIn }) => {
@@ -30,10 +25,8 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await createGroup(user, { title: "Vrienden" })
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await page
-    .getByRole("button", { name: "Maak een nieuw verlanglijstje aan" })
-    .click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await expect(dialog.getByLabel("Voor mezelf")).toBeChecked()
@@ -48,9 +41,7 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(
-    page.getByRole("link", { name: "Mijn lijstje in groep Familie" })
-  ).toBeVisible()
+  await expect(page.getByRole("link", { name: "Mijn lijstje" })).toBeVisible()
 
   const wishlist = await prisma.wishlist.findFirstOrThrow({
     where: { userId: user.id },
@@ -72,10 +63,8 @@ test("create a wishlist for someone else", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await page
-    .getByRole("button", { name: "Maak een nieuw verlanglijstje aan" })
-    .click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
@@ -99,10 +88,8 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
-  await page
-    .getByRole("button", { name: "Maak een nieuw verlanglijstje aan" })
-    .click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
@@ -160,20 +147,22 @@ test("edit a wishlist", async ({ signIn }) => {
   expect(updated.groups.map(({ id }) => id)).toEqual([friends.id])
 })
 
-test("wishlist card lists all its groups", async ({ signIn }) => {
+test("your own wishlist shows the groups it is in", async ({ signIn }) => {
   const user = await createUser()
   const groups = [
     await createGroup(user, { title: "Een" }),
     await createGroup(user, { title: "Twee" }),
     await createGroup(user, { title: "Drie" }),
   ]
-  await createWishlist(user, { groups })
+  const wishlist = await createWishlist(user, { groups })
   const page = await signIn(user)
 
-  await page.goto("/profile/wishlists")
+  await page.goto(`/wishlist/${wishlist.id}`)
 
   await expect(
-    page.getByRole("link", { name: "Mijn lijstje in groepen Een, Twee & Drie" })
+    page.getByRole("heading", {
+      name: "Mijn lijstje in groepen Een, Twee & Drie",
+    })
   ).toBeVisible()
 })
 
@@ -250,20 +239,4 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
   await expect(
     page.getByRole("link", { name: "Dashboard lijst" })
   ).toHaveAttribute("href", `/wishlist/${wishlist.id}`)
-})
-
-test("create a wishlist from the dashboard", async ({ signIn }) => {
-  const user = await createUser()
-  const page = await signIn(user)
-
-  await page.goto("/")
-  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
-
-  const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
-  await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
-  await dialog.getByRole("button", { name: "Maak aan" }).click()
-
-  await expect(dialog).toBeHidden()
-  await page.getByRole("link", { name: "Mijn lijstje" }).click()
-  await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
 })

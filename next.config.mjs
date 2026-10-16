@@ -6,6 +6,13 @@ const withNextIntl = createNextIntlPlugin()
 const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  async redirects() {
+    return ["/profile/wishlists", "/profile/groups"].map(source => ({
+      source,
+      destination: "/",
+      permanent: false,
+    }))
+  },
   async headers() {
     return [
       {

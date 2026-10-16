@@ -44,12 +44,7 @@ interface Props {
   className?: string
 }
 
-export const EditWishlist = ({
-  wishlist,
-  groups,
-  label,
-  className = "absolute right-1",
-}: Props) => {
+export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
