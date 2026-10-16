@@ -440,8 +440,5 @@
   "UnfollowWishlist": {
     "button": "Stop met volgen",
     "toast": "Je volgt dit verlanglijstje niet meer"
-  },
-  "MoreOptions": {
-    "toggle": "Meer opties"
   }
 }

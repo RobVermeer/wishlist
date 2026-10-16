@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
-import { MoreOptions } from "@/components/MoreOptions"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
@@ -67,29 +66,27 @@ export const NewItem = ({ id, categories }: Props) => {
           <Label htmlFor="title">{t("NewItem.form.title")}</Label>
           <Input required id="title" name="title" />
 
-          <MoreOptions>
-            <Label htmlFor="url">
-              {t.rich("NewItem.form.url", {
-                small: chunks => <small>{chunks}</small>,
-              })}
-            </Label>
-            <Input id="url" name="url" />
-            <Label htmlFor="category">
-              {t.rich("NewItem.form.category", {
-                small: chunks => <small>{chunks}</small>,
-              })}
-            </Label>
-            <CategoryCombobox
-              id="category"
-              name="category"
-              categories={categories}
-            />
+          <div className="flex items-center gap-3">
+            <Checkbox id="unlimited" name="unlimited" />
+            <Label htmlFor="unlimited">{t("NewItem.form.unlimited")}</Label>
+          </div>
 
-            <div className="flex items-center gap-3">
-              <Checkbox id="unlimited" name="unlimited" />
-              <Label htmlFor="unlimited">{t("NewItem.form.unlimited")}</Label>
-            </div>
-          </MoreOptions>
+          <Label htmlFor="url">
+            {t.rich("NewItem.form.url", {
+              small: chunks => <small>{chunks}</small>,
+            })}
+          </Label>
+          <Input id="url" name="url" />
+          <Label htmlFor="category">
+            {t.rich("NewItem.form.category", {
+              small: chunks => <small>{chunks}</small>,
+            })}
+          </Label>
+          <CategoryCombobox
+            id="category"
+            name="category"
+            categories={categories}
+          />
         </form>
         <DialogFooter>
           <Button type="submit" form="add">

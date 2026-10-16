@@ -1,4 +1,4 @@
-import { test as base, expect, Locator, Page } from "@playwright/test"
+import { test as base, expect, Page } from "@playwright/test"
 import { PrismaClient, User } from "../src/generated/prisma/client"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
 import { randomUUID } from "node:crypto"
@@ -182,14 +182,6 @@ type TrackedIssue = {
 export async function trackedIssues(): Promise<TrackedIssue[]> {
   const response = await fetch(`${mailURL}/__issues`)
   return response.json()
-}
-
-export async function showMoreOptions(dialog: Locator) {
-  const toggle = dialog.getByRole("button", { name: "Meer opties" })
-
-  if ((await toggle.getAttribute("aria-expanded")) !== "true") {
-    await toggle.click()
-  }
 }
 
 export const toasts = (page: Page) =>
