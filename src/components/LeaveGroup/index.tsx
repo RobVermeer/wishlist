@@ -20,10 +20,7 @@ interface Props {
   className?: string
 }
 
-export const LeaveGroup = ({
-  group,
-  className = "absolute right-1",
-}: Props) => {
+export const LeaveGroup = ({ group, className }: Props) => {
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const { id } = group

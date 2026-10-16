@@ -16,8 +16,6 @@ test("profile tabs navigate between profile pages", async ({ signIn }) => {
   await expect(page).toHaveTitle("Profiel - Wishlist")
 
   for (const [name, path] of [
-    ["Verlanglijstjes", "/profile/wishlists"],
-    ["Groepen", "/profile/groups"],
     ["Gekochte cadeaus", "/profile/bought"],
     ["Profiel", "/profile"],
   ]) {

@@ -7,29 +7,14 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
-import { Page } from "@playwright/test"
-
-const groupCard = (page: Page, title: string) =>
-  page.locator("div.rounded-md").filter({
-    has: page.locator("a").getByText(title, { exact: true }),
-  })
-
-test("new user sees empty states for groups", async ({ signIn }) => {
-  const user = await createUser()
-  const page = await signIn(user)
-
-  await page.goto("/profile/groups")
-
-  await expect(page.getByText("Je volgt nog geen groepen.")).toBeVisible()
-})
 
 test("create a group with a theme", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
   const title = `Familie ${user.id}`.slice(0, 40)
 
-  await page.goto("/profile/groups")
-  await page.getByRole("button", { name: "Maak een nieuwe groep aan" }).click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
   await dialog.getByLabel("Naam").fill(title)
@@ -38,7 +23,7 @@ test("create a group with a theme", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(groupCard(page, title)).toBeVisible()
+  await expect(page.getByRole("link", { name: title })).toBeVisible()
 
   const group = await prisma.group.findFirstOrThrow({
     where: { userId: user.id },
@@ -48,7 +33,6 @@ test("create a group with a theme", async ({ signIn }) => {
   expect(group.theme).toBe("christmas")
   expect(group.members.map(({ id }) => id)).toEqual([user.id])
 
-  await page.goto("/")
   await page.getByRole("link", { name: title }).click()
   await expect(page).toHaveURL(`/group/${group.id}`)
   await expect(page.getByRole("heading", { name: title })).toBeVisible()
@@ -58,8 +42,8 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto("/profile/groups")
-  await page.getByRole("button", { name: "Maak een nieuwe groep aan" }).click()
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
   await dialog.getByLabel("Naam").fill("A")
@@ -399,23 +383,6 @@ test("a group shows cards when it has more lists or only your own", async ({
   await expect(
     memberPage.getByRole("link", { name: "Mijn lijstje" })
   ).toBeVisible()
-})
-
-test("create a group from the dashboard", async ({ signIn }) => {
-  const user = await createUser()
-  const page = await signIn(user)
-  const title = `Vrienden ${user.id}`.slice(0, 40)
-
-  await page.goto("/")
-  await page.getByRole("button", { name: "Nieuwe groep" }).click()
-
-  const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill(title)
-  await dialog.getByRole("button", { name: "Maak aan" }).click()
-
-  await expect(dialog).toBeHidden()
-  await page.getByRole("link", { name: title }).click()
-  await expect(page.getByRole("heading", { name: title })).toBeVisible()
 })
 
 test("add one of your wishlists to a group from its page", async ({
