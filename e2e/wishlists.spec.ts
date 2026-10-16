@@ -19,11 +19,9 @@ test("new user sees empty states for wishlists", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto("/")
+  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeVisible()
   await expect(
-    page.getByText("Je volgt nog geen enkele groep 🥺")
-  ).toBeVisible()
-  await expect(
-    page.getByText("Je hebt nog geen lijstjes gemaakt 🥺")
+    page.getByText("Je hebt nog geen verlanglijstje 🥺")
   ).toBeVisible()
 
   await page.goto("/profile/wishlists")
@@ -264,4 +262,20 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
   await expect(
     page.getByRole("link", { name: "Dashboard lijst" })
   ).toHaveAttribute("href", `/wishlist/${wishlist.id}`)
+})
+
+test("create a wishlist from the dashboard", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
+  await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
+  await dialog.getByRole("button", { name: "Maak aan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await page.getByRole("link", { name: "Mijn lijstje" }).click()
+  await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
 })
