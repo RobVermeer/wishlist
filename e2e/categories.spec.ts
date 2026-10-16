@@ -8,6 +8,7 @@ import {
   createItem,
   prisma,
   toasts,
+  showMoreOptions,
 } from "./fixtures"
 import { Locator, Page } from "@playwright/test"
 
@@ -15,6 +16,7 @@ const categoryToggle = (page: Page, title: string) =>
   page.getByRole("button", { name: new RegExp(`^${title} \\d+$`) })
 
 const chooseCategory = async (page: Page, dialog: Locator, name: string) => {
+  await showMoreOptions(dialog)
   await dialog.getByLabel("Categorie").click()
   await page.getByPlaceholder("Zoek of typ een nieuwe categorie").fill(name)
   await page
@@ -96,6 +98,7 @@ test("existing categories can be picked when adding a wish", async ({
   await page.getByRole("button", { name: "Voeg een wens toe" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await showMoreOptions(dialog)
   await expect(dialog.getByLabel("Categorie")).toHaveText("Kies een categorie")
   await dialog.getByLabel("Categorie").click()
   await expect(page.getByRole("option")).toHaveText(["Kleding", "Boeken"])
