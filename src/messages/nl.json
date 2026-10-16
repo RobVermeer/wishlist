@@ -3,16 +3,18 @@
     "title": "Overzicht - Wishlist",
     "groups": {
       "title": "Groepen die je volgt",
+      "new": "Nieuwe groep",
       "empty": {
-        "title": "Je volgt nog geen enkele groep 🥺",
-        "text": "Om te zien wat anderen wensen en om je eigen verlanglijstje te kunnen toevoegen moet je eerst een groep volgen. Ga naar <profile>je profiel</profile> om te beginnen! 🚀"
+        "title": "Je zit nog niet in een groep 🥺",
+        "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen 🚀"
       }
     },
     "wishlists": {
       "title": "Je verlanglijstjes",
+      "new": "Nieuw verlanglijstje",
       "empty": {
-        "title": "Je hebt nog geen lijstjes gemaakt 🥺",
-        "text": "Doe dit snel op <profile>je profiel</profile>! 🤩"
+        "title": "Je hebt nog geen verlanglijstje 🥺",
+        "text": "Maak er snel een met de knop hierboven 🤩"
       }
     },
     "followed": {
