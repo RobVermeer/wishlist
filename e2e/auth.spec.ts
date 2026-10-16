@@ -22,8 +22,6 @@ test.describe("unauthenticated visitor", () => {
 
   for (const path of [
     "/profile",
-    "/profile/wishlists",
-    "/profile/groups",
     "/profile/bought",
     "/group/some-group",
     "/group/some-group/some-wishlist",
@@ -45,9 +43,9 @@ test("logged in user visiting login is redirected to the callback url", async ({
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile/groups")}`)
+  await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile/bought")}`)
 
-  await expect(page).toHaveURL("/profile/groups")
+  await expect(page).toHaveURL("/profile/bought")
 })
 
 test("login ignores callback urls pointing to other sites", async ({
@@ -174,8 +172,6 @@ test("menu links to all main pages", async ({ signIn }) => {
   await page.goto("/")
 
   for (const [name, path] of [
-    ["Mijn verlanglijstjes", "/profile/wishlists"],
-    ["Mijn groepen", "/profile/groups"],
     ["Mijn gekochte cadeaus", "/profile/bought"],
     ["Overzicht", "/"],
   ]) {
@@ -208,4 +204,16 @@ test("theme api returns the theme of a group", async ({ signIn }) => {
   const response = await page.request.get(`/api/theme?groupId=${group.id}`)
 
   expect(await response.json()).toEqual({ theme: "christmas" })
+})
+
+test("the old profile pages for wishlists and groups go to the dashboard", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  for (const path of ["/profile/wishlists", "/profile/groups"]) {
+    await page.goto(path)
+    await expect(page).toHaveURL("/")
+  }
 })

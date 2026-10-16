@@ -26,7 +26,7 @@ import {
 import { useTranslations } from "next-intl"
 
 interface Props {
-  trigger?: ReactNode
+  trigger: ReactNode
 }
 
 export const NewGroup = ({ trigger }: Props) => {
@@ -58,13 +58,7 @@ export const NewGroup = ({ trigger }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger ?? (
-          <Button>
-            <Plus size="16" className="mr-2" /> {t("NewGroup.button")}
-          </Button>
-        )}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewGroup.title")}</DialogTitle>

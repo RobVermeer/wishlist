@@ -3,16 +3,7 @@
 import { Session } from "next-auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut } from "next-auth/react"
-import {
-  BookUser,
-  Group,
-  House,
-  List,
-  ListTodo,
-  Lock,
-  LogOut,
-  MenuIcon,
-} from "lucide-react"
+import { BookUser, House, ListTodo, Lock, LogOut, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import {
   Sheet,
@@ -84,26 +75,6 @@ export function Menu({ session }: Props) {
             </Link>
 
             <Separator />
-
-            <Link
-              href="/profile/wishlists"
-              scroll={false}
-              onClick={close}
-              className="flex gap-2 items-center"
-            >
-              <List className="text-orange-500" size="18" strokeWidth="2.5" />{" "}
-              {t("Menu.wishlists")}
-            </Link>
-
-            <Link
-              href="/profile/groups"
-              scroll={false}
-              onClick={close}
-              className="flex gap-2 items-center"
-            >
-              <Group className="text-pink-500" size="18" strokeWidth="2.5" />{" "}
-              {t("Menu.groups")}
-            </Link>
 
             <Link
               href="/profile/bought"
