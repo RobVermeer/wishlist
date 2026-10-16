@@ -342,9 +342,9 @@ test("group members see categories but cannot reorder them", async ({
   expect(await itemOrder(page, ["Trui", "Fiets"])).toEqual(["Fiets", "Trui"])
 
   const card = page.locator("div.rounded-md").filter({ hasText: "Trui" })
-  await card.getByRole("button").click()
-  await expect(toasts(page)).toContainText("Je hebt deze wens afgestreept")
-  await expect(card).toHaveClass(/line-through/)
+  await card.getByRole("button", { name: "Ik koop dit" }).click()
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
+  await expect(card).toContainText("Jij koopt dit")
 
   await categoryToggle(page, "Kleding").click()
   await expect(page.getByText("Trui")).toBeHidden()

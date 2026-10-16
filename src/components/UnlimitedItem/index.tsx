@@ -6,15 +6,13 @@ export const UnlimitedItem = () => {
   const t = useTranslations("Toggle")
 
   return (
-    <div className="absolute right-3">
-      <Popover>
-        <PopoverTrigger>
-          <InfinityIcon />
-        </PopoverTrigger>
-        <PopoverContent>
-          <p>{t("unlimited")}</p>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover>
+      <PopoverTrigger className="flex shrink-0 items-center gap-1 text-sm text-muted-foreground">
+        <InfinityIcon size="18" /> {t("unlimitedLabel")}
+      </PopoverTrigger>
+      <PopoverContent>
+        <p>{t("unlimited")}</p>
+      </PopoverContent>
+    </Popover>
   )
 }

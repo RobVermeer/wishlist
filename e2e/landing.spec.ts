@@ -13,12 +13,14 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
 
   const example = page.getByRole("figure")
   await expect(example.getByRole("listitem")).toHaveText([
-    "Fiets",
-    "Boeken",
-    "Lego kasteel",
-    "Warme sokken",
+    /^Fiets\s*Ik koop dit$/,
+    /^Boeken\s*Onbeperkt$/,
+    /^Lego kasteel\s*Wordt al gekocht$/,
+    /^Warme sokken\s*Ik koop dit$/,
   ])
-  await expect(example.getByRole("listitem").nth(2)).toHaveClass(/line-through/)
+  await expect(
+    example.getByRole("listitem").nth(2).getByText("Lego kasteel")
+  ).toHaveClass(/line-through/)
   await expect(example).toContainText("Sanne ziet dat niet")
 
   for (const feature of [
