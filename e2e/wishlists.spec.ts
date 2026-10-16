@@ -8,15 +8,17 @@ import {
   toasts,
 } from "./fixtures"
 
-test("new user sees empty states for wishlists", async ({ signIn }) => {
+test("new user sees empty states", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
   await page.goto("/")
-  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeVisible()
   await expect(
     page.getByText("Je hebt nog geen verlanglijstje 🥺")
   ).toBeVisible()
+
+  await page.goto("/for-others")
+  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeVisible()
 })
 
 test("create your own wishlist in your groups", async ({ signIn }) => {
@@ -41,7 +43,9 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("link", { name: "Mijn lijstje" })).toBeVisible()
+  await expect(
+    page.getByRole("link", { name: "Mijn lijstje", exact: true })
+  ).toBeVisible()
 
   const wishlist = await prisma.wishlist.findFirstOrThrow({
     where: { userId: user.id },
@@ -53,7 +57,7 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   expect(wishlist.groups.map(({ id }) => id)).toEqual([family.id])
 
   await page.goto("/")
-  await page.getByRole("link", { name: "Mijn lijstje" }).click()
+  await page.getByRole("link", { name: "Mijn lijstje", exact: true }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
   await expect(page).toHaveTitle("Mijn lijstje - Wishlist")
   await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
@@ -224,7 +228,9 @@ test("unknown wishlist shows not found", async ({ signIn }) => {
   ).toBeVisible()
 })
 
-test("dashboard links to your groups and wishlists", async ({ signIn }) => {
+test("your wishlists and groups each have their own page", async ({
+  signIn,
+}) => {
   const user = await createUser()
   const group = await createGroup(user, { title: "Dashboard groep" })
   const wishlist = await createWishlist(user, { title: "Dashboard lijst" })
@@ -232,11 +238,17 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
 
   await page.goto("/")
 
-  await expect(page).toHaveTitle("Overzicht - Wishlist")
-  await expect(
-    page.getByRole("link", { name: "Dashboard groep" })
-  ).toHaveAttribute("href", `/group/${group.id}`)
+  await expect(page).toHaveTitle("Mijn lijstjes - Wishlist")
   await expect(
     page.getByRole("link", { name: "Dashboard lijst" })
   ).toHaveAttribute("href", `/wishlist/${wishlist.id}`)
+  await expect(page.getByRole("link", { name: "Dashboard groep" })).toBeHidden()
+
+  await page.goto("/for-others")
+
+  await expect(page).toHaveTitle("Voor anderen - Wishlist")
+  await expect(
+    page.getByRole("link", { name: "Dashboard groep" })
+  ).toHaveAttribute("href", `/group/${group.id}`)
+  await expect(page.getByRole("link", { name: "Dashboard lijst" })).toBeHidden()
 })

@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
+import { MainNav } from "@/components/MainNav"
+import { clsx } from "clsx"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
@@ -44,9 +46,11 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={ubuntu.className}>
+      <body className={clsx(ubuntu.className, session && "pb-16 sm:pb-0")}>
         <NextIntlClientProvider>
           <Header session={session} />
+
+          {session && <MainNav />}
 
           <Layout>{children}</Layout>
 

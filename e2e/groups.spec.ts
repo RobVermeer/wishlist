@@ -13,7 +13,7 @@ test("create a group with a theme", async ({ signIn }) => {
   const page = await signIn(user)
   const title = `Familie ${user.id}`.slice(0, 40)
 
-  await page.goto("/")
+  await page.goto("/for-others")
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
@@ -42,7 +42,7 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto("/")
+  await page.goto("/for-others")
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
@@ -124,14 +124,14 @@ test("owner can remove a group", async ({ signIn }) => {
   )
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
-  await expect(page).toHaveURL("/")
+  await expect(page).toHaveURL("/for-others")
   await expect(page.getByRole("link", { name: "Weg ermee" })).toHaveCount(0)
   expect(
     (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).removed
   ).toBe(true)
 
   const memberPage = await signIn(member)
-  await memberPage.goto("/")
+  await memberPage.goto("/for-others")
   await expect(memberPage.getByRole("link", { name: "Weg ermee" })).toBeHidden()
 
   await memberPage.goto(`/group/${group.id}`)
@@ -160,7 +160,7 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   await expect(dialog.getByLabel("Naam")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
-  await expect(page).toHaveURL("/")
+  await expect(page).toHaveURL("/for-others")
   await expect(page.getByRole("link", { name: "Vriendengroep" })).toHaveCount(0)
 
   const left = await prisma.group.findUniqueOrThrow({
@@ -192,7 +192,7 @@ test("visiting a group you don't follow lets you follow it", async ({
     page.getByRole("heading", { name: "Olga", exact: true })
   ).toBeVisible()
 
-  await page.goto("/")
+  await page.goto("/for-others")
   await expect(page.getByRole("link", { name: "Uitnodiging" })).toBeVisible()
 })
 
@@ -221,7 +221,9 @@ test("group page lists the wishlists of its members", async ({ signIn }) => {
     "href",
     `/group/${group.id}/${managedList.id}`
   )
-  await expect(page.getByRole("link", { name: "Mijn lijstje" })).toBeHidden()
+  await expect(
+    page.getByRole("link", { name: "Mijn lijstje", exact: true })
+  ).toBeHidden()
   await expect(page.getByRole("link", { name: "Geheim lijstje" })).toBeHidden()
   await expect(page.getByRole("link", { name: "Xander" })).toBeHidden()
 })
@@ -371,7 +373,7 @@ test("a group shows cards when it has more lists or only your own", async ({
   const ownerPage = await signIn(owner)
   await ownerPage.goto(`/group/${ownGroup.id}`)
   await expect(
-    ownerPage.getByRole("link", { name: "Mijn lijstje" })
+    ownerPage.getByRole("link", { name: "Mijn lijstje", exact: true })
   ).toBeVisible()
   await expect(
     ownerPage.getByRole("button", { name: "Voeg een wens toe" })
@@ -381,7 +383,7 @@ test("a group shows cards when it has more lists or only your own", async ({
   await memberPage.goto(`/group/${sharedGroup.id}`)
   await expect(memberPage.getByRole("link", { name: "Olga" })).toBeVisible()
   await expect(
-    memberPage.getByRole("link", { name: "Mijn lijstje" })
+    memberPage.getByRole("link", { name: "Mijn lijstje", exact: true })
   ).toBeVisible()
 })
 
@@ -446,7 +448,9 @@ test("create a wishlist for a group from its page", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("link", { name: "Mijn lijstje" })).toBeVisible()
+  await expect(
+    page.getByRole("link", { name: "Mijn lijstje", exact: true })
+  ).toBeVisible()
 
   const wishlist = await prisma.wishlist.findFirstOrThrow({
     where: { userId: user.id },

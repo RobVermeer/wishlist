@@ -22,6 +22,7 @@ test.describe("unauthenticated visitor", () => {
 
   for (const path of [
     "/profile",
+    "/for-others",
     "/presents",
     "/group/some-group",
     "/group/some-group/some-wishlist",
@@ -144,7 +145,7 @@ test("user without a first name is asked for it", async ({ signIn }) => {
     .toBe("Nina")
 
   await page.reload()
-  await expect(page.getByText("Groepen die je volgt")).toBeVisible()
+  await expect(page.getByText("Je verlanglijstjes")).toBeVisible()
   await expect(nameDialog).toBeHidden()
 })
 
@@ -164,24 +165,58 @@ test("logging out ends the session", async ({ signIn }) => {
     .toBe(0)
 })
 
-test("menu links to all main pages", async ({ signIn }) => {
+test("tabs link to the main pages", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
-  const menuButton = page.locator("header").getByRole("button")
+  const tabs = page.getByRole("navigation", { name: "Hoofdmenu" })
 
   await page.goto("/")
+  await expect(
+    tabs.getByRole("link", { name: "Mijn lijstjes" })
+  ).toHaveAttribute("aria-current", "page")
 
   for (const [name, path] of [
+    ["Voor anderen", "/for-others"],
     ["Cadeaus", "/presents"],
-    ["Overzicht", "/"],
+    ["Mijn lijstjes", "/"],
   ]) {
-    await menuButton.click()
-    await page.getByRole("dialog").getByRole("link", { name }).click()
+    await tabs.getByRole("link", { name }).click()
     await expect(page).toHaveURL(path)
-    await expect(page.getByRole("dialog")).toBeHidden()
+    await expect(tabs.getByRole("link", { name })).toHaveAttribute(
+      "aria-current",
+      "page"
+    )
   }
+})
 
-  await menuButton.click()
+test("the tab of the section you are in stays active on its pages", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const group = await createGroup(user)
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+  const tabs = page.getByRole("navigation", { name: "Hoofdmenu" })
+
+  await page.goto(`/group/${group.id}`)
+  await expect(
+    tabs.getByRole("link", { name: "Voor anderen" })
+  ).toHaveAttribute("aria-current", "page")
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await expect(
+    tabs.getByRole("link", { name: "Mijn lijstjes" })
+  ).toHaveAttribute("aria-current", "page")
+})
+
+test("menu has no admin link for other users", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.locator("header").getByRole("button").click()
+
+  await expect(page.getByRole("dialog")).toContainText("Uitloggen")
   await expect(page.getByRole("link", { name: "Admin" })).toBeHidden()
 })
 

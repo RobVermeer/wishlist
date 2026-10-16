@@ -1,6 +1,17 @@
 {
   "Home": {
-    "title": "Overzicht - Wishlist",
+    "title": "Mijn lijstjes - Wishlist",
+    "wishlists": {
+      "title": "Je verlanglijstjes",
+      "new": "Nieuw verlanglijstje",
+      "empty": {
+        "title": "Je hebt nog geen verlanglijstje 🥺",
+        "text": "Maak er snel een met de knop hierboven 🤩"
+      }
+    }
+  },
+  "ForOthers": {
+    "title": "Voor anderen - Wishlist",
     "groups": {
       "title": "Groepen die je volgt",
       "new": "Nieuwe groep",
@@ -9,17 +20,15 @@
         "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen 🚀"
       }
     },
-    "wishlists": {
-      "title": "Je verlanglijstjes",
-      "new": "Nieuw verlanglijstje",
-      "empty": {
-        "title": "Je hebt nog geen verlanglijstje 🥺",
-        "text": "Maak er snel een met de knop hierboven 🤩"
-      }
-    },
     "followed": {
       "title": "Verlanglijstjes die je volgt"
     }
+  },
+  "MainNav": {
+    "label": "Hoofdmenu",
+    "mine": "Mijn lijstjes",
+    "others": "Voor anderen",
+    "presents": "Cadeaus"
   },
   "NotFound": {
     "empty": {
@@ -72,8 +81,6 @@
     }
   },
   "Menu": {
-    "dashboard": "Overzicht",
-    "boughtPresents": "Cadeaus",
     "logout": "Uitloggen"
   },
   "Login": {

@@ -73,7 +73,7 @@ export const EditGroup = ({ group, className }: Props) => {
     }
 
     setOpen(false)
-    router.push("/")
+    router.push("/for-others")
   }
 
   return (

@@ -29,7 +29,7 @@ export const LeaveGroup = ({ group, className }: Props) => {
   async function handleLeave() {
     await leaveGroupById(id)
     setOpen(false)
-    router.push("/")
+    router.push("/for-others")
   }
 
   return (

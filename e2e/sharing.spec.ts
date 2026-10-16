@@ -197,7 +197,7 @@ test("unknown or removed shared wishlists are not found", async ({ page }) => {
   }
 })
 
-test("followed wishlists are on the dashboard and can be unfollowed", async ({
+test("followed wishlists are under Voor anderen and can be unfollowed", async ({
   signIn,
 }) => {
   const owner = await createUser({ firstName: "Olga" })
@@ -205,7 +205,7 @@ test("followed wishlists are on the dashboard and can be unfollowed", async ({
   const wishlist = await createWishlist(owner, { followers: [follower] })
   const page = await signIn(follower)
 
-  await page.goto("/")
+  await page.goto("/for-others")
   await expect(
     page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
   ).toBeVisible()
@@ -217,7 +217,7 @@ test("followed wishlists are on the dashboard and can be unfollowed", async ({
   await expect(toasts(page)).toContainText(
     "Je volgt dit verlanglijstje niet meer"
   )
-  await expect(page).toHaveURL("/")
+  await expect(page).toHaveURL("/for-others")
   await expect(
     page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
   ).toHaveCount(0)

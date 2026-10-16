@@ -3,7 +3,7 @@
 import { Session } from "next-auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut } from "next-auth/react"
-import { BookUser, House, ListTodo, Lock, LogOut, MenuIcon } from "lucide-react"
+import { ListTodo, Lock, LogOut, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import {
   Sheet,
@@ -64,37 +64,9 @@ export function Menu({ session }: Props) {
               </SheetTitle>
             </SheetHeader>
 
-            <Link
-              href="/"
-              scroll={false}
-              onClick={close}
-              className="flex gap-2 items-center mt-4"
-            >
-              <House className="text-emerald-500" size="18" strokeWidth="2.5" />{" "}
-              {t("Menu.dashboard")}
-            </Link>
-
-            <Separator />
-
-            <Link
-              href="/presents"
-              scroll={false}
-              onClick={close}
-              className="flex gap-2 items-center"
-            >
-              <BookUser
-                className="text-purple-500"
-                size="18"
-                strokeWidth="2.5"
-              />{" "}
-              {t("Menu.boughtPresents")}
-            </Link>
-
-            <Separator />
-
             <a
               href="https://36.robvermeer.nl"
-              className="flex gap-2 items-center"
+              className="flex gap-2 items-center mt-4"
             >
               <ListTodo
                 className="text-green-400"

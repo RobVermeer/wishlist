@@ -27,7 +27,7 @@ export const UnfollowWishlist = ({ wishlistId }: Props) => {
     }
 
     toast({ title: t("toast") })
-    router.push("/")
+    router.push("/for-others")
   }
 
   return (

@@ -5,7 +5,7 @@ test("dates are stored as unix epoch milliseconds", async ({ signIn }) => {
   const page = await signIn(user)
   const title = `Datum ${user.id}`.slice(0, 40)
 
-  await page.goto("/")
+  await page.goto("/for-others")
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
   await dialog.getByLabel("Naam").fill(title)
