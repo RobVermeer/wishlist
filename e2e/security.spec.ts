@@ -241,3 +241,56 @@ test("followers of a wishlist can see it and check off its wishes", async ({
     )
     .toBe(follower.id)
 })
+
+for (const target of ["group", "wishlist"] as const) {
+  test(`you can't add a wishlist to a group with a forged ${target}`, async ({
+    signIn,
+  }) => {
+    const user = await createUser()
+    const stranger = await createUser()
+    const group = await createGroup(user)
+    const foreignGroup = await createGroup(stranger)
+    const wishlist = await createWishlist(user, { title: "Kerst" })
+    const foreignWishlist = await createWishlist(stranger)
+    const page = await signIn(user)
+
+    const [from, to] =
+      target === "group"
+        ? [group.id, foreignGroup.id]
+        : [wishlist.id, foreignWishlist.id]
+    await page.route(`**/group/${group.id}`, async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        return route.continue({
+          postData: request.postData()!.replaceAll(from, to),
+        })
+      }
+      return route.continue()
+    })
+
+    await page.goto(`/group/${group.id}`)
+    await page
+      .getByRole("button", { name: "Voeg mijn verlanglijstje toe" })
+      .click()
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: "Voeg toe" })
+      .click()
+
+    await expect(toasts(page)).toContainText(
+      target === "group"
+        ? "Groep niet gevonden"
+        : "Verlanglijstje niet gevonden"
+    )
+    expect(
+      await prisma.group.count({
+        where: { id: foreignGroup.id, wishlist: { some: {} } },
+      })
+    ).toBe(0)
+    expect(
+      await prisma.wishlist.count({
+        where: { id: foreignWishlist.id, groups: { some: {} } },
+      })
+    ).toBe(0)
+  })
+}
