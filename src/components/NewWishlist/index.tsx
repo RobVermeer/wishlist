@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
-import { FormEvent, startTransition, useState } from "react"
+import { FormEvent, ReactNode, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
@@ -31,9 +31,11 @@ import {
 
 interface Props {
   groups: Awaited<ReturnType<typeof getGroupsForUser>>
+  defaultGroupIds?: string[]
+  trigger?: ReactNode
 }
 
-export const NewWishlist = ({ groups }: Props) => {
+export const NewWishlist = ({ groups, defaultGroupIds, trigger }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [ownList, setOwnList] = useState(true)
@@ -64,9 +66,11 @@ export const NewWishlist = ({ groups }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus size="16" className="mr-2" /> {t("NewWishlist.button")}
-        </Button>
+        {trigger ?? (
+          <Button>
+            <Plus size="16" className="mr-2" /> {t("NewWishlist.button")}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -92,7 +96,9 @@ export const NewWishlist = ({ groups }: Props) => {
                   id={`group-${group.id}`}
                   value={group.id}
                   name="groups"
-                  defaultChecked
+                  defaultChecked={
+                    defaultGroupIds ? defaultGroupIds.includes(group.id) : true
+                  }
                 />
                 <label htmlFor={`group-${group.id}`}>{group.title}</label>
               </div>

@@ -400,3 +400,20 @@ test("a group shows cards when it has more lists or only your own", async ({
     memberPage.getByRole("link", { name: "Mijn lijstje" })
   ).toBeVisible()
 })
+
+test("create a group from the dashboard", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+  const title = `Vrienden ${user.id}`.slice(0, 40)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
+  await dialog.getByLabel("Naam").fill(title)
+  await dialog.getByRole("button", { name: "Maak aan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await page.getByRole("link", { name: title }).click()
+  await expect(page.getByRole("heading", { name: title })).toBeVisible()
+})
