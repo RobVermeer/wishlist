@@ -52,7 +52,7 @@ export default async function Home() {
         wishlistColors(wishlist.theme)
       )}
     >
-      <span className="flex size-11 items-center justify-center rounded-full bg-white/70 shadow-sm transition-transform group-hover:scale-110 dark:bg-white/10">
+      <span className="flex size-11 items-center justify-center rounded-full bg-white/70 shadow-sm transition-transform group-hover:scale-110 dark:bg-white/15">
         <WishlistIcon theme={wishlist.theme} className="size-5" />
       </span>
       <WishlistTitle
