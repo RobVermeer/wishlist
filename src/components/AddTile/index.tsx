@@ -8,7 +8,7 @@ interface Props extends ComponentProps<"button"> {
 export const AddTile = ({ label, ...props }: Props) => (
   <button
     type="button"
-    className="aspect-video flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-input p-3 text-center font-semibold text-muted-foreground transition-all hover:border-primary hover:text-primary"
+    className="flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-input bg-card/40 p-4 text-center font-medium text-muted-foreground transition-all hover:-rotate-1 hover:border-primary hover:text-primary"
     {...props}
   >
     <Plus size="24" />
