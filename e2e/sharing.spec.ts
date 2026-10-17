@@ -14,7 +14,7 @@ import { Page } from "@playwright/test"
 const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
 
 const itemCard = (page: Page, title: string) =>
-  page.locator("div.rounded-md").filter({ hasText: title })
+  page.locator("div.rounded-2xl").filter({ hasText: title })
 
 test("share your wishlist with a link", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Olga" })

@@ -48,7 +48,7 @@ export const ToggleItem = ({ id, boughtByMe }: Props) => {
       className="flex shrink-0 items-center gap-2"
     >
       {boughtByMe && (
-        <span className="flex items-center gap-1 text-sm text-primary">
+        <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold text-gold-foreground dark:text-gold">
           <Check size="16" strokeWidth="2.5" /> {t("boughtByMe")}
         </span>
       )}

@@ -343,7 +343,7 @@ test("a group with only someone else's wishlist shows it right away", async ({
   ).toBeVisible()
 
   await page
-    .locator("div.rounded-md")
+    .locator("div.rounded-2xl")
     .filter({ hasText: "Fiets" })
     .getByRole("button", { name: "Ik koop dit" })
     .click()

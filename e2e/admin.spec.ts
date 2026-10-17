@@ -11,7 +11,7 @@ import {
 import { Page } from "@playwright/test"
 
 const card = (page: Page, text: string) =>
-  page.locator("div.rounded-md").filter({ hasText: text })
+  page.locator("div.rounded-2xl").filter({ hasText: text })
 
 test("regular users cannot access the admin", async ({ signIn }) => {
   const user = await createUser()
