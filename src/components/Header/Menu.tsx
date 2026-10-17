@@ -37,7 +37,7 @@ export function Menu({ session }: Props) {
   return (
     <div className="flex gap-2">
       <Link href="/profile">
-        <Avatar className="border border-slate-500 cursor-pointer">
+        <Avatar className="cursor-pointer ring-2 ring-background shadow-sm">
           {session.user.image && (
             <AvatarImage
               src={session.user.image}
@@ -49,7 +49,7 @@ export function Menu({ session }: Props) {
       </Link>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
-          <Button size="icon" variant="ghost" className="relative text-white">
+          <Button size="icon" variant="ghost" className="relative">
             <MenuIcon />
           </Button>
         </SheetTrigger>
