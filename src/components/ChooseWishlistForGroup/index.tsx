@@ -1,8 +1,8 @@
 "use client"
 
-import { ListPlus } from "lucide-react"
+import { ListChecks } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { FormEvent, startTransition, useState } from "react"
+import { FormEvent, ReactNode, startTransition, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -20,11 +20,16 @@ import { addWishlistToGroup } from "@/lib/wishlists/addWishlistToGroup"
 
 interface Props {
   group: { id: string; title: string }
-  wishlists: { id: string; name: string }[]
+  wishlists: { id: string; name: string; details: string }[]
+  trigger: ReactNode
 }
 
-export const AddWishlistToGroup = ({ group, wishlists }: Props) => {
-  const t = useTranslations("Group.addWishlist")
+export const ChooseWishlistForGroup = ({
+  group,
+  wishlists,
+  trigger,
+}: Props) => {
+  const t = useTranslations("Group.chooseWishlist")
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [wishlistId, setWishlistId] = useState(wishlists[0]?.id)
@@ -51,11 +56,7 @@ export const AddWishlistToGroup = ({ group, wishlists }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <ListPlus size="16" className="mr-2" /> {t("button")}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
@@ -63,19 +64,28 @@ export const AddWishlistToGroup = ({ group, wishlists }: Props) => {
             {t("text", { group: group.title })}
           </DialogDescription>
         </DialogHeader>
-        <form id="add-to-group" onSubmit={onSubmit}>
+        <form id="choose-for-group" onSubmit={onSubmit}>
           <RadioGroup value={wishlistId} onValueChange={setWishlistId}>
             {wishlists.map(wishlist => (
-              <div key={wishlist.id} className="flex items-center gap-2">
-                <RadioGroupItem value={wishlist.id} id={`add-${wishlist.id}`} />
-                <Label htmlFor={`add-${wishlist.id}`}>{wishlist.name}</Label>
+              <div key={wishlist.id} className="flex items-start gap-2">
+                <RadioGroupItem
+                  value={wishlist.id}
+                  id={`choose-${wishlist.id}`}
+                  className="mt-0.5"
+                />
+                <Label htmlFor={`choose-${wishlist.id}`} className="grid gap-1">
+                  {wishlist.name}
+                  <small className="font-normal text-muted-foreground">
+                    {wishlist.details}
+                  </small>
+                </Label>
               </div>
             ))}
           </RadioGroup>
         </form>
         <DialogFooter>
-          <Button type="submit" form="add-to-group">
-            <ListPlus size="16" className="mr-2" /> {t("submit")}
+          <Button type="submit" form="choose-for-group">
+            <ListChecks size="16" className="mr-2" /> {t("submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

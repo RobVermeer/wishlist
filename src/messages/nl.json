@@ -68,6 +68,9 @@
         "other": "Voor iemand anders",
         "name": "Naam",
         "placeholder": "Bijvoorbeeld de naam van je kind"
+      },
+      "groups": {
+        "replaces": "Vervangt je andere verlanglijstje in deze groep"
       }
     }
   },
@@ -97,22 +100,32 @@
   },
   "Group": {
     "empty": {
-      "title": "Er zijn nog geen lijstjes! 😵‍💫",
-      "text": "Voeg als eerste je verlanglijstje toe 📝"
+      "title": "Er zijn nog geen lijstjes! 😵‍💫"
     },
     "noFollow": {
       "title": "Je volgt deze groep nog niet 😵",
       "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😊"
     },
     "follow": "Volg de groep",
-    "addWishlist": {
-      "button": "Voeg mijn verlanglijstje toe",
-      "title": "Voeg je verlanglijstje toe",
-      "text": "Kies welk verlanglijstje je in {group} wilt laten zien.",
-      "submit": "Voeg toe",
-      "toast": "Je verlanglijstje staat nu in de groep 🎉"
+    "missing": {
+      "title": "Welk verlanglijstje is voor deze groep?",
+      "text": "Kies een van je verlanglijstjes of maak een nieuwe, dan zien de anderen in {group} wat je graag wilt."
     },
-    "newWishlist": "Nieuw verlanglijstje voor deze groep"
+    "duplicates": {
+      "title": "Je staat {count} keer in deze groep",
+      "text": "Kies welk verlanglijstje de anderen hier zien. Je andere verlanglijstjes blijven gewoon bestaan."
+    },
+    "chooseWishlist": {
+      "button": "Kies je verlanglijstje",
+      "change": "Ander verlanglijstje kiezen",
+      "title": "Kies je verlanglijstje",
+      "text": "De anderen in {group} zien alleen het verlanglijstje dat je kiest.",
+      "submit": "Kies dit verlanglijstje",
+      "toast": "Dit verlanglijstje staat nu in de groep 🎉",
+      "wishes": "{count, plural, =0 {Nog geen wensen} one {# wens} other {# wensen}}"
+    },
+    "newWishlist": "Nieuw verlanglijstje",
+    "forSomeoneElse": "Verlanglijstje voor iemand anders"
   },
   "GroupWishlist": {
     "empty": {

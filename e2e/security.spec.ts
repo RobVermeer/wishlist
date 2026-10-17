@@ -105,6 +105,7 @@ test("wishlists can only be added to groups you are a member of", async ({
   await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
+  await dialog.getByLabel("Eigen groep").click()
   await dialog
     .locator(`input[name="groups"][value="${ownGroup.id}"]`)
     .evaluate((input, id) => input.setAttribute("value", id), foreignGroup.id)
@@ -244,7 +245,7 @@ for (const target of ["group", "wishlist"] as const) {
     const stranger = await createUser()
     const group = await createGroup(user)
     const foreignGroup = await createGroup(stranger)
-    const wishlist = await createWishlist(user, { title: "Kerst" })
+    const wishlist = await createWishlist(user)
     const foreignWishlist = await createWishlist(stranger)
     const page = await signIn(user)
 
@@ -263,12 +264,10 @@ for (const target of ["group", "wishlist"] as const) {
     })
 
     await page.goto(`/group/${group.id}`)
-    await page
-      .getByRole("button", { name: "Voeg mijn verlanglijstje toe" })
-      .click()
+    await page.getByRole("button", { name: "Kies je verlanglijstje" }).click()
     await page
       .getByRole("dialog")
-      .getByRole("button", { name: "Voeg toe" })
+      .getByRole("button", { name: "Kies dit verlanglijstje" })
       .click()
 
     await expect(toasts(page)).toContainText(

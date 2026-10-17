@@ -7,11 +7,11 @@ import { WishlistCard } from "@/components/WishlistCard"
 import { Wishlist } from "@/components/Wishlist"
 import { EditGroup } from "@/components/EditGroup"
 import { LeaveGroup } from "@/components/LeaveGroup"
-import { AddWishlistToGroup } from "@/components/AddWishlistToGroup"
+import { ChooseWishlistForGroup } from "@/components/ChooseWishlistForGroup"
 import { NewWishlist } from "@/components/NewWishlist"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import { ListChecks, Plus, UserPlus } from "lucide-react"
+import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
@@ -63,13 +63,33 @@ export default async function GroupPage({ params }: Props) {
     )
   }
 
-  const ownGroups = await getGroupsForUser()
-  const wishlistsToAdd = (await getWishlistsForUser()).filter(
-    wishlist => !wishlist.groups.some(({ id }) => id === group.id)
+  const groupOptions = await getGroupOptionsForUser()
+  const ownWishlists = (await getWishlistsForUser()).filter(
+    wishlist => !wishlist.title
   )
+  const ownInGroup = ownWishlists.filter(wishlist =>
+    wishlist.groups.some(({ id }) => id === group.id)
+  )
+  const ownToChoose = ownWishlists.filter(
+    wishlist => !ownInGroup.includes(wishlist)
+  )
+  const wishlistNames = (wishlists: typeof ownWishlists) =>
+    wishlists.map(wishlist => ({
+      id: wishlist.id,
+      name: wishlist.description || tCommon("myList"),
+      details: t("chooseWishlist.wishes", {
+        count: wishlist.wishlistItem.length,
+      }),
+    }))
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
     group.wishlist.length === 1 && !onlyWishlist.isOwnList
+
+  const chooseButton = (
+    <Button>
+      <ListChecks size="16" className="mr-2" /> {t("chooseWishlist.button")}
+    </Button>
+  )
 
   return (
     <List>
@@ -82,6 +102,47 @@ export default async function GroupPage({ params }: Props) {
         )}
       </div>
 
+      {ownInGroup.length === 0 && (
+        <section className="grid gap-3 rounded-md border p-4">
+          <EmptyState title={t("missing.title")}>
+            {t("missing.text", { group: group.title })}
+          </EmptyState>
+          <div className="flex flex-wrap gap-2">
+            {ownToChoose.length > 0 && (
+              <ChooseWishlistForGroup
+                group={group}
+                wishlists={wishlistNames(ownToChoose)}
+                trigger={chooseButton}
+              />
+            )}
+            <NewWishlist
+              groups={groupOptions}
+              defaultGroupIds={[group.id]}
+              trigger={
+                <Button variant="outline">
+                  <Plus size="16" className="mr-2" /> {t("newWishlist")}
+                </Button>
+              }
+            />
+          </div>
+        </section>
+      )}
+
+      {ownInGroup.length > 1 && (
+        <section className="grid gap-3 rounded-md border p-4">
+          <EmptyState
+            title={t("duplicates.title", { count: ownInGroup.length })}
+          >
+            {t("duplicates.text")}
+          </EmptyState>
+          <ChooseWishlistForGroup
+            group={group}
+            wishlists={wishlistNames([...ownInGroup, ...ownToChoose])}
+            trigger={chooseButton}
+          />
+        </section>
+      )}
+
       {showOnlyWishlist ? (
         <Wishlist id={onlyWishlist.id} />
       ) : (
@@ -90,27 +151,29 @@ export default async function GroupPage({ params }: Props) {
         ))
       )}
 
-      {group.wishlist.length === 0 && (
-        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
-      )}
+      {group.wishlist.length === 0 && <EmptyState title={t("empty.title")} />}
 
       <Separator className="my-3" />
 
-      {wishlistsToAdd.length > 0 && (
-        <AddWishlistToGroup
+      {ownInGroup.length === 1 && ownToChoose.length > 0 && (
+        <ChooseWishlistForGroup
           group={group}
-          wishlists={wishlistsToAdd.map(wishlist => ({
-            id: wishlist.id,
-            name: wishlist.title || tCommon("myList"),
-          }))}
+          wishlists={wishlistNames(ownToChoose)}
+          trigger={
+            <Button variant="outline">
+              <ListChecks size="16" className="mr-2" />{" "}
+              {t("chooseWishlist.change")}
+            </Button>
+          }
         />
       )}
       <NewWishlist
-        groups={ownGroups}
+        groups={groupOptions}
         defaultGroupIds={[group.id]}
+        defaultOwnList={false}
         trigger={
           <Button variant="outline">
-            <Plus size="16" className="mr-2" /> {t("newWishlist")}
+            <UserPlus size="16" className="mr-2" /> {t("forSomeoneElse")}
           </Button>
         }
       />
