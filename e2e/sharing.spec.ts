@@ -206,9 +206,6 @@ test("followed wishlists are on the dashboard and can be unfollowed", async ({
   const page = await signIn(follower)
 
   await page.goto("/")
-  await expect(
-    page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
-  ).toBeVisible()
   await page.getByRole("link", { name: "Olga" }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
 
@@ -218,9 +215,7 @@ test("followed wishlists are on the dashboard and can be unfollowed", async ({
     "Je volgt dit verlanglijstje niet meer"
   )
   await expect(page).toHaveURL("/")
-  await expect(
-    page.getByRole("heading", { name: "Verlanglijstjes die je volgt" })
-  ).toHaveCount(0)
+  await expect(page.getByRole("link", { name: "Olga" })).toHaveCount(0)
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(page.getByText(notFound)).toBeVisible()

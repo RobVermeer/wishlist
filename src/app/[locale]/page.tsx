@@ -62,7 +62,7 @@ export default async function Home() {
   return (
     <>
       <List>
-        <ListTitle>{t("groups.title")}</ListTitle>
+        <ListTitle>{t("following.title")}</ListTitle>
 
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
           {groups.map(group => (
@@ -82,12 +82,13 @@ export default async function Home() {
               </span>
             </Link>
           ))}
-          <NewGroup trigger={<AddTile label={t("groups.new")} />} />
+          {followedWishlists.map(renderWishlist)}
+          <NewGroup trigger={<AddTile label={t("following.newGroup")} />} />
         </div>
 
-        {groups.length === 0 && (
-          <EmptyState title={t("groups.empty.title")}>
-            {t("groups.empty.text")}
+        {groups.length === 0 && followedWishlists.length === 0 && (
+          <EmptyState title={t("following.empty.title")}>
+            {t("following.empty.text")}
           </EmptyState>
         )}
       </List>
@@ -109,16 +110,6 @@ export default async function Home() {
           </EmptyState>
         )}
       </List>
-
-      {followedWishlists.length > 0 && (
-        <List>
-          <ListTitle>{t("followed.title")}</ListTitle>
-
-          <div className="grid gap-2 grid-cols-2 sm:grid-cols-3">
-            {followedWishlists.map(renderWishlist)}
-          </div>
-        </List>
-      )}
     </>
   )
 }

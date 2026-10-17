@@ -1,9 +1,9 @@
 {
   "Home": {
     "title": "Overzicht - Wishlist",
-    "groups": {
-      "title": "Groepen die je volgt",
-      "new": "Nieuwe groep",
+    "following": {
+      "title": "Wat je volgt",
+      "newGroup": "Nieuwe groep",
       "empty": {
         "title": "Je zit nog niet in een groep 🥺",
         "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen 🚀"
@@ -16,9 +16,6 @@
         "title": "Je hebt nog geen verlanglijstje 🥺",
         "text": "Maak er snel een met de knop hierboven 🤩"
       }
-    },
-    "followed": {
-      "title": "Verlanglijstjes die je volgt"
     }
   },
   "NotFound": {

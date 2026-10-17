@@ -144,7 +144,7 @@ test("user without a first name is asked for it", async ({ signIn }) => {
     .toBe("Nina")
 
   await page.reload()
-  await expect(page.getByText("Groepen die je volgt")).toBeVisible()
+  await expect(page.getByText("Wat je volgt")).toBeVisible()
   await expect(nameDialog).toBeHidden()
 })
 

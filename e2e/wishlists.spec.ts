@@ -240,3 +240,41 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
     page.getByRole("link", { name: "Dashboard lijst" })
   ).toHaveAttribute("href", `/wishlist/${wishlist.id}`)
 })
+
+test("the dashboard shows what you follow first, then your own wishlists", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const friend = await createUser({ firstName: "Fenna" })
+  await createGroup(user, { title: "Familie" })
+  await createWishlist(friend, { followers: [user] })
+  await createWishlist(user, { title: "Eigen lijst" })
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+    "Wat je volgt",
+    "Je verlanglijstjes",
+  ])
+
+  const following = page.locator("div.grid").filter({
+    has: page.getByRole("button", { name: "Nieuwe groep" }),
+  })
+  await expect(following.getByRole("link")).toHaveText([/Familie/, /Fenna/])
+  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeHidden()
+})
+
+test("following only a wishlist doesn't show the empty state", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const friend = await createUser({ firstName: "Fenna" })
+  await createWishlist(friend, { followers: [user] })
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  await expect(page.getByRole("link", { name: "Fenna" })).toBeVisible()
+  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeHidden()
+})
