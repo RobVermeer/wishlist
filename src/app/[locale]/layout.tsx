@@ -1,7 +1,7 @@
 import "./globals.css"
 import type { Metadata } from "next"
 import { getServerSession } from "next-auth"
-import { Ubuntu } from "next/font/google"
+import { Figtree, Fraunces } from "next/font/google"
 import { authOptions } from "@/lib/nextAuth"
 import { Header } from "@/components/Header"
 import { Toaster } from "@/components/ui/toaster"
@@ -11,7 +11,12 @@ import { Layout } from "@/components/Layout"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
 
-const ubuntu = Ubuntu({ weight: ["400"], subsets: ["latin"] })
+const body = Figtree({ subsets: ["latin"], variable: "--font-body" })
+const heading = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  axes: ["SOFT", "opsz"],
+})
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata")
@@ -44,7 +49,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={ubuntu.className}>
+      <body className={`${body.variable} ${heading.variable}`}>
         <NextIntlClientProvider>
           <Header session={session} />
 
