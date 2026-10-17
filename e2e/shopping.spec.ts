@@ -123,6 +123,52 @@ test("buy a wish and change your mind", async ({ signIn }) => {
   ).toBeVisible()
 })
 
+test("undo buying a wish from the toast", async ({ signIn }) => {
+  const { shopper, group, wishlist } = await setup()
+  const item = await createItem(wishlist, { title: "Sokken" })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const card = itemCard(page, "Sokken")
+  await card.getByRole("button", { name: "Ik koop dit" }).click()
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
+  await toasts(page).getByRole("button", { name: "Ongedaan maken" }).click()
+
+  await expect(toasts(page)).toContainText("Je koopt dit toch niet")
+  await expect(
+    toasts(page).getByRole("button", { name: "Ongedaan maken" })
+  ).toHaveCount(0)
+  await expect(card.getByRole("button", { name: "Ik koop dit" })).toBeVisible()
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBeNull()
+})
+
+test("undo changing your mind from the toast", async ({ signIn }) => {
+  const { shopper, group, wishlist } = await setup()
+  const item = await createItem(wishlist, {
+    title: "Sokken",
+    boughtBy: shopper,
+  })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const card = itemCard(page, "Sokken")
+  await card.getByRole("button", { name: "Toch niet" }).click()
+  await expect(toasts(page)).toContainText("Je koopt dit toch niet")
+  await toasts(page).getByRole("button", { name: "Ongedaan maken" }).click()
+
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
+  await expect(card).toContainText("Jij koopt dit")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBe(shopper.id)
+})
+
 test("a wish someone else buys shows as already bought", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
   const otherShopper = await createUser()

@@ -249,7 +249,8 @@
     "unlimitedLabel": "Onbeperkt",
     "unlimited": "Deze wens kan door meer mensen gekocht worden, hij blijft altijd open.",
     "checked": "Leuk, jij koopt dit! 🎁",
-    "undo": "Je koopt dit toch niet"
+    "undo": "Je koopt dit toch niet",
+    "revert": "Ongedaan maken"
   },
   "UserInfo": {
     "title": "Vul je naam in",
