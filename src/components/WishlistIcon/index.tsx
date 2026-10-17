@@ -44,24 +44,24 @@ export const WishlistIcon = ({ theme, className }: Props) => {
 export const wishlistColors = (theme: string | null) => {
   switch (theme) {
     case "birthday":
-      return "bg-pink-100 text-pink-700 dark:bg-pink-950/50 dark:text-pink-300"
+      return "bg-pink-100 text-pink-700 dark:bg-pink-400/25 dark:text-pink-200"
     case "holidays":
-      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-400/25 dark:text-emerald-200"
     case "home":
-      return "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300"
+      return "bg-amber-100 text-amber-700 dark:bg-amber-400/25 dark:text-amber-200"
     case "travel":
-      return "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300"
+      return "bg-sky-100 text-sky-700 dark:bg-sky-400/25 dark:text-sky-200"
     case "clothing":
-      return "bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300"
+      return "bg-violet-100 text-violet-700 dark:bg-violet-400/25 dark:text-violet-200"
     case "baby":
-      return "bg-teal-100 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300"
+      return "bg-teal-100 text-teal-700 dark:bg-teal-400/25 dark:text-teal-200"
     case "sports":
-      return "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300"
+      return "bg-orange-100 text-orange-700 dark:bg-orange-400/25 dark:text-orange-200"
     case "tools":
-      return "bg-stone-200 text-stone-700 dark:bg-stone-800/60 dark:text-stone-300"
+      return "bg-stone-200 text-stone-700 dark:bg-stone-400/25 dark:text-stone-200"
     case "pet":
-      return "bg-lime-100 text-lime-700 dark:bg-lime-950/50 dark:text-lime-300"
+      return "bg-lime-100 text-lime-700 dark:bg-lime-400/25 dark:text-lime-200"
     default:
-      return "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300"
+      return "bg-rose-100 text-rose-700 dark:bg-rose-400/25 dark:text-rose-200"
   }
 }

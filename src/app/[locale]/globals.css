@@ -28,27 +28,45 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: hsl(285 20% 7%);
-    --foreground: hsl(36 30% 93%);
-    --card: hsl(285 16% 12%);
-    --card-foreground: hsl(36 30% 93%);
-    --popover: hsl(285 16% 12%);
-    --popover-foreground: hsl(36 30% 93%);
-    --primary: hsl(352 80% 60%);
+    --background: hsl(276 32% 12%);
+    --foreground: hsl(36 40% 95%);
+    --card: hsl(276 26% 18%);
+    --card-foreground: hsl(36 40% 95%);
+    --popover: hsl(276 26% 18%);
+    --popover-foreground: hsl(36 40% 95%);
+    --primary: hsl(352 85% 62%);
     --primary-foreground: hsl(0 0% 100%);
-    --secondary: hsl(285 12% 18%);
-    --secondary-foreground: hsl(36 30% 93%);
-    --muted: hsl(285 12% 16%);
-    --muted-foreground: hsl(285 8% 66%);
-    --accent: hsl(285 12% 18%);
-    --accent-foreground: hsl(36 30% 93%);
-    --destructive: hsl(0 62% 45%);
+    --secondary: hsl(276 22% 23%);
+    --secondary-foreground: hsl(36 40% 95%);
+    --muted: hsl(276 20% 21%);
+    --muted-foreground: hsl(280 15% 75%);
+    --accent: hsl(276 22% 23%);
+    --accent-foreground: hsl(36 40% 95%);
+    --destructive: hsl(0 70% 55%);
     --destructive-foreground: hsl(0 0% 100%);
-    --border: hsl(285 10% 20%);
-    --input: hsl(285 10% 24%);
-    --ring: hsl(352 80% 60%);
-    --gold: hsl(42 85% 60%);
+    --border: hsl(276 18% 27%);
+    --input: hsl(276 18% 32%);
+    --ring: hsl(352 85% 62%);
+    --gold: hsl(42 90% 62%);
     --gold-foreground: hsl(30 60% 12%);
+  }
+
+  body {
+    background-image:
+      radial-gradient(
+        circle at 1px 1px,
+        color-mix(in oklab, var(--foreground) 9%, transparent) 1px,
+        transparent 0
+      ),
+      radial-gradient(
+        120% 60% at 50% 0%,
+        hsl(352 70% 45% / 0.22),
+        transparent 70%
+      );
+    background-size:
+      22px 22px,
+      100% 100%;
+    background-attachment: scroll, fixed;
   }
 }
 

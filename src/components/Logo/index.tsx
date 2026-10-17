@@ -23,7 +23,7 @@ export function Logo({ className, inverted = false, onClick }: Props) {
         className={cn(
           "flex size-9 -rotate-6 items-center justify-center rounded-xl shadow-sm",
           inverted
-            ? "bg-white text-primary dark:text-[hsl(350_55%_28%)]"
+            ? "bg-white text-primary dark:text-[hsl(352_70%_46%)]"
             : "bg-primary text-primary-foreground"
         )}
       >
