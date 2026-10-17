@@ -155,6 +155,9 @@ export async function createItem(
       wishlistId: wishlist.id,
       userId: boughtBy?.id ?? null,
       categoryId: category?.id ?? null,
+      position: await prisma.wishlistItem.count({
+        where: { wishlistId: wishlist.id },
+      }),
     },
   })
 }

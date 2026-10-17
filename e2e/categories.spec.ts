@@ -154,6 +154,37 @@ test("move a wish between categories", async ({ signIn }) => {
   ).toBeNull()
 })
 
+test("a wish moved to another category goes to the end of it", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  const winter = await createCategory(wishlist, "Winter", 1)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Muts", category: winter })
+  await createItem(wishlist, { title: "Sjaal", category: winter })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page
+    .locator("div.rounded-md")
+    .filter({ hasText: "Trui" })
+    .getByRole("button", { name: "Wijzig", exact: true })
+    .click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await chooseCategory(page, dialog, "Winter")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  await expect(page.locator("main div.rounded-md")).toHaveText([
+    /Muts/,
+    /Sjaal/,
+    /Trui/,
+  ])
+})
+
 test("removing the last wish of a category removes the category", async ({
   signIn,
 }) => {
