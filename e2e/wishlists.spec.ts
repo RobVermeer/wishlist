@@ -31,10 +31,10 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await expect(dialog.getByLabel("Voor mezelf")).toBeChecked()
   await expect(dialog.getByLabel("Naam", { exact: true })).toHaveCount(0)
-  await expect(dialog.getByLabel("Familie")).toBeChecked()
-  await expect(dialog.getByLabel("Vrienden")).toBeChecked()
+  await expect(dialog.getByLabel("Familie")).not.toBeChecked()
+  await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
-  await dialog.getByLabel("Vrienden").click()
+  await dialog.getByLabel("Familie").click()
   await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Verjaardag" }).click()

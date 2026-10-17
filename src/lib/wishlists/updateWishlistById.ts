@@ -11,6 +11,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { assertGroupsOfUser } from "./assertGroupsOfUser"
+import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
   try {
@@ -44,15 +45,21 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
 
     await assertGroupsOfUser(userId, data.groups, t("group.notFound"))
 
-    await prisma.wishlist.update({
-      where: { id },
-      data: {
-        title: data.name || null,
-        description: data.description || null,
-        theme: data.theme || null,
-        groups: { set: data.groups?.map(id => ({ id })) },
-      },
-      select: wishlistProperties,
+    await prisma.$transaction(async tx => {
+      await tx.wishlist.update({
+        where: { id },
+        data: {
+          title: data.name || null,
+          description: data.description || null,
+          theme: data.theme || null,
+          groups: { set: data.groups?.map(id => ({ id })) },
+        },
+        select: wishlistProperties,
+      })
+
+      if (!data.name) {
+        await keepOneOwnWishlistPerGroup(tx, userId, id, data.groups)
+      }
     })
 
     revalidatePath("/")

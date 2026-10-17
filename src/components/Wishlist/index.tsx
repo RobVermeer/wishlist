@@ -18,7 +18,7 @@ import Link from "next/link"
 import { CategoryList } from "../CategoryList"
 import { ShareWishlist } from "@/components/ShareWishlist"
 import { EditWishlist } from "@/components/EditWishlist"
-import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
+import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { UnfollowWishlist } from "@/components/UnfollowWishlist"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
@@ -39,7 +39,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   }
 
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
-  const ownGroups = wishlist.isOwnList ? await getGroupsForUser() : []
+  const ownGroups = wishlist.isOwnList ? await getGroupOptionsForUser() : []
   const categoryTitles = wishlist.categories.map(({ title }) => title)
 
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {

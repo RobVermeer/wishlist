@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
 
 export const addWishlistToGroup = async (
   wishlistId: string,
@@ -24,7 +25,7 @@ export const addWishlistToGroup = async (
 
     const wishlist = await prisma.wishlist.findUnique({
       where: { id: wishlistId, userId, removed: false },
-      select: { id: true },
+      select: { id: true, title: true },
     })
 
     if (!wishlist) {
@@ -40,9 +41,15 @@ export const addWishlistToGroup = async (
       throw new Error(t("group.notFound"))
     }
 
-    await prisma.wishlist.update({
-      where: { id: wishlistId },
-      data: { groups: { connect: { id: groupId } } },
+    await prisma.$transaction(async tx => {
+      await tx.wishlist.update({
+        where: { id: wishlistId },
+        data: { groups: { connect: { id: groupId } } },
+      })
+
+      if (!wishlist.title) {
+        await keepOneOwnWishlistPerGroup(tx, userId, wishlistId, [groupId])
+      }
     })
 
     revalidatePath("/")

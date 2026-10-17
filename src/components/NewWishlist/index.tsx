@@ -15,8 +15,8 @@ import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
 import { FormEvent, ReactNode, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
-import type { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
-import { Checkbox } from "@/components/ui/checkbox"
+import type { GroupOption } from "@/lib/groups/getGroupOptionsForUser"
+import { WishlistGroupsField } from "@/components/WishlistGroupsField"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { WishlistOwnerField } from "@/components/WishlistOwnerField"
@@ -30,15 +30,21 @@ import {
 } from "@/components/ui/select"
 
 interface Props {
-  groups: Awaited<ReturnType<typeof getGroupsForUser>>
+  groups: GroupOption[]
   defaultGroupIds?: string[]
+  defaultOwnList?: boolean
   trigger: ReactNode
 }
 
-export const NewWishlist = ({ groups, defaultGroupIds, trigger }: Props) => {
+export const NewWishlist = ({
+  groups,
+  defaultGroupIds = [],
+  defaultOwnList = true,
+  trigger,
+}: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
-  const [ownList, setOwnList] = useState(true)
+  const [ownList, setOwnList] = useState(defaultOwnList)
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -82,22 +88,12 @@ export const NewWishlist = ({ groups, defaultGroupIds, trigger }: Props) => {
 
           <Separator />
 
-          <div className="grid gap-1">
-            <h3>{t("NewWishlist.form.groups")}</h3>
-            {groups.map(group => (
-              <div key={group.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`group-${group.id}`}
-                  value={group.id}
-                  name="groups"
-                  defaultChecked={
-                    defaultGroupIds ? defaultGroupIds.includes(group.id) : true
-                  }
-                />
-                <label htmlFor={`group-${group.id}`}>{group.title}</label>
-              </div>
-            ))}
-          </div>
+          <WishlistGroupsField
+            label={t("NewWishlist.form.groups")}
+            groups={groups}
+            defaultGroupIds={defaultGroupIds}
+            ownList={ownList}
+          />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme">

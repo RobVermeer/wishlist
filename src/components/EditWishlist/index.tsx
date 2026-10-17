@@ -18,7 +18,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { RemoveButton } from "@/components/RemoveButton"
 import { Pencil, Save } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
+import type { GroupOption } from "@/lib/groups/getGroupOptionsForUser"
+import { WishlistGroupsField } from "@/components/WishlistGroupsField"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { WishlistOwnerField } from "@/components/WishlistOwnerField"
@@ -39,7 +40,7 @@ interface Props {
     theme: string | null
     groups: { id: string }[]
   }
-  groups: { id: string; title: string }[]
+  groups: GroupOption[]
   label?: string
   className?: string
 }
@@ -127,22 +128,13 @@ export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
 
           <Separator />
 
-          <div className="grid gap-1">
-            <h3>{t("EditWishlist.form.groups")}</h3>
-            {groups.map(group => (
-              <div key={group.id} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`group-${group.id}`}
-                  value={group.id}
-                  name="groups"
-                  defaultChecked={wishlist.groups
-                    .map(g => g.id)
-                    .includes(group.id)}
-                />
-                <label htmlFor={`group-${group.id}`}>{group.title}</label>
-              </div>
-            ))}
-          </div>
+          <WishlistGroupsField
+            label={t("EditWishlist.form.groups")}
+            groups={groups}
+            defaultGroupIds={wishlist.groups.map(({ id }) => id)}
+            ownList={ownList}
+            wishlistId={id}
+          />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme" defaultValue={wishlist.theme || undefined}>
