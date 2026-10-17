@@ -4,10 +4,11 @@ import Link from "next/link"
 
 interface Props {
   className?: string
+  inverted?: boolean
   onClick?: () => void
 }
 
-export function Logo({ className, onClick }: Props) {
+export function Logo({ className, inverted = false, onClick }: Props) {
   return (
     <Link
       href="/"
@@ -18,7 +19,14 @@ export function Logo({ className, onClick }: Props) {
       scroll={false}
       onClick={onClick}
     >
-      <span className="flex size-9 -rotate-6 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+      <span
+        className={cn(
+          "flex size-9 -rotate-6 items-center justify-center rounded-xl shadow-sm",
+          inverted
+            ? "bg-white text-primary dark:text-[hsl(350_55%_28%)]"
+            : "bg-primary text-primary-foreground"
+        )}
+      >
         <Gift size="20" strokeWidth="2.25" />
       </span>
       Wishlist
