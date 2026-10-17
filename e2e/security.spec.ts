@@ -226,7 +226,7 @@ test("followers of a wishlist can see it and check off its wishes", async ({
   await expect(page.getByRole("heading", { name: "Olga" })).toBeVisible()
 
   await page
-    .locator("div.rounded-md")
+    .locator("div.rounded-2xl")
     .filter({ hasText: "Fiets" })
     .getByRole("button", { name: "Ik koop dit" })
     .click()

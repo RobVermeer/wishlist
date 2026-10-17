@@ -12,7 +12,7 @@ import {
 import { Locator, Page } from "@playwright/test"
 
 const itemCard = (page: Page, title: string) =>
-  page.locator("div.rounded-md").filter({ hasText: title })
+  page.locator("div.rounded-2xl").filter({ hasText: title })
 
 async function expectAllFields(dialog: Locator) {
   await expect(dialog.getByLabel("Wens", { exact: true })).toBeVisible()
@@ -114,7 +114,7 @@ test("wishes are listed in their order and new ones go last", async ({
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
   await expect(dialog).toBeHidden()
 
-  await expect(page.locator("main div.rounded-md")).toHaveText([
+  await expect(page.locator("main div.rounded-2xl")).toHaveText([
     /Boek/,
     /Fiets/,
     /Puzzel/,
@@ -301,7 +301,7 @@ test("owner can reorder wishes by dragging", async ({ signIn }) => {
 
   const shopperPage = await signIn(shopper)
   await shopperPage.goto(`/group/${group.id}/${wishlist.id}`)
-  await expect(shopperPage.locator("main div.rounded-md")).toHaveText([
+  await expect(shopperPage.locator("main div.rounded-2xl")).toHaveText([
     /Puzzel/,
     /Fiets/,
     /Boek/,
@@ -349,7 +349,7 @@ test("owner can reorder wishes in a category with the keyboard", async ({
     .toEqual(["Fiets", "Strip", "Roman"])
 
   await page.reload()
-  await expect(page.locator("main div.rounded-md")).toHaveText([
+  await expect(page.locator("main div.rounded-2xl")).toHaveText([
     /Fiets/,
     /Strip/,
     /Roman/,

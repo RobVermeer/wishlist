@@ -13,7 +13,7 @@ import {
 import { Page } from "@playwright/test"
 
 const itemCard = (page: Page, title: string) =>
-  page.locator("div.rounded-md").filter({ hasText: title })
+  page.locator("div.rounded-2xl").filter({ hasText: title })
 
 async function setup() {
   const owner = await createUser({ firstName: "Olga" })

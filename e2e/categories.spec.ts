@@ -168,7 +168,7 @@ test("a wish moved to another category goes to the end of it", async ({
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await page
-    .locator("div.rounded-md")
+    .locator("div.rounded-2xl")
     .filter({ hasText: "Trui" })
     .getByRole("button", { name: "Wijzig", exact: true })
     .click()
@@ -178,7 +178,7 @@ test("a wish moved to another category goes to the end of it", async ({
   await dialog.getByRole("button", { name: "Opslaan" }).click()
   await expect(dialog).toBeHidden()
 
-  await expect(page.locator("main div.rounded-md")).toHaveText([
+  await expect(page.locator("main div.rounded-2xl")).toHaveText([
     /Muts/,
     /Sjaal/,
     /Trui/,
@@ -374,7 +374,7 @@ test("group members see categories but cannot reorder them", async ({
   ).toHaveCount(0)
   expect(await itemOrder(page, ["Trui", "Fiets"])).toEqual(["Fiets", "Trui"])
 
-  const card = page.locator("div.rounded-md").filter({ hasText: "Trui" })
+  const card = page.locator("div.rounded-2xl").filter({ hasText: "Trui" })
   await card.getByRole("button", { name: "Ik koop dit" }).click()
   await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
   await expect(card).toContainText("Jij koopt dit")
