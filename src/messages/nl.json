@@ -1,13 +1,19 @@
 {
   "Home": {
     "title": "Overzicht - Wishlist",
+    "greeting": {
+      "name": "Hoi {name} 👋",
+      "anonymous": "Hoi 👋",
+      "text": "Kijk wat je familie en vrienden graag willen, of zet je eigen wensen op een rij."
+    },
     "following": {
       "title": "Wat je volgt",
       "newGroup": "Nieuwe groep",
       "empty": {
         "title": "Je zit nog niet in een groep 🥺",
         "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen 🚀"
-      }
+      },
+      "members": "{count, plural, one {# lid} other {# leden}}"
     },
     "wishlists": {
       "title": "Je verlanglijstjes",
@@ -122,7 +128,8 @@
       "wishes": "{count, plural, =0 {Nog geen wensen} one {# wens} other {# wensen}}"
     },
     "newWishlist": "Nieuw verlanglijstje",
-    "forSomeoneElse": "Verlanglijstje voor iemand anders"
+    "forSomeoneElse": "Verlanglijstje voor iemand anders",
+    "members": "{count, plural, one {# lid} other {# leden}}"
   },
   "GroupWishlist": {
     "empty": {

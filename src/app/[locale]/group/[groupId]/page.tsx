@@ -1,7 +1,6 @@
 import { EmptyState } from "@/components/EmptyState"
 import { FollowGroup } from "@/components/FollowGroup"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
 import { ShareButton } from "@/components/ShareButton"
 import { WishlistCard } from "@/components/WishlistCard"
 import { Wishlist } from "@/components/Wishlist"
@@ -93,13 +92,29 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <List>
-      <div className="flex items-start justify-between gap-2">
-        <ListTitle>{group.title}</ListTitle>
-        {group.createdBy.id === session.user.id ? (
-          <EditGroup group={group} className="shrink-0" />
-        ) : (
-          <LeaveGroup group={group} className="shrink-0" />
-        )}
+      <div
+        className="relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-cover bg-center p-5 text-white shadow-md"
+        style={{
+          backgroundImage: `url('/theme/${group.theme || "background"}.webp')`,
+        }}
+      >
+        <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10" />
+        <span className="absolute right-10 top-0 h-full w-3 bg-gold/80" />
+        <div className="relative flex justify-end">
+          {group.createdBy.id === session.user.id ? (
+            <EditGroup group={group} className="shrink-0 text-foreground" />
+          ) : (
+            <LeaveGroup group={group} className="shrink-0 text-foreground" />
+          )}
+        </div>
+        <div className="relative">
+          <h2 className="font-display text-3xl font-semibold tracking-tight">
+            {group.title}
+          </h2>
+          <p className="text-sm text-white/80">
+            {t("members", { count: group.members.length })}
+          </p>
+        </div>
       </div>
 
       {ownInGroup.length === 0 && (
