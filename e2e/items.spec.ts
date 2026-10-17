@@ -3,6 +3,8 @@ import {
   expect,
   createUser,
   createWishlist,
+  createCategory,
+  createGroup,
   createItem,
   prisma,
   toasts,
@@ -260,4 +262,96 @@ test("owner does not see which wishes have been bought", async ({ signIn }) => {
   await expect(card).toBeVisible()
   await expect(card).not.toHaveClass(/line-through/)
   await expect(card.getByRole("button")).toHaveText(/Wijzig/)
+})
+
+const positionsOf = async (wishlistId: string) =>
+  (
+    await prisma.wishlistItem.findMany({
+      where: { wishlistId },
+      orderBy: { position: "asc" },
+    })
+  ).map(({ title }) => title)
+
+test("owner can reorder wishes by dragging", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const shopper = await createUser()
+  const group = await createGroup(owner, { members: [shopper] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Boek" })
+  await createItem(wishlist, { title: "Puzzel" })
+  const page = await signIn(owner)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  const handle = page.getByRole("button", { name: "Verplaats wens Puzzel" })
+  const target = itemCard(page, "Fiets")
+  const from = (await handle.boundingBox())!
+  const to = (await target.boundingBox())!
+
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(from.x + from.width / 2, to.y, { steps: 10 })
+  await page.mouse.move(from.x + from.width / 2, to.y - 10, { steps: 5 })
+  await page.mouse.up()
+
+  await expect
+    .poll(() => positionsOf(wishlist.id))
+    .toEqual(["Puzzel", "Fiets", "Boek"])
+
+  const shopperPage = await signIn(shopper)
+  await shopperPage.goto(`/group/${group.id}/${wishlist.id}`)
+  await expect(shopperPage.locator("main div.rounded-md")).toHaveText([
+    /Puzzel/,
+    /Fiets/,
+    /Boek/,
+  ])
+  await expect(
+    shopperPage.getByRole("button", { name: /Verplaats wens/ })
+  ).toHaveCount(0)
+})
+
+test("owner can reorder wishes in a category with the keyboard", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const books = await createCategory(wishlist, "Boeken", 0)
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Roman", category: books })
+  await createItem(wishlist, { title: "Strip", category: books })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  const handle = page.getByRole("button", { name: "Verplaats wens Roman" })
+  const announcement = page
+    .locator('[role="status"][id^="DndLiveRegion"]')
+    .filter({ hasText: /./ })
+
+  await handle.focus()
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText("Wens Roman opgepakt, positie 1 van 2.")
+  await expect(async () => {
+    await page.keyboard.press("ArrowDown")
+    await expect(announcement).toHaveText(
+      "Wens Roman verplaatst naar positie 2 van 2.",
+      { timeout: 500 }
+    )
+  }).toPass()
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText(
+    "Wens Roman neergezet op positie 2 van 2."
+  )
+
+  await expect
+    .poll(() => positionsOf(wishlist.id))
+    .toEqual(["Fiets", "Strip", "Roman"])
+
+  await page.reload()
+  await expect(page.locator("main div.rounded-md")).toHaveText([
+    /Fiets/,
+    /Strip/,
+    /Roman/,
+  ])
 })

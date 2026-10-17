@@ -452,5 +452,13 @@
   "UnfollowWishlist": {
     "button": "Stop met volgen",
     "toast": "Je volgt dit verlanglijstje niet meer"
+  },
+  "Item": {
+    "move": "Verplaats wens {name}",
+    "instructions": "Druk op spatie om de wens op te pakken. Gebruik de pijltjestoetsen om te verplaatsen, spatie om neer te zetten en escape om te annuleren.",
+    "pickedUp": "Wens {name} opgepakt, positie {position} van {total}.",
+    "movedOver": "Wens {name} verplaatst naar positie {position} van {total}.",
+    "dropped": "Wens {name} neergezet op positie {position} van {total}.",
+    "cancelled": "Verplaatsen van wens {name} geannuleerd."
   }
 }
