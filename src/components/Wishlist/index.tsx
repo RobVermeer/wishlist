@@ -16,6 +16,7 @@ import { RemindButton } from "../RemindButton"
 import { ItemCard } from "../ItemCard"
 import Link from "next/link"
 import { CategoryList } from "../CategoryList"
+import { ItemList } from "@/components/ItemList"
 import { ShareWishlist } from "@/components/ShareWishlist"
 import { EditWishlist } from "@/components/EditWishlist"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
@@ -51,6 +52,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
     return <ItemCard key={item.id} item={item} />
   }
+
+  const toSortable = (item: (typeof wishlist.wishlistItem)[number]) => ({
+    id: item.id,
+    name: item.title,
+    node: renderItem(item),
+  })
 
   const { uncategorized, categories } = groupByCategory(
     wishlist.wishlistItem,
@@ -111,7 +118,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         )}
       </div>
 
-      {uncategorized.map(renderItem)}
+      <ItemList
+        id={`items-${wishlist.id}`}
+        wishlistId={wishlist.id}
+        items={uncategorized.map(toSortable)}
+        sortable={wishlist.isOwnList}
+      />
 
       {categories.length > 0 && (
         <CategoryList
@@ -120,7 +132,14 @@ export const Wishlist = async ({ id, groupId }: Props) => {
             id,
             title,
             count: items.length,
-            items: items.map(renderItem),
+            items: (
+              <ItemList
+                id={`items-${id}`}
+                wishlistId={wishlist.id}
+                items={items.map(toSortable)}
+                sortable={wishlist.isOwnList}
+              />
+            ),
           }))}
           sortable={wishlist.isOwnList}
         />

@@ -284,7 +284,9 @@ test("owner can reorder categories with the keyboard", async ({ signIn }) => {
   const handle = page.getByRole("button", {
     name: "Verplaats categorie Boeken",
   })
-  const announcement = page.locator('[role="status"][id^="DndLiveRegion"]')
+  const announcement = page
+    .locator('[role="status"][id^="DndLiveRegion"]')
+    .filter({ hasText: /./ })
 
   await handle.focus()
   await page.keyboard.press("Space")

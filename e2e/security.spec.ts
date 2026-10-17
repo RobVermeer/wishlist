@@ -6,6 +6,8 @@ import {
   createUser,
   createGroup,
   createWishlist,
+  createCategory,
+  createItem,
   prisma,
   toasts,
 } from "./fixtures"
@@ -287,3 +289,64 @@ for (const target of ["group", "wishlist"] as const) {
     ).toBe(0)
   })
 }
+
+test("only your own wishes in one part of the list can be reordered", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const stranger = await createUser()
+  const wishlist = await createWishlist(user)
+  const books = await createCategory(wishlist, "Boeken", 0)
+  const first = await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Puzzel" })
+  const inCategory = await createItem(wishlist, {
+    title: "Roman",
+    category: books,
+  })
+  const foreignItem = await createItem(await createWishlist(stranger), {
+    title: "Van een ander",
+  })
+  const page = await signIn(user)
+
+  for (const forged of [foreignItem.id, inCategory.id]) {
+    await page.unrouteAll()
+    await page.route(`**/wishlist/${wishlist.id}`, async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        return route.continue({
+          postData: request.postData()!.replaceAll(first.id, forged),
+        })
+      }
+      return route.continue()
+    })
+
+    await page.goto(`/wishlist/${wishlist.id}`)
+    await page.getByRole("button", { name: "Verplaats wens Fiets" }).focus()
+    await page.keyboard.press("Space")
+    await expect(async () => {
+      await page.keyboard.press("ArrowDown")
+      await expect(
+        page
+          .locator('[role="status"][id^="DndLiveRegion"]')
+          .filter({ hasText: /./ })
+      ).toHaveText("Wens Fiets verplaatst naar positie 2 van 2.", {
+        timeout: 500,
+      })
+    }).toPass()
+    await page.keyboard.press("Space")
+
+    await expect(toasts(page)).toContainText("Wens niet gevonden")
+  }
+
+  expect(
+    (
+      await prisma.wishlistItem.findUniqueOrThrow({
+        where: { id: foreignItem.id },
+      })
+    ).position
+  ).toBe(0)
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: first.id } }))
+      .position
+  ).toBe(0)
+})
