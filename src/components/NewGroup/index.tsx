@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -62,6 +63,13 @@ export const NewGroup = ({ trigger }: Props) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewGroup.title")}</DialogTitle>
+          <DialogDescription>
+            {t.rich("NewGroup.text", {
+              b: chunks => (
+                <b className="font-medium text-foreground">{chunks}</b>
+              ),
+            })}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">{t("NewGroup.form.title")}</Label>

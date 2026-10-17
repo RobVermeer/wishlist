@@ -18,6 +18,9 @@ test("create a group with a theme", async ({ signIn }) => {
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
+  await expect(dialog).toHaveAccessibleDescription(
+    /Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig/
+  )
   await dialog.getByLabel("Naam").fill(title)
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Kerst" }).click()
