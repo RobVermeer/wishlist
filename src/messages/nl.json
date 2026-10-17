@@ -152,6 +152,7 @@
   },
   "NewGroup": {
     "title": "Nieuwe groep 👨‍👨‍👧‍👦",
+    "text": "Een groep is voor familie of vrienden die elkaars verlanglijstjes willen zien. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>.",
     "form": {
       "title": "Naam",
       "save": "Maak aan"
