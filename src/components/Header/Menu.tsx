@@ -37,7 +37,7 @@ export function Menu({ session }: Props) {
   return (
     <div className="flex gap-2">
       <Link href="/profile">
-        <Avatar className="cursor-pointer text-foreground ring-2 ring-gold shadow-sm">
+        <Avatar className="cursor-pointer text-foreground ring-2 ring-white/70 shadow-sm">
           {session.user.image && (
             <AvatarImage
               src={session.user.image}

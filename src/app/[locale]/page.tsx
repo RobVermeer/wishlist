@@ -89,7 +89,6 @@ export default async function Home() {
               }}
             >
               <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent" />
-              <span className="absolute right-6 top-0 h-full w-2.5 bg-gold/80 shadow-sm" />
               <span className="relative font-display text-lg font-semibold leading-tight">
                 {group.title}
               </span>

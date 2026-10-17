@@ -99,7 +99,6 @@ export default async function GroupPage({ params }: Props) {
         }}
       >
         <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10" />
-        <span className="absolute right-10 top-0 h-full w-3 bg-gold/80" />
         <div className="relative flex justify-end">
           {group.createdBy.id === session.user.id ? (
             <EditGroup group={group} className="shrink-0 text-foreground" />
