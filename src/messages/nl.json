@@ -313,12 +313,12 @@
     "button": "Log nu in"
   },
   "Category": {
-    "move": "Verplaats categorie {category}",
+    "move": "Verplaats categorie {name}",
     "instructions": "Druk op spatie om de categorie op te pakken. Gebruik de pijltjestoetsen om te verplaatsen, spatie om neer te zetten en escape om te annuleren.",
-    "pickedUp": "Categorie {category} opgepakt, positie {position} van {total}.",
-    "movedOver": "Categorie {category} verplaatst naar positie {position} van {total}.",
-    "dropped": "Categorie {category} neergezet op positie {position} van {total}.",
-    "cancelled": "Verplaatsen van categorie {category} geannuleerd."
+    "pickedUp": "Categorie {name} opgepakt, positie {position} van {total}.",
+    "movedOver": "Categorie {name} verplaatst naar positie {position} van {total}.",
+    "dropped": "Categorie {name} neergezet op positie {position} van {total}.",
+    "cancelled": "Verplaatsen van categorie {name} geannuleerd."
   },
   "CategoryCombobox": {
     "placeholder": "Kies een categorie",
