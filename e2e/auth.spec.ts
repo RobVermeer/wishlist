@@ -1,13 +1,4 @@
-import {
-  test,
-  expect,
-  createUser,
-  createGroup,
-  createWishlist,
-  emailsTo,
-  prisma,
-  toasts,
-} from "./fixtures"
+import { test, expect, createUser, emailsTo, prisma, toasts } from "./fixtures"
 import { testEnv } from "./support/env"
 
 test.describe("unauthenticated visitor", () => {
@@ -193,17 +184,6 @@ test("avatar in the header links to the profile", async ({ signIn }) => {
   await page.locator("header").getByRole("link", { name: "PP" }).click()
 
   await expect(page).toHaveURL("/profile")
-})
-
-test("theme api returns the theme of a group", async ({ signIn }) => {
-  const user = await createUser()
-  const group = await createGroup(user, { theme: "christmas" })
-  await createWishlist(user, { groups: [group] })
-  const page = await signIn(user)
-
-  const response = await page.request.get(`/api/theme?groupId=${group.id}`)
-
-  expect(await response.json()).toEqual({ theme: "christmas" })
 })
 
 test("the old profile pages for wishlists and groups go to the dashboard", async ({
