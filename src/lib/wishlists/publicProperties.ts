@@ -17,6 +17,7 @@ export const wishlistProperties = {
   wishlistItem: {
     select: wishlistItemProperties,
     where: { removed: false },
+    orderBy: [{ position: "asc" as const }, { createdAt: "asc" as const }],
   },
   categories: {
     select: categoryProperties,

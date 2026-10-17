@@ -91,6 +91,34 @@ test("add a wish with a link", async ({ signIn }) => {
   })
 })
 
+test("wishes are listed in their order and new ones go last", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const first = await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Boek" })
+  await prisma.wishlistItem.update({
+    where: { id: first.id },
+    data: { position: 5 },
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Puzzel")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+  await expect(dialog).toBeHidden()
+
+  await expect(page.locator("main div.rounded-md")).toHaveText([
+    /Boek/,
+    /Fiets/,
+    /Puzzel/,
+  ])
+})
+
 test("add an unlimited wish without a link", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)

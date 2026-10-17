@@ -10,6 +10,7 @@ import { getErrorMessage } from "@/lib/utils"
 import * as z from "zod"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { nextWishlistItemPosition } from "./nextWishlistItemPosition"
 import {
   findOrCreateCategory,
   removeEmptyCategories,
@@ -64,6 +65,12 @@ export const updateWishlistItemById = async (
           unlimited: data.unlimited,
           url: data.url || null,
           categoryId,
+          ...(categoryId !== wishlistItem.categoryId && {
+            position: await nextWishlistItemPosition(
+              tx,
+              wishlistItem.wishlistId
+            ),
+          }),
         },
         select: wishlistItemProperties,
       })

@@ -10,6 +10,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { wishlistItemSchema } from "@/lib/schema"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { nextWishlistItemPosition } from "./nextWishlistItemPosition"
 import { findOrCreateCategory } from "@/lib/wishlistCategories"
 
 export const createWishlistItemForUser = async (
@@ -60,6 +61,7 @@ export const createWishlistItemForUser = async (
           createdAt: new Date(),
           wishlistId,
           categoryId,
+          position: await nextWishlistItemPosition(tx, wishlistId),
         },
       })
     })
