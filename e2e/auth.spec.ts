@@ -143,8 +143,7 @@ test("logging out ends the session", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  await page.goto("/")
-  await page.locator("header").getByRole("button").click()
+  await page.goto("/profile")
   await page.getByRole("button", { name: "Uitloggen" }).click()
 
   await expect(page).toHaveURL(/\/login/)
@@ -155,35 +154,36 @@ test("logging out ends the session", async ({ signIn }) => {
     .toBe(0)
 })
 
-test("menu links to all main pages", async ({ signIn }) => {
-  const user = await createUser()
-  const page = await signIn(user)
-  const menuButton = page.locator("header").getByRole("button")
-
-  await page.goto("/")
-
-  for (const [name, path] of [
-    ["Mijn gekochte cadeaus", "/profile/bought"],
-    ["Overzicht", "/"],
-  ]) {
-    await menuButton.click()
-    await page.getByRole("dialog").getByRole("link", { name }).click()
-    await expect(page).toHaveURL(path)
-    await expect(page.getByRole("dialog")).toBeHidden()
-  }
-
-  await menuButton.click()
-  await expect(page.getByRole("link", { name: "Admin" })).toBeHidden()
-})
-
-test("avatar in the header links to the profile", async ({ signIn }) => {
+test("the header links to the dashboard and your profile", async ({
+  signIn,
+}) => {
   const user = await createUser({ name: "Pieter Post" })
   const page = await signIn(user)
+  const header = page.locator("header")
 
-  await page.goto("/")
-  await page.locator("header").getByRole("link", { name: "PP" }).click()
+  await page.goto("/profile/bought")
+  await expect(header.getByRole("button")).toHaveCount(0)
+  await expect(header.getByText("PP")).toBeVisible()
 
+  await header.getByRole("link", { name: "Wishlist" }).click()
+  await expect(page).toHaveURL("/")
+
+  await header.getByRole("link", { name: "Je profiel" }).click()
   await expect(page).toHaveURL("/profile")
+  await page.getByRole("link", { name: "Gekochte cadeaus" }).click()
+  await expect(page).toHaveURL("/profile/bought")
+})
+
+test("only admins see the link to the admin on their profile", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/profile")
+
+  await expect(page.getByRole("button", { name: "Uitloggen" })).toBeVisible()
+  await expect(page.getByRole("link", { name: "Admin" })).toHaveCount(0)
 })
 
 test("the old profile pages for wishlists and groups go to the dashboard", async ({
