@@ -3,7 +3,7 @@
 import { Session } from "next-auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { signOut } from "next-auth/react"
-import { BookUser, House, ListTodo, Lock, LogOut, MenuIcon } from "lucide-react"
+import { BookUser, House, Lock, LogOut, MenuIcon } from "lucide-react"
 import Link from "next/link"
 import {
   Sheet,
@@ -93,20 +93,6 @@ export function Menu({ session }: Props) {
               />{" "}
               {t("Menu.boughtPresents")}
             </Link>
-
-            <Separator />
-
-            <a
-              href="https://36.robvermeer.nl"
-              className="flex gap-2 items-center"
-            >
-              <ListTodo
-                className="text-green-400"
-                size="18"
-                strokeWidth="2.5"
-              />{" "}
-              36 hours
-            </a>
 
             {session.user.isAdmin && (
               <>
