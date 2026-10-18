@@ -77,10 +77,8 @@
       }
     }
   },
-  "Menu": {
-    "dashboard": "Overzicht",
-    "boughtPresents": "Mijn gekochte cadeaus",
-    "logout": "Uitloggen"
+  "Header": {
+    "profile": "Je profiel"
   },
   "Login": {
     "title": "Welkom bij Wishlist",
@@ -144,7 +142,9 @@
   },
   "Profile": {
     "title": "Profiel",
-    "metaTitle": "Profiel - Wishlist"
+    "metaTitle": "Profiel - Wishlist",
+    "admin": "Admin",
+    "logout": "Uitloggen"
   },
   "ProfileBoughtPresents": {
     "title": "Mijn gekochte cadeaus - Profiel - Wishlist",

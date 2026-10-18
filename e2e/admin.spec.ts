@@ -23,12 +23,12 @@ test("regular users cannot access the admin", async ({ signIn }) => {
   }
 })
 
-test("admin can open the admin from the menu", async ({ signIn }) => {
+test("admin can open the admin from their profile", async ({ signIn }) => {
   const admin = await createAdmin()
   const page = await signIn(admin)
 
   await page.goto("/")
-  await page.locator("header").getByRole("button").click()
+  await page.locator("header").getByRole("link", { name: "Je profiel" }).click()
   await page.getByRole("link", { name: "Admin" }).click()
 
   await expect(page).toHaveURL("/admin")
