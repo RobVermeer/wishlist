@@ -15,11 +15,11 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   await expect(example.getByRole("listitem")).toHaveText([
     /^Fiets\s*Ik koop dit$/,
     /^Boeken\s*Onbeperkt$/,
-    /^Lego kasteel\s*Wordt al gekocht$/,
+    /^LEGO kasteel\s*Wordt al gekocht$/,
     /^Warme sokken\s*Ik koop dit$/,
   ])
   await expect(
-    example.getByRole("listitem").nth(2).getByText("Lego kasteel")
+    example.getByRole("listitem").nth(2).getByText("LEGO kasteel")
   ).toHaveClass(/line-through/)
   await expect(example).toContainText("Sanne ziet dat niet")
 
@@ -39,7 +39,7 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
       .getByRole("heading", { name: "Voor elke gelegenheid" })
       .locator("..")
       .getByRole("listitem")
-  ).toHaveText(["Sinterklaas", "Kerst", "Verjaardag", "Baby"])
+  ).toHaveText(["Sinterklaas", "Kerst", "Verjaardag", "Babyshower"])
 
   await expect(
     page

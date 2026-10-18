@@ -381,10 +381,10 @@
       "items": {
         "bike": "Fiets",
         "books": "Boeken",
-        "lego": "Lego kasteel",
+        "lego": "LEGO kasteel",
         "socks": "Warme sokken"
       },
-      "caption": "Iemand uit de groep koopt het Lego kasteel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
+      "caption": "Iemand uit de groep koopt het LEGO kasteel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
       "buy": "Ik koop dit"
     },
     "features": {
@@ -419,7 +419,7 @@
       "sinterklaas": "Sinterklaas",
       "christmas": "Kerst",
       "birthday": "Verjaardag",
-      "baby": "Baby"
+      "baby": "Babyshower"
     },
     "steps": {
       "title": "In drie stappen klaar",
