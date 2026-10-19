@@ -1,11 +1,10 @@
 import "./globals.css"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { getServerSession } from "next-auth"
 import { Figtree, Fraunces } from "next/font/google"
 import { authOptions } from "@/lib/nextAuth"
 import { Header } from "@/components/Header"
 import { Toaster } from "@/components/ui/toaster"
-import { headers } from "next/headers"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
 import { NextIntlClientProvider } from "next-intl"
@@ -25,16 +24,19 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Wishlist",
     description: t("description"),
     manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      title: "Wishlist",
+      statusBarStyle: "default",
+    },
   }
 }
 
-export async function generateViewport(): Promise<Metadata> {
-  const headersList = await headers()
-  const colorScheme = headersList.get("sec-ch-prefers-color-scheme")
-
-  return {
-    themeColor: colorScheme === "dark" ? "#0c0a09" : "#ffffff",
-  }
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#db243c" },
+    { media: "(prefers-color-scheme: dark)", color: "#c72339" },
+  ],
 }
 
 export default async function RootLayout({
