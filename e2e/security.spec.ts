@@ -406,3 +406,47 @@ test("a wishlist page doesn't give away the groups it is in", async ({
     }
   }
 })
+
+test("group themes can't load images from elsewhere", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, {
+    members: [member],
+    theme: "x'), url('https://tracker.example/pixel",
+  })
+  const page = await signIn(member)
+  const requested: string[] = []
+  await page.route("https://tracker.example/**", route => {
+    requested.push(route.request().url())
+    return route.fulfill({ status: 204 })
+  })
+
+  for (const path of ["/", `/group/${group.id}`]) {
+    await page.goto(path)
+    await page.waitForLoadState("networkidle")
+  }
+
+  expect(requested).toEqual([])
+})
+
+test("groups only get the themes you can choose", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
+  await dialog.getByLabel("Naam").fill("Thema groep")
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Kerst" }).click()
+  await dialog
+    .locator('select[name="theme"] option[value="christmas"]')
+    .evaluate(option =>
+      option.setAttribute("value", "x'), url('https://tracker.example/pixel")
+    )
+  await dialog.getByRole("button", { name: "Maak aan" }).click()
+
+  await expect(toasts(page)).toContainText("Kies een thema uit de lijst")
+  expect(await prisma.group.count({ where: { userId: user.id } })).toBe(0)
+})

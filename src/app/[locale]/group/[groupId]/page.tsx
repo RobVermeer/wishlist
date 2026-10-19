@@ -12,6 +12,7 @@ import { NewWishlist } from "@/components/NewWishlist"
 import { Button } from "@/components/ui/button"
 import { ListChecks, Plus } from "lucide-react"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
+import { groupBackground } from "@/lib/groups/themes"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
@@ -100,7 +101,7 @@ export default async function GroupPage({ params }: Props) {
       <div
         className="relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-cover bg-center p-5 text-white shadow-md"
         style={{
-          backgroundImage: `url('/theme/${group.theme || "background"}.webp')`,
+          backgroundImage: groupBackground(group.theme),
         }}
       >
         <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10" />
