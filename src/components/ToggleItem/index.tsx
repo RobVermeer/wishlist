@@ -45,7 +45,7 @@ export const ToggleItem = ({ id, boughtByMe }: Props) => {
   return (
     <form
       action={() => toggle(boughtByMe, true)}
-      className="flex shrink-0 items-center gap-2"
+      className="ml-auto flex shrink-0 items-center gap-2"
     >
       {boughtByMe && (
         <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold text-gold-foreground dark:text-gold">

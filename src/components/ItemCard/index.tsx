@@ -18,7 +18,7 @@ export const ItemCard = ({ item }: Props) => {
   const bought = Boolean(boughtBy) && !unlimited
 
   return (
-    <Card className="flex items-center gap-2">
+    <Card className="flex flex-wrap items-center gap-2">
       <span
         className={clsx(
           "flex-1",

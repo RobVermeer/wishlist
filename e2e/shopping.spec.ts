@@ -343,3 +343,21 @@ test("bought presents page leaves out removed wishes and wishlists", async ({
   await expect(page.getByText("Weggehaald")).toBeHidden()
   await expect(page.getByText("Van oud lijstje")).toBeHidden()
 })
+
+test("the buttons of a wish fit on a small phone", async ({ signIn }) => {
+  const { shopper, group, wishlist } = await setup()
+  await createItem(wishlist, {
+    title: "Koptelefoon met noise cancelling",
+    boughtBy: shopper,
+  })
+  const page = await signIn(shopper)
+  await page.setViewportSize({ width: 320, height: 640 })
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const card = (await itemCard(page, "Koptelefoon").boundingBox())!
+  const button = (await page
+    .getByRole("button", { name: "Toch niet" })
+    .boundingBox())!
+  expect(button.x + button.width).toBeLessThanOrEqual(card.x + card.width)
+})
