@@ -382,9 +382,10 @@
         "bike": "Fiets",
         "books": "Boeken",
         "lego": "LEGO kasteel",
+        "game": "Bordspel",
         "socks": "Warme sokken"
       },
-      "caption": "Iemand uit de groep koopt het LEGO kasteel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
+      "caption": "Iemand anders koopt het LEGO kasteel en jij het bordspel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
       "buy": "Ik koop dit"
     },
     "features": {
