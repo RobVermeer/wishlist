@@ -15,7 +15,6 @@ import { CategoryCombobox } from "@/components/CategoryCombobox"
 import { RemoveButton } from "@/components/RemoveButton"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
-import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save } from "lucide-react"
@@ -23,9 +22,13 @@ import { useTranslations } from "next-intl"
 import { Checkbox } from "../ui/checkbox"
 
 interface Props {
-  item: NonNullable<
-    Awaited<ReturnType<typeof getWishlistById>>
-  >["wishlistItem"][0]
+  item: {
+    id: string
+    title: string
+    url: string | null
+    unlimited: boolean
+    category: { title: string } | null
+  }
   categories: string[]
 }
 

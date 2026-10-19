@@ -350,3 +350,59 @@ test("only your own wishes in one part of the list can be reordered", async ({
       .position
   ).toBe(0)
 })
+
+test("pages don't show who bought a wish", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const buyer = await createUser({ firstName: "Bobbiekoper" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [buyer, member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  await createItem(wishlist, { title: "Fiets", boughtBy: buyer })
+
+  for (const [user, paths] of [
+    [owner, [`/wishlist/${wishlist.id}`, `/group/${group.id}`]],
+    [member, [`/group/${group.id}`, `/group/${group.id}/${wishlist.id}`]],
+  ] as const) {
+    const page = await signIn(user)
+
+    for (const path of paths) {
+      await page.goto(path)
+      await expect(
+        page.getByRole("heading", { level: 2 }).first()
+      ).toBeVisible()
+      const html = await page.content()
+
+      expect(html, path).not.toContain(buyer.id)
+      expect(html, path).not.toContain("Bobbiekoper")
+    }
+  }
+})
+
+test("a wishlist page doesn't give away the groups it is in", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser()
+  const colleague = await createUser()
+  const follower = await createUser()
+  const family = await createGroup(owner, { members: [member] })
+  const work = await createGroup(owner, { members: [colleague] })
+  const wishlist = await createWishlist(owner, {
+    groups: [family, work],
+    followers: [follower],
+  })
+
+  for (const [user, path, hidden] of [
+    [follower, `/wishlist/${wishlist.id}`, [family.id, work.id]],
+    [member, `/group/${family.id}/${wishlist.id}`, [work.id]],
+  ] as const) {
+    const page = await signIn(user)
+    await page.goto(path)
+    await expect(page.getByRole("heading", { name: /Olga/ })).toBeVisible()
+    const html = await page.content()
+
+    for (const id of hidden) {
+      expect(html, path).not.toContain(id)
+    }
+  }
+})

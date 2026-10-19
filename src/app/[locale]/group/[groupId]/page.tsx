@@ -84,6 +84,7 @@ export default async function GroupPage({ params }: Props) {
         count: wishlist.wishlistItem.length,
       }),
     }))
+  const groupInfo = { id: group.id, title: group.title }
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
     group.wishlist.length === 1 && !onlyWishlist.isOwnList
@@ -105,9 +106,15 @@ export default async function GroupPage({ params }: Props) {
         <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10" />
         <div className="relative flex justify-end">
           {group.createdBy.id === session.user.id ? (
-            <EditGroup group={group} className="shrink-0 text-foreground" />
+            <EditGroup
+              group={{ ...groupInfo, theme: group.theme }}
+              className="shrink-0 text-foreground"
+            />
           ) : (
-            <LeaveGroup group={group} className="shrink-0 text-foreground" />
+            <LeaveGroup
+              group={{ id: group.id }}
+              className="shrink-0 text-foreground"
+            />
           )}
         </div>
         <div className="relative">
@@ -128,7 +135,7 @@ export default async function GroupPage({ params }: Props) {
           <div className="flex flex-wrap gap-2">
             {ownToChoose.length > 0 && (
               <ChooseWishlistForGroup
-                group={group}
+                group={groupInfo}
                 wishlists={wishlistNames(ownToChoose)}
                 trigger={chooseButton}
               />
@@ -154,7 +161,7 @@ export default async function GroupPage({ params }: Props) {
             {t("duplicates.text")}
           </EmptyState>
           <ChooseWishlistForGroup
-            group={group}
+            group={groupInfo}
             wishlists={wishlistNames([...ownInGroup, ...ownToChoose])}
             trigger={chooseButton}
           />
@@ -174,7 +181,7 @@ export default async function GroupPage({ params }: Props) {
       <Separator className="my-3" />
 
       <AddWishlistToGroup
-        group={group}
+        group={groupInfo}
         own={wishlistNames(ownToChoose).map(option => ({
           ...option,
           replaces:
