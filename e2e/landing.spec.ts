@@ -39,6 +39,11 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   ]) {
     await expect(page.getByRole("heading", { name: feature })).toBeVisible()
   }
+  await expect(
+    page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Ook voor een ander" }),
+    })
+  ).toContainText("samen met de andere ouder")
 
   await expect(
     page
