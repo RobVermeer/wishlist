@@ -35,6 +35,7 @@ export const wishlistSchema = z.object({
     .optional(),
   theme: z.string().optional(),
   groups: z.array(z.string()).optional(),
+  managers: z.array(z.string()).optional(),
 })
 
 export const wishlistItemSchema = z.object({

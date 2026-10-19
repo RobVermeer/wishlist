@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
+import { managedByUser } from "./visibility"
 
 export const addWishlistToGroup = async (
   wishlistId: string,
@@ -24,7 +25,7 @@ export const addWishlistToGroup = async (
     const userId = session.user.id
 
     const wishlist = await prisma.wishlist.findUnique({
-      where: { id: wishlistId, userId, removed: false },
+      where: { id: wishlistId, removed: false, ...managedByUser(userId) },
       select: { id: true, title: true },
     })
 

@@ -12,6 +12,7 @@ import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { assertGroupsOfUser } from "./assertGroupsOfUser"
 import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
+import { assertManagersOfUser } from "./assertManagersOfUser"
 
 export const createWishlistForUser = async (formData: FormData) => {
   try {
@@ -28,9 +29,12 @@ export const createWishlistForUser = async (formData: FormData) => {
       description: formData.get("description")?.toString() || undefined,
       theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map(group => group.toString()),
+      managers: formData.getAll("managers").map(manager => manager.toString()),
     })
+    const managers = data.name ? data.managers : []
 
     await assertGroupsOfUser(userId, data.groups, t("group.notFound"))
+    await assertManagersOfUser(userId, managers, t("user.notFound"))
 
     await prisma.$transaction(async tx => {
       const wishlist = await tx.wishlist.create({
@@ -40,6 +44,7 @@ export const createWishlistForUser = async (formData: FormData) => {
           description: data.description || null,
           theme: data.theme || null,
           groups: { connect: data.groups?.map(id => ({ id })) },
+          managers: { connect: managers?.map(id => ({ id })) },
           createdAt: new Date(),
           userId,
         },

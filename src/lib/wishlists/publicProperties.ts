@@ -10,6 +10,9 @@ export const wishlistProperties = {
   user: {
     select: userProperties,
   },
+  managers: {
+    select: { id: true },
+  },
   groups: {
     select: { id: true, title: true },
     where: { removed: false },

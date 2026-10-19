@@ -23,6 +23,8 @@ import { WishlistGroupsField } from "@/components/WishlistGroupsField"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { WishlistOwnerField } from "@/components/WishlistOwnerField"
+import { WishlistManagersField } from "@/components/WishlistManagersField"
+import type { ManagerOption } from "@/lib/users/getManagerOptionsForUser"
 import {
   Select,
   SelectContent,
@@ -39,17 +41,26 @@ interface Props {
     description: string | null
     theme: string | null
     groups: { id: string }[]
+    managers: { id: string }[]
+    isManager: boolean
   }
   groups: GroupOption[]
+  managers: ManagerOption[]
   label?: string
   className?: string
 }
 
-export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
+export const EditWishlist = ({
+  wishlist,
+  groups,
+  managers,
+  label,
+  className,
+}: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const { id, title, description } = wishlist
+  const { id, title, description, isManager } = wishlist
   const [ownList, setOwnList] = useState(!title)
   const t = useTranslations()
 
@@ -98,7 +109,7 @@ export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="sm:max-w-[425px]"
+        className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]"
         onOpenAutoFocus={event => event.preventDefault()}
       >
         <DialogHeader>
@@ -113,7 +124,19 @@ export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
             ownList={ownList}
             onOwnListChange={setOwnList}
             defaultName={title || ""}
+            canChangeOwner={!isManager}
           />
+          {ownList && wishlist.managers.length > 0 && (
+            <small className="-mt-2 text-muted-foreground">
+              {t("Common.wishlist.managers.ownList")}
+            </small>
+          )}
+          {!ownList && !isManager && (
+            <WishlistManagersField
+              managers={managers}
+              defaultManagerIds={wishlist.managers.map(({ id }) => id)}
+            />
+          )}
 
           <Label htmlFor="description">
             {t.rich("EditWishlist.form.description", {
@@ -180,10 +203,12 @@ export const EditWishlist = ({ wishlist, groups, label, className }: Props) => {
           </Select>
         </form>
         <DialogFooter className="gap-2 md:gap-0">
-          <RemoveButton
-            description={t("EditWishlist.remove.description")}
-            onConfirm={handleRemove}
-          />
+          {!isManager && (
+            <RemoveButton
+              description={t("EditWishlist.remove.description")}
+              onConfirm={handleRemove}
+            />
+          )}
           <Button type="submit" form={`change-${id}`}>
             <Save size="16" className="mr-2" /> {t("EditWishlist.form.save")}
           </Button>

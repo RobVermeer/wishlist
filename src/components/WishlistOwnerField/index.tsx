@@ -9,32 +9,38 @@ interface Props {
   ownList: boolean
   onOwnListChange: (ownList: boolean) => void
   defaultName?: string
+  canChangeOwner?: boolean
 }
 
 export const WishlistOwnerField = ({
   ownList,
   onOwnListChange,
   defaultName,
+  canChangeOwner = true,
 }: Props) => {
   const t = useTranslations("Common.wishlist.for")
 
   return (
     <fieldset className="grid gap-3">
-      <legend className="mb-3 text-sm font-medium">{t("label")}</legend>
+      {canChangeOwner && (
+        <>
+          <legend className="mb-3 text-sm font-medium">{t("label")}</legend>
 
-      <RadioGroup
-        value={ownList ? "me" : "other"}
-        onValueChange={value => onOwnListChange(value === "me")}
-      >
-        <div className="flex items-center gap-2">
-          <RadioGroupItem value="me" id="for-me" />
-          <Label htmlFor="for-me">{t("me")}</Label>
-        </div>
-        <div className="flex items-center gap-2">
-          <RadioGroupItem value="other" id="for-other" />
-          <Label htmlFor="for-other">{t("other")}</Label>
-        </div>
-      </RadioGroup>
+          <RadioGroup
+            value={ownList ? "me" : "other"}
+            onValueChange={value => onOwnListChange(value === "me")}
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="me" id="for-me" />
+              <Label htmlFor="for-me">{t("me")}</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="other" id="for-other" />
+              <Label htmlFor="for-other">{t("other")}</Label>
+            </div>
+          </RadioGroup>
+        </>
+      )}
 
       {!ownList && (
         <>

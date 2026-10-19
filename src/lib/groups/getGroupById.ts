@@ -29,7 +29,9 @@ export const getGroupById = cache(async (id: string) => {
 
     const wishlist = data.wishlist.map(wishlist => ({
       ...wishlist,
-      isOwnList: wishlist.user.id === userId,
+      isOwnList:
+        wishlist.user.id === userId ||
+        wishlist.managers.some(({ id }) => id === userId),
     }))
 
     const subscribed = data.members.some(

@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const reorderCategoriesForWishlist = async (
   wishlistId: string,
@@ -21,7 +22,11 @@ export const reorderCategoriesForWishlist = async (
     }
 
     const wishlist = await prisma.wishlist.findUnique({
-      where: { id: wishlistId, userId: session.user.id, removed: false },
+      where: {
+        id: wishlistId,
+        removed: false,
+        ...managedByUser(session.user.id),
+      },
       include: { categories: { select: { id: true } } },
     })
 

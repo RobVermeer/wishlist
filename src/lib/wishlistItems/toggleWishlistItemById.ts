@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
-import { sharedWithUser } from "@/lib/wishlists/visibility"
+import { managedByUser, sharedWithUser } from "@/lib/wishlists/visibility"
 
 export const toggleWishlistItemById = async (id: string) => {
   try {
@@ -28,7 +28,7 @@ export const toggleWishlistItemById = async (id: string) => {
         unlimited: false,
         wishlist: {
           removed: false,
-          userId: { not: userId },
+          NOT: managedByUser(userId),
           ...sharedWithUser(userId),
         },
       },

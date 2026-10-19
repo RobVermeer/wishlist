@@ -7,7 +7,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { NewItem } from "@/components/NewItem"
 import { notFound } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import { getGroupById } from "@/lib/groups/getGroupById"
@@ -21,6 +21,9 @@ import { ShareWishlist } from "@/components/ShareWishlist"
 import { EditWishlist } from "@/components/EditWishlist"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { UnfollowWishlist } from "@/components/UnfollowWishlist"
+import { StopManagingWishlist } from "@/components/StopManagingWishlist"
+import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
+import { getFirstName } from "@/lib/users/getFirstName"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 
@@ -34,6 +37,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const group = groupId ? await getGroupById(groupId) : null
   const t = await getTranslations("GroupWishlist")
   const tEdit = await getTranslations("EditWishlist")
+  const format = await getFormatter()
 
   if (!wishlist) {
     notFound()
@@ -41,6 +45,10 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
   const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
   const ownGroups = wishlist.isOwnList ? await getGroupOptionsForUser() : []
+  const managerOptions =
+    wishlist.isOwnList && !wishlist.isManager
+      ? await getManagerOptionsForUser(wishlist.id)
+      : []
   const categoryTitles = wishlist.categories.map(({ title }) => title)
 
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
@@ -102,6 +110,14 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           <small className="italic text-sm">{wishlist.description}</small>
         )}
 
+        {wishlist.managedWith.length > 0 && (
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("hint.together", {
+              names: format.list(wishlist.managedWith.map(getFirstName)),
+            })}
+          </p>
+        )}
+
         <p className="mt-2 text-sm text-muted-foreground">
           {wishlist.isOwnList
             ? t("hint.own")
@@ -115,9 +131,14 @@ export const Wishlist = async ({ id, groupId }: Props) => {
               title: wishlist.title,
               description: wishlist.description,
               theme: wishlist.theme,
-              groups: wishlist.groups.map(({ id }) => ({ id })),
+              groups: wishlist.groups
+                .filter(({ id }) => ownGroups.some(group => group.id === id))
+                .map(({ id }) => ({ id })),
+              managers: wishlist.managers.map(({ id }) => ({ id })),
+              isManager: wishlist.isManager,
             }}
             groups={ownGroups}
+            managers={managerOptions}
             label={tEdit("pageButton")}
             className="mt-3"
           />
@@ -168,6 +189,8 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           />
         </>
       )}
+
+      {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
 
       {canBeReminded && !wishlist.isOwnList && (
         <RemindButton userId={wishlist.user.id} />

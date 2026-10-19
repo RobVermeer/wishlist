@@ -12,6 +12,7 @@ import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { nextWishlistItemPosition } from "./nextWishlistItemPosition"
 import { findOrCreateCategory } from "@/lib/wishlistCategories"
+import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const createWishlistItemForUser = async (
   wishlistId: string,
@@ -30,7 +31,7 @@ export const createWishlistItemForUser = async (
     const wishlist = await prisma.wishlist.findUnique({
       where: {
         id: wishlistId,
-        userId,
+        ...managedByUser(userId),
       },
     })
 

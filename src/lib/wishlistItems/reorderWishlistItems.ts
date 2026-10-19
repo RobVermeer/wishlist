@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const reorderWishlistItems = async (
   wishlistId: string,
@@ -24,7 +25,11 @@ export const reorderWishlistItems = async (
       where: {
         id: { in: itemIds },
         removed: false,
-        wishlist: { id: wishlistId, userId: session.user.id, removed: false },
+        wishlist: {
+          id: wishlistId,
+          removed: false,
+          ...managedByUser(session.user.id),
+        },
       },
       select: { id: true, position: true, categoryId: true },
     })

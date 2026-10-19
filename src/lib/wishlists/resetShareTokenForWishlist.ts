@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { managedByUser } from "./visibility"
 
 export const resetShareTokenForWishlist = async (id: string) => {
   try {
@@ -18,7 +19,7 @@ export const resetShareTokenForWishlist = async (id: string) => {
     }
 
     const wishlist = await prisma.wishlist.findUnique({
-      where: { id, userId: session.user.id, removed: false },
+      where: { id, removed: false, ...managedByUser(session.user.id) },
       select: { id: true },
     })
 
