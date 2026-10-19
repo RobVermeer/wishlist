@@ -175,6 +175,48 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   expect(left.removed).toBe(false)
 })
 
+test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const own = await createWishlist(member, { groups: [group] })
+  const forSomeoneElse = await createWishlist(member, {
+    title: "Baby Mo",
+    groups: [group],
+  })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Verlaat" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
+  await expect(dialog).toContainText(
+    "zien de anderen je verlanglijstjes niet meer"
+  )
+  await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
+  await expect(page).toHaveURL("/")
+
+  const ownerPage = await signIn(owner)
+  await ownerPage.goto(`/group/${group.id}`)
+  await expect(
+    ownerPage.getByText("Er zijn nog geen lijstjes! 😵‍💫")
+  ).toBeVisible()
+
+  for (const { id } of [own, forSomeoneElse]) {
+    await ownerPage.goto(`/wishlist/${id}`)
+    await expect(
+      ownerPage.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+    ).toBeVisible()
+
+    const wishlist = await prisma.wishlist.findUniqueOrThrow({
+      where: { id },
+      include: { groups: true },
+    })
+    expect(wishlist.groups).toEqual([])
+    expect(wishlist.removed).toBe(false)
+  }
+})
+
 test("visiting a group you don't follow lets you follow it", async ({
   signIn,
 }) => {
