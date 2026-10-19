@@ -1,5 +1,5 @@
 import { clsx } from "clsx"
-import { InfinityIcon, Link } from "lucide-react"
+import { Check, InfinityIcon, Link } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ListTitle } from "@/components/ListTitle"
 
@@ -7,6 +7,7 @@ const items = [
   { key: "bike", link: true },
   { key: "books", unlimited: true },
   { key: "lego", bought: true },
+  { key: "game", bought: true, byMe: true },
   { key: "socks" },
 ] as const
 
@@ -25,7 +26,7 @@ export const LandingExample = () => {
           {items.map(item => (
             <li
               key={item.key}
-              className="flex items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
             >
               <span
                 className={clsx(
@@ -42,6 +43,16 @@ export const LandingExample = () => {
                 <span className="flex items-center gap-1 text-sm font-normal text-muted-foreground">
                   <InfinityIcon aria-hidden size="18" />{" "}
                   {tToggle("unlimitedLabel")}
+                </span>
+              ) : "byMe" in item ? (
+                <span className="ml-auto flex shrink-0 items-center gap-2">
+                  <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold text-gold-foreground dark:text-gold">
+                    <Check aria-hidden size="16" strokeWidth="2.5" />{" "}
+                    {tToggle("boughtByMe")}
+                  </span>
+                  <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
+                    {tToggle("cancel")}
+                  </span>
                 </span>
               ) : "bought" in item ? (
                 <span className="text-sm font-normal text-muted-foreground no-underline">
