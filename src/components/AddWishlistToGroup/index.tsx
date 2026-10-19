@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { useToast } from "@/components/ui/use-toast"
 import type { GroupOption } from "@/lib/groups/getGroupOptionsForUser"
+import type { ManagerOption } from "@/lib/users/getManagerOptionsForUser"
 import { addWishlistToGroup } from "@/lib/wishlists/addWishlistToGroup"
 
 interface Option {
@@ -32,6 +33,7 @@ interface Props {
   own: Option[]
   forSomeoneElse: Option[]
   groups: GroupOption[]
+  managers: ManagerOption[]
 }
 
 export const AddWishlistToGroup = ({
@@ -39,6 +41,7 @@ export const AddWishlistToGroup = ({
   own,
   forSomeoneElse,
   groups,
+  managers,
 }: Props) => {
   const t = useTranslations("Group.addWishlist")
   const { toast } = useToast()
@@ -58,6 +61,7 @@ export const AddWishlistToGroup = ({
     return (
       <NewWishlist
         groups={groups}
+        managers={managers}
         defaultGroupIds={[group.id]}
         trigger={button}
       />
@@ -157,6 +161,7 @@ export const AddWishlistToGroup = ({
 
       <NewWishlist
         groups={groups}
+        managers={managers}
         defaultGroupIds={[group.id]}
         open={newOpen}
         onOpenChange={setNewOpen}

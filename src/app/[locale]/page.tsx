@@ -5,6 +5,7 @@ import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { groupBackground } from "@/lib/groups/themes"
+import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlistsForUser"
 import Link from "next/link"
@@ -112,6 +113,7 @@ export default async function Home() {
           {wishlists.map(renderWishlist)}
           <NewWishlist
             groups={await getGroupOptionsForUser()}
+            managers={await getManagerOptionsForUser()}
             trigger={<AddTile label={t("wishlists.new")} />}
           />
         </div>

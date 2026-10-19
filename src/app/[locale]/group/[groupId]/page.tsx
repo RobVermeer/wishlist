@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button"
 import { ListChecks, Plus } from "lucide-react"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { groupBackground } from "@/lib/groups/themes"
+import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
@@ -65,6 +66,7 @@ export default async function GroupPage({ params }: Props) {
   }
 
   const groupOptions = await getGroupOptionsForUser()
+  const managerOptions = await getManagerOptionsForUser()
   const wishlists = await getWishlistsForUser()
   const ownWishlists = wishlists.filter(wishlist => !wishlist.title)
   const forSomeoneElseToAdd = wishlists.filter(
@@ -143,6 +145,7 @@ export default async function GroupPage({ params }: Props) {
             )}
             <NewWishlist
               groups={groupOptions}
+              managers={managerOptions}
               defaultGroupIds={[group.id]}
               trigger={
                 <Button variant="outline">
@@ -196,6 +199,7 @@ export default async function GroupPage({ params }: Props) {
         }))}
         forSomeoneElse={wishlistNames(forSomeoneElseToAdd)}
         groups={groupOptions}
+        managers={managerOptions}
       />
       <ShareButton title={group.title} />
     </List>

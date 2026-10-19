@@ -15,6 +15,7 @@ import {
   findOrCreateCategory,
   removeEmptyCategories,
 } from "@/lib/wishlistCategories"
+import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const updateWishlistItemById = async (
   id: string,
@@ -33,9 +34,7 @@ export const updateWishlistItemById = async (
     const wishlistItem = await prisma.wishlistItem.findUnique({
       where: {
         id,
-        wishlist: {
-          userId,
-        },
+        wishlist: managedByUser(userId),
         removed: false,
       },
     })

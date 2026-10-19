@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { cache } from "react"
 import { getTranslations } from "next-intl/server"
+import { managedByUser } from "./visibility"
 
 export const getWishlistsForUser = cache(async () => {
   const session = await getServerSession(authOptions)
@@ -20,7 +21,7 @@ export const getWishlistsForUser = cache(async () => {
   const data = await prisma.wishlist.findMany({
     orderBy: { createdAt: "asc" },
     select: wishlistProperties,
-    where: { userId, removed: false },
+    where: { removed: false, ...managedByUser(userId) },
   })
 
   const wishlists = data.map(wishlist => ({

@@ -74,6 +74,12 @@
       },
       "groups": {
         "replaces": "Vervangt je andere verlanglijstje in deze groep"
+      },
+      "managers": {
+        "label": "Wie beheert het nog meer?",
+        "text": "Die kan ook wensen toevoegen en wijzigen.",
+        "empty": "Zit je met iemand in een groep, dan kun je diegene hier kiezen.",
+        "ownList": "Dan beheer je dit verlanglijstje niet meer samen."
       }
     }
   },
@@ -146,6 +152,7 @@
     },
     "inGroup": "in <link>{group}</link>",
     "hint": {
+      "together": "Je beheert dit verlanglijstje samen met {names}.",
       "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
       "other": "{name} ziet niet wat er wordt gekocht 🤫"
     }
@@ -471,6 +478,10 @@
   "UnfollowWishlist": {
     "button": "Stop met volgen",
     "toast": "Je volgt dit verlanglijstje niet meer"
+  },
+  "StopManagingWishlist": {
+    "button": "Stop met beheren",
+    "toast": "Je beheert dit verlanglijstje niet meer"
   },
   "Item": {
     "move": "Verplaats wens {name}",

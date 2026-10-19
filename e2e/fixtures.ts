@@ -101,6 +101,7 @@ export async function createWishlist(
     theme = null,
     groups = [],
     followers = [],
+    managers = [],
     shareToken = null,
   }: {
     title?: string | null
@@ -108,6 +109,7 @@ export async function createWishlist(
     theme?: string | null
     groups?: { id: string }[]
     followers?: { id: string }[]
+    managers?: { id: string }[]
     shareToken?: string | null
   } = {}
 ) {
@@ -121,6 +123,7 @@ export async function createWishlist(
       userId: owner.id,
       groups: { connect: groups.map(({ id }) => ({ id })) },
       followers: { connect: followers.map(({ id }) => ({ id })) },
+      managers: { connect: managers.map(({ id }) => ({ id })) },
     },
   })
 }

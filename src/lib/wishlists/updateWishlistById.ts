@@ -11,7 +11,9 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { assertGroupsOfUser } from "./assertGroupsOfUser"
+import { assertManagersOfUser } from "./assertManagersOfUser"
 import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
+import { managedByUser } from "./visibility"
 
 export const updateWishlistById = async (id: string, formData: FormData) => {
   try {
@@ -23,12 +25,25 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
     }
 
     const userId = session.user.id
+    const managesThisWishlist = {
+      OR: [{ wishlists: { some: { id } } }, { managing: { some: { id } } }],
+    }
 
     const wishlist = await prisma.wishlist.findUnique({
       where: {
         id,
-        userId,
         removed: false,
+        ...managedByUser(userId),
+      },
+      select: {
+        userId: true,
+        managers: { select: { id: true } },
+        groups: {
+          select: { id: true },
+          where: {
+            members: { none: { id: userId }, some: managesThisWishlist },
+          },
+        },
       },
     })
 
@@ -41,9 +56,25 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       description: formData.get("description")?.toString() || undefined,
       theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map(group => group.toString()),
+      managers: formData.getAll("managers").map(manager => manager.toString()),
     })
+    const isOwner = wishlist.userId === userId
+    const currentManagerIds = wishlist.managers.map(({ id }) => id)
+    const managerIds = data.name ? (data.managers ?? []) : []
+
+    if (!isOwner && !data.name) {
+      throw new Error(t("noAccess"))
+    }
 
     await assertGroupsOfUser(userId, data.groups, t("group.notFound"))
+
+    if (isOwner) {
+      await assertManagersOfUser(
+        userId,
+        managerIds.filter(managerId => !currentManagerIds.includes(managerId)),
+        t("user.notFound")
+      )
+    }
 
     await prisma.$transaction(async tx => {
       await tx.wishlist.update({
@@ -52,7 +83,15 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
           title: data.name || null,
           description: data.description || null,
           theme: data.theme || null,
-          groups: { set: data.groups?.map(id => ({ id })) },
+          groups: {
+            set: [
+              ...wishlist.groups,
+              ...(data.groups ?? []).map(id => ({ id })),
+            ],
+          },
+          ...(isOwner && {
+            managers: { set: managerIds.map(id => ({ id })) },
+          }),
         },
         select: wishlistProperties,
       })

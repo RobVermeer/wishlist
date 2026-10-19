@@ -50,6 +50,7 @@ model User {
   groups        Group[]        @relation(name: "OwnedGroups")
   subscribed    Group[]        @relation(name: "Subscribed")
   following     Wishlist[]     @relation(name: "FollowedWishlists")
+  managing      Wishlist[]     @relation(name: "ManagedWishlists")
 }
 
 model VerificationToken {
@@ -86,6 +87,7 @@ model Wishlist {
   groups       Group[]
   shareToken   String?            @unique
   followers    User[]             @relation(name: "FollowedWishlists")
+  managers     User[]             @relation(name: "ManagedWishlists")
 }
 
 model WishlistCategory {

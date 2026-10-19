@@ -38,11 +38,11 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 - Functions that read data start with `import "server-only"`. Never put them in a `"use server"` file, every export of such a file becomes a public endpoint.
 - Mutations are server actions in their own `"use server"` file. Each one:
   1. gets the session and throws `Errors.notLoggedIn` without one,
-  2. checks the user may touch the record (owner, group member or admin) in the same query that loads it,
+  2. checks the user may touch the record (owner, manager, group member or admin) in the same query that loads it,
   3. validates input with a zod schema,
   4. calls `revalidatePath("/")` after writing,
   5. returns `{ type: "success" }` or `{ type: "error", errors }`, and tracks unexpected errors with `trackIssue`.
-- Wishlists are visible to their owner and to members of a group they are in. Use `visibleToUser` and `sharedWithUser` from `src/lib/wishlists/visibility.ts` instead of writing that condition again.
+- Wishlists are visible to their owner, to members of a group they are in and to followers. A wishlist for someone else can have managers who may change it like its owner, except for removing it and choosing who manages it. Use `visibleToUser`, `sharedWithUser` and `managedByUser` from `src/lib/wishlists/visibility.ts` instead of writing those conditions again.
 - Only send what a client component renders. Never pass whole database records, and select users with `userProperties`, which leaves out e-mail addresses.
 
 ## Forms
@@ -62,6 +62,7 @@ All user facing text goes through next-intl, also on admin pages. Write informal
 | Marking a wish as bought        | afstrepen, the button says `Ik koop dit` |
 | Something you bought            | cadeau                                   |
 | A group of people sharing lists | groep                                    |
+| Managing a list together        | samen beheren                            |
 
 ## Database changes
 

@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { getTranslations } from "next-intl/server"
 import { visibleToUser } from "./visibility"
+import { userProperties } from "@/lib/users/publicProperties"
 
 export const getWishlistById = cache(async (id: string) => {
   try {
@@ -21,6 +22,10 @@ export const getWishlistById = cache(async (id: string) => {
     const result = await prisma.wishlist.findUnique({
       select: {
         ...wishlistProperties,
+        managers: {
+          select: userProperties,
+          orderBy: { firstName: "asc" },
+        },
         followers: { where: { id: userId }, select: { id: true } },
       },
       where: { id, removed: false, ...visibleToUser(userId) },
@@ -30,7 +35,10 @@ export const getWishlistById = cache(async (id: string) => {
       throw new Error(t("wishlist.notFound"))
     }
 
-    const { followers, ...data } = result
+    const { followers, managers, ...data } = result
+    const isOwner = data.user.id === userId
+    const isManager = managers.some(manager => manager.id === userId)
+    const isOwnList = isOwner || isManager
 
     return {
       ...data,
@@ -38,8 +46,13 @@ export const getWishlistById = cache(async (id: string) => {
         ...item,
         boughtByMe: item.boughtBy?.id === userId,
       })),
-      isOwnList: data.user.id === userId,
-      isFollowing: followers.length > 0,
+      isOwnList,
+      isManager,
+      managers: isOwner ? managers : [],
+      managedWith: isOwnList
+        ? [data.user, ...managers].filter(owner => owner.id !== userId)
+        : [],
+      isFollowing: followers.length > 0 && !isOwnList,
     }
   } catch {
     return null

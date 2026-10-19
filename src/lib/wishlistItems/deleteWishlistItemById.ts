@@ -8,6 +8,7 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
 import { removeEmptyCategories } from "@/lib/wishlistCategories"
+import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const deleteWishlistItemById = async (id: string) => {
   try {
@@ -23,9 +24,7 @@ export const deleteWishlistItemById = async (id: string) => {
     const wishlistItemToDelete = await prisma.wishlistItem.findUnique({
       where: {
         id,
-        wishlist: {
-          userId,
-        },
+        wishlist: managedByUser(userId),
         removed: false,
       },
     })

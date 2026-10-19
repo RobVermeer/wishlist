@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { managedByUser } from "./visibility"
 
 export const followWishlistByShareToken = async (shareToken: string) => {
   try {
@@ -20,7 +21,7 @@ export const followWishlistByShareToken = async (shareToken: string) => {
     const userId = session.user.id
 
     const wishlist = await prisma.wishlist.findUnique({
-      where: { shareToken, removed: false, userId: { not: userId } },
+      where: { shareToken, removed: false, NOT: managedByUser(userId) },
       select: { id: true },
     })
 

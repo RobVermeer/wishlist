@@ -20,6 +20,8 @@ import { WishlistGroupsField } from "@/components/WishlistGroupsField"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { WishlistOwnerField } from "@/components/WishlistOwnerField"
+import { WishlistManagersField } from "@/components/WishlistManagersField"
+import type { ManagerOption } from "@/lib/users/getManagerOptionsForUser"
 import {
   Select,
   SelectContent,
@@ -31,6 +33,7 @@ import {
 
 interface Props {
   groups: GroupOption[]
+  managers: ManagerOption[]
   defaultGroupIds?: string[]
   defaultOwnList?: boolean
   trigger?: ReactNode
@@ -40,6 +43,7 @@ interface Props {
 
 export const NewWishlist = ({
   groups,
+  managers,
   defaultGroupIds = [],
   defaultOwnList = true,
   trigger,
@@ -78,12 +82,13 @@ export const NewWishlist = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
         </DialogHeader>
         <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <WishlistOwnerField ownList={ownList} onOwnListChange={setOwnList} />
+          {!ownList && <WishlistManagersField managers={managers} />}
 
           <Label htmlFor="description">
             {t.rich("NewWishlist.form.description", {
