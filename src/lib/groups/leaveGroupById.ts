@@ -31,10 +31,16 @@ export const leaveGroupById = async (id: string) => {
       throw new Error(t("group.notFound"))
     }
 
+    const ownWishlists = await prisma.wishlist.findMany({
+      where: { userId, groups: { some: { id } } },
+      select: { id: true },
+    })
+
     await prisma.group.update({
       where: { id },
       data: {
         members: { disconnect: [{ id: userId }] },
+        wishlist: { disconnect: ownWishlists },
       },
       select: groupProperties,
     })
