@@ -12,6 +12,47 @@ import { getServerSession } from "next-auth"
 import { Jimp } from "jimp"
 import { trackIssue } from "@/lib/trackIssue"
 
+const maxMegapixels = 25
+const pngSignature = Buffer.from([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+])
+
+function largestPngHeader(buffer: Buffer) {
+  let pixels = 0
+
+  for (
+    let offset = 8;
+    offset + 16 <= buffer.length;
+    offset += buffer.readUInt32BE(offset) + 12
+  ) {
+    if (buffer.toString("latin1", offset + 4, offset + 8) === "IHDR") {
+      const size =
+        buffer.readUInt32BE(offset + 8) * buffer.readUInt32BE(offset + 12)
+      pixels = Math.max(pixels, size)
+    }
+  }
+
+  return pixels
+}
+
+async function readAvatar(file: File) {
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const isPng = buffer.subarray(0, 8).equals(pngSignature)
+  const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8
+
+  if (isPng && largestPngHeader(buffer) > maxMegapixels * 1_000_000) {
+    return null
+  }
+
+  if (!isPng && !isJpeg) {
+    return null
+  }
+
+  return Jimp.fromBuffer(buffer, {
+    "image/jpeg": { maxResolutionInMP: maxMegapixels },
+  }).catch(() => null)
+}
+
 export async function updateProfile(data: FormData) {
   try {
     const session = await getServerSession(authOptions)
@@ -31,8 +72,11 @@ export async function updateProfile(data: FormData) {
     let uploadedImage
 
     if (avatar?.size) {
-      const bytes = await avatar.arrayBuffer()
-      const buffer = Buffer.from(bytes)
+      const image = await readAvatar(avatar)
+
+      if (!image) {
+        throw new Error(t("user.avatar"))
+      }
 
       await mkdir(join("./public/avatars", session.user.id), {
         recursive: true,
@@ -43,7 +87,6 @@ export async function updateProfile(data: FormData) {
         `${randomUUID()}.png`
       ) as `${string}.png`
 
-      const image = await Jimp.read(buffer)
       await image.cover({ w: 96, h: 96 }).write(imagePath)
 
       uploadedImage = `${process.env.BASE_URL}/${imagePath.replace(

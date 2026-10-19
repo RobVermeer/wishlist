@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs"
 import { rm } from "node:fs/promises"
+import { crc32, deflateSync } from "node:zlib"
 import {
   test,
   expect,
@@ -11,6 +12,35 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
+
+function blackPng(...sizes: [number, number][]) {
+  const chunk = (type: string, data: Buffer) => {
+    const body = Buffer.concat([Buffer.from(type), data])
+    const length = Buffer.alloc(4)
+    const crc = Buffer.alloc(4)
+    length.writeUInt32BE(data.length)
+    crc.writeUInt32BE(crc32(body))
+    return Buffer.concat([length, body, crc])
+  }
+  const headers = sizes.map(([width, height]) => {
+    const header = Buffer.alloc(13)
+    header.writeUInt32BE(width, 0)
+    header.writeUInt32BE(height, 4)
+    header[8] = 1
+    return chunk("IHDR", header)
+  })
+  const [width, height] = sizes.at(-1)!
+
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    ...headers,
+    chunk(
+      "IDAT",
+      deflateSync(Buffer.alloc((Math.ceil(width / 8) + 1) * height))
+    ),
+    chunk("IEND", Buffer.alloc(0)),
+  ])
+}
 
 test("pages don't contain the email addresses of other users", async ({
   signIn,
@@ -196,6 +226,32 @@ test("avatar file names can't escape the avatar folder", async ({ signIn }) => {
       force: true,
     })
   }
+})
+
+test("avatars that take too much memory to read are refused", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  for (const [name, buffer] of [
+    ["groot.png", blackPng([6000, 6000])],
+    ["verstopt.png", blackPng([100, 100], [6000, 6000])],
+  ] as const) {
+    await page.goto("/profile")
+    await page
+      .getByLabel("Profielfoto")
+      .setInputFiles({ name, mimeType: "image/png", buffer })
+    await page.getByRole("button", { name: "Opslaan" }).click()
+
+    await expect(toasts(page), name).toContainText(
+      "Kies een JPG- of PNG-foto van maximaal 25 megapixel"
+    )
+  }
+
+  expect(
+    (await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).image
+  ).toBeNull()
 })
 
 test("responses include security headers", async ({ request }) => {
