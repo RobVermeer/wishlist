@@ -24,7 +24,16 @@ export const YourItemCard = ({ item, categories }: Props) => {
 
       {!url && title}
 
-      <EditItem item={item} categories={categories} />
+      <EditItem
+        item={{
+          id: item.id,
+          title,
+          url,
+          unlimited,
+          category: item.category,
+        }}
+        categories={categories}
+      />
     </Card>
   )
 }

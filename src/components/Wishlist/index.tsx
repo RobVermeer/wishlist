@@ -110,7 +110,13 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
         {wishlist.isOwnList && (
           <EditWishlist
-            wishlist={wishlist}
+            wishlist={{
+              id: wishlist.id,
+              title: wishlist.title,
+              description: wishlist.description,
+              theme: wishlist.theme,
+              groups: wishlist.groups.map(({ id }) => ({ id })),
+            }}
             groups={ownGroups}
             label={tEdit("pageButton")}
             className="mt-3"
@@ -164,7 +170,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       )}
 
       {canBeReminded && !wishlist.isOwnList && (
-        <RemindButton wishlist={wishlist} />
+        <RemindButton userId={wishlist.user.id} />
       )}
 
       {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
