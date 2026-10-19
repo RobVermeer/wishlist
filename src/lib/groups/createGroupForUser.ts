@@ -21,7 +21,10 @@ export const createGroupForUser = async (formData: FormData) => {
     }
 
     const userId = session.user.id
-    const data = groupSchema.parse(Object.fromEntries(formData.entries()))
+    const data = groupSchema.parse({
+      title: formData.get("title")?.toString(),
+      theme: formData.get("theme")?.toString() || undefined,
+    })
 
     await prisma.group.create({
       select: groupProperties,

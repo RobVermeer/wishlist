@@ -4,6 +4,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { getGroupsForUser } from "@/lib/groups/getGroupsForUser"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
+import { groupBackground } from "@/lib/groups/themes"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlistsForUser"
 import Link from "next/link"
@@ -82,11 +83,7 @@ export default async function Home() {
               key={group.id}
               href={`/group/${group.id}`}
               className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-2xl bg-cover bg-center p-4 text-white shadow-sm transition-all hover:-rotate-1 hover:shadow-lg"
-              style={{
-                backgroundImage: `url('/theme/${
-                  group.theme || "background"
-                }.webp')`,
-              }}
+              style={{ backgroundImage: groupBackground(group.theme) }}
             >
               <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent" />
               <span className="relative font-display text-lg font-semibold leading-tight">

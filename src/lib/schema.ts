@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { groupThemes } from "@/lib/groups/themes"
 
 export const groupSchema = z.object({
   title: z
@@ -6,7 +7,9 @@ export const groupSchema = z.object({
     .trim()
     .min(2, { error: "Groep titel moet minimaal uit 2 tekens bestaan" })
     .max(40, { error: "Groep titel mag maximaal uit 40 tekens bestaan" }),
-  theme: z.string().trim().optional(),
+  theme: z
+    .enum(["default", ...groupThemes], { error: "Kies een thema uit de lijst" })
+    .optional(),
 })
 
 export const wishlistSchema = z.object({

@@ -34,7 +34,10 @@ export const updateGroupById = async (id: string, formData: FormData) => {
       throw new Error(t("group.notFound"))
     }
 
-    const data = groupSchema.parse(Object.fromEntries(formData.entries()))
+    const data = groupSchema.parse({
+      title: formData.get("title")?.toString(),
+      theme: formData.get("theme")?.toString() || undefined,
+    })
 
     await prisma.group.update({
       where: { id },
