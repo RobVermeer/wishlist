@@ -1,4 +1,12 @@
-import { test, expect, createUser, emailsTo, prisma, toasts } from "./fixtures"
+import {
+  test,
+  expect,
+  createUser,
+  emailsTo,
+  prisma,
+  toasts,
+  trackedIssues,
+} from "./fixtures"
 import { testEnv } from "./support/env"
 
 test.describe("unauthenticated visitor", () => {
@@ -92,6 +100,32 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   const user = await prisma.user.findUniqueOrThrow({ where: { email } })
   expect(user.firstName).toBe("Magda")
   expect(user.emailVerified).not.toBeNull()
+})
+
+test("an address gets at most three login e-mails in ten minutes", async ({
+  page,
+}) => {
+  const email = `flood-${Date.now()}@e2e.test`
+
+  for (let attempt = 0; attempt < 4; attempt++) {
+    await page.goto("/login")
+    await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+    const dialog = page.getByRole("dialog")
+    await dialog.getByLabel("E-mail").fill(email)
+    await dialog.getByRole("button", { name: "Inloggen" }).click()
+    await expect(dialog.getByText("Check je inbox 📨")).toBeVisible()
+  }
+
+  expect(await emailsTo(email)).toHaveLength(3)
+  await expect
+    .poll(async () =>
+      (await trackedIssues()).filter(
+        ({ message, extra }) =>
+          message === "Too many login e-mails" && extra.identifier === email
+      )
+    )
+    .toHaveLength(1)
 })
 
 test("login with Google redirects to the Google consent screen", async ({
