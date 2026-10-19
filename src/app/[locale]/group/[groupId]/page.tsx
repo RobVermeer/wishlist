@@ -6,10 +6,11 @@ import { WishlistCard } from "@/components/WishlistCard"
 import { Wishlist } from "@/components/Wishlist"
 import { EditGroup } from "@/components/EditGroup"
 import { LeaveGroup } from "@/components/LeaveGroup"
+import { AddWishlistToGroup } from "@/components/AddWishlistToGroup"
 import { ChooseWishlistForGroup } from "@/components/ChooseWishlistForGroup"
 import { NewWishlist } from "@/components/NewWishlist"
 import { Button } from "@/components/ui/button"
-import { ListChecks, Plus, UserPlus } from "lucide-react"
+import { ListChecks, Plus } from "lucide-react"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
@@ -63,8 +64,11 @@ export default async function GroupPage({ params }: Props) {
   }
 
   const groupOptions = await getGroupOptionsForUser()
-  const ownWishlists = (await getWishlistsForUser()).filter(
-    wishlist => !wishlist.title
+  const wishlists = await getWishlistsForUser()
+  const ownWishlists = wishlists.filter(wishlist => !wishlist.title)
+  const forSomeoneElseToAdd = wishlists.filter(
+    wishlist =>
+      wishlist.title && !wishlist.groups.some(({ id }) => id === group.id)
   )
   const ownInGroup = ownWishlists.filter(wishlist =>
     wishlist.groups.some(({ id }) => id === group.id)
@@ -75,7 +79,7 @@ export default async function GroupPage({ params }: Props) {
   const wishlistNames = (wishlists: typeof ownWishlists) =>
     wishlists.map(wishlist => ({
       id: wishlist.id,
-      name: wishlist.description || tCommon("myList"),
+      name: wishlist.title || wishlist.description || tCommon("myList"),
       details: t("chooseWishlist.wishes", {
         count: wishlist.wishlistItem.length,
       }),
@@ -169,27 +173,21 @@ export default async function GroupPage({ params }: Props) {
 
       <Separator className="my-3" />
 
-      {ownInGroup.length === 1 && ownToChoose.length > 0 && (
-        <ChooseWishlistForGroup
-          group={group}
-          wishlists={wishlistNames(ownToChoose)}
-          trigger={
-            <Button variant="outline">
-              <ListChecks size="16" className="mr-2" />{" "}
-              {t("chooseWishlist.change")}
-            </Button>
-          }
-        />
-      )}
-      <NewWishlist
+      <AddWishlistToGroup
+        group={group}
+        own={wishlistNames(ownToChoose).map(option => ({
+          ...option,
+          replaces:
+            ownInGroup.length === 1
+              ? t("addWishlist.replaces", {
+                  name: wishlistNames(ownInGroup)[0].name,
+                })
+              : ownInGroup.length > 1
+                ? t("addWishlist.replacesMany")
+                : undefined,
+        }))}
+        forSomeoneElse={wishlistNames(forSomeoneElseToAdd)}
         groups={groupOptions}
-        defaultGroupIds={[group.id]}
-        defaultOwnList={false}
-        trigger={
-          <Button variant="outline">
-            <UserPlus size="16" className="mr-2" /> {t("forSomeoneElse")}
-          </Button>
-        }
       />
       <ShareButton title={group.title} />
     </List>

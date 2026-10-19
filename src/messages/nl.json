@@ -118,15 +118,25 @@
     },
     "chooseWishlist": {
       "button": "Kies je verlanglijstje",
-      "change": "Ander verlanglijstje kiezen",
       "title": "Kies je verlanglijstje",
       "text": "De anderen in {group} zien alleen het verlanglijstje dat je kiest.",
       "submit": "Kies dit verlanglijstje",
       "toast": "Dit verlanglijstje staat nu in de groep 🎉",
       "wishes": "{count, plural, =0 {Nog geen wensen} one {# wens} other {# wensen}}"
     },
+    "addWishlist": {
+      "button": "Verlanglijstje toevoegen",
+      "title": "Verlanglijstje toevoegen",
+      "text": "Kies welk verlanglijstje je aan {group} toevoegt.",
+      "own": "Van jou",
+      "forSomeoneElse": "Voor iemand anders",
+      "replaces": "Vervangt ‘{name}’ in deze groep",
+      "replacesMany": "Vervangt je andere verlanglijstjes in deze groep",
+      "new": "Nieuw verlanglijstje",
+      "submit": "Voeg toe",
+      "toast": "Het verlanglijstje staat nu in de groep 🎉"
+    },
     "newWishlist": "Nieuw verlanglijstje",
-    "forSomeoneElse": "Verlanglijstje voor iemand anders",
     "members": "{count, plural, one {# lid} other {# leden}}"
   },
   "GroupWishlist": {

@@ -30,6 +30,7 @@ export const ChooseWishlistForGroup = ({
   trigger,
 }: Props) => {
   const t = useTranslations("Group.chooseWishlist")
+  const formId = `choose-${group.id}`
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [wishlistId, setWishlistId] = useState(wishlists[0]?.id)
@@ -64,7 +65,7 @@ export const ChooseWishlistForGroup = ({
             {t("text", { group: group.title })}
           </DialogDescription>
         </DialogHeader>
-        <form id="choose-for-group" onSubmit={onSubmit}>
+        <form id={formId} onSubmit={onSubmit}>
           <RadioGroup value={wishlistId} onValueChange={setWishlistId}>
             {wishlists.map(wishlist => (
               <div key={wishlist.id} className="flex items-start gap-2">
@@ -84,7 +85,7 @@ export const ChooseWishlistForGroup = ({
           </RadioGroup>
         </form>
         <DialogFooter>
-          <Button type="submit" form="choose-for-group">
+          <Button type="submit" form={formId}>
             <ListChecks size="16" className="mr-2" /> {t("submit")}
           </Button>
         </DialogFooter>

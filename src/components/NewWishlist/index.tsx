@@ -33,7 +33,9 @@ interface Props {
   groups: GroupOption[]
   defaultGroupIds?: string[]
   defaultOwnList?: boolean
-  trigger: ReactNode
+  trigger?: ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export const NewWishlist = ({
@@ -41,9 +43,13 @@ export const NewWishlist = ({
   defaultGroupIds = [],
   defaultOwnList = true,
   trigger,
+  open: controlledOpen,
+  onOpenChange,
 }: Props) => {
   const { toast } = useToast()
-  const [open, setOpen] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen ?? internalOpen
+  const setOpen = onOpenChange ?? setInternalOpen
   const [ownList, setOwnList] = useState(defaultOwnList)
   const t = useTranslations()
 
@@ -71,7 +77,7 @@ export const NewWishlist = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
