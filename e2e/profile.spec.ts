@@ -57,6 +57,33 @@ test("saving an empty profile shows an error", async ({ signIn }) => {
   ).toBe("Kees")
 })
 
+test("first names can be at most 40 characters", async ({ signIn }) => {
+  const user = await createUser({ firstName: "Kees" })
+  const nameless = await createUser({ firstName: null })
+  const tooLong = "K".repeat(41)
+  const error = "Voornaam mag maximaal uit 40 tekens bestaan"
+
+  const page = await signIn(user)
+  await page.goto("/profile")
+  await page.getByLabel("Voornaam").fill(tooLong)
+  await page.getByRole("button", { name: "Opslaan" }).click()
+  await expect(toasts(page)).toContainText(error)
+
+  const namelessPage = await signIn(nameless)
+  await namelessPage.goto("/")
+  const dialog = namelessPage.getByRole("dialog", { name: "Vul je naam in" })
+  await dialog.getByLabel("Voornaam").fill(tooLong)
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(toasts(namelessPage)).toContainText(error)
+  await expect(dialog).toBeVisible()
+
+  for (const { id, firstName } of [user, nameless]) {
+    expect(
+      (await prisma.user.findUniqueOrThrow({ where: { id } })).firstName
+    ).toBe(firstName)
+  }
+})
+
 test("upload a profile picture", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)

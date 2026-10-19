@@ -7,6 +7,8 @@ import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
 import { trackIssue } from "@/lib/trackIssue"
+import { userSchema } from "@/lib/schema"
+import * as z from "zod"
 
 export const updateFirstNameById = async (id: string, firstName: string) => {
   try {
@@ -21,8 +23,10 @@ export const updateFirstNameById = async (id: string, firstName: string) => {
       throw new Error(t("noAccess"))
     }
 
+    const data = userSchema.parse({ firstName })
+
     await prisma.user.update({
-      data: { firstName },
+      data: { firstName: data.firstName },
       where: { id },
     })
 
@@ -32,6 +36,13 @@ export const updateFirstNameById = async (id: string, firstName: string) => {
       type: "success" as const,
     }
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        type: "error" as const,
+        errors: error.issues.map(issue => issue.message),
+      }
+    }
+
     trackIssue("Update first name by ID", "error", { error })
 
     return {
