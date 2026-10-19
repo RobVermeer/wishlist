@@ -1,4 +1,9 @@
-import { test as base, expect, Page } from "@playwright/test"
+import {
+  test as base,
+  BrowserContextOptions,
+  expect,
+  Page,
+} from "@playwright/test"
 import { PrismaClient, User } from "../src/generated/prisma/client"
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3"
 import { randomUUID } from "node:crypto"
@@ -191,15 +196,15 @@ export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
 
 type Fixtures = {
-  signIn: (user: TestUser) => Promise<Page>
+  signIn: (user: TestUser, options?: BrowserContextOptions) => Promise<Page>
 }
 
 export const test = base.extend<Fixtures>({
   signIn: async ({ browser }, use) => {
     const contexts: Awaited<ReturnType<typeof browser.newContext>>[] = []
 
-    await use(async user => {
-      const context = await browser.newContext({ baseURL })
+    await use(async (user, options) => {
+      const context = await browser.newContext({ ...options, baseURL })
 
       await context.addCookies([
         {
