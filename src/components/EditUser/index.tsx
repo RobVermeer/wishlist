@@ -67,7 +67,12 @@ export const EditUser = ({ firstName }: Props) => {
           small: chunks => <small>{chunks}</small>,
         })}
       </Label>
-      <Input id="avatar" name="avatar" type="file" accept="image/*" />
+      <Input
+        id="avatar"
+        name="avatar"
+        type="file"
+        accept="image/png,image/jpeg"
+      />
 
       <SubmitButton pending={pending} />
     </form>

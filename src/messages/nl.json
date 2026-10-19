@@ -290,7 +290,8 @@
       "alreadyBought": "Deze wens is al door iemand anders gekocht"
     },
     "user": {
-      "notFound": "Gebruiker niet gevonden"
+      "notFound": "Gebruiker niet gevonden",
+      "avatar": "Kies een JPG- of PNG-foto van maximaal 25 megapixel"
     },
     "reminder": {
       "alreadySent": "Er is vandaag al om meer wensen gevraagd"
