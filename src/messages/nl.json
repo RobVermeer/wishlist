@@ -468,5 +468,22 @@
     "movedOver": "Wens {name} verplaatst naar positie {position} van {total}.",
     "dropped": "Wens {name} neergezet op positie {position} van {total}.",
     "cancelled": "Verplaatsen van wens {name} geannuleerd."
+  },
+  "InstallApp": {
+    "title": "Zet Wishlist op je telefoon",
+    "text": "Dan open je hem met één tik vanaf je beginscherm, net als een app.",
+    "desktop": "Open Wishlist op je telefoon en volg de stappen hieronder.",
+    "install": "Installeer de app",
+    "ios": {
+      "title": "iPhone of iPad",
+      "share": "Tik op <strong>Deel</strong> <share></share>. Zie je die niet, tik dan eerst op <more></more>",
+      "add": "Kies <strong>Zet op beginscherm</strong>.",
+      "confirm": "Tik op <strong>Voeg toe</strong>."
+    },
+    "android": {
+      "title": "Android",
+      "menu": "Tik in je browser op het menu <menu></menu>.",
+      "install": "Kies <strong>App installeren</strong> of <strong>Toevoegen aan startscherm</strong>."
+    }
   }
 }

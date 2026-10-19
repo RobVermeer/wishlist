@@ -1,4 +1,5 @@
 import { EditUser } from "@/components/EditUser"
+import { InstallApp } from "@/components/InstallApp"
 import { LogoutButton } from "@/components/LogoutButton"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
@@ -36,6 +37,8 @@ export default async function ProfilePage() {
       <List>
         <EditUser firstName={firstName} />
       </List>
+
+      <InstallApp />
 
       <Separator />
 

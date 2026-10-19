@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { Gift } from "lucide-react"
+import { InstallApp } from "@/components/InstallApp"
 import { LoginForm } from "@/components/LoginForm"
 import { LandingExample } from "@/components/LandingExample"
 import { LandingFeatures } from "@/components/LandingFeatures"
@@ -30,6 +31,8 @@ export default async function Login({ searchParams }: Props) {
       <div id="inloggen" className="scroll-mt-4">
         <LoginForm />
       </div>
+
+      <InstallApp hideOnDesktop />
 
       <LandingExample />
       <LandingFeatures />
