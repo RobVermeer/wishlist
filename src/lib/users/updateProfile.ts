@@ -11,6 +11,8 @@ import { authOptions } from "@/lib/nextAuth"
 import { getServerSession } from "next-auth"
 import { Jimp } from "jimp"
 import { trackIssue } from "@/lib/trackIssue"
+import { userSchema } from "@/lib/schema"
+import * as z from "zod"
 
 const maxMegapixels = 25
 const pngSignature = Buffer.from([
@@ -62,7 +64,9 @@ export async function updateProfile(data: FormData) {
       throw new Error(t("notLoggedIn"))
     }
 
-    const firstName = data.get("firstName")?.toString()
+    const { firstName } = userSchema.partial().parse({
+      firstName: data.get("firstName")?.toString() || undefined,
+    })
     const avatar = data.get("avatar") as File | null
 
     if (!firstName && !avatar?.size) {
@@ -97,7 +101,7 @@ export async function updateProfile(data: FormData) {
 
     await prisma.user.update({
       data: {
-        firstName: firstName || undefined,
+        firstName,
         image: uploadedImage,
       },
       where: {
@@ -110,6 +114,13 @@ export async function updateProfile(data: FormData) {
       type: "success" as const,
     }
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        type: "error" as const,
+        errors: error.issues.map(issue => issue.message),
+      }
+    }
+
     trackIssue("Update first name by ID", "error", { error })
 
     return {

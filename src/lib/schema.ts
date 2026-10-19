@@ -12,6 +12,14 @@ export const groupSchema = z.object({
     .optional(),
 })
 
+export const userSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(1, { error: "Vul je voornaam in" })
+    .max(40, { error: "Voornaam mag maximaal uit 40 tekens bestaan" }),
+})
+
 export const wishlistSchema = z.object({
   name: z
     .string()
