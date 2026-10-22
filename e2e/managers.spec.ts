@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test"
+import { Locator, Page } from "@playwright/test"
 import {
   test,
   expect,
@@ -12,6 +12,14 @@ import {
 
 const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
 const managersLabel = "Wie beheert het nog meer?"
+
+const chosenManagers = (dialog: Locator) =>
+  dialog.getByRole("group", { name: managersLabel }).getByRole("listitem")
+
+async function chooseManager(page: Page, dialog: Locator, name: string) {
+  await dialog.getByRole("button", { name: "Kies iemand" }).click()
+  await page.getByRole("option", { name }).click()
+}
 
 const ownWishlists = (page: Page) =>
   page.locator("div.grid").filter({
@@ -66,9 +74,11 @@ test("make a wishlist for someone else and manage it together", async ({
   await expect(managers).toContainText(
     "Die kan ook wensen toevoegen en wijzigen."
   )
-  await expect(managers.getByRole("checkbox")).toHaveCount(2)
-  await expect(managers.getByLabel("Ria")).not.toBeChecked()
-  await managers.getByLabel("Rob").click()
+  await expect(chosenManagers(dialog)).toHaveCount(0)
+  await dialog.getByRole("button", { name: "Kies iemand" }).click()
+  await expect(page.getByRole("option")).toHaveText(["Ria", "Rob"])
+  await page.getByRole("option", { name: "Rob" }).click()
+  await expect(chosenManagers(dialog)).toHaveText(["Rob"])
   await dialog.getByRole("button", { name: "Maak aan" }).click()
   await expect(dialog).toBeHidden()
 
@@ -172,7 +182,9 @@ test("without anyone in your groups the dialog says who you can choose", async (
   await expect(managers).toContainText(
     "Zit je met iemand in een groep, dan kun je diegene hier kiezen."
   )
-  await expect(managers.getByRole("checkbox")).toHaveCount(0)
+  await expect(
+    managers.getByRole("button", { name: "Kies iemand" })
+  ).toHaveCount(0)
 })
 
 test("managers change the wishlist but not who manages it", async ({
@@ -256,13 +268,11 @@ test("the owner chooses who manages the wishlist", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
   const managers = dialog.getByRole("group", { name: managersLabel })
-  await expect(managers.getByRole("checkbox")).toHaveCount(3)
-  await expect(managers.getByLabel("Ria")).not.toBeChecked()
-  await expect(managers.getByLabel("Rob")).toBeChecked()
-  await expect(managers.getByLabel("Tess")).toBeChecked()
+  await expect(chosenManagers(dialog)).toHaveText(["Rob", "Tess"])
 
-  await managers.getByLabel("Ria").click()
-  await managers.getByLabel("Tess").click()
+  await managers.getByRole("button", { name: "Haal Tess weg" }).click()
+  await chooseManager(page, dialog, "Ria")
+  await expect(chosenManagers(dialog)).toHaveText(["Ria", "Rob"])
   await dialog.getByLabel("Familie", { exact: true }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
@@ -479,7 +489,7 @@ test("a wishlist stays in a group while one of its managers is in it", async ({
   expect((await findWishlist(wishlist)).groups).toEqual([])
 })
 
-test("everyone you can choose fits in the dialog on a small phone", async ({
+test("find who manages a wishlist by name on a small phone", async ({
   signIn,
 }) => {
   const user = await createUser()
@@ -498,7 +508,14 @@ test("everyone you can choose fits in the dialog on a small phone", async ({
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
   await dialog.getByLabel("Naam", { exact: true }).fill("Baby")
-  await dialog.getByLabel("Hugo").click()
+  await dialog.getByRole("button", { name: "Kies iemand" }).click()
+  const search = page.getByPlaceholder("Zoek op naam")
+  await search.fill("xyz")
+  await expect(page.getByText("Niemand gevonden")).toBeVisible()
+  await search.fill("hu")
+  await expect(page.getByRole("option")).toHaveText(["Hugo"])
+  await page.getByRole("option", { name: "Hugo" }).click()
+  await expect(chosenManagers(dialog)).toHaveText(["Hugo"])
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()

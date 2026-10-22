@@ -79,6 +79,10 @@
         "label": "Wie beheert het nog meer?",
         "text": "Die kan ook wensen toevoegen en wijzigen.",
         "empty": "Zit je met iemand in een groep, dan kun je diegene hier kiezen.",
+        "choose": "Kies iemand",
+        "search": "Zoek op naam",
+        "noMatch": "Niemand gevonden",
+        "remove": "Haal {name} weg",
         "ownList": "Dan beheer je dit verlanglijstje niet meer samen."
       }
     }

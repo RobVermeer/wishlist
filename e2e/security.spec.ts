@@ -569,7 +569,8 @@ for (const flow of ["new", "edited"] as const) {
     }
 
     const dialog = page.getByRole("dialog")
-    await dialog.getByLabel("Mo").click()
+    await dialog.getByRole("button", { name: "Kies iemand" }).click()
+    await page.getByRole("option", { name: "Mo" }).click()
     await dialog
       .locator(`input[name="managers"][value="${member.id}"]`)
       .evaluate((input, id) => input.setAttribute("value", id), stranger.id)
