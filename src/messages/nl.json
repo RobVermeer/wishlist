@@ -76,7 +76,7 @@
         "replaces": "Vervangt je andere verlanglijstje in deze groep"
       },
       "managers": {
-        "label": "Wie beheert het nog meer?",
+        "label": "Wie beheert dit verlanglijstje nog meer?",
         "text": "Die kan ook wensen toevoegen en wijzigen.",
         "empty": "Zit je met iemand in een groep, dan kun je diegene hier kiezen.",
         "choose": "Kies iemand",

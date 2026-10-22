@@ -11,7 +11,7 @@ import {
 } from "./fixtures"
 
 const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
-const managersLabel = "Wie beheert het nog meer?"
+const managersLabel = "Wie beheert dit verlanglijstje nog meer?"
 
 const chosenManagers = (dialog: Locator) =>
   dialog.getByRole("group", { name: managersLabel }).getByRole("listitem")
