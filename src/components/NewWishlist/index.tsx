@@ -90,21 +90,14 @@ export const NewWishlist = ({
           <WishlistOwnerField ownList={ownList} onOwnListChange={setOwnList} />
           {!ownList && <WishlistManagersField managers={managers} />}
 
+          <Separator />
+
           <Label htmlFor="description">
             {t.rich("NewWishlist.form.description", {
               small: chunks => <small>{chunks}</small>,
             })}
           </Label>
           <Input id="description" name="description" />
-
-          <Separator />
-
-          <WishlistGroupsField
-            label={t("NewWishlist.form.groups")}
-            groups={groups}
-            defaultGroupIds={defaultGroupIds}
-            ownList={ownList}
-          />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme">
@@ -145,6 +138,15 @@ export const NewWishlist = ({
               </SelectGroup>
             </SelectContent>
           </Select>
+
+          <Separator />
+
+          <WishlistGroupsField
+            label={t("NewWishlist.form.groups")}
+            groups={groups}
+            defaultGroupIds={defaultGroupIds}
+            ownList={ownList}
+          />
         </form>
         <DialogFooter>
           <Button type="submit" form="add">

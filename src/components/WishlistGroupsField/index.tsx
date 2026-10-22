@@ -28,7 +28,7 @@ export const WishlistGroupsField = ({
 
   return (
     <fieldset className="grid gap-1">
-      <legend className="mb-1">{label}</legend>
+      <legend className="mb-1 text-sm font-medium">{label}</legend>
       {groups.map(group => {
         const replaces =
           ownList &&
@@ -45,7 +45,9 @@ export const WishlistGroupsField = ({
                 checked={checked.includes(group.id)}
                 onCheckedChange={on => toggle(group.id, on === true)}
               />
-              <label htmlFor={`group-${group.id}`}>{group.title}</label>
+              <label htmlFor={`group-${group.id}`} className="text-sm">
+                {group.title}
+              </label>
             </div>
             {replaces && (
               <small className="ml-6 text-muted-foreground">
