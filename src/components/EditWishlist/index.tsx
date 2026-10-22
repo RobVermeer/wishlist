@@ -138,6 +138,8 @@ export const EditWishlist = ({
             />
           )}
 
+          <Separator />
+
           <Label htmlFor="description">
             {t.rich("EditWishlist.form.description", {
               small: chunks => <small>{chunks}</small>,
@@ -147,16 +149,6 @@ export const EditWishlist = ({
             id="description"
             name="description"
             defaultValue={description || ""}
-          />
-
-          <Separator />
-
-          <WishlistGroupsField
-            label={t("EditWishlist.form.groups")}
-            groups={groups}
-            defaultGroupIds={wishlist.groups.map(({ id }) => id)}
-            ownList={ownList}
-            wishlistId={id}
           />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
@@ -201,6 +193,16 @@ export const EditWishlist = ({
               </SelectGroup>
             </SelectContent>
           </Select>
+
+          <Separator />
+
+          <WishlistGroupsField
+            label={t("EditWishlist.form.groups")}
+            groups={groups}
+            defaultGroupIds={wishlist.groups.map(({ id }) => id)}
+            ownList={ownList}
+            wishlistId={id}
+          />
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           {!isManager && (
