@@ -26,7 +26,7 @@ import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
-import { getClosedCategories } from "@/lib/wishlistCategories/getClosedCategories"
+import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
 
 interface Props {
   id: string
@@ -36,7 +36,7 @@ interface Props {
 export const Wishlist = async ({ id, groupId }: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
-  const closedCategories = await getClosedCategories()
+  const openCategories = await getOpenCategories()
   const t = await getTranslations("GroupWishlist")
   const tEdit = await getTranslations("EditWishlist")
   const format = await getFormatter()
@@ -170,7 +170,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
               />
             ),
           }))}
-          closedCategories={closedCategories}
+          openCategories={openCategories}
           sortable={wishlist.isOwnList}
         />
       )}

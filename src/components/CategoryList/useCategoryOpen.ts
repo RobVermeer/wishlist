@@ -1,9 +1,9 @@
 import { useSyncExternalStore } from "react"
 import {
   cookieName,
-  parseClosedCategories,
-  serializeClosedCategories,
-} from "./closedCategories"
+  parseOpenCategories,
+  serializeOpenCategories,
+} from "./openCategories"
 
 const listeners = new Set<() => void>()
 
@@ -23,23 +23,23 @@ function getSnapshot() {
   return cookie?.slice(cookieName.length + 1) ?? ""
 }
 
-function setClosedCategories(ids: string[]) {
-  document.cookie = serializeClosedCategories(ids)
+function setOpenCategories(ids: string[]) {
+  document.cookie = serializeOpenCategories(ids)
   listeners.forEach(listener => listener())
 }
 
-export function useCategoryOpen(id: string, closedCategories: string) {
-  const closed = parseClosedCategories(
-    useSyncExternalStore(subscribe, getSnapshot, () => closedCategories)
+export function useCategoryOpen(id: string, openCategories: string) {
+  const opened = parseOpenCategories(
+    useSyncExternalStore(subscribe, getSnapshot, () => openCategories)
   )
 
   function setOpen(open: boolean) {
-    setClosedCategories(
+    setOpenCategories(
       open
-        ? closed.filter(closedId => closedId !== id)
-        : [...closed.filter(closedId => closedId !== id), id]
+        ? [...opened.filter(openedId => openedId !== id), id]
+        : opened.filter(openedId => openedId !== id)
     )
   }
 
-  return [!closed.includes(id), setOpen] as const
+  return [opened.includes(id), setOpen] as const
 }

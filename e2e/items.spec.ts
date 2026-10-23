@@ -323,6 +323,7 @@ test("owner can reorder wishes in a category with the keyboard", async ({
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: /^Boeken \d+$/ }).click()
 
   const handle = page.getByRole("button", { name: "Verplaats wens Roman" })
   const announcement = page

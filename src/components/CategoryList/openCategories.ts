@@ -1,14 +1,14 @@
-// A functional cookie, so the server renders closed categories closed.
-export const cookieName = "closed-categories"
+// A functional cookie, so the server renders opened categories open.
+export const cookieName = "open-categories"
 
 const maxIds = 100
 const oneYear = 60 * 60 * 24 * 365
 
-export function parseClosedCategories(value: string) {
+export function parseOpenCategories(value: string) {
   return value.split(".").filter(id => /^\w+$/.test(id))
 }
 
-export function serializeClosedCategories(ids: string[]) {
+export function serializeOpenCategories(ids: string[]) {
   const value = ids.slice(-maxIds).join(".")
 
   return `${cookieName}=${value}; path=/; max-age=${oneYear}; samesite=lax`
