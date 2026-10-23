@@ -1,54 +1,44 @@
 import { useSyncExternalStore } from "react"
+import {
+  cookieName,
+  parseClosedCategories,
+  serializeClosedCategories,
+} from "./closedCategories"
 
-const storageKey = "closed-categories"
 const listeners = new Set<() => void>()
 
 function subscribe(listener: () => void) {
   listeners.add(listener)
-  window.addEventListener("storage", listener)
 
   return () => {
     listeners.delete(listener)
-    window.removeEventListener("storage", listener)
   }
 }
 
 function getSnapshot() {
-  try {
-    return localStorage.getItem(storageKey) ?? "[]"
-  } catch {
-    return "[]"
-  }
+  const cookie = document.cookie
+    .split("; ")
+    .find(cookie => cookie.startsWith(`${cookieName}=`))
+
+  return cookie?.slice(cookieName.length + 1) ?? ""
 }
 
-function getServerSnapshot() {
-  return "[]"
+function setClosedCategories(ids: string[]) {
+  document.cookie = serializeClosedCategories(ids)
+  listeners.forEach(listener => listener())
 }
 
-function parse(value: string): string[] {
-  try {
-    const parsed = JSON.parse(value)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
-export function useCategoryOpen(id: string) {
-  const closed = parse(
-    useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+export function useCategoryOpen(id: string, closedCategories: string) {
+  const closed = parseClosedCategories(
+    useSyncExternalStore(subscribe, getSnapshot, () => closedCategories)
   )
 
   function setOpen(open: boolean) {
-    const next = open
-      ? closed.filter(closedId => closedId !== id)
-      : [...closed.filter(closedId => closedId !== id), id]
-
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(next))
-    } catch {}
-
-    listeners.forEach(listener => listener())
+    setClosedCategories(
+      open
+        ? closed.filter(closedId => closedId !== id)
+        : [...closed.filter(closedId => closedId !== id), id]
+    )
   }
 
   return [!closed.includes(id), setOpen] as const

@@ -7,13 +7,23 @@ import { Category, CategorySection } from "./CategorySection"
 interface Props {
   wishlistId: string
   categories: Category[]
+  closedCategories: string
   sortable: boolean
 }
 
-export const CategoryList = ({ wishlistId, categories, sortable }: Props) => {
+export const CategoryList = ({
+  wishlistId,
+  categories,
+  closedCategories,
+  sortable,
+}: Props) => {
   if (!sortable) {
     return categories.map(category => (
-      <CategorySection key={category.id} category={category} />
+      <CategorySection
+        key={category.id}
+        category={category}
+        closedCategories={closedCategories}
+      />
     ))
   }
 
@@ -33,6 +43,7 @@ export const CategoryList = ({ wishlistId, categories, sortable }: Props) => {
           ref={ref}
           style={style}
           category={category}
+          closedCategories={closedCategories}
           handle={handle}
         />
       )}
