@@ -268,6 +268,28 @@ test("categories can be closed and stay closed after a reload", async ({
   await expect(page.getByText("Trui")).toBeVisible()
 })
 
+test("closed categories are closed before the page has loaded", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  const books = await createCategory(wishlist, "Boeken", 1)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Roman", category: books })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await categoryToggle(page, "Kleding").click()
+  await expect(page.getByText("Trui")).toBeHidden()
+
+  await page.route("**/_next/static/**/*.js", route => route.abort())
+  await page.reload()
+
+  await expect(page.getByText("Trui")).toBeHidden()
+  await expect(page.getByText("Roman")).toBeVisible()
+})
+
 test("owner can reorder categories with the keyboard", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)
