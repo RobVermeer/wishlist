@@ -19,7 +19,7 @@ export interface Category {
 
 interface Props {
   category: Category
-  closedCategories: string
+  openCategories: string
   handle?: ReactNode
   ref?: Ref<HTMLDivElement>
   style?: CSSProperties
@@ -27,12 +27,12 @@ interface Props {
 
 export const CategorySection = ({
   category,
-  closedCategories,
+  openCategories,
   handle,
   ref,
   style,
 }: Props) => {
-  const [open, setOpen] = useCategoryOpen(category.id, closedCategories)
+  const [open, setOpen] = useCategoryOpen(category.id, openCategories)
 
   return (
     <Collapsible

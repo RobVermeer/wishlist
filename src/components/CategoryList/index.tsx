@@ -7,14 +7,14 @@ import { Category, CategorySection } from "./CategorySection"
 interface Props {
   wishlistId: string
   categories: Category[]
-  closedCategories: string
+  openCategories: string
   sortable: boolean
 }
 
 export const CategoryList = ({
   wishlistId,
   categories,
-  closedCategories,
+  openCategories,
   sortable,
 }: Props) => {
   if (!sortable) {
@@ -22,7 +22,7 @@ export const CategoryList = ({
       <CategorySection
         key={category.id}
         category={category}
-        closedCategories={closedCategories}
+        openCategories={openCategories}
       />
     ))
   }
@@ -43,7 +43,7 @@ export const CategoryList = ({
           ref={ref}
           style={style}
           category={category}
-          closedCategories={closedCategories}
+          openCategories={openCategories}
           handle={handle}
         />
       )}

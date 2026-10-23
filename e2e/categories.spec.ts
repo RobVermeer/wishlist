@@ -14,6 +14,14 @@ import { Locator, Page } from "@playwright/test"
 const categoryToggle = (page: Page, title: string) =>
   page.getByRole("button", { name: new RegExp(`^${title} \\d+$`) })
 
+const openCategory = async (page: Page, title: string) => {
+  await categoryToggle(page, title).click()
+  await expect(categoryToggle(page, title)).toHaveAttribute(
+    "aria-expanded",
+    "true"
+  )
+}
+
 const chooseCategory = async (page: Page, dialog: Locator, name: string) => {
   await dialog.getByLabel("Categorie").click()
   await page.getByPlaceholder("Zoek of typ een nieuwe categorie").fill(name)
@@ -50,8 +58,8 @@ test("wishes without a category are listed above the categories", async ({
 
   await page.goto(`/wishlist/${wishlist.id}`)
 
-  await expect(categoryToggle(page, "Boeken")).toBeVisible()
-  await expect(categoryToggle(page, "Kleding")).toBeVisible()
+  await openCategory(page, "Boeken")
+  await openCategory(page, "Kleding")
   expect(
     await itemOrder(page, ["Trui", "Roman", "Fiets", "Boeken", "Kleding"])
   ).toEqual(["Fiets", "Boeken", "Roman", "Kleding", "Trui"])
@@ -124,6 +132,7 @@ test("move a wish between categories", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await openCategory(page, "Kleding")
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
@@ -138,6 +147,7 @@ test("move a wish between categories", async ({ signIn }) => {
   const categories = await categoriesOf(wishlist.id)
   expect(categories.map(({ title }) => title)).toEqual(["Winter"])
 
+  await openCategory(page, "Winter")
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   await dialog.getByLabel("Categorie").click()
   await page.getByRole("option", { name: "Geen categorie" }).click()
@@ -167,6 +177,8 @@ test("a wish moved to another category goes to the end of it", async ({
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await openCategory(page, "Kleding")
+  await openCategory(page, "Winter")
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: "Trui" })
@@ -195,6 +207,7 @@ test("removing the last wish of a category removes the category", async ({
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await openCategory(page, "Kleding")
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   await page
     .getByRole("dialog", { name: "Wijzig wens" })
@@ -233,7 +246,7 @@ test("category names can be at most 40 characters", async ({ signIn }) => {
   ).toBe(0)
 })
 
-test("categories can be closed and stay closed after a reload", async ({
+test("categories are closed until opened and stay open after a reload", async ({
   signIn,
 }) => {
   const user = await createUser()
@@ -247,28 +260,31 @@ test("categories can be closed and stay closed after a reload", async ({
   await page.goto(`/wishlist/${wishlist.id}`)
 
   const clothesToggle = categoryToggle(page, "Kleding")
+  await expect(clothesToggle).toHaveAttribute("aria-expanded", "false")
+  await expect(page.getByText("Trui")).toBeHidden()
+  await expect(page.getByText("Roman")).toBeHidden()
+
+  await clothesToggle.click()
+
   await expect(clothesToggle).toHaveAttribute("aria-expanded", "true")
   await expect(page.getByText("Trui")).toBeVisible()
-
-  await clothesToggle.click()
-
-  await expect(clothesToggle).toHaveAttribute("aria-expanded", "false")
-  await expect(page.getByText("Trui")).toBeHidden()
-  await expect(page.getByText("Roman")).toBeVisible()
+  await expect(page.getByText("Roman")).toBeHidden()
 
   await page.reload()
 
-  await expect(clothesToggle).toHaveAttribute("aria-expanded", "false")
-  await expect(page.getByText("Trui")).toBeHidden()
+  await expect(clothesToggle).toHaveAttribute("aria-expanded", "true")
+  await expect(page.getByText("Trui")).toBeVisible()
+  await expect(page.getByText("Roman")).toBeHidden()
 
   await clothesToggle.click()
 
-  await expect(page.getByText("Trui")).toBeVisible()
+  await expect(page.getByText("Trui")).toBeHidden()
   await page.reload()
-  await expect(page.getByText("Trui")).toBeVisible()
+  await expect(clothesToggle).toHaveAttribute("aria-expanded", "false")
+  await expect(page.getByText("Trui")).toBeHidden()
 })
 
-test("closed categories are closed before the page has loaded", async ({
+test("opened categories are open before the page has loaded", async ({
   signIn,
 }) => {
   const user = await createUser()
@@ -281,13 +297,13 @@ test("closed categories are closed before the page has loaded", async ({
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await categoryToggle(page, "Kleding").click()
-  await expect(page.getByText("Trui")).toBeHidden()
+  await expect(page.getByText("Trui")).toBeVisible()
 
   await page.route("**/_next/static/**/*.js", route => route.abort())
   await page.reload()
 
-  await expect(page.getByText("Trui")).toBeHidden()
-  await expect(page.getByText("Roman")).toBeVisible()
+  await expect(page.getByText("Trui")).toBeVisible()
+  await expect(page.getByText("Roman")).toBeHidden()
 })
 
 test("owner can reorder categories with the keyboard", async ({ signIn }) => {
@@ -390,7 +406,7 @@ test("group members see categories but cannot reorder them", async ({
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
-  await expect(categoryToggle(page, "Kleding")).toBeVisible()
+  await openCategory(page, "Kleding")
   await expect(
     page.getByRole("button", { name: /Verplaats categorie/ })
   ).toHaveCount(0)
