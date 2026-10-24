@@ -193,6 +193,13 @@
       "title": "Naam",
       "save": "Opslaan"
     },
+    "members": {
+      "title": "Leden",
+      "remove": {
+        "button": "Haal uit de groep",
+        "description": "{name} zit daarna niet meer in de groep en de verlanglijstjes van {name} verdwijnen eruit."
+      }
+    },
     "wishlists": {
       "title": "Verlanglijstjes",
       "remove": {

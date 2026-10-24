@@ -776,3 +776,67 @@ test("only the creator of a group can take wishlists out of it", async ({
   })
   expect(untouched.wishlist.map(({ id }) => id)).toEqual([wishlist.id])
 })
+
+test("only the creator of a group can remove its members", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const other = await createUser({ firstName: "Pia" })
+  const group = await createGroup(owner, { members: [member, other] })
+  const ownGroup = await createGroup(member, { members: [other] })
+  const wishlist = await createWishlist(other, { groups: [group, ownGroup] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig groep" })
+    .getByRole("list", { name: "Leden" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  const untouched = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true, wishlist: true },
+  })
+  expect(untouched.members).toHaveLength(3)
+  expect(untouched.wishlist.map(({ id }) => id)).toEqual([wishlist.id])
+})
+
+test("the creator of a group can't remove themself from it", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const page = await signIn(owner)
+
+  await forgeActions(page, `/group/${group.id}`, member.id, owner.id)
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig groep" })
+    .getByRole("list", { name: "Leden" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  const untouched = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true },
+  })
+  expect(untouched.members).toHaveLength(2)
+})

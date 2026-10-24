@@ -801,3 +801,64 @@ test("owner can take a wishlist out of the group", async ({ signIn }) => {
     memberPage.getByText("Welk verlanglijstje is voor deze groep?")
   ).toBeVisible()
 })
+
+test("owner can remove a member and their wishlists from the group", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const other = await createUser({ firstName: "Pia" })
+  const group = await createGroup(owner, { members: [member, other] })
+  const own = await createWishlist(member, { groups: [group] })
+  const forSomeoneElse = await createWishlist(member, {
+    title: "Baby Mo",
+    groups: [group],
+  })
+  const managedTogether = await createWishlist(member, {
+    title: "Opa",
+    groups: [group],
+    managers: [other],
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await expect(page.getByText("3 leden")).toBeVisible()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
+  const members = dialog.getByRole("list", { name: "Leden" })
+  await expect(members.getByRole("listitem")).toHaveText([/Mo/, /Pia/])
+  await members
+    .getByRole("listitem")
+    .filter({ hasText: "Mo" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+
+  const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
+  await expect(confirm).toContainText("Mo zit daarna niet meer in de groep")
+  await confirm.getByRole("button", { name: "Haal uit de groep" }).click()
+
+  await expect(members.getByRole("listitem")).toHaveText([/Pia/])
+  await page.keyboard.press("Escape")
+  await expect(page.getByText("2 leden")).toBeVisible()
+
+  const updated = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true, wishlist: true },
+  })
+  expect(updated.members.map(({ id }) => id).sort()).toEqual(
+    [owner.id, other.id].sort()
+  )
+  expect(updated.wishlist.map(({ id }) => id)).toEqual([managedTogether.id])
+  for (const { id } of [own, forSomeoneElse]) {
+    expect(
+      (await prisma.wishlist.findUniqueOrThrow({ where: { id } })).removed
+    ).toBe(false)
+  }
+
+  const memberPage = await signIn(member)
+  await memberPage.goto(`/group/${group.id}`)
+  await expect(
+    memberPage.getByText("Je volgt deze groep nog niet 😵")
+  ).toBeVisible()
+})
