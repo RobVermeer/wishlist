@@ -23,6 +23,7 @@ import { getTranslations } from "next-intl/server"
 import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
+import { getFirstName } from "@/lib/users/getFirstName"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { groupId } = await params
@@ -112,6 +113,9 @@ export default async function GroupPage({ params }: Props) {
           {group.createdBy.id === session.user.id ? (
             <EditGroup
               group={{ ...groupInfo, theme: group.theme }}
+              members={group.members
+                .filter(({ id }) => id !== group.createdBy.id)
+                .map(member => ({ id: member.id, name: getFirstName(member) }))}
               wishlists={group.wishlist.map(wishlist => ({
                 id: wishlist.id,
                 name: getWishlistName(wishlist),

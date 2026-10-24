@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteGroupById } from "@/lib/groups/deleteGroupById"
+import { removeMemberFromGroup } from "@/lib/groups/removeMemberFromGroup"
 import { removeWishlistFromGroup } from "@/lib/groups/removeWishlistFromGroup"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { FormEvent, startTransition, useState } from "react"
@@ -19,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { RemoveButton } from "@/components/RemoveButton"
 import { Separator } from "@/components/ui/separator"
+import { RemovableList } from "./RemovableList"
 import { Pencil, Save } from "lucide-react"
 import {
   Select,
@@ -32,11 +34,12 @@ import { useTranslations } from "next-intl"
 
 interface Props {
   group: { id: string; title: string; theme: string | null }
+  members: { id: string; name: string }[]
   wishlists: { id: string; name: string }[]
   className?: string
 }
 
-export const EditGroup = ({ group, wishlists, className }: Props) => {
+export const EditGroup = ({ group, members, wishlists, className }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -136,39 +139,42 @@ export const EditGroup = ({ group, wishlists, className }: Props) => {
             </SelectContent>
           </Select>
         </form>
+        {members.length > 0 && (
+          <>
+            <Separator />
+            <RemovableList
+              id={`members-${id}`}
+              title={t("EditGroup.members.title")}
+              items={members}
+              button={t("EditGroup.members.remove.button")}
+              description={name =>
+                t("EditGroup.members.remove.description", { name })
+              }
+              onRemove={memberId =>
+                startTransition(async () =>
+                  showErrors(await removeMemberFromGroup(id, memberId))
+                )
+              }
+            />
+          </>
+        )}
         {wishlists.length > 0 && (
           <>
             <Separator />
-            <section className="grid gap-3">
-              <h3 id={`wishlists-${id}`} className="text-sm font-medium">
-                {t("EditGroup.wishlists.title")}
-              </h3>
-              <ul aria-labelledby={`wishlists-${id}`} className="grid gap-2">
-                {wishlists.map(wishlist => (
-                  <li
-                    key={wishlist.id}
-                    className="flex items-center justify-between gap-2"
-                  >
-                    <span className="truncate">{wishlist.name}</span>
-                    <RemoveButton
-                      label={t("EditGroup.wishlists.remove.button")}
-                      description={t("EditGroup.wishlists.remove.description", {
-                        name: wishlist.name,
-                      })}
-                      onConfirm={() =>
-                        startTransition(async () =>
-                          showErrors(
-                            await removeWishlistFromGroup(id, wishlist.id)
-                          )
-                        )
-                      }
-                      size="sm"
-                      className="shrink-0"
-                    />
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <RemovableList
+              id={`wishlists-${id}`}
+              title={t("EditGroup.wishlists.title")}
+              items={wishlists}
+              button={t("EditGroup.wishlists.remove.button")}
+              description={name =>
+                t("EditGroup.wishlists.remove.description", { name })
+              }
+              onRemove={wishlistId =>
+                startTransition(async () =>
+                  showErrors(await removeWishlistFromGroup(id, wishlistId))
+                )
+              }
+            />
           </>
         )}
         <DialogFooter className="gap-2 md:gap-0">
