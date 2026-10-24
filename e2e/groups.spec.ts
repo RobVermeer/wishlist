@@ -758,3 +758,46 @@ test("make a new wishlist from the add dialog of a group", async ({
   await expect(dialog).toBeHidden()
   await expect(page.getByRole("link", { name: "Oma" })).toBeVisible()
 })
+
+test("owner can take a wishlist out of the group", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  await createWishlist(owner, { groups: [group] })
+  const wishlist = await createWishlist(member, { groups: [group] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await expect(page.getByRole("link", { name: /Mo/ })).toBeVisible()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
+  const lists = dialog.getByRole("list", { name: "Verlanglijstjes" })
+  await expect(lists.getByRole("listitem")).toHaveText([/Olga/, /Mo/])
+  await lists
+    .getByRole("listitem")
+    .filter({ hasText: "Mo" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+
+  const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
+  await expect(confirm).toContainText("Het verlanglijstje zelf blijft bestaan")
+  await confirm.getByRole("button", { name: "Haal uit de groep" }).click()
+
+  await expect(lists.getByRole("listitem")).toHaveText([/Olga/])
+  await page.keyboard.press("Escape")
+  await expect(page.getByRole("link", { name: /Mo/ })).toHaveCount(0)
+
+  const takenOut = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+    include: { groups: true },
+  })
+  expect(takenOut.groups).toEqual([])
+  expect(takenOut.removed).toBe(false)
+
+  const memberPage = await signIn(member)
+  await memberPage.goto(`/group/${group.id}`)
+  await expect(
+    memberPage.getByText("Welk verlanglijstje is voor deze groep?")
+  ).toBeVisible()
+})

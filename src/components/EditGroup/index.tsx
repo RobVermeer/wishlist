@@ -12,11 +12,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteGroupById } from "@/lib/groups/deleteGroupById"
+import { removeWishlistFromGroup } from "@/lib/groups/removeWishlistFromGroup"
 import { updateGroupById } from "@/lib/groups/updateGroupById"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { RemoveButton } from "@/components/RemoveButton"
+import { Separator } from "@/components/ui/separator"
 import { Pencil, Save } from "lucide-react"
 import {
   Select,
@@ -30,10 +32,11 @@ import { useTranslations } from "next-intl"
 
 interface Props {
   group: { id: string; title: string; theme: string | null }
+  wishlists: { id: string; name: string }[]
   className?: string
 }
 
-export const EditGroup = ({ group, className }: Props) => {
+export const EditGroup = ({ group, wishlists, className }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -62,6 +65,16 @@ export const EditGroup = ({ group, className }: Props) => {
     startTransition(() => handleSubmit(data))
   }
 
+  function showErrors(
+    result: { type: "success" } | { type: "error"; errors: string[] }
+  ) {
+    if (result.type === "error") {
+      result.errors.forEach(title => {
+        toast({ variant: "destructive", title })
+      })
+    }
+  }
+
   async function handleRemove() {
     const { type, errors } = await deleteGroupById(id)
 
@@ -84,7 +97,7 @@ export const EditGroup = ({ group, className }: Props) => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className="sm:max-w-[425px]"
+        className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]"
         onOpenAutoFocus={event => event.preventDefault()}
       >
         <DialogHeader>
@@ -123,6 +136,41 @@ export const EditGroup = ({ group, className }: Props) => {
             </SelectContent>
           </Select>
         </form>
+        {wishlists.length > 0 && (
+          <>
+            <Separator />
+            <section className="grid gap-3">
+              <h3 id={`wishlists-${id}`} className="text-sm font-medium">
+                {t("EditGroup.wishlists.title")}
+              </h3>
+              <ul aria-labelledby={`wishlists-${id}`} className="grid gap-2">
+                {wishlists.map(wishlist => (
+                  <li
+                    key={wishlist.id}
+                    className="flex items-center justify-between gap-2"
+                  >
+                    <span className="truncate">{wishlist.name}</span>
+                    <RemoveButton
+                      label={t("EditGroup.wishlists.remove.button")}
+                      description={t("EditGroup.wishlists.remove.description", {
+                        name: wishlist.name,
+                      })}
+                      onConfirm={() =>
+                        startTransition(async () =>
+                          showErrors(
+                            await removeWishlistFromGroup(id, wishlist.id)
+                          )
+                        )
+                      }
+                      size="sm"
+                      className="shrink-0"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </>
+        )}
         <DialogFooter className="gap-2 md:gap-0">
           <RemoveButton
             description={t("EditGroup.remove.description")}

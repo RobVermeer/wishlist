@@ -18,16 +18,30 @@ import {
 interface Props {
   description: string
   onConfirm: () => void
+  label?: string
+  size?: "default" | "sm"
+  className?: string
 }
 
-export const RemoveButton = ({ description, onConfirm }: Props) => {
+export const RemoveButton = ({
+  description,
+  onConfirm,
+  label,
+  size,
+  className = "w-full",
+}: Props) => {
   const t = useTranslations("Remove")
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="w-full" type="button" variant="outline">
-          <Trash size="16" className="mr-2" /> {t("button")}
+        <Button
+          className={className}
+          size={size}
+          type="button"
+          variant="outline"
+        >
+          <Trash size="16" className="mr-2" /> {label ?? t("button")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -39,7 +53,7 @@ export const RemoveButton = ({ description, onConfirm }: Props) => {
           <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
           <AlertDialogAction className="flex gap-2" onClick={onConfirm}>
             <Trash size="16" />
-            {t("confirm")}
+            {label ?? t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

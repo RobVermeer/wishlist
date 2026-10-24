@@ -22,6 +22,7 @@ import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { groupId } = await params
@@ -111,6 +112,10 @@ export default async function GroupPage({ params }: Props) {
           {group.createdBy.id === session.user.id ? (
             <EditGroup
               group={{ ...groupInfo, theme: group.theme }}
+              wishlists={group.wishlist.map(wishlist => ({
+                id: wishlist.id,
+                name: getWishlistName(wishlist),
+              }))}
               className="shrink-0 text-foreground"
             />
           ) : (

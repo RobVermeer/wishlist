@@ -744,3 +744,35 @@ test("only managers can add wishes to a wishlist", async ({ signIn }) => {
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
   ).toBe(0)
 })
+
+test("only the creator of a group can take wishlists out of it", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const other = await createUser({ firstName: "Pia" })
+  const group = await createGroup(owner, { members: [member, other] })
+  const ownGroup = await createGroup(member, { members: [other] })
+  const wishlist = await createWishlist(other, { groups: [group, ownGroup] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig groep" })
+    .getByRole("list", { name: "Verlanglijstjes" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Haal uit de groep" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  const untouched = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true, wishlist: true },
+  })
+  expect(untouched.wishlist.map(({ id }) => id)).toEqual([wishlist.id])
+})

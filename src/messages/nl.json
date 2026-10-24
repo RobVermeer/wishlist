@@ -192,6 +192,13 @@
     "form": {
       "title": "Naam",
       "save": "Opslaan"
+    },
+    "wishlists": {
+      "title": "Verlanglijstjes",
+      "remove": {
+        "button": "Haal uit de groep",
+        "description": "‘{name}’ verdwijnt uit de groep. Het verlanglijstje zelf blijft bestaan."
+      }
     }
   },
   "LeaveGroup": {
