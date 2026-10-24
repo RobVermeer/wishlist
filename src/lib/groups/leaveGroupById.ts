@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
-import { managedByUser } from "@/lib/wishlists/visibility"
+import { getWishlistsLeavingGroup } from "./getWishlistsLeavingGroup"
 
 export const leaveGroupById = async (id: string) => {
   try {
@@ -32,24 +32,7 @@ export const leaveGroupById = async (id: string) => {
       throw new Error(t("group.notFound"))
     }
 
-    const otherManagerInGroup = {
-      subscribed: { some: { id } },
-      NOT: { id: userId },
-    }
-
-    const wishlistsToTakeOut = await prisma.wishlist.findMany({
-      where: {
-        ...managedByUser(userId),
-        groups: { some: { id } },
-        NOT: {
-          OR: [
-            { user: otherManagerInGroup },
-            { managers: { some: otherManagerInGroup } },
-          ],
-        },
-      },
-      select: { id: true },
-    })
+    const wishlistsToTakeOut = await getWishlistsLeavingGroup(id, userId)
 
     await prisma.group.update({
       where: { id },
