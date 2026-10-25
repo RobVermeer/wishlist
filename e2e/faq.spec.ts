@@ -26,7 +26,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Hoe werken categorieën?",
     "Hoe zet ik mijn wensen in een andere volgorde?",
     "Wat is een onbeperkte wens?",
-    "Hoe maak ik een verlanglijstje voor mijn kind?",
+    "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
     "Kan ik een verlanglijstje samen met iemand beheren?",
     "Hoe verwijder ik mijn verlanglijstje?",
   ])
