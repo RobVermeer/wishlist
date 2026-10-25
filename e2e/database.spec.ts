@@ -8,7 +8,7 @@ test("dates are stored as unix epoch milliseconds", async ({ signIn }) => {
   await page.goto("/")
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill(title)
+  await dialog.getByLabel("Naam van de groep").fill(title)
   await dialog.getByRole("button", { name: "Maak aan" }).click()
   await expect(dialog).toBeHidden()
 

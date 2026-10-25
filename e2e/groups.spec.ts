@@ -21,7 +21,7 @@ test("create a group with a theme", async ({ signIn }) => {
   await expect(dialog).toHaveAccessibleDescription(
     /Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig/
   )
-  await dialog.getByLabel("Naam").fill(title)
+  await dialog.getByLabel("Naam van de groep").fill(title)
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Kerst" }).click()
   await dialog.getByRole("button", { name: "Maak aan" }).click()
@@ -50,14 +50,14 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill("A")
+  await dialog.getByLabel("Naam van de groep").fill("A")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
     "Groep titel moet minimaal uit 2 tekens bestaan"
   )
   await expect(dialog).toBeVisible()
-  await expect(dialog.getByLabel("Naam")).toHaveValue("A")
+  await expect(dialog.getByLabel("Naam van de groep")).toHaveValue("A")
   expect(await prisma.group.count({ where: { userId: user.id } })).toBe(0)
 })
 
@@ -70,7 +70,7 @@ test("owner can edit a group", async ({ signIn }) => {
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
-  await dialog.getByLabel("Naam").fill("Nieuwe naam")
+  await dialog.getByLabel("Naam van de groep").fill("Nieuwe naam")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Sinterklaas" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -161,7 +161,7 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
   await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
-  await expect(dialog.getByLabel("Naam")).toBeHidden()
+  await expect(dialog.getByLabel("Naam van de groep")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
   await expect(page).toHaveURL("/")

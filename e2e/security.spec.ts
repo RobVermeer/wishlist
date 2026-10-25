@@ -536,7 +536,7 @@ test("groups only get the themes you can choose", async ({ signIn }) => {
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill("Thema groep")
+  await dialog.getByLabel("Naam van de groep").fill("Thema groep")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Kerst" }).click()
   await dialog
