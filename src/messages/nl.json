@@ -561,6 +561,10 @@
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
           },
           {
+            "question": "Hoe verwijder ik een wens?",
+            "answer": "Kies bij de wens ‘Wijzig’ en dan ‘Verwijder’, en bevestig dat. De wens is dan definitief weg. Wie het verlanglijstje mee beheert, kan ook wensen verwijderen."
+          },
+          {
             "question": "Hoe werken categorieën?",
             "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Wishlist onthoudt dat voor de volgende keer. Een categorie zonder wensen verdwijnt vanzelf."
           },

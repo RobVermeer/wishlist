@@ -23,6 +23,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
       .locator("summary")
   ).toHaveText([
     "Hoe zet ik een wens op mijn verlanglijstje?",
+    "Hoe verwijder ik een wens?",
     "Hoe werken categorieën?",
     "Hoe zet ik mijn wensen in een andere volgorde?",
     "Wat is een onbeperkte wens?",
