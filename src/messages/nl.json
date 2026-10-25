@@ -561,12 +561,24 @@
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
           },
           {
+            "question": "Hoe werken categorieën?",
+            "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Wishlist onthoudt dat voor de volgende keer. Een categorie zonder wensen verdwijnt vanzelf."
+          },
+          {
+            "question": "Hoe zet ik mijn wensen in een andere volgorde?",
+            "answer": "Sleep een wens aan de puntjes ernaast naar een andere plek. Met het toetsenbord kan het ook: ga naar de puntjes, druk op spatie, verplaats de wens met de pijltjestoetsen en druk weer op spatie. Categorieën verplaats je op dezelfde manier. Wil je een wens in een andere categorie, wijzig de wens dan en kies een andere categorie. Hij komt dan onderaan die categorie te staan."
+          },
+          {
             "question": "Wat is een onbeperkte wens?",
             "answer": "Een wens die meer mensen kunnen kopen, zoals boeken of een cadeaubon. Vink bij de wens ‘Deze wens mag onbeperkt vervuld worden’ aan, dan blijft hij open, hoe vaak hij ook gekocht wordt."
           },
           {
-            "question": "Kan ik een verlanglijstje voor iemand anders maken?",
-            "answer": "Ja, bijvoorbeeld voor je kind. Kies bij ‘Voor wie is dit verlanglijstje?’ voor iemand anders. Zit je met de andere ouder in een groep, dan kun je het verlanglijstje ook samen beheren."
+            "question": "Hoe maak ik een verlanglijstje voor mijn kind?",
+            "answer": "Kies op je overzicht ‘Nieuw verlanglijstje’ en kies bij ‘Voor wie is dit verlanglijstje?’ voor ‘Voor iemand anders’. Vul de naam van je kind in. Zet het verlanglijstje in je groepen, dan staat het daar naast je eigen verlanglijstje."
+          },
+          {
+            "question": "Kan ik een verlanglijstje samen met iemand beheren?",
+            "answer": "Ja, een verlanglijstje voor iemand anders, zoals je kind, kun je samen beheren met iemand met wie je in een groep zit. Kies diegene bij ‘Wie beheert dit verlanglijstje nog meer?’. Jullie kunnen dan allebei wensen toevoegen, wijzigen en verplaatsen, en geen van jullie ziet wat er wordt gekocht. Alleen wie het verlanglijstje heeft gemaakt, kan het verwijderen of kiezen wie het mee beheert. Wil je niet meer meedoen, kies dan ‘Stop met beheren’."
           }
         ]
       },
@@ -582,6 +594,14 @@
             "answer": "Met een link deel je één verlanglijstje. In een groep zien alle leden elkaars verlanglijstjes, met één link voor de hele groep."
           },
           {
+            "question": "Hoe maak ik een groep?",
+            "answer": "Kies op je overzicht ‘Nieuwe groep’, geef de groep een naam en kies eventueel een thema. Nodig daarna de anderen uit met de link van de groep."
+          },
+          {
+            "question": "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
+            "answer": "Open de groep en kies ‘Verlanglijstje toevoegen’. Of open je verlanglijstje, kies ‘Wijzig verlanglijstje’ en vink de groepen aan waar het in moet. Vink je een groep uit, dan haal je je verlanglijstje uit die groep. Het verlanglijstje zelf blijft bestaan."
+          },
+          {
             "question": "Kan mijn verlanglijstje in meerdere groepen staan?",
             "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. In een groep staat wel één verlanglijstje van jezelf: voeg je er een ander toe, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders kunnen er gewoon naast staan."
           },
@@ -590,12 +610,12 @@
             "answer": "Open de groep en kies ‘Nodig iemand uit voor de groep’. Iedereen met die link kan lid worden."
           },
           {
-            "question": "Wat gebeurt er als ik uit een groep stap?",
-            "answer": "De anderen zien je verlanglijstjes dan niet meer. Een verlanglijstje dat je samen beheert met iemand die in de groep blijft, blijft wel staan."
+            "question": "Wat mag ik als maker van een groep?",
+            "answer": "Via ‘Wijzig’ op de groep pas je de naam en het thema aan, haal je leden en verlanglijstjes uit de groep en kun je de hele groep verwijderen. De verlanglijstjes van anderen wijzigen of verwijderen kun je niet. Zelf uit de groep stappen kan ook niet: dan verwijder je de groep. Wie je uit de groep haalt, kan met de link van de groep wel opnieuw lid worden."
           },
           {
-            "question": "Wie kan iemand uit een groep halen?",
-            "answer": "Alleen wie de groep heeft gemaakt. Die kan via ‘Wijzig’ leden en verlanglijstjes uit de groep halen, of de hele groep verwijderen. Met de link van de groep kan iemand wel opnieuw lid worden."
+            "question": "Wat gebeurt er als ik uit een groep stap?",
+            "answer": "De anderen zien je verlanglijstjes dan niet meer. Een verlanglijstje dat je samen beheert met iemand die in de groep blijft, blijft wel staan."
           },
           {
             "question": "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",

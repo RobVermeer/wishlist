@@ -16,6 +16,37 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Je account",
   ])
 
+  await expect(
+    page
+      .getByRole("heading", { name: "Je verlanglijstje" })
+      .locator("..")
+      .locator("summary")
+  ).toHaveText([
+    "Hoe zet ik een wens op mijn verlanglijstje?",
+    "Hoe werken categorieën?",
+    "Hoe zet ik mijn wensen in een andere volgorde?",
+    "Wat is een onbeperkte wens?",
+    "Hoe maak ik een verlanglijstje voor mijn kind?",
+    "Kan ik een verlanglijstje samen met iemand beheren?",
+  ])
+
+  await expect(
+    page
+      .getByRole("heading", { name: "Delen en groepen" })
+      .locator("..")
+      .locator("summary")
+  ).toHaveText([
+    "Hoe deel ik mijn verlanglijstje, bijvoorbeeld voor mijn verjaardag?",
+    "Wat is het verschil tussen een groep en een link?",
+    "Hoe maak ik een groep?",
+    "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
+    "Kan mijn verlanglijstje in meerdere groepen staan?",
+    "Hoe nodig ik iemand uit voor een groep?",
+    "Wat mag ik als maker van een groep?",
+    "Wat gebeurt er als ik uit een groep stap?",
+    "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",
+  ])
+
   const question = page.getByText("Ziet degene die het wenst wat ik koop?")
   const answer = page.getByText("Nee, zo blijft het een verrassing")
   await expect(answer).toBeHidden()
