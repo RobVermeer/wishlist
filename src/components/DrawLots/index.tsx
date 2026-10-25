@@ -1,7 +1,7 @@
 "use client"
 
 import { FormEvent, useState, useTransition } from "react"
-import { Dices, LoaderCircle } from "lucide-react"
+import { Dices, LoaderCircle, UserPlus, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -30,6 +30,15 @@ export const DrawLots = ({ groupId, members }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [pending, startTransition] = useTransition()
+  const [extra, setExtra] = useState<{ name: string; email: string }[]>([])
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+
+  function addPerson() {
+    setExtra([...extra, { name: name.trim(), email: email.trim() }])
+    setName("")
+    setEmail("")
+  }
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await createDraw(groupId, data)
@@ -42,6 +51,7 @@ export const DrawLots = ({ groupId, members }: Props) => {
     }
 
     setOpen(false)
+    setExtra([])
     toast({ title: tDraw("toast") })
   }
 
@@ -81,6 +91,81 @@ export const DrawLots = ({ groupId, members }: Props) => {
                 </Label>
               </div>
             ))}
+          </fieldset>
+          <fieldset className="grid gap-2">
+            <legend className="mb-1 text-sm font-medium">
+              {t("extra.title")}
+            </legend>
+            <p className="text-sm text-muted-foreground">{t("extra.text")}</p>
+            {extra.length > 0 && (
+              <ul className="grid gap-1">
+                {extra.map((person, index) => (
+                  <li
+                    key={`${person.email}-${index}`}
+                    className="flex items-center justify-between gap-2 rounded-md bg-secondary px-3 py-1.5 text-sm"
+                  >
+                    <span className="truncate">
+                      {person.name}{" "}
+                      <span className="text-muted-foreground">
+                        {person.email}
+                      </span>
+                    </span>
+                    <input type="hidden" name="extraName" value={person.name} />
+                    <input
+                      type="hidden"
+                      name="extraEmail"
+                      value={person.email}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="size-7 shrink-0"
+                      aria-label={t("extra.remove", { name: person.name })}
+                      onClick={() =>
+                        setExtra(extra.filter((_, other) => other !== index))
+                      }
+                    >
+                      <X size="14" />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="grid grid-cols-2 gap-2">
+              <div className="grid gap-1">
+                <Label htmlFor="draw-extra-name" className="text-xs">
+                  {t("extra.name")}
+                </Label>
+                <Input
+                  id="draw-extra-name"
+                  value={name}
+                  onChange={event => setName(event.target.value)}
+                  placeholder={t("extra.namePlaceholder")}
+                />
+              </div>
+              <div className="grid gap-1">
+                <Label htmlFor="draw-extra-email" className="text-xs">
+                  {t("extra.email")}
+                </Label>
+                <Input
+                  id="draw-extra-email"
+                  type="email"
+                  value={email}
+                  onChange={event => setEmail(event.target.value)}
+                  placeholder={t("extra.emailPlaceholder")}
+                />
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="justify-self-start"
+              disabled={!name.trim() || !email.trim()}
+              onClick={addPerson}
+            >
+              <UserPlus size="16" className="mr-2" /> {t("extra.add")}
+            </Button>
           </fieldset>
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-2">

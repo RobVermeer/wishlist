@@ -88,6 +88,18 @@ export const contactSchema = z
 
 export const drawSchema = z.object({
   members: z.array(z.string()),
+  extra: z.array(
+    z.object({
+      name: z
+        .string()
+        .trim()
+        .min(1, { error: "Vul een naam in voor iedereen die je toevoegt" })
+        .max(40, { error: "Een naam mag maximaal uit 40 tekens bestaan" }),
+      email: z
+        .email({ error: "Vul een geldig e-mailadres in" })
+        .transform(email => email.toLowerCase()),
+    })
+  ),
   budget: z.coerce
     .number({ error: "Vul het budget in hele euro's in" })
     .int({ error: "Vul het budget in hele euro's in" })

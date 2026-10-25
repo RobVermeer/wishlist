@@ -147,3 +147,85 @@ test("only the creator of a group sees the button to draw lots", async ({
     page.getByRole("button", { name: "Lootjes trekken" })
   ).toHaveCount(0)
 })
+
+const addPerson = async (
+  dialog: ReturnType<Page["getByRole"]>,
+  name: string,
+  email: string
+) => {
+  await dialog.getByLabel("Naam").fill(name)
+  await dialog.getByLabel("E-mailadres").fill(email)
+  await dialog.getByRole("button", { name: "Voeg toe" }).click()
+}
+
+test("people who aren't in the group yet can take part", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const opa = await createUser({ firstName: "Opa" })
+  const group = await createGroup(owner, {
+    title: "Sinterklaas",
+    members: [bert],
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await addPerson(dialog, "Opa", opa.email!.toUpperCase())
+  await expect(dialog.getByRole("listitem")).toHaveText([/Opa/])
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+
+  await expect.poll(async () => (await emailsTo(opa.email!)).length).toBe(1)
+  const [email] = await emailsTo(opa.email!)
+  expect(email.subject).toBe(
+    "Opa, je hebt een lootje getrokken voor Sinterklaas"
+  )
+  expect(email.html).toContain("Doe mee met de groep")
+  expect(email.html).toContain(`/group/${group.id}`)
+  const drawn = drawnName(email.html)
+
+  const opaPage = await signIn(opa)
+  await opaPage.goto(`/group/${group.id}`)
+  await opaPage.getByRole("button", { name: "Volg de groep" }).click()
+  await expect(lot(opaPage)).toContainText(`Je hebt ${drawn} getrokken`)
+})
+
+test("someone added to the draw must have a valid e-mail address", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await addPerson(dialog, "Opa", "geen-adres")
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("Vul een geldig e-mailadres in")
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+})
+
+test("everyone in the draw needs their own e-mail address", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await addPerson(dialog, "Opa", "opa@e2e.test")
+  await addPerson(dialog, "Oma", "opa@e2e.test")
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Iedereen in de loting heeft een eigen e-mailadres nodig"
+  )
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+})
