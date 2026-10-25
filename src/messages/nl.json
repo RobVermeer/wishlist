@@ -22,6 +22,10 @@
         "title": "Je hebt nog geen verlanglijstje 🥺",
         "text": "Maak er snel een met de knop hierboven 🤩"
       }
+    },
+    "lots": {
+      "title": "Je lootjes",
+      "drawn": "Je hebt <strong>{name}</strong> getrokken"
     }
   },
   "NotFound": {

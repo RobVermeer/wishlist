@@ -345,3 +345,60 @@ test("drawing lots again replaces the previous draw", async ({ signIn }) => {
   }
   await expect(lot(page)).toBeVisible()
 })
+
+test("the overview shows your lootjes from all your groups", async ({
+  signIn,
+}) => {
+  const bert = await createUser({ firstName: "Bert" })
+  const anna = await createUser({ firstName: "Anna" })
+  const carla = await createUser({ firstName: "Carla" })
+  const family = await createGroup(anna, {
+    title: `Familie ${bert.id}`,
+    members: [bert],
+  })
+  const friends = await createGroup(carla, {
+    title: `Vrienden ${bert.id}`,
+    members: [bert],
+  })
+  const removed = await createGroup(anna, {
+    title: `Weg ${bert.id}`,
+    members: [bert],
+    removed: true,
+  })
+  const left = await createGroup(anna, { title: `Verlaten ${bert.id}` })
+  await createDraw(family, [anna, bert], { cancelled: true })
+  await createDraw(family, [bert, anna], {
+    budget: 25,
+    date: new Date("2026-12-05"),
+  })
+  await createDraw(friends, [bert, carla])
+  await createDraw(removed, [bert, anna])
+  await createDraw(left, [bert, anna])
+  const page = await signIn(bert)
+
+  await page.goto("/")
+
+  const lots = page.getByRole("list", { name: "Je lootjes" })
+  await expect(lots.getByRole("listitem")).toHaveText([
+    new RegExp(`Familie ${bert.id}\\s*Je hebt Anna getrokken`),
+    new RegExp(`Vrienden ${bert.id}\\s*Je hebt Carla getrokken`),
+  ])
+  await expect(lots.getByRole("listitem").first()).toContainText(/€\s25/)
+  await expect(lots.getByRole("listitem").first()).toContainText(
+    "5 december 2026"
+  )
+  await lots
+    .getByRole("link", { name: new RegExp(`Vrienden ${bert.id}`) })
+    .click()
+  await expect(page).toHaveURL(`/group/${friends.id}`)
+})
+
+test("the overview has no lootjes without a draw", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  await expect(page.getByText("Wat je volgt")).toBeVisible()
+  await expect(page.getByRole("list", { name: "Je lootjes" })).toHaveCount(0)
+})
