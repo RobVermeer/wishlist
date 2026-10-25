@@ -1,5 +1,6 @@
 import { Session } from "next-auth"
 import Link from "next/link"
+import { CircleHelp } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Logo } from "@/components/Logo"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -18,14 +19,25 @@ export function Header({ session }: Props) {
         <Logo inverted />
 
         {session && (
-          <Link href="/profile" aria-label={t("profile")}>
-            <Avatar className="text-foreground ring-2 ring-white/70 shadow-sm transition-transform hover:scale-105">
-              {session.user.image && (
-                <AvatarImage src={session.user.image} alt="" />
-              )}
-              <AvatarFallback>{getInitials(session.user.name)}</AvatarFallback>
-            </Avatar>
-          </Link>
+          <nav className="flex items-center gap-3">
+            <Link
+              href="/vragen"
+              aria-label={t("faq")}
+              className="rounded-full p-1.5 text-primary-foreground/90 transition-colors hover:bg-white/15 hover:text-primary-foreground"
+            >
+              <CircleHelp aria-hidden size="24" />
+            </Link>
+            <Link href="/profile" aria-label={t("profile")}>
+              <Avatar className="text-foreground ring-2 ring-white/70 shadow-sm transition-transform hover:scale-105">
+                {session.user.image && (
+                  <AvatarImage src={session.user.image} alt="" />
+                )}
+                <AvatarFallback>
+                  {getInitials(session.user.name)}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          </nav>
         )}
       </div>
     </header>

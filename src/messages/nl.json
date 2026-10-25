@@ -88,7 +88,8 @@
     }
   },
   "Header": {
-    "profile": "Je profiel"
+    "profile": "Je profiel",
+    "faq": "Veelgestelde vragen"
   },
   "Login": {
     "title": "Welkom bij Wishlist",
@@ -547,5 +548,95 @@
       "menu": "Tik in je browser op het menu <menu></menu>.",
       "install": "Kies <strong>App installeren</strong> of <strong>Toevoegen aan startscherm</strong>."
     }
+  },
+  "Faq": {
+    "title": "Veelgestelde vragen",
+    "metaTitle": "Veelgestelde vragen - Wishlist",
+    "sections": [
+      {
+        "title": "Je verlanglijstje",
+        "questions": [
+          {
+            "question": "Hoe zet ik een wens op mijn verlanglijstje?",
+            "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
+          },
+          {
+            "question": "Wat is een onbeperkte wens?",
+            "answer": "Een wens die meer mensen kunnen kopen, zoals boeken of een cadeaubon. Vink bij de wens ‘Deze wens mag onbeperkt vervuld worden’ aan, dan blijft hij open, hoe vaak hij ook gekocht wordt."
+          },
+          {
+            "question": "Kan ik een verlanglijstje voor iemand anders maken?",
+            "answer": "Ja, bijvoorbeeld voor je kind. Kies bij ‘Voor wie is dit verlanglijstje?’ voor iemand anders. Zit je met de andere ouder in een groep, dan kun je het verlanglijstje ook samen beheren."
+          }
+        ]
+      },
+      {
+        "title": "Delen en groepen",
+        "questions": [
+          {
+            "question": "Hoe deel ik mijn verlanglijstje, bijvoorbeeld voor mijn verjaardag?",
+            "answer": "Open je verlanglijstje en kies ‘Deel dit verlanglijstje’. Wie de link opent, logt in en volgt je verlanglijstje. Een groep heb je daar niet voor nodig."
+          },
+          {
+            "question": "Wat is het verschil tussen een groep en een link?",
+            "answer": "Met een link deel je één verlanglijstje. In een groep zien alle leden elkaars verlanglijstjes, met één link voor de hele groep."
+          },
+          {
+            "question": "Kan mijn verlanglijstje in meerdere groepen staan?",
+            "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. In een groep staat wel één verlanglijstje van jezelf: voeg je er een ander toe, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders kunnen er gewoon naast staan."
+          },
+          {
+            "question": "Hoe nodig ik iemand uit voor een groep?",
+            "answer": "Open de groep en kies ‘Nodig iemand uit voor de groep’. Iedereen met die link kan lid worden."
+          },
+          {
+            "question": "Wat gebeurt er als ik uit een groep stap?",
+            "answer": "De anderen zien je verlanglijstjes dan niet meer. Een verlanglijstje dat je samen beheert met iemand die in de groep blijft, blijft wel staan."
+          },
+          {
+            "question": "Wie kan iemand uit een groep halen?",
+            "answer": "Alleen wie de groep heeft gemaakt. Die kan via ‘Wijzig’ leden en verlanglijstjes uit de groep halen, of de hele groep verwijderen. Met de link van de groep kan iemand wel opnieuw lid worden."
+          },
+          {
+            "question": "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",
+            "answer": "Maak een nieuwe link via ‘Deel dit verlanglijstje’. De oude link werkt dan niet meer. Wie je verlanglijstje al volgt, houdt toegang."
+          }
+        ]
+      },
+      {
+        "title": "Cadeaus kopen",
+        "questions": [
+          {
+            "question": "Ziet degene die het wenst wat ik koop?",
+            "answer": "Nee, zo blijft het een verrassing. De anderen zien wel dat een wens al gekocht wordt, zodat niemand iets dubbel koopt."
+          },
+          {
+            "question": "Ik koop een wens toch niet. Wat nu?",
+            "answer": "Druk bij de wens op ‘Toch niet’. Dan kan iemand anders hem weer kopen."
+          },
+          {
+            "question": "Waar zie ik wat ik heb gekocht?",
+            "answer": "Op je profiel, onder ‘Gekochte cadeaus’. Daar staat wat je voor wie koopt."
+          },
+          {
+            "question": "Hoe vraag ik om meer wensen?",
+            "answer": "Kies op het verlanglijstje van iemand anders ‘Vraag om meer wensen’. Diegene krijgt dan een e-mail. Je kunt iemand één keer per dag om meer wensen vragen."
+          }
+        ]
+      },
+      {
+        "title": "Je account",
+        "questions": [
+          {
+            "question": "Kan ik Wishlist op mijn telefoon zetten?",
+            "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt."
+          },
+          {
+            "question": "Hoe pas ik mijn naam of profielfoto aan?",
+            "answer": "Ga naar je profiel. Daar kun je je voornaam en profielfoto wijzigen."
+          }
+        ]
+      }
+    ]
   }
 }
