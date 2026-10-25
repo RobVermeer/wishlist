@@ -7,14 +7,47 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
+import { Locator } from "@playwright/test"
+
+const top = async (locator: Locator) => (await locator.boundingBox())!.y
 
 test("new user sees empty states for wishlists", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
   await page.goto("/")
-  await expect(page.getByText("Je zit nog niet in een groep")).toBeVisible()
-  await expect(page.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
+
+  const following = page.getByRole("region", { name: "Wat je volgt" })
+  const empty = following.getByText("Je zit nog niet in een groep")
+  const newGroup = following.getByRole("button", { name: "Nieuwe groep" })
+  await expect(empty).toBeVisible()
+  expect(await top(empty)).toBeLessThan(await top(newGroup))
+
+  const wishlists = page.getByRole("region", { name: "Je verlanglijstjes" })
+  const noWishlist = wishlists.getByText("Je hebt nog geen verlanglijstje")
+  await expect(wishlists).toContainText(
+    "Maak je eerste verlanglijstje met de knop hieronder."
+  )
+  expect(await top(noWishlist)).toBeLessThan(
+    await top(wishlists.getByRole("button", { name: "Nieuw verlanglijstje" }))
+  )
+})
+
+test("the button for a new group comes after what you follow", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const group = await createGroup(user, { title: "Familie" })
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  const following = page.getByRole("region", { name: "Wat je volgt" })
+  const familie = following.getByRole("link", { name: /Familie/ })
+  const newGroup = following.getByRole("button", { name: "Nieuwe groep" })
+  await expect(familie).toHaveAttribute("href", `/group/${group.id}`)
+  const box = (await familie.boundingBox())!
+  expect(await top(newGroup)).toBeGreaterThanOrEqual(box.y + box.height)
 })
 
 test("create your own wishlist in your groups", async ({ signIn }) => {
@@ -256,9 +289,7 @@ test("the dashboard shows what you follow first, then your own wishlists", async
     "Je verlanglijstjes",
   ])
 
-  const following = page.locator("div.grid").filter({
-    has: page.getByRole("button", { name: "Nieuwe groep" }),
-  })
+  const following = page.getByRole("region", { name: "Wat je volgt" })
   await expect(following.getByRole("link")).toHaveText([/Familie/, /Fenna/])
   await expect(page.getByText("Je zit nog niet in een groep")).toBeHidden()
 })

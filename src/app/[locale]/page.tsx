@@ -11,7 +11,8 @@ import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlist
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import { WishlistIcon, wishlistColors } from "@/components/WishlistIcon"
-import { Gift } from "lucide-react"
+import { Gift, Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { DrawDetails } from "@/components/DrawDetails"
 import { getLotsForUser } from "@/lib/draws/getLotsForUser"
 import { cn } from "@/lib/utils"
@@ -111,39 +112,56 @@ export default async function Home() {
         </List>
       )}
 
-      <List>
-        <ListTitle>{t("following.title")}</ListTitle>
+      <section aria-labelledby="following-title" className="grid gap-2">
+        <ListTitle>
+          <span id="following-title">{t("following.title")}</span>
+        </ListTitle>
 
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {groups.map(group => (
-            <Link
-              key={group.id}
-              href={`/group/${group.id}`}
-              className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-2xl bg-cover bg-center p-4 text-white shadow-sm transition-all hover:-rotate-1 hover:shadow-lg"
-              style={{ backgroundImage: groupBackground(group.theme) }}
-            >
-              <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent" />
-              <span className="relative font-display text-lg font-semibold leading-tight">
-                {group.title}
-              </span>
-              <span className="relative text-xs text-white/80">
-                {t("following.members", { count: group.members.length })}
-              </span>
-            </Link>
-          ))}
-          {followedWishlists.map(renderWishlist)}
-          <NewGroup trigger={<AddTile label={t("following.newGroup")} />} />
-        </div>
-
-        {groups.length === 0 && followedWishlists.length === 0 && (
+        {groups.length === 0 && followedWishlists.length === 0 ? (
           <EmptyState title={t("following.empty.title")}>
             {t("following.empty.text")}
           </EmptyState>
+        ) : (
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
+            {groups.map(group => (
+              <Link
+                key={group.id}
+                href={`/group/${group.id}`}
+                className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-2xl bg-cover bg-center p-4 text-white shadow-sm transition-all hover:-rotate-1 hover:shadow-lg"
+                style={{ backgroundImage: groupBackground(group.theme) }}
+              >
+                <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent" />
+                <span className="relative font-display text-lg font-semibold leading-tight">
+                  {group.title}
+                </span>
+                <span className="relative text-xs text-white/80">
+                  {t("following.members", { count: group.members.length })}
+                </span>
+              </Link>
+            ))}
+            {followedWishlists.map(renderWishlist)}
+          </div>
         )}
-      </List>
 
-      <List>
-        <ListTitle>{t("wishlists.title")}</ListTitle>
+        <NewGroup
+          trigger={
+            <Button variant="outline">
+              <Plus size="16" className="mr-2" /> {t("following.newGroup")}
+            </Button>
+          }
+        />
+      </section>
+
+      <section aria-labelledby="wishlists-title" className="grid gap-2">
+        <ListTitle>
+          <span id="wishlists-title">{t("wishlists.title")}</span>
+        </ListTitle>
+
+        {wishlists.length === 0 && (
+          <EmptyState title={t("wishlists.empty.title")}>
+            {t("wishlists.empty.text")}
+          </EmptyState>
+        )}
 
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
           {wishlists.map(renderWishlist)}
@@ -153,13 +171,7 @@ export default async function Home() {
             trigger={<AddTile label={t("wishlists.new")} />}
           />
         </div>
-
-        {wishlists.length === 0 && (
-          <EmptyState title={t("wishlists.empty.title")}>
-            {t("wishlists.empty.text")}
-          </EmptyState>
-        )}
-      </List>
+      </section>
     </>
   )
 }
