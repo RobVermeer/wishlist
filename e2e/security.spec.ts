@@ -123,7 +123,9 @@ test("wishlists are only visible to their owner and the members of their groups"
   await memberPage.goto(`/wishlist/${wishlist.id}`)
   await expect(memberPage).toHaveTitle("Olga - Wishlist")
   await memberPage.goto(`/group/${group.id}/${wishlist.id}`)
-  await expect(memberPage.getByRole("heading", { name: /Olga/ })).toBeVisible()
+  await expect(
+    memberPage.getByRole("heading", { name: /Olga/, level: 2 })
+  ).toBeVisible()
 
   for (const [user, path] of [
     [outsider, `/wishlist/${wishlist.id}`],
@@ -299,7 +301,9 @@ test("followers of a wishlist can see it and check off its wishes", async ({
   })
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await expect(page.getByRole("heading", { name: "Olga" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Olga", level: 2 })
+  ).toBeVisible()
 
   await page
     .locator("div.rounded-2xl")

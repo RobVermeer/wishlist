@@ -77,8 +77,46 @@ test("empty wishlist of someone else", async ({ signIn }) => {
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
+  await expect(page.getByText("Olga heeft nog geen wensen")).toBeVisible()
   await expect(
-    page.getByText("Dit lijstje is nog helemaal leeg 🫣")
+    page.getByText("Vraag om meer wensen, dan krijgt Olga een e-mail.")
+  ).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Vraag om meer wensen" })
+  ).toBeVisible()
+})
+
+test("an empty wishlist says to look later once more wishes were asked for", async ({
+  signIn,
+}) => {
+  const { owner, shopper, group, wishlist } = await setup()
+  await prisma.reminder.create({ data: { to: owner.id, from: shopper.id } })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  await expect(page.getByText("Olga heeft nog geen wensen")).toBeVisible()
+  await expect(page.getByText("Kijk later nog eens.")).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Vraag om meer wensen" })
+  ).toHaveCount(0)
+})
+
+test("an empty wishlist for someone else says who gets the e-mail", async ({
+  signIn,
+}) => {
+  const { owner, shopper, group } = await setup()
+  const wishlist = await createWishlist(owner, {
+    title: "Baby Olga",
+    groups: [group],
+  })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  await expect(page.getByText("Baby Olga heeft nog geen wensen")).toBeVisible()
+  await expect(
+    page.getByText("Vraag om meer wensen, dan krijgt Olga een e-mail.")
   ).toBeVisible()
 })
 
