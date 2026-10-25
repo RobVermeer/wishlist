@@ -466,6 +466,10 @@
       "buy": "Ik koop dit"
     },
     "features": {
+      "draw": {
+        "title": "Lootjes trekken",
+        "text": "Trek lootjes in je groep, met een budget en datum als je wilt. Ook wie nog niet in de groep zit, kan meedoen."
+      },
       "phone": {
         "title": "Op je telefoon",
         "text": "Zet Wishlist op je beginscherm, dan open je het met één tik, net als een app."
@@ -651,6 +655,35 @@
           {
             "question": "Hoe stop ik met het volgen van een verlanglijstje?",
             "answer": "Open het verlanglijstje en kies ‘Stop met volgen’. Met de link kun je het later weer volgen."
+          }
+        ]
+      },
+      {
+        "title": "Lootjes trekken",
+        "questions": [
+          {
+            "question": "Hoe trek ik lootjes?",
+            "answer": "Wie de groep heeft gemaakt, kiest onderaan de groep ‘Lootjes trekken’. Vink aan wie meedoet, voeg eventueel iemand toe die nog niet in de groep zit en kies een budget en datum als je wilt. Iedereen krijgt dan een e-mail met het eigen lootje."
+          },
+          {
+            "question": "Waar zie ik wie ik heb getrokken?",
+            "answer": "In de e-mail, in de groep, en op je overzicht onder ‘Je lootjes’. Daar staat ook het budget en de datum, en een link naar het verlanglijstje van wie je hebt getrokken."
+          },
+          {
+            "question": "Ziet iemand wie wie heeft getrokken?",
+            "answer": "Nee. Iedereen ziet alleen het eigen lootje, ook wie de lootjes heeft getrokken."
+          },
+          {
+            "question": "Kan iemand meedoen die nog niet in de groep zit?",
+            "answer": "Ja. Vul bij het trekken een naam en e-mailadres in. Diegene krijgt het lootje per e-mail, met een uitnodiging voor de groep. Wordt diegene lid met hetzelfde e-mailadres, dan staat het lootje ook in de groep. Wie de lootjes heeft getrokken, ziet wie zich nog niet heeft aangemeld en kan de e-mail één keer per dag opnieuw sturen."
+          },
+          {
+            "question": "Kan ik de lootjes opnieuw trekken?",
+            "answer": "Ja, wie de groep heeft gemaakt, kiest ‘Opnieuw lootjes trekken’. De vorige loting telt dan niet meer en iedereen krijgt een nieuw lootje, per e-mail en in de groep."
+          },
+          {
+            "question": "Kan ik in meerdere groepen lootjes trekken?",
+            "answer": "Ja, elke groep heeft een eigen loting. Op je overzicht zie je onder ‘Je lootjes’ al je lootjes bij elkaar."
           }
         ]
       },
