@@ -455,13 +455,13 @@
     },
     "features": {
       "title": "Wat kun je allemaal?",
-      "groups": {
-        "title": "Deel met wie je wilt",
-        "text": "Stuur een link naar je verlanglijstje, of maak een groep voor je familie, vrienden of collega's."
-      },
       "secret": {
         "title": "Stiekem afstrepen",
         "text": "Streep af wat je gaat kopen. De groep ziet het, degene die het wenst niet. Zo krijgt niemand iets dubbel."
+      },
+      "bought": {
+        "title": "Je cadeaus op een rij",
+        "text": "Onder Gekochte cadeaus op je profiel zie je wat je voor wie koopt. Zo vergeet je niemand."
       },
       "categories": {
         "title": "Overzichtelijk",
