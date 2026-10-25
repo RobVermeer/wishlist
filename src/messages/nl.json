@@ -2,16 +2,16 @@
   "Home": {
     "title": "Overzicht - Wishlist",
     "greeting": {
-      "name": "Hoi {name} 👋",
-      "anonymous": "Hoi 👋",
+      "name": "Hoi {name}",
+      "anonymous": "Hoi",
       "text": "Kijk wat je familie en vrienden graag willen, of zet je eigen wensen op een rij."
     },
     "following": {
       "title": "Wat je volgt",
       "newGroup": "Nieuwe groep",
       "empty": {
-        "title": "Je zit nog niet in een groep 🥺",
-        "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen 🚀"
+        "title": "Je zit nog niet in een groep",
+        "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen."
       },
       "members": "{count, plural, one {# lid} other {# leden}}"
     },
@@ -19,8 +19,8 @@
       "title": "Je verlanglijstjes",
       "new": "Nieuw verlanglijstje",
       "empty": {
-        "title": "Je hebt nog geen verlanglijstje 🥺",
-        "text": "Maak er snel een met de knop hierboven 🤩"
+        "title": "Je hebt nog geen verlanglijstje",
+        "text": "Maak je eerste verlanglijstje met de knop hierboven."
       }
     },
     "lots": {
@@ -30,13 +30,13 @@
   },
   "NotFound": {
     "empty": {
-      "title": "Oeps, we konden deze pagina niet vinden! 🤯",
+      "title": "We kunnen deze pagina niet vinden",
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
   "Error": {
     "empty": {
-      "title": "Oeps, er ging iets mis! 🤯",
+      "title": "Er ging iets mis",
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
@@ -97,7 +97,7 @@
   },
   "Login": {
     "title": "Welkom bij Wishlist",
-    "text": "Houd één verlanglijstje bij voor elk feestje, van je verjaardag tot kerst. Deel het met een link of zet het in je groepen: iedereen in een groep ziet met één link alle verlanglijstjes 🤩",
+    "text": "Houd één verlanglijstje bij voor elk feestje, van je verjaardag tot kerst. Deel het met een link of zet het in je groepen: iedereen in een groep ziet met één link alle verlanglijstjes.",
     "google": "Inloggen met Google",
     "email": "Inloggen met e-mail",
     "emailDialog": {
@@ -109,18 +109,19 @@
         "submit": "Inloggen"
       },
       "success": {
-        "title": "Check je inbox 📨",
+        "title": "Check je inbox",
         "text": "Druk op de link in de e-mail die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
       }
     }
   },
   "Group": {
     "empty": {
-      "title": "Er zijn nog geen lijstjes! 😵‍💫"
+      "title": "Er staan nog geen verlanglijstjes in deze groep",
+      "text": "Voeg je verlanglijstje toe en nodig de anderen uit met de knoppen hieronder."
     },
     "noFollow": {
-      "title": "Je volgt deze groep nog niet 😵",
-      "text": "Volg de groep snel om alle lijstjes te kunnen zien! 😊"
+      "title": "Je volgt deze groep nog niet",
+      "text": "Volg de groep om de verlanglijstjes van iedereen te zien."
     },
     "follow": "Volg de groep",
     "missing": {
@@ -186,13 +187,13 @@
   "ProfileBoughtPresents": {
     "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
     "empty": {
-      "title": "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲",
-      "text": "Doe dat eens heel snel! 🤓"
+      "title": "Je hebt nog niets afgestreept",
+      "text": "Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug wat je voor wie koopt."
     },
     "boughtFor": "Gekocht voor {name}"
   },
   "NewGroup": {
-    "title": "Nieuwe groep 👨‍👨‍👧‍👦",
+    "title": "Nieuwe groep",
     "text": "Een groep is voor familie of vrienden die elkaars verlanglijstjes willen zien. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>.",
     "form": {
       "title": "Naam",
@@ -226,13 +227,13 @@
   },
   "LeaveGroup": {
     "button": "Verlaat",
-    "title": "Verlaat groep 🥺",
-    "text": "Als je uit de groep stapt, zien de anderen je verlanglijstjes niet meer en heb je een nieuwe uitnodiging nodig om weer mee te doen 🤓",
+    "title": "Verlaat groep",
+    "text": "Als je uit de groep stapt, zien de anderen je verlanglijstjes niet meer en heb je een nieuwe uitnodiging nodig om weer mee te doen.",
     "leave": "Stap uit de groep"
   },
   "NewItem": {
     "button": "Voeg een wens toe",
-    "title": "Voeg wens toe 🤠",
+    "title": "Voeg wens toe",
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
@@ -256,7 +257,7 @@
     }
   },
   "NewWishlist": {
-    "title": "Nieuw verlanglijstje 🤩",
+    "title": "Nieuw verlanglijstje",
     "form": {
       "description": "Beschrijving <small>(optioneel)</small>",
       "groups": "In welke groepen moet je verlanglijstje komen?",
@@ -309,7 +310,7 @@
   },
   "UserInfo": {
     "title": "Vul je naam in",
-    "text": "Vul je voornaam in, dan weten anderen van wie het verlanglijstje is 😊",
+    "text": "Vul je voornaam in, dan weten anderen van wie het verlanglijstje is.",
     "form": {
       "firstName": "Voornaam",
       "save": "Opslaan"
@@ -367,7 +368,7 @@
     "preview": "Er is iemand die vraagt of je jouw lijstje kan uitbreiden",
     "title": "<strong>{name}</strong>, heb je nog wensen?",
     "hello": "Hey <strong>{name}</strong>,",
-    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje kan zetten 🤩🎁 Klik op de rode knop hieronder om dit direct te gaan doen.",
+    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje kunt zetten. Klik op de rode knop hieronder om dat meteen te doen.",
     "button": "Naar Wishlist"
   },
   "EmailLogin": {

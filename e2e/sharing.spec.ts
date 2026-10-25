@@ -11,7 +11,7 @@ import {
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
-const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
+const notFound = "We kunnen deze pagina niet vinden"
 
 const itemCard = (page: Page, title: string) =>
   page.locator("div.rounded-2xl").filter({ hasText: title })

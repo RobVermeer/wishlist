@@ -154,10 +154,9 @@ test("buy a wish and change your mind", async ({ signIn }) => {
   ).toBeNull()
 
   await page.goto("/profile/bought")
+  await expect(page.getByText("Je hebt nog niets afgestreept")).toBeVisible()
   await expect(
-    page.getByText(
-      "Het ziet ernaar uit dat je nog geen wensen hebt afgestreept 😲"
-    )
+    page.getByText("Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug")
   ).toBeVisible()
 })
 
