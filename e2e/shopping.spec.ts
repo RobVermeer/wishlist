@@ -187,6 +187,61 @@ test("a wish someone else buys shows as already bought", async ({ signIn }) => {
   await expect(card.getByRole("button")).toHaveCount(0)
 })
 
+test("a wish bought in one group shows as bought everywhere the wishlist is shared", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const shopper = await createUser({ firstName: "Sam" })
+  const friend = await createUser({ firstName: "Pia" })
+  const follower = await createUser({ firstName: "Fien" })
+  const group = await createGroup(owner, {
+    title: "Familie",
+    members: [shopper],
+  })
+  const friends = await createGroup(friend, {
+    title: "Vrienden",
+    members: [owner],
+  })
+  const wishlist = await createWishlist(owner, {
+    groups: [group, friends],
+    followers: [follower],
+  })
+  await createItem(wishlist, { title: "Sokken" })
+  await createItem(wishlist, { title: "Boek" })
+
+  const shopperPage = await signIn(shopper)
+  await shopperPage.goto(`/group/${group.id}/${wishlist.id}`)
+  await itemCard(shopperPage, "Sokken")
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
+  await expect(itemCard(shopperPage, "Sokken")).toContainText("Jij koopt dit")
+
+  const followerPage = await signIn(follower)
+  await followerPage.goto(`/wishlist/${wishlist.id}`)
+  await expect(itemCard(followerPage, "Sokken")).toContainText(
+    "Wordt al gekocht"
+  )
+  await itemCard(followerPage, "Boek")
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
+  await expect(itemCard(followerPage, "Boek")).toContainText("Jij koopt dit")
+
+  const friendPage = await signIn(friend)
+  await friendPage.goto(`/group/${friends.id}/${wishlist.id}`)
+  for (const title of ["Sokken", "Boek"]) {
+    const card = itemCard(friendPage, title)
+    await expect(card).toContainText("Wordt al gekocht")
+    await expect(card.getByRole("button")).toHaveCount(0)
+  }
+
+  const ownerPage = await signIn(owner)
+  await ownerPage.goto(`/wishlist/${wishlist.id}`)
+  for (const title of ["Sokken", "Boek"]) {
+    await expect(itemCard(ownerPage, title)).toBeVisible()
+    await expect(itemCard(ownerPage, title)).not.toContainText("gekocht")
+  }
+})
+
 test("buying a wish someone else just bought shows an error", async ({
   signIn,
 }) => {
