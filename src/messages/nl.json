@@ -681,6 +681,14 @@
           {
             "question": "Hoe pas ik mijn naam of profielfoto aan?",
             "answer": "Ga naar je profiel. Daar kun je je voornaam en profielfoto wijzigen."
+          },
+          {
+            "question": "Hoe verwijder ik mijn account?",
+            "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’ en dan ‘Verwijder mijn account’. We verwijderen dan je account, samen met je verlanglijstjes en de groepen die je hebt gemaakt."
+          },
+          {
+            "question": "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
+            "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’. We antwoorden per e-mail."
           }
         ]
       }
