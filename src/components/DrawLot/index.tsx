@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Gift } from "lucide-react"
-import { getFormatter, getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
+import { DrawDetails } from "@/components/DrawDetails"
 import { Button } from "@/components/ui/button"
 import type { getLotForUser } from "@/lib/draws/getLotForUser"
 
@@ -11,7 +12,6 @@ interface Props {
 
 export const DrawLot = async ({ groupId, lot }: Props) => {
   const t = await getTranslations("Draw.lot")
-  const format = await getFormatter()
   const { receiver, wishlistId, budget, date } = lot
 
   return (
@@ -31,31 +31,7 @@ export const DrawLot = async ({ groupId, lot }: Props) => {
           strong: chunks => <strong className="text-primary">{chunks}</strong>,
         })}
       </p>
-      {(budget !== null || date) && (
-        <p className="text-sm text-muted-foreground">
-          {[
-            budget !== null &&
-              t("budget", {
-                budget: format.number(budget, {
-                  style: "currency",
-                  currency: "EUR",
-                  maximumFractionDigits: 0,
-                }),
-              }),
-            date &&
-              t("date", {
-                date: format.dateTime(date, {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                  timeZone: "UTC",
-                }),
-              }),
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
-      )}
+      <DrawDetails budget={budget} date={date} />
       {wishlistId ? (
         <Button asChild className="justify-self-start">
           <Link href={`/group/${groupId}/${wishlistId}`}>

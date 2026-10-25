@@ -11,6 +11,9 @@ import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlist
 import Link from "next/link"
 import { getTranslations } from "next-intl/server"
 import { WishlistIcon, wishlistColors } from "@/components/WishlistIcon"
+import { Gift } from "lucide-react"
+import { DrawDetails } from "@/components/DrawDetails"
+import { getLotsForUser } from "@/lib/draws/getLotsForUser"
 import { cn } from "@/lib/utils"
 import { AddTile } from "@/components/AddTile"
 import { NewGroup } from "@/components/NewGroup"
@@ -41,6 +44,7 @@ export default async function Home() {
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()
   const followedWishlists = await getFollowedWishlistsForUser()
+  const lots = await getLotsForUser()
   const t = await getTranslations("Home")
 
   const renderWishlist = (
@@ -74,6 +78,38 @@ export default async function Home() {
         </h1>
         <p className="mt-1 text-muted-foreground">{t("greeting.text")}</p>
       </div>
+
+      {lots.length > 0 && (
+        <List>
+          <ListTitle>
+            <span id="lots-title">{t("lots.title")}</span>
+          </ListTitle>
+          <ul aria-labelledby="lots-title" className="grid gap-2">
+            {lots.map(lot => (
+              <li key={lot.group.id}>
+                <Link
+                  href={`/group/${lot.group.id}`}
+                  className="grid gap-1 rounded-lg bg-secondary p-4 transition-colors hover:bg-secondary/70"
+                >
+                  <span className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <Gift aria-hidden size="16" className="text-primary" />
+                    {lot.group.title}
+                  </span>
+                  <span className="font-display text-xl font-semibold">
+                    {t.rich("lots.drawn", {
+                      name: lot.receiver,
+                      strong: chunks => (
+                        <strong className="text-primary">{chunks}</strong>
+                      ),
+                    })}
+                  </span>
+                  <DrawDetails budget={lot.budget} date={lot.date} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </List>
+      )}
 
       <List>
         <ListTitle>{t("following.title")}</ListTitle>
