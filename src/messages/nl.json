@@ -92,7 +92,7 @@
   },
   "Login": {
     "title": "Welkom bij Wishlist",
-    "text": "Wil je een verlanglijstje delen met je familie of vrienden, of gewoon voor jezelf bijhouden? Log in en maak je verlanglijstje aan 🤩",
+    "text": "Houd één verlanglijstje bij voor elk feestje, van je verjaardag tot kerst. Deel het met een link of zet het in je groepen: iedereen in een groep ziet met één link alle verlanglijstjes 🤩",
     "google": "Inloggen met Google",
     "email": "Inloggen met e-mail",
     "emailDialog": {
@@ -408,7 +408,7 @@
     }
   },
   "Metadata": {
-    "description": "Deel je verlanglijstjes met familie en vrienden, en streep stiekem af wat je gaat kopen."
+    "description": "Eén verlanglijstje voor al je feestjes. Deel het met een link of in groepen met familie en vrienden, en streep stiekem af wat je gaat kopen."
   },
   "Landing": {
     "groups": {
