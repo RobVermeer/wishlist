@@ -28,6 +28,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Wat is een onbeperkte wens?",
     "Hoe maak ik een verlanglijstje voor mijn kind?",
     "Kan ik een verlanglijstje samen met iemand beheren?",
+    "Hoe verwijder ik mijn verlanglijstje?",
   ])
 
   await expect(
@@ -38,6 +39,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   ).toHaveText([
     "Hoe deel ik mijn verlanglijstje, bijvoorbeeld voor mijn verjaardag?",
     "Wat is het verschil tussen een groep en een link?",
+    "Kan iedereen mijn verlanglijstje zien?",
     "Hoe maak ik een groep?",
     "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
     "Kan mijn verlanglijstje in meerdere groepen staan?",
@@ -45,6 +47,18 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Wat mag ik als maker van een groep?",
     "Wat gebeurt er als ik uit een groep stap?",
     "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",
+    "Hoe stop ik met het volgen van een verlanglijstje?",
+  ])
+  await expect(
+    page
+      .getByRole("heading", { name: "Je account" })
+      .locator("..")
+      .locator("summary")
+  ).toHaveText([
+    "Kost Wishlist iets?",
+    "Waarom heb ik geen wachtwoord?",
+    "Kan ik Wishlist op mijn telefoon zetten?",
+    "Hoe pas ik mijn naam of profielfoto aan?",
   ])
 
   const question = page.getByText("Ziet degene die het wenst wat ik koop?")
