@@ -61,6 +61,8 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Waarom heb ik geen wachtwoord?",
     "Kan ik Wishlist op mijn telefoon zetten?",
     "Hoe pas ik mijn naam of profielfoto aan?",
+    "Hoe verwijder ik mijn account?",
+    "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
   ])
 
   const question = page.getByText("Ziet degene die het wenst wat ik koop?")
