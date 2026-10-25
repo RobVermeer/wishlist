@@ -10,7 +10,7 @@ import { AddWishlistToGroup } from "@/components/AddWishlistToGroup"
 import { ChooseWishlistForGroup } from "@/components/ChooseWishlistForGroup"
 import { NewWishlist } from "@/components/NewWishlist"
 import { Button } from "@/components/ui/button"
-import { ListChecks, Plus } from "lucide-react"
+import { Dices, ListChecks, Plus } from "lucide-react"
 import { getGroupOptionsForUser } from "@/lib/groups/getGroupOptionsForUser"
 import { groupBackground } from "@/lib/groups/themes"
 import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
@@ -257,13 +257,24 @@ export default async function GroupPage({ params }: Props) {
         ))
       )}
 
-      {isCreator && (
-        <section className="grid gap-3 rounded-md border p-4">
-          <EmptyState
-            title={draw ? tDraw("manage.drawnTitle") : tDraw("manage.title")}
-          >
-            {draw ? tDraw("manage.drawnText") : tDraw("manage.text")}
-          </EmptyState>
+      {isCreator && (draw || group.members.length > 1) && (
+        <section
+          aria-labelledby="draw-title"
+          className={
+            draw
+              ? "grid gap-3 rounded-md border p-4"
+              : "flex flex-wrap items-center justify-between gap-3 rounded-md border p-4"
+          }
+        >
+          <div className="grid gap-0.5">
+            <h3 id="draw-title" className="flex items-center gap-2 font-medium">
+              <Dices aria-hidden size="18" className="text-primary" />
+              {draw ? tDraw("manage.drawnTitle") : tDraw("manage.title")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {draw ? tDraw("manage.drawnText") : tDraw("manage.text")}
+            </p>
+          </div>
           {draw && <DrawStatus participants={draw} />}
           <DrawLots
             groupId={group.id}
