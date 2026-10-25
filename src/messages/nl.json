@@ -571,8 +571,13 @@
   "Faq": {
     "title": "Veelgestelde vragen",
     "metaTitle": "Veelgestelde vragen - Wishlist",
+    "intro": "Waar heb je een vraag over?",
+    "subjects": "Onderwerpen",
+    "questions": "{count, plural, one {# vraag} other {# vragen}}",
+    "top": "Terug naar boven",
     "sections": [
       {
+        "id": "je-verlanglijstje",
         "title": "Je verlanglijstje",
         "questions": [
           {
@@ -610,6 +615,7 @@
         ]
       },
       {
+        "id": "delen-en-groepen",
         "title": "Delen en groepen",
         "questions": [
           {
@@ -659,6 +665,7 @@
         ]
       },
       {
+        "id": "lootjes-trekken",
         "title": "Lootjes trekken",
         "questions": [
           {
@@ -688,6 +695,7 @@
         ]
       },
       {
+        "id": "cadeaus-kopen",
         "title": "Cadeaus kopen",
         "questions": [
           {
@@ -709,6 +717,7 @@
         ]
       },
       {
+        "id": "je-account",
         "title": "Je account",
         "questions": [
           {
