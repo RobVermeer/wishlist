@@ -89,17 +89,25 @@ Keep the tone warm but calm:
 - Dates are stored as unix epoch milliseconds (`timestampFormat: "unixepoch-ms"`), which keeps them compatible with data from before Prisma 7.
 - Production uses an absolute `DATABASE_URL`, the deploy stops when it isn't.
 
-## Before opening a pull request
+## Pull requests
 
-```sh
-npm run lint
-npm run format:check
-npm run typecheck
-npm run knip
-npm run test:e2e
-```
+Finish every feature and fix with a pull request from its own branch, as soon as the work and its checks are done.
 
-CI runs the same checks. Keep commits small: the subject says what changed, the body why when it isn't obvious.
+- **Atomic commits:** one logical change per commit, and every commit passes its own tests. Something the change needs, like a refactor or a fix, goes first in its own commit. The subject says what changed, the body why when it isn't obvious.
+- **Authorship:** commit with your own git name and e-mail address. Don't add `Co-Authored-By` lines for AI assistants.
+- **Landing page and FAQ:** when a feature is added or changes, update the landing page (`src/components/Landing*`, `Landing` in `nl.json`) and the FAQ (`Faq.sections` in `nl.json`, shown at `/vragen`) in the same pull request, as their own commit and with tests. Check every claim against what the app does.
+- **Screenshots:** put screenshots before and after in the description, in light, dark and mobile, see [testing](testing.md). `gh` can't upload images, so push them to the `pr-screenshots` branch, in a folder named after your branch, and link them as `https://raw.githubusercontent.com/RobVermeer/wishlist/<commit>/<folder>/<file>.jpg` with the commit of that branch, so the links keep working. Only show test data.
+- **Checks:** run them before pushing. CI runs the same.
+
+  ```sh
+  npm run lint
+  npm run format:check
+  npm run typecheck
+  npm run knip
+  npm run test:e2e
+  ```
+
+- **With Claude Code:** turn on Auto-fix for the pull request, so CI failures, merge conflicts and review comments get picked up.
 
 ## Dependencies
 
