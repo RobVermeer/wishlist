@@ -402,3 +402,29 @@ test("the overview has no lootjes without a draw", async ({ signIn }) => {
   await expect(page.getByText("Wat je volgt")).toBeVisible()
   await expect(page.getByRole("list", { name: "Je lootjes" })).toHaveCount(0)
 })
+
+test("drawing lots shows once there's someone to draw with", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const group = await createGroup(owner)
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await expect(page.locator("main section").first()).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Lootjes trekken" })
+  ).toHaveCount(0)
+
+  const bert = await createUser({ firstName: "Bert" })
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { members: { connect: { id: bert.id } } },
+  })
+  await page.reload()
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+
+  await expect(
+    page.getByRole("dialog", { name: "Lootjes trekken" })
+  ).toContainText("Niemand ziet wie wie heeft getrokken, ook jij niet.")
+})

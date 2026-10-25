@@ -823,15 +823,15 @@
     },
     "manage": {
       "title": "Lootjes trekken",
-      "text": "Trek lootjes voor deze groep: iedereen krijgt één persoon om een cadeau voor te kopen. Niemand ziet wie wie heeft getrokken, ook jij niet.",
+      "text": "Iedereen krijgt één persoon om een cadeau voor te kopen.",
       "button": "Lootjes trekken",
       "drawnTitle": "De lootjes zijn getrokken",
-      "drawnText": "Iedereen heeft een e-mail gekregen en ziet het eigen lootje in de groep. Niemand ziet wie wie heeft getrokken, ook jij niet.",
+      "drawnText": "Iedereen heeft een e-mail gekregen en ziet het eigen lootje in de groep.",
       "redraw": "Opnieuw lootjes trekken"
     },
     "form": {
       "title": "Lootjes trekken",
-      "text": "Iedereen krijgt een e-mail met wie diegene heeft getrokken, en ziet dat ook in de groep.",
+      "text": "Iedereen krijgt een e-mail met wie diegene heeft getrokken, en ziet dat ook in de groep. Niemand ziet wie wie heeft getrokken, ook jij niet.",
       "participants": "Wie doen er mee?",
       "extra": {
         "title": "Iemand anders erbij?",

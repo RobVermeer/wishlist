@@ -71,7 +71,7 @@ export const DrawLots = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={redraw ? "outline" : "default"}>
+        <Button variant="outline">
           <Dices size="16" className="mr-2" />{" "}
           {redraw ? tDraw("manage.redraw") : tDraw("manage.button")}
         </Button>
