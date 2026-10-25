@@ -54,3 +54,34 @@ export const wishlistItemSchema = z.object({
     .max(40, { error: "Categorie mag maximaal uit 40 tekens bestaan" })
     .optional(),
 })
+
+export const contactTopics = [
+  "bug",
+  "question",
+  "deleteAccount",
+  "other",
+] as const
+
+const contactMessageRequired = {
+  bug: "Schrijf wat er misgaat",
+  question: "Schrijf wat je ons wilt vragen",
+  other: "Schrijf je bericht",
+}
+
+export const contactSchema = z
+  .object({
+    topic: z.enum(contactTopics, { error: "Kies waar je bericht over gaat" }),
+    message: z
+      .string()
+      .trim()
+      .max(2000, { error: "Je bericht mag maximaal uit 2000 tekens bestaan" }),
+  })
+  .superRefine(({ topic, message }, context) => {
+    if (topic !== "deleteAccount" && !message) {
+      context.addIssue({
+        code: "custom",
+        message: contactMessageRequired[topic],
+        path: ["message"],
+      })
+    }
+  })

@@ -11,6 +11,7 @@ import {
   Text,
 } from "@react-email/components"
 import { getTranslations } from "next-intl/server"
+import type { contactTopics } from "@/lib/schema"
 
 const baseUrl = process.env.BASE_URL!
 
@@ -178,6 +179,49 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
               Wishlist
             </Link>
           </Text>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
+
+interface ContactEmailProps {
+  from: { id: string; email: string; name: string }
+  topic: (typeof contactTopics)[number]
+  message: string
+}
+
+export const ContactEmail = async ({
+  from,
+  topic,
+  message,
+}: ContactEmailProps) => {
+  const t = await getTranslations("EmailContact")
+
+  return (
+    <Html>
+      <Head />
+      <Preview>{t(`subject.${topic}`, { name: from.name })}</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Img
+            src={`${baseUrl}/gift.png`}
+            width="32"
+            height="32"
+            alt="Wishlist"
+          />
+
+          <Text style={title}>{t(`topic.${topic}`)}</Text>
+
+          <Section style={section}>
+            {message && (
+              <Text style={{ ...text, whiteSpace: "pre-wrap" }}>{message}</Text>
+            )}
+            <Text style={text}>
+              {t("from", { name: from.name, email: from.email, id: from.id })}
+            </Text>
+            <Text style={text}>{t("reply", { name: from.name })}</Text>
+          </Section>
         </Container>
       </Body>
     </Html>

@@ -327,6 +327,9 @@
     },
     "draw": {
       "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting"
+    },
+    "contact": {
+      "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
     }
   },
   "EmailDraw": {
@@ -681,6 +684,54 @@
           }
         ]
       }
-    ]
+    ],
+    "contact": {
+      "title": "Staat je vraag er niet bij?",
+      "text": "Of heb je een fout gevonden? Stuur ons een bericht, dan antwoorden we per e-mail."
+    }
+  },
+  "Contact": {
+    "button": "Stuur ons een bericht",
+    "title": "Stuur ons een bericht",
+    "text": "Heb je een fout gevonden, een vraag, of wil je je account verwijderen? Laat het ons weten, we antwoorden per e-mail.",
+    "form": {
+      "topic": "Waar gaat je bericht over?",
+      "topics": {
+        "bug": "Ik heb een fout gevonden",
+        "question": "Ik heb een vraag",
+        "deleteAccount": "Verwijder mijn account",
+        "other": "Iets anders"
+      },
+      "message": {
+        "bug": "Wat gaat er mis?",
+        "question": "Wat wil je weten?",
+        "other": "Je bericht"
+      },
+      "placeholder": {
+        "bug": "Vertel wat je deed en wat er gebeurde.",
+        "question": "Stel je vraag.",
+        "other": "Waar kunnen we je mee helpen?"
+      },
+      "deleteAccount": "We verwijderen je account, samen met je verlanglijstjes en de groepen die je hebt gemaakt. Dat kunnen we niet ongedaan maken.",
+      "submit": "Verstuur",
+      "submitDeleteAccount": "Vraag om verwijdering"
+    },
+    "toast": "Je bericht is verstuurd. We antwoorden zo snel mogelijk per e-mail."
+  },
+  "EmailContact": {
+    "subject": {
+      "bug": "Fout gevonden door {name}",
+      "question": "Vraag van {name}",
+      "deleteAccount": "Account verwijderen voor {name}",
+      "other": "Bericht van {name}"
+    },
+    "topic": {
+      "bug": "Er is een fout gevonden",
+      "question": "Er is een vraag gesteld",
+      "deleteAccount": "Iemand wil het account verwijderen",
+      "other": "Er is een bericht gestuurd"
+    },
+    "from": "Van {name} ({email}), gebruiker {id}.",
+    "reply": "Beantwoord deze e-mail om {name} te antwoorden."
   }
 }

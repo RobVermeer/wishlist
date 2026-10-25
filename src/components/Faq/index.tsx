@@ -2,6 +2,7 @@ import { ChevronDown } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
+import { ContactForm } from "@/components/ContactForm"
 
 interface Section {
   title: string
@@ -38,6 +39,12 @@ export const Faq = () => {
           ))}
         </List>
       ))}
+
+      <section className="grid gap-3 rounded-lg bg-secondary p-6 text-center">
+        <h2 className="text-xl font-semibold">{t("contact.title")}</h2>
+        <p className="text-muted-foreground">{t("contact.text")}</p>
+        <ContactForm />
+      </section>
     </>
   )
 }

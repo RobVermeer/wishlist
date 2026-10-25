@@ -14,6 +14,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Delen en groepen",
     "Cadeaus kopen",
     "Je account",
+    "Staat je vraag er niet bij?",
   ])
 
   await expect(

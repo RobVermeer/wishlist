@@ -1,7 +1,8 @@
 import "server-only"
 
 import { getTranslations } from "next-intl/server"
-import { DrawUserEmail, RemindUserEmail } from "./templates"
+import { ContactEmail, DrawUserEmail, RemindUserEmail } from "./templates"
+import type { contactTopics } from "@/lib/schema"
 import { resend } from "@/lib/resend"
 import { trackIssue } from "@/lib/trackIssue"
 
@@ -81,5 +82,35 @@ export const sendReminder = async ({ toUser, userName }: SendReminder) => {
     trackIssue("Email reminder sent", "info", { toUser, userName })
   } catch (error) {
     trackIssue("Email reminder error", "error", { toUser, userName, error })
+  }
+}
+
+interface SendContactEmail {
+  to: string
+  from: { id: string; email: string; name: string }
+  topic: (typeof contactTopics)[number]
+  message: string
+}
+
+export const sendContactEmail = async ({
+  to,
+  from,
+  topic,
+  message,
+}: SendContactEmail) => {
+  const t = await getTranslations("EmailContact")
+
+  const { error } = await resend.emails.send({
+    from: "Wishlist <no-reply@ru-coding.nl>",
+    to: [to],
+    replyTo: from.email,
+    subject: t(`subject.${topic}`, { name: from.name }),
+    react: await ContactEmail({ from, topic, message }),
+  })
+
+  if (error) {
+    trackIssue("Email contact message error", "error", { error, from, topic })
+    const tErrors = await getTranslations("Errors")
+    throw new Error(tErrors("contact.failed"))
   }
 }
