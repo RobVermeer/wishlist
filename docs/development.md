@@ -20,6 +20,11 @@ npm run dev
 
 Defaults for local development live in `.env.development`, put overrides in `.env.local`. Log in with any e-mail address and run `npm run login-link` to get the link from the fake mail server.
 
+- Keep `npm run mail` running in a terminal. It keeps e-mails in memory, so a login e-mail sent while it's down is lost and has to be requested again.
+- A login link without the mail server: add a row to `VerificationToken` in `prisma/dev.db` with the e-mail address as `identifier`, the SHA-256 of a random token followed by `NEXTAUTH_SECRET` from `.env.development` as `token`, and an `expires` in epoch milliseconds. Then open `http://localhost:3000/api/auth/callback/email?token=<random token>&email=<e-mail address>`. It works once.
+- To try admin features locally, like the admin pages and messages from the contact form, put `ADMIN_USER_ID=<your user id>` in `.env.local`. Messages then land in the fake mail server.
+- Restart `npm run dev` after a new migration: a running dev server keeps its Prisma client and doesn't know the new tables.
+
 ## Structure
 
 | Path                              | What goes there                                                                      |
