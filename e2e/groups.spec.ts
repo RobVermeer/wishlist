@@ -217,6 +217,26 @@ test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
   }
 })
 
+test("leaving a group that fails shows the error", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Verlaat" }).click()
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { removed: true },
+  })
+
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
+  await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  await expect(page).toHaveURL(`/group/${group.id}`)
+})
+
 test("visiting a group you don't follow lets you follow it", async ({
   signIn,
 }) => {
