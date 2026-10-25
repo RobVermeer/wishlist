@@ -69,6 +69,19 @@ All user facing text goes through next-intl, also on admin pages. Write informal
 | A group of people sharing lists | groep                                    |
 | Managing a list together        | samen beheren                            |
 
+Keep the tone warm but calm:
+
+- No emoji in titles, dialogs and error messages. Use one only where it adds something, like the 🎁 after buying a wish.
+- An empty state says what to do next, and fits who is looking: the owner of a verlanglijstje sees something else than the people it's shared with.
+- Labels say exactly what to fill in, like "Naam van de groep" instead of "Naam".
+- Sentences end with a period, also hints and placeholders.
+
+## Screens
+
+- One red (primary) button per screen: the next step. Other actions use quiet `outline` buttons.
+- Show a block only when it can be used. Drawing lots only shows once there's someone to draw with, for example.
+- Don't say the same thing twice on one screen, and keep things where they belong: a button to make a new group doesn't go between the groups you follow.
+
 ## Database changes
 
 - Change `prisma/schema.prisma` and create a migration with `npx prisma migrate dev --name <what changed>`.
