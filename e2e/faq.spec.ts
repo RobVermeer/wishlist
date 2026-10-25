@@ -100,3 +100,33 @@ test("the frequently asked questions ask to log in first", async ({ page }) => {
 
   await expect(page).toHaveURL("/login?callbackUrl=%2Fvragen")
 })
+
+test("jump to a subject in the frequently asked questions", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+
+  const subjects = page.getByRole("navigation", { name: "Onderwerpen" })
+  await expect(subjects.getByRole("link")).toHaveText([
+    /Je verlanglijstje\s*\d+ vragen/,
+    /Delen en groepen\s*\d+ vragen/,
+    /Lootjes trekken\s*6 vragen/,
+    /Cadeaus kopen\s*\d+ vragen/,
+    /Je account\s*\d+ vragen/,
+  ])
+
+  await subjects.getByRole("link", { name: /Lootjes trekken/ }).click()
+  await expect(page).toHaveURL("/vragen#lootjes-trekken")
+  await expect(
+    page.getByRole("heading", { name: "Lootjes trekken", level: 2 })
+  ).toBeInViewport()
+
+  await page
+    .getByRole("region", { name: "Lootjes trekken" })
+    .getByRole("link", { name: "Terug naar boven" })
+    .click()
+  await expect(subjects).toBeInViewport()
+})
