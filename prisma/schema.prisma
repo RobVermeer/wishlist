@@ -37,20 +37,21 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
+  id            String            @id @default(cuid())
   name          String?
   firstName     String?
-  email         String?        @unique
+  email         String?           @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   wishlists     Wishlist[]
   wishlistItem  WishlistItem[]
-  groups        Group[]        @relation(name: "OwnedGroups")
-  subscribed    Group[]        @relation(name: "Subscribed")
-  following     Wishlist[]     @relation(name: "FollowedWishlists")
-  managing      Wishlist[]     @relation(name: "ManagedWishlists")
+  groups        Group[]           @relation(name: "OwnedGroups")
+  subscribed    Group[]           @relation(name: "Subscribed")
+  following     Wishlist[]        @relation(name: "FollowedWishlists")
+  managing      Wishlist[]        @relation(name: "ManagedWishlists")
+  drawnLots     DrawParticipant[]
 }
 
 model VerificationToken {
@@ -71,6 +72,7 @@ model Group {
   createdBy User       @relation(name: "OwnedGroups", fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   members   User[]     @relation(name: "Subscribed")
+  draws     Draw[]
 }
 
 model Wishlist {
@@ -122,4 +124,31 @@ model Reminder {
   createdAt DateTime @default(now())
   to        String
   from      String
+}
+
+model Draw {
+  id           String            @id @default(cuid())
+  createdAt    DateTime
+  cancelledAt  DateTime?
+  budget       Int?
+  date         DateTime?
+  groupId      String
+  group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  participants DrawParticipant[]
+}
+
+model DrawParticipant {
+  id         String           @id @default(cuid())
+  name       String
+  email      String
+  lastSentAt DateTime?
+  drawId     String
+  draw       Draw             @relation(fields: [drawId], references: [id], onDelete: Cascade)
+  userId     String?
+  user       User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  receiverId String?          @unique
+  receiver   DrawParticipant? @relation("DrawnLot", fields: [receiverId], references: [id])
+  giver      DrawParticipant? @relation("DrawnLot")
+
+  @@unique([drawId, email])
 }
