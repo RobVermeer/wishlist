@@ -51,11 +51,8 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   ).toContainText("samen met de andere ouder")
 
   await expect(
-    page
-      .getByRole("heading", { name: "Voor elke gelegenheid" })
-      .locator("..")
-      .getByRole("listitem")
-  ).toHaveText(["Sinterklaas", "Kerst", "Verjaardag", "Babyshower"])
+    page.getByRole("heading", { name: "Voor elke gelegenheid" })
+  ).toHaveCount(0)
 
   await expect(
     page

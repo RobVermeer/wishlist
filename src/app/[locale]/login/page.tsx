@@ -7,7 +7,6 @@ import { LoginForm } from "@/components/LoginForm"
 import { LandingExample } from "@/components/LandingExample"
 import { LandingFeatures } from "@/components/LandingFeatures"
 import { LandingGroups } from "@/components/LandingGroups"
-import { LandingOccasions } from "@/components/LandingOccasions"
 import { LandingSteps } from "@/components/LandingSteps"
 import { Button } from "@/components/ui/button"
 import { authOptions } from "@/lib/nextAuth"
@@ -38,7 +37,6 @@ export default async function Login({ searchParams }: Props) {
       <LandingGroups />
       <LandingExample />
       <LandingFeatures />
-      <LandingOccasions />
       <LandingSteps />
 
       <section className="grid gap-4 rounded-lg bg-secondary p-6 text-center">
