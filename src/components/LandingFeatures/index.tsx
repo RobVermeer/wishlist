@@ -1,6 +1,6 @@
 import {
   Baby,
-  Group,
+  Gift,
   InfinityIcon,
   List,
   ShoppingBasket,
@@ -11,8 +11,8 @@ import { ListTitle } from "@/components/ListTitle"
 import { cn } from "@/lib/utils"
 
 const features = [
-  { key: "groups", Icon: Group, color: "text-pink-500" },
   { key: "secret", Icon: SquareCheckBig, color: "text-primary" },
+  { key: "bought", Icon: Gift, color: "text-pink-500" },
   { key: "categories", Icon: List, color: "text-orange-500" },
   { key: "managed", Icon: Baby, color: "text-purple-500" },
   { key: "unlimited", Icon: InfinityIcon, color: "text-emerald-500" },
