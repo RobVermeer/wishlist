@@ -229,3 +229,119 @@ test("everyone in the draw needs their own e-mail address", async ({
   )
   expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
 })
+
+const status = (page: Page) =>
+  page.getByRole("list", { name: "Wie doen er mee" })
+
+test("the creator sees who joined, but not who drew whom", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: "Carla" })
+  const group = await createGroup(owner, { members: [bert, carla] })
+  await createDraw(group, [
+    owner,
+    bert,
+    carla,
+    { name: "Opa", email: "opa@e2e.test" },
+  ])
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { members: { disconnect: { id: carla.id } } },
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(status(page).getByRole("listitem")).toHaveText([
+    /Anna\s*In de groep/,
+    /Bert\s*In de groep/,
+    /Carla\s*Niet meer in de groep/,
+    /Opa\s*Nog niet aangemeld/,
+  ])
+  await expect(page.getByText(/Je hebt .+ getrokken/)).toHaveCount(1)
+  await expect(lot(page)).toContainText("Je hebt Bert getrokken")
+
+  const bertPage = await signIn(bert)
+  await bertPage.goto(`/group/${group.id}`)
+  await expect(lot(bertPage)).toBeVisible()
+  await expect(status(bertPage)).toHaveCount(0)
+})
+
+test("send the lootje again to someone who hasn't joined yet", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, {
+    title: "Kerst",
+    members: [bert],
+  })
+  const opa = `opa-${bert.id}@e2e.test`
+  await createDraw(group, [owner, bert, { name: "Opa", email: opa }], {
+    lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  const row = status(page).getByRole("listitem").filter({ hasText: "Opa" })
+  await expect(
+    status(page).getByRole("button", { name: "Stuur opnieuw" })
+  ).toHaveCount(1)
+  await row.getByRole("button", { name: "Stuur opnieuw" }).click()
+
+  await expect(toasts(page)).toContainText("De e-mail is opnieuw verstuurd")
+  await expect.poll(async () => (await emailsTo(opa)).length).toBe(1)
+  const [email] = await emailsTo(opa)
+  expect(email.subject).toBe("Opa, je hebt een lootje getrokken voor Kerst")
+  expect(drawnName(email.html)).toBe("Anna")
+  expect(email.html).toContain("Doe mee met de groep")
+  await expect(
+    row.getByRole("button", { name: "Stuur opnieuw" })
+  ).toBeDisabled()
+})
+
+test("drawing lots again replaces the previous draw", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, {
+    title: "Kerst",
+    members: [bert],
+  })
+  const opa = `opa-${bert.id}@e2e.test`
+  const { draw } = await createDraw(group, [
+    owner,
+    bert,
+    { name: "Opa", email: opa },
+  ])
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Opnieuw lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Opnieuw lootjes trekken" })
+  await expect(dialog).toContainText("De vorige loting telt dan niet meer")
+  await expect(dialog.getByLabel("Opa")).toBeChecked()
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+  await expect
+    .poll(
+      async () =>
+        (await prisma.draw.findUniqueOrThrow({ where: { id: draw.id } }))
+          .cancelledAt
+    )
+    .not.toBeNull()
+  for (const [address, name] of [
+    [owner.email!, "Anna"],
+    [bert.email!, "Bert"],
+    [opa, "Opa"],
+  ]) {
+    await expect.poll(async () => (await emailsTo(address)).length).toBe(1)
+    const [email] = await emailsTo(address)
+    expect(email.subject).toBe(
+      `${name}, de lootjes voor Kerst zijn opnieuw getrokken`
+    )
+  }
+  await expect(lot(page)).toBeVisible()
+})

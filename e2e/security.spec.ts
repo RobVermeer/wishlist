@@ -883,3 +883,60 @@ test("members don't see the e-mail addresses of people added to a draw", async (
     expect(await page.content()).not.toContain("opa-geheim@e2e.test")
   }
 })
+
+test("a lootje can be sent again once a day", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  const {
+    participants: [, , participant],
+  } = await createDraw(group, [owner, bert, { name: "Opa", email: opa }], {
+    lastSentAt: new Date(0),
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  const button = page.getByRole("button", { name: "Stuur opnieuw" })
+  await expect(button).toBeEnabled()
+  await prisma.drawParticipant.update({
+    where: { id: participant.id },
+    data: { lastSentAt: new Date() },
+  })
+  await button.click()
+
+  await expect(toasts(page)).toContainText(
+    "Je kunt de e-mail één keer per dag opnieuw sturen"
+  )
+  expect(await emailsTo(opa)).toHaveLength(0)
+})
+
+test("only the creator of a group can send a lootje again", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const opa = `opa-${member.id}@e2e.test`
+  const {
+    participants: [, , target],
+  } = await createDraw(group, [owner, member, { name: "Opa", email: opa }], {
+    lastSentAt: new Date(0),
+  })
+  const ownGroup = await createGroup(member, { members: [owner] })
+  const {
+    participants: [, , own],
+  } = await createDraw(
+    ownGroup,
+    [member, owner, { name: "Oma", email: `oma-${member.id}@e2e.test` }],
+    { lastSentAt: new Date(0) }
+  )
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, own.id, target.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Stuur opnieuw" }).click()
+
+  await expect(toasts(page)).toContainText("Deelnemer niet gevonden")
+  expect(await emailsTo(opa)).toHaveLength(0)
+})

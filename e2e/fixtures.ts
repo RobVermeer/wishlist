@@ -178,7 +178,13 @@ export async function createDraw(
     budget = null,
     date = null,
     cancelled = false,
-  }: { budget?: number | null; date?: Date | null; cancelled?: boolean } = {}
+    lastSentAt = new Date(),
+  }: {
+    budget?: number | null
+    date?: Date | null
+    cancelled?: boolean
+    lastSentAt?: Date
+  } = {}
 ) {
   const draw = await prisma.draw.create({
     data: {
@@ -202,7 +208,7 @@ export async function createDraw(
             : participant.name,
           email: participant.email!.toLowerCase(),
           userId: isUser ? participant.id : null,
-          lastSentAt: new Date(),
+          lastSentAt,
         },
       })
     )

@@ -38,12 +38,26 @@ export const createDraw = async (groupId: string, data: FormData) => {
     }
 
     const extraNames = data.getAll("extraName").map(name => name.toString())
+    const previousIds = data.getAll("previous").map(id => id.toString())
+    const previous = previousIds.length
+      ? await prisma.drawParticipant.findMany({
+          where: {
+            id: { in: previousIds },
+            userId: null,
+            draw: { groupId, cancelledAt: null },
+          },
+          select: { name: true, email: true },
+        })
+      : []
     const { members, extra, budget, date } = drawSchema.parse({
       members: data.getAll("members").map(member => member.toString()),
-      extra: data.getAll("extraEmail").map((email, index) => ({
-        name: extraNames[index] ?? "",
-        email: email.toString().trim(),
-      })),
+      extra: [
+        ...previous,
+        ...data.getAll("extraEmail").map((email, index) => ({
+          name: extraNames[index] ?? "",
+          email: email.toString().trim(),
+        })),
+      ],
       budget: data.get("budget")?.toString() || undefined,
       date: data.get("date")?.toString() || undefined,
     })
