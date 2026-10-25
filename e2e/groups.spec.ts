@@ -140,7 +140,7 @@ test("owner can remove a group", async ({ signIn }) => {
 
   await memberPage.goto(`/group/${group.id}`)
   await expect(
-    memberPage.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+    memberPage.getByText("We kunnen deze pagina niet vinden")
   ).toBeVisible()
 })
 
@@ -159,7 +159,7 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   ).toHaveCount(0)
   await page.getByRole("button", { name: "Verlaat" }).click()
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
   await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
   await expect(dialog.getByLabel("Naam")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
@@ -189,7 +189,7 @@ test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
   await page.goto(`/group/${group.id}`)
   await page.getByRole("button", { name: "Verlaat" }).click()
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
   await expect(dialog).toContainText(
     "zien de anderen je verlanglijstjes niet meer"
   )
@@ -199,13 +199,13 @@ test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
   const ownerPage = await signIn(owner)
   await ownerPage.goto(`/group/${group.id}`)
   await expect(
-    ownerPage.getByText("Er zijn nog geen lijstjes! 😵‍💫")
+    ownerPage.getByText("Er staan nog geen verlanglijstjes in deze groep")
   ).toBeVisible()
 
   for (const { id } of [own, forSomeoneElse]) {
     await ownerPage.goto(`/wishlist/${id}`)
     await expect(
-      ownerPage.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+      ownerPage.getByText("We kunnen deze pagina niet vinden")
     ).toBeVisible()
 
     const wishlist = await prisma.wishlist.findUniqueOrThrow({
@@ -228,7 +228,7 @@ test("visiting a group you don't follow lets you follow it", async ({
 
   await page.goto(`/group/${group.id}`)
 
-  await expect(page.getByText("Je volgt deze groep nog niet 😵")).toBeVisible()
+  await expect(page.getByText("Je volgt deze groep nog niet")).toBeVisible()
   await expect(page.getByRole("link", { name: "Olga" })).toBeHidden()
 
   await page.getByRole("button", { name: "Volg de groep" }).click()
@@ -279,7 +279,14 @@ test("group without wishlists shows an empty state", async ({ signIn }) => {
 
   await page.goto(`/group/${group.id}`)
 
-  await expect(page.getByText("Er zijn nog geen lijstjes! 😵‍💫")).toBeVisible()
+  await expect(
+    page.getByText("Er staan nog geen verlanglijstjes in deze groep")
+  ).toBeVisible()
+  await expect(
+    page.getByText(
+      "Voeg je verlanglijstje toe en nodig de anderen uit met de knoppen hieronder."
+    )
+  ).toBeVisible()
   await expect(
     page.getByRole("heading", {
       name: "Welk verlanglijstje is voor deze groep?",
@@ -320,7 +327,7 @@ test("unknown group shows not found", async ({ signIn }) => {
   await page.goto("/group/does-not-exist")
 
   await expect(
-    page.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+    page.getByText("We kunnen deze pagina niet vinden")
   ).toBeVisible()
 })
 
@@ -859,6 +866,6 @@ test("owner can remove a member and their wishlists from the group", async ({
   const memberPage = await signIn(member)
   await memberPage.goto(`/group/${group.id}`)
   await expect(
-    memberPage.getByText("Je volgt deze groep nog niet 😵")
+    memberPage.getByText("Je volgt deze groep nog niet")
   ).toBeVisible()
 })

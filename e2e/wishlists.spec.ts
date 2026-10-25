@@ -13,10 +13,8 @@ test("new user sees empty states for wishlists", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto("/")
-  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeVisible()
-  await expect(
-    page.getByText("Je hebt nog geen verlanglijstje 🥺")
-  ).toBeVisible()
+  await expect(page.getByText("Je zit nog niet in een groep")).toBeVisible()
+  await expect(page.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
 })
 
 test("create your own wishlist in your groups", async ({ signIn }) => {
@@ -195,9 +193,7 @@ test("remove a wishlist", async ({ signIn }) => {
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
   await expect(page).toHaveURL("/")
-  await expect(
-    page.getByText("Je hebt nog geen verlanglijstje 🥺")
-  ).toBeVisible()
+  await expect(page.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
 
   const removed = await prisma.wishlist.findUniqueOrThrow({
     where: { id: wishlist.id },
@@ -205,11 +201,13 @@ test("remove a wishlist", async ({ signIn }) => {
   expect(removed.removed).toBe(true)
 
   await page.goto(`/group/${group.id}`)
-  await expect(page.getByText("Er zijn nog geen lijstjes! 😵‍💫")).toBeVisible()
+  await expect(
+    page.getByText("Er staan nog geen verlanglijstjes in deze groep")
+  ).toBeVisible()
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(
-    page.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+    page.getByText("We kunnen deze pagina niet vinden")
   ).toBeVisible()
 })
 
@@ -220,7 +218,7 @@ test("unknown wishlist shows not found", async ({ signIn }) => {
   await page.goto("/wishlist/does-not-exist")
 
   await expect(
-    page.getByText("Oeps, we konden deze pagina niet vinden! 🤯")
+    page.getByText("We kunnen deze pagina niet vinden")
   ).toBeVisible()
 })
 
@@ -262,7 +260,7 @@ test("the dashboard shows what you follow first, then your own wishlists", async
     has: page.getByRole("button", { name: "Nieuwe groep" }),
   })
   await expect(following.getByRole("link")).toHaveText([/Familie/, /Fenna/])
-  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeHidden()
+  await expect(page.getByText("Je zit nog niet in een groep")).toBeHidden()
 })
 
 test("following only a wishlist doesn't show the empty state", async ({
@@ -276,5 +274,5 @@ test("following only a wishlist doesn't show the empty state", async ({
   await page.goto("/")
 
   await expect(page.getByRole("link", { name: "Fenna" })).toBeVisible()
-  await expect(page.getByText("Je zit nog niet in een groep 🥺")).toBeHidden()
+  await expect(page.getByText("Je zit nog niet in een groep")).toBeHidden()
 })

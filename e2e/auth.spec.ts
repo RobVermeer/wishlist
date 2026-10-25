@@ -72,7 +72,7 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   await dialog.getByLabel("E-mail").fill(email)
   await dialog.getByRole("button", { name: "Inloggen" }).click()
 
-  await expect(dialog.getByText("Check je inbox 📨")).toBeVisible()
+  await expect(dialog.getByText("Check je inbox")).toBeVisible()
   await expect(dialog.getByText(email)).toBeVisible()
 
   await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
@@ -114,7 +114,7 @@ test("an address gets at most three login e-mails in ten minutes", async ({
     const dialog = page.getByRole("dialog")
     await dialog.getByLabel("E-mail").fill(email)
     await dialog.getByRole("button", { name: "Inloggen" }).click()
-    await expect(dialog.getByText("Check je inbox 📨")).toBeVisible()
+    await expect(dialog.getByText("Check je inbox")).toBeVisible()
   }
 
   expect(await emailsTo(email)).toHaveLength(3)

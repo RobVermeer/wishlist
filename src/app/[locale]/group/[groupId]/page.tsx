@@ -200,7 +200,9 @@ export default async function GroupPage({ params }: Props) {
         ))
       )}
 
-      {group.wishlist.length === 0 && <EmptyState title={t("empty.title")} />}
+      {group.wishlist.length === 0 && (
+        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
+      )}
 
       {isCreator && (
         <section className="grid gap-3 rounded-md border p-4">

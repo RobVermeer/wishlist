@@ -92,7 +92,7 @@ test("pages don't contain the email addresses of other users", async ({
   const visitorPage = await signIn(visitor)
   await visitorPage.goto(`/group/${group.id}`)
   await expect(
-    visitorPage.getByText("Je volgt deze groep nog niet 😵")
+    visitorPage.getByText("Je volgt deze groep nog niet")
   ).toBeVisible()
   const html = await visitorPage.content()
 
@@ -111,7 +111,7 @@ test("wishlists are only visible to their owner and the members of their groups"
   const group = await createGroup(owner, { members: [member] })
   const otherGroup = await createGroup(owner, { members: [otherGroupMember] })
   const wishlist = await createWishlist(owner, { groups: [group] })
-  const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
+  const notFound = "We kunnen deze pagina niet vinden"
 
   const ownerPage = await signIn(owner)
   await ownerPage.goto(`/wishlist/${wishlist.id}`)

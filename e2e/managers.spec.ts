@@ -10,7 +10,7 @@ import {
   toasts,
 } from "./fixtures"
 
-const notFound = "Oeps, we konden deze pagina niet vinden! 🤯"
+const notFound = "We kunnen deze pagina niet vinden"
 const managersLabel = "Wie beheert dit verlanglijstje nog meer?"
 
 const chosenManagers = (dialog: Locator) =>
@@ -469,7 +469,7 @@ test("a wishlist stays in a group while one of its managers is in it", async ({
     await page.goto(`/group/${family.id}`)
     await page.getByRole("button", { name: "Verlaat" }).click()
     await page
-      .getByRole("dialog", { name: "Verlaat groep 🥺" })
+      .getByRole("dialog", { name: "Verlaat groep" })
       .getByRole("button", { name: "Stap uit de groep" })
       .click()
     await expect(page).toHaveURL("/")
@@ -484,7 +484,7 @@ test("a wishlist stays in a group while one of its managers is in it", async ({
   }
 
   await expect(
-    grandmaPage.getByText("Er zijn nog geen lijstjes! 😵‍💫")
+    grandmaPage.getByText("Er staan nog geen verlanglijstjes in deze groep")
   ).toBeVisible()
   expect((await findWishlist(wishlist)).groups).toEqual([])
 })
