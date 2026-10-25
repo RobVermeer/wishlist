@@ -84,7 +84,9 @@ test("a shared wishlist asks to log in before showing anything", async ({
   await page.goto(`/lijstje/token-${owner.id}`)
 
   await expect(page).toHaveTitle("Olga - Wishlist")
-  await expect(page.getByRole("heading", { name: "Olga" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Olga", level: 2 })
+  ).toBeVisible()
   await expect(
     page.getByText("Olga heeft een verlanglijstje met je gedeeld 🎁")
   ).toBeVisible()
@@ -274,13 +276,15 @@ test("making a new link stops the old one, followers keep access", async ({
   await visitor.goto(`/lijstje/old-${owner.id}`)
   await expect(visitor.getByText(notFound)).toBeVisible()
   await visitor.goto(`/lijstje/${shareToken}`)
-  await expect(visitor.getByRole("heading", { name: "Olga" })).toBeVisible()
+  await expect(
+    visitor.getByRole("heading", { name: "Olga", level: 2 })
+  ).toBeVisible()
   await visitor.close()
 
   const followerPage = await signIn(follower)
   await followerPage.goto(`/wishlist/${wishlist.id}`)
   await expect(
-    followerPage.getByRole("heading", { name: "Olga" })
+    followerPage.getByRole("heading", { name: "Olga", level: 2 })
   ).toBeVisible()
 })
 

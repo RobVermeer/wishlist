@@ -156,8 +156,19 @@
   },
   "GroupWishlist": {
     "empty": {
-      "title": "Dit lijstje is nog helemaal leeg 🫣",
-      "text": "Wel zo goedkoop, alleen misschien moeten we er toch maar wat van gaan zeggen! 👮"
+      "own": {
+        "title": "Je verlanglijstje is nog leeg",
+        "text": "Voeg je eerste wens toe, dan zien de anderen wat je graag wilt."
+      },
+      "managed": {
+        "title": "Dit verlanglijstje is nog leeg",
+        "text": "Voeg de eerste wens toe, dan zien de anderen wat {name} graag wil."
+      },
+      "other": {
+        "title": "{name} heeft nog geen wensen",
+        "remind": "Vraag om meer wensen, dan krijgt {name} een e-mail.",
+        "later": "Kijk later nog eens."
+      }
     },
     "inGroup": "in <link>{group}</link>",
     "hint": {

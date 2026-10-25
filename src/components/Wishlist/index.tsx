@@ -175,9 +175,28 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         />
       )}
 
-      {wishlist.wishlistItem.length === 0 && (
-        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
-      )}
+      {wishlist.wishlistItem.length === 0 &&
+        (wishlist.isOwnList ? (
+          wishlist.title ? (
+            <EmptyState title={t("empty.managed.title")}>
+              {t("empty.managed.text", { name: getWishlistName(wishlist) })}
+            </EmptyState>
+          ) : (
+            <EmptyState title={t("empty.own.title")}>
+              {t("empty.own.text")}
+            </EmptyState>
+          )
+        ) : (
+          <EmptyState
+            title={t("empty.other.title", { name: getWishlistName(wishlist) })}
+          >
+            {canBeReminded
+              ? t("empty.other.remind", {
+                  name: getFirstName(wishlist.user),
+                })
+              : t("empty.other.later")}
+          </EmptyState>
+        ))}
 
       {(wishlist.isOwnList || canBeReminded || wishlist.isFollowing) && (
         <Separator className="my-3" />

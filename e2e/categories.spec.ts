@@ -219,9 +219,7 @@ test("removing the last wish of a category removes the category", async ({
     .click()
 
   await expect(categoryToggle(page, "Kleding")).toHaveCount(0)
-  await expect(
-    page.getByText("Dit lijstje is nog helemaal leeg 🫣")
-  ).toBeVisible()
+  await expect(page.getByText("Je verlanglijstje is nog leeg")).toBeVisible()
   expect(await categoriesOf(wishlist.id)).toEqual([])
 })
 

@@ -38,9 +38,7 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
       "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁"
     )
   ).toBeVisible()
-  await expect(
-    page.getByText("Dit lijstje is nog helemaal leeg 🫣")
-  ).toBeVisible()
+  await expect(page.getByText("Je verlanglijstje is nog leeg")).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeHidden()
@@ -240,9 +238,7 @@ test("removing a wish asks for confirmation", async ({ signIn }) => {
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
   await expect(itemCard(page, "Puzzel")).toBeHidden()
-  await expect(
-    page.getByText("Dit lijstje is nog helemaal leeg 🫣")
-  ).toBeVisible()
+  await expect(page.getByText("Je verlanglijstje is nog leeg")).toBeVisible()
   expect(
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .removed

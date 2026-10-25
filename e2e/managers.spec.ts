@@ -239,7 +239,7 @@ test("managers change the wishlist but not who manages it", async ({
   const grandpaPage = await signIn(grandpa)
   await grandpaPage.goto(`/group/${fathersFamily.id}`)
   await expect(
-    grandpaPage.getByRole("heading", { name: "Emma 🎂" })
+    grandpaPage.getByRole("heading", { name: "Emma 🎂", exact: true })
   ).toBeVisible()
 })
 
@@ -478,7 +478,7 @@ test("a wishlist stays in a group while one of its managers is in it", async ({
 
     if (user === mother) {
       await expect(
-        grandmaPage.getByRole("heading", { name: "Emma" })
+        grandmaPage.getByRole("heading", { name: "Emma", exact: true })
       ).toBeVisible()
     }
   }
@@ -524,4 +524,25 @@ test("find who manages a wishlist by name on a small phone", async ({
     include: { managers: true },
   })
   expect(ids(wishlist.managers)).toEqual([family.at(-1)!.id])
+})
+
+test("an empty wishlist you manage asks for the first wish", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const manager = await createUser()
+  const wishlist = await createWishlist(owner, {
+    title: "Emma",
+    managers: [manager],
+  })
+  const page = await signIn(manager)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  await expect(page.getByText("Dit verlanglijstje is nog leeg")).toBeVisible()
+  await expect(
+    page.getByText(
+      "Voeg de eerste wens toe, dan zien de anderen wat Emma graag wil."
+    )
+  ).toBeVisible()
 })
