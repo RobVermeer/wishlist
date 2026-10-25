@@ -95,6 +95,7 @@ export default async function GroupPage({ params }: Props) {
       }),
     }))
   const groupInfo = { id: group.id, title: group.title }
+  const groupIsEmpty = group.wishlist.length === 0
   const isCreator = group.createdBy.id === session.user.id
   const lot = await getLotForUser(group.id)
   const draw = isCreator ? await getDrawForCreator(group.id) : null
@@ -150,31 +151,87 @@ export default async function GroupPage({ params }: Props) {
 
       {lot && <DrawLot groupId={group.id} lot={lot} />}
 
-      {ownInGroup.length === 0 && (
-        <section className="grid gap-3 rounded-md border p-4">
-          <EmptyState title={t("missing.title")}>
-            {t("missing.text", { group: group.title })}
-          </EmptyState>
-          <div className="flex flex-wrap gap-2">
-            {ownToChoose.length > 0 && (
-              <ChooseWishlistForGroup
-                group={groupInfo}
-                wishlists={wishlistNames(ownToChoose)}
-                trigger={chooseButton}
-              />
-            )}
-            <NewWishlist
-              groups={groupOptions}
-              managers={managerOptions}
-              defaultGroupIds={[group.id]}
-              trigger={
-                <Button variant="outline">
-                  <Plus size="16" className="mr-2" /> {t("newWishlist")}
-                </Button>
-              }
-            />
+      {groupIsEmpty ? (
+        <section
+          aria-labelledby="group-start"
+          className="grid gap-4 rounded-md border p-4"
+        >
+          <div className="grid gap-1">
+            <h3 id="group-start" className="text-xl text-secondary-foreground">
+              {t("empty.title")}
+            </h3>
+            <p className="text-muted-foreground">{t("empty.text")}</p>
           </div>
+          <ol className="grid gap-4">
+            <li className="grid gap-2">
+              <span className="flex items-center gap-3 font-medium">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  1
+                </span>
+                {t("empty.steps.wishlist")}
+              </span>
+              <div className="flex flex-wrap gap-2 pl-10">
+                {ownToChoose.length > 0 && (
+                  <ChooseWishlistForGroup
+                    group={groupInfo}
+                    wishlists={wishlistNames(ownToChoose)}
+                    trigger={chooseButton}
+                  />
+                )}
+                <NewWishlist
+                  groups={groupOptions}
+                  managers={managerOptions}
+                  defaultGroupIds={[group.id]}
+                  trigger={
+                    <Button
+                      variant={ownToChoose.length > 0 ? "outline" : "default"}
+                    >
+                      <Plus size="16" className="mr-2" /> {t("newWishlist")}
+                    </Button>
+                  }
+                />
+              </div>
+            </li>
+            <li className="grid gap-2">
+              <span className="flex items-center gap-3 font-medium">
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  2
+                </span>
+                {t("empty.steps.invite")}
+              </span>
+              <div className="pl-10">
+                <ShareButton title={group.title} variant="outline" />
+              </div>
+            </li>
+          </ol>
         </section>
+      ) : (
+        ownInGroup.length === 0 && (
+          <section className="grid gap-3 rounded-md border p-4">
+            <EmptyState title={t("missing.title")}>
+              {t("missing.text", { group: group.title })}
+            </EmptyState>
+            <div className="flex flex-wrap gap-2">
+              {ownToChoose.length > 0 && (
+                <ChooseWishlistForGroup
+                  group={groupInfo}
+                  wishlists={wishlistNames(ownToChoose)}
+                  trigger={chooseButton}
+                />
+              )}
+              <NewWishlist
+                groups={groupOptions}
+                managers={managerOptions}
+                defaultGroupIds={[group.id]}
+                trigger={
+                  <Button variant="outline">
+                    <Plus size="16" className="mr-2" /> {t("newWishlist")}
+                  </Button>
+                }
+              />
+            </div>
+          </section>
+        )
       )}
 
       {ownInGroup.length > 1 && (
@@ -198,10 +255,6 @@ export default async function GroupPage({ params }: Props) {
         group.wishlist.map(wishlist => (
           <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />
         ))
-      )}
-
-      {group.wishlist.length === 0 && (
-        <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
       {isCreator && (
@@ -245,7 +298,7 @@ export default async function GroupPage({ params }: Props) {
         groups={groupOptions}
         managers={managerOptions}
       />
-      <ShareButton title={group.title} />
+      {!groupIsEmpty && <ShareButton title={group.title} />}
     </List>
   )
 }

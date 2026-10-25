@@ -272,32 +272,43 @@ test("group page lists the wishlists of its members", async ({ signIn }) => {
   await expect(page.getByRole("link", { name: "Xander" })).toBeHidden()
 })
 
-test("group without wishlists shows an empty state", async ({ signIn }) => {
+test("an empty group starts with one block on what to do first", async ({
+  signIn,
+}) => {
   const user = await createUser()
   const group = await createGroup(user)
   const page = await signIn(user)
 
   await page.goto(`/group/${group.id}`)
 
+  const start = page.locator("main section").first()
+  await expect(start).toHaveAccessibleName(
+    "Er staan nog geen verlanglijstjes in deze groep"
+  )
+  await expect(start).toContainText(
+    "Begin met je eigen verlanglijstje en nodig daarna de anderen uit."
+  )
+  await expect(start.getByRole("listitem")).toHaveText([
+    /Zet je verlanglijstje in de groep/,
+    /Nodig de anderen uit/,
+  ])
   await expect(
-    page.getByText("Er staan nog geen verlanglijstjes in deze groep")
-  ).toBeVisible()
-  await expect(
-    page.getByText(
-      "Voeg je verlanglijstje toe en nodig de anderen uit met de knoppen hieronder."
-    )
-  ).toBeVisible()
-  await expect(
-    page.getByRole("heading", {
-      name: "Welk verlanglijstje is voor deze groep?",
-    })
+    start.getByRole("button", { name: "Nieuw verlanglijstje", exact: true })
   ).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Kies je verlanglijstje" })
   ).toHaveCount(0)
   await expect(
-    page.getByRole("button", { name: "Nieuw verlanglijstje", exact: true })
+    page.getByRole("button", { name: "Nodig iemand uit voor de groep" })
+  ).toHaveCount(1)
+  await expect(
+    start.getByRole("button", { name: "Nodig iemand uit voor de groep" })
   ).toBeVisible()
+  await expect(
+    page.getByRole("heading", {
+      name: "Welk verlanglijstje is voor deze groep?",
+    })
+  ).toHaveCount(0)
 })
 
 test("share button copies the group link", async ({ signIn }) => {
