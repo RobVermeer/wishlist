@@ -51,6 +51,11 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   ).toContainText("samen met de andere ouder")
   await expect(
     page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Stiekem afstrepen" }),
+    })
+  ).toContainText("De anderen zien het, degene die het wenst niet")
+  await expect(
+    page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Je cadeaus op een rij" }),
     })
   ).toContainText("Gekochte cadeaus")
