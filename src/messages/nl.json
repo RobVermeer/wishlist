@@ -117,7 +117,11 @@
   "Group": {
     "empty": {
       "title": "Er staan nog geen verlanglijstjes in deze groep",
-      "text": "Voeg je verlanglijstje toe en nodig de anderen uit met de knoppen hieronder."
+      "text": "Begin met je eigen verlanglijstje en nodig daarna de anderen uit.",
+      "steps": {
+        "wishlist": "Zet je verlanglijstje in de groep",
+        "invite": "Nodig de anderen uit"
+      }
     },
     "noFollow": {
       "title": "Je volgt deze groep nog niet",

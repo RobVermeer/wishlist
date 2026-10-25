@@ -7,14 +7,18 @@ import { useShareOrCopy } from "@/lib/useShareOrCopy"
 
 interface Props {
   title: string
+  variant?: "default" | "outline"
+  className?: string
 }
 
-export const ShareButton = ({ title }: Props) => {
+export const ShareButton = ({ title, variant, className }: Props) => {
   const t = useTranslations()
   const shareOrCopy = useShareOrCopy()
 
   return (
     <Button
+      variant={variant}
+      className={className}
       onClick={() =>
         shareOrCopy({
           title,
