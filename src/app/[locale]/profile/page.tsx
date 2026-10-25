@@ -1,3 +1,4 @@
+import { ContactForm } from "@/components/ContactForm"
 import { EditUser } from "@/components/EditUser"
 import { InstallApp } from "@/components/InstallApp"
 import { LogoutButton } from "@/components/LogoutButton"
@@ -50,6 +51,7 @@ export default async function ProfilePage() {
             </Link>
           </Button>
         )}
+        <ContactForm />
         <LogoutButton />
       </List>
     </>
