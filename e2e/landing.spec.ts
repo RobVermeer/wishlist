@@ -35,6 +35,7 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   await expect(example).toContainText("Sanne ziet dat niet")
 
   for (const feature of [
+    "Op je telefoon",
     "Stiekem afstrepen",
     "Je gekochte cadeaus op een rij",
     "Overzichtelijk",
@@ -64,7 +65,6 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Deel met wie je wilt" })
   ).toHaveCount(0)
-
   await expect(
     page.getByRole("heading", { name: "Voor elke gelegenheid" })
   ).toHaveCount(0)

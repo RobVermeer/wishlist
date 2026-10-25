@@ -466,6 +466,10 @@
       "buy": "Ik koop dit"
     },
     "features": {
+      "phone": {
+        "title": "Op je telefoon",
+        "text": "Zet Wishlist op je beginscherm, dan open je het met één tik, net als een app."
+      },
       "title": "Wat kun je allemaal?",
       "secret": {
         "title": "Stiekem afstrepen",
