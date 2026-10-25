@@ -175,6 +175,7 @@ type SentEmail = {
   to: string[]
   subject: string
   html: string
+  replyTo: string[]
 }
 
 export async function emailsTo(address: string): Promise<SentEmail[]> {

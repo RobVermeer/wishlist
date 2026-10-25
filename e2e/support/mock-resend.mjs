@@ -26,6 +26,7 @@ createServer(async (request, response) => {
       to: [payload.to].flat(),
       subject: payload.subject,
       html: payload.html,
+      replyTo: [payload.reply_to ?? []].flat(),
     })
 
     return json(response, 200, { id })
