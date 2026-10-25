@@ -12,6 +12,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
     "Je verlanglijstje",
     "Delen en groepen",
+    "Lootjes trekken",
     "Cadeaus kopen",
     "Je account",
     "Staat je vraag er niet bij?",
@@ -50,6 +51,19 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Wat gebeurt er als ik uit een groep stap?",
     "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",
     "Hoe stop ik met het volgen van een verlanglijstje?",
+  ])
+  await expect(
+    page
+      .getByRole("heading", { name: "Lootjes trekken" })
+      .locator("..")
+      .locator("summary")
+  ).toHaveText([
+    "Hoe trek ik lootjes?",
+    "Waar zie ik wie ik heb getrokken?",
+    "Ziet iemand wie wie heeft getrokken?",
+    "Kan iemand meedoen die nog niet in de groep zit?",
+    "Kan ik de lootjes opnieuw trekken?",
+    "Kan ik in meerdere groepen lootjes trekken?",
   ])
   await expect(
     page

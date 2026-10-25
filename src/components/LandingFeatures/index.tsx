@@ -1,5 +1,6 @@
 import {
   Baby,
+  Dices,
   Smartphone,
   Gift,
   InfinityIcon,
@@ -12,6 +13,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { cn } from "@/lib/utils"
 
 const features = [
+  { key: "draw", Icon: Dices, color: "text-amber-500" },
   { key: "phone", Icon: Smartphone, color: "text-teal-500" },
   { key: "secret", Icon: SquareCheckBig, color: "text-primary" },
   { key: "bought", Icon: Gift, color: "text-pink-500" },
