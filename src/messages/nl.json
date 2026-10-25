@@ -328,7 +328,9 @@
     "draw": {
       "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting",
       "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting",
-      "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig"
+      "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig",
+      "participantNotFound": "Deelnemer niet gevonden",
+      "alreadySent": "Je kunt de e-mail één keer per dag opnieuw sturen"
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
@@ -756,7 +758,10 @@
     "manage": {
       "title": "Lootjes trekken",
       "text": "Trek lootjes voor deze groep: iedereen krijgt één persoon om een cadeau voor te kopen. Niemand ziet wie wie heeft getrokken, ook jij niet.",
-      "button": "Lootjes trekken"
+      "button": "Lootjes trekken",
+      "drawnTitle": "De lootjes zijn getrokken",
+      "drawnText": "Iedereen heeft een e-mail gekregen en ziet het eigen lootje in de groep. Niemand ziet wie wie heeft getrokken, ook jij niet.",
+      "redraw": "Opnieuw lootjes trekken"
     },
     "form": {
       "title": "Lootjes trekken",
@@ -774,10 +779,22 @@
       },
       "budget": "Budget in euro <small>(optioneel)</small>",
       "date": "Datum <small>(optioneel)</small>",
-      "submit": "Trek lootjes"
+      "submit": "Trek lootjes",
+      "redrawTitle": "Opnieuw lootjes trekken",
+      "redrawText": "De vorige loting telt dan niet meer: iedereen krijgt een nieuw lootje, per e-mail en in de groep.",
+      "notInGroup": "nog niet in de groep"
     },
     "toast": "De lootjes zijn getrokken",
-    "anonymous": "Iemand zonder naam"
+    "anonymous": "Iemand zonder naam",
+    "status": {
+      "title": "Wie doen er mee?",
+      "member": "In de groep",
+      "invited": "Nog niet aangemeld",
+      "left": "Niet meer in de groep",
+      "resend": "Stuur opnieuw",
+      "resent": "De e-mail is opnieuw verstuurd",
+      "leftWarning": "{names} {count, plural, one {zit} other {zitten}} niet meer in de groep. Trek de lootjes opnieuw als {count, plural, one {die} other {zij}} niet meer meedoen."
+    }
   },
   "EmailDrawLots": {
     "subject": {

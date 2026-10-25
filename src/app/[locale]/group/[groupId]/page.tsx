@@ -25,6 +25,8 @@ import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { getLotForUser } from "@/lib/draws/getLotForUser"
+import { getDrawForCreator } from "@/lib/draws/getDrawForCreator"
+import { DrawStatus } from "@/components/DrawStatus"
 import { DrawLot } from "@/components/DrawLot"
 import { DrawLots } from "@/components/DrawLots"
 
@@ -95,6 +97,7 @@ export default async function GroupPage({ params }: Props) {
   const groupInfo = { id: group.id, title: group.title }
   const isCreator = group.createdBy.id === session.user.id
   const lot = await getLotForUser(group.id)
+  const draw = isCreator ? await getDrawForCreator(group.id) : null
   const tDraw = await getTranslations("Draw")
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
@@ -201,15 +204,22 @@ export default async function GroupPage({ params }: Props) {
 
       {isCreator && (
         <section className="grid gap-3 rounded-md border p-4">
-          <EmptyState title={tDraw("manage.title")}>
-            {tDraw("manage.text")}
+          <EmptyState
+            title={draw ? tDraw("manage.drawnTitle") : tDraw("manage.title")}
+          >
+            {draw ? tDraw("manage.drawnText") : tDraw("manage.text")}
           </EmptyState>
+          {draw && <DrawStatus participants={draw} />}
           <DrawLots
             groupId={group.id}
             members={group.members.map(member => ({
               id: member.id,
               name: getFirstName(member) || tDraw("anonymous"),
             }))}
+            previous={(draw ?? [])
+              .filter(({ status }) => status === "invited")
+              .map(({ id, name }) => ({ id, name }))}
+            redraw={draw !== null}
           />
         </section>
       )}

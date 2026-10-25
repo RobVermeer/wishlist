@@ -22,9 +22,16 @@ import { createDraw } from "@/lib/draws/createDraw"
 interface Props {
   groupId: string
   members: { id: string; name: string }[]
+  previous?: { id: string; name: string }[]
+  redraw?: boolean
 }
 
-export const DrawLots = ({ groupId, members }: Props) => {
+export const DrawLots = ({
+  groupId,
+  members,
+  previous = [],
+  redraw = false,
+}: Props) => {
   const t = useTranslations("Draw.form")
   const tDraw = useTranslations("Draw")
   const { toast } = useToast()
@@ -64,14 +71,17 @@ export const DrawLots = ({ groupId, members }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Dices size="16" className="mr-2" /> {tDraw("manage.button")}
+        <Button variant={redraw ? "outline" : "default"}>
+          <Dices size="16" className="mr-2" />{" "}
+          {redraw ? tDraw("manage.redraw") : tDraw("manage.button")}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t("title")}</DialogTitle>
-          <DialogDescription>{t("text")}</DialogDescription>
+          <DialogTitle>{redraw ? t("redrawTitle") : t("title")}</DialogTitle>
+          <DialogDescription>
+            {redraw ? t("redrawText") : t("text")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} id="draw" className="grid gap-4 py-4">
           <fieldset className="grid gap-2">
@@ -88,6 +98,22 @@ export const DrawLots = ({ groupId, members }: Props) => {
                 />
                 <Label htmlFor={`draw-${member.id}`} className="font-normal">
                   {member.name}
+                </Label>
+              </div>
+            ))}
+            {previous.map(person => (
+              <div key={person.id} className="flex items-center gap-2">
+                <Checkbox
+                  id={`draw-${person.id}`}
+                  name="previous"
+                  value={person.id}
+                  defaultChecked
+                />
+                <Label htmlFor={`draw-${person.id}`} className="font-normal">
+                  {person.name}{" "}
+                  <small className="text-muted-foreground">
+                    {t("notInGroup")}
+                  </small>
                 </Label>
               </div>
             ))}
