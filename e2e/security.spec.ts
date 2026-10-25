@@ -9,6 +9,7 @@ import {
   createWishlist,
   createCategory,
   createItem,
+  createDraw,
   emailsTo,
   prisma,
   toasts,
@@ -861,4 +862,24 @@ test("only the creator of a group can draw lots", async ({ signIn }) => {
   await expect(toasts(page)).toContainText("Groep niet gevonden")
   expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
   expect(await emailsTo(other.email!)).toHaveLength(0)
+})
+
+test("members don't see the e-mail addresses of people added to a draw", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  await createDraw(group, [
+    owner,
+    bert,
+    { name: "Opa", email: "opa-geheim@e2e.test" },
+  ])
+
+  for (const user of [owner, bert]) {
+    const page = await signIn(user)
+    await page.goto(`/group/${group.id}`)
+    await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+    expect(await page.content()).not.toContain("opa-geheim@e2e.test")
+  }
 })

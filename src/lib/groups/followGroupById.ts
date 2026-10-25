@@ -39,6 +39,19 @@ export const followGroupById = async (id: string) => {
       select: groupProperties,
     })
 
+    const email = session.user.email?.toLowerCase()
+
+    if (email) {
+      await prisma.drawParticipant.updateMany({
+        where: {
+          userId: null,
+          email,
+          draw: { groupId: id, cancelledAt: null },
+        },
+        data: { userId },
+      })
+    }
+
     revalidatePath("/")
 
     return {

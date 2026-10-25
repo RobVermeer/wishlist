@@ -37,19 +37,51 @@ export const createDraw = async (groupId: string, data: FormData) => {
       throw new Error(t("group.notFound"))
     }
 
-    const { members, budget, date } = drawSchema.parse({
+    const extraNames = data.getAll("extraName").map(name => name.toString())
+    const { members, extra, budget, date } = drawSchema.parse({
       members: data.getAll("members").map(member => member.toString()),
+      extra: data.getAll("extraEmail").map((email, index) => ({
+        name: extraNames[index] ?? "",
+        email: email.toString().trim(),
+      })),
       budget: data.get("budget")?.toString() || undefined,
       date: data.get("date")?.toString() || undefined,
     })
 
-    const participants = group.members
-      .filter(member => members.includes(member.id) && member.email)
-      .map(member => ({
-        name: getFirstName(member),
-        email: member.email!.toLowerCase(),
-        userId: member.id,
-      }))
+    const extraMemberIds = group.members
+      .filter(member => extra.some(({ email }) => email === member.email))
+      .map(({ id }) => id)
+    const participants: {
+      name: string
+      email: string
+      userId: string | null
+    }[] = [
+      ...group.members
+        .filter(
+          member =>
+            (members.includes(member.id) ||
+              extraMemberIds.includes(member.id)) &&
+            member.email
+        )
+        .map(member => ({
+          name: getFirstName(member),
+          email: member.email!.toLowerCase(),
+          userId: member.id,
+        })),
+      ...extra
+        .filter(({ email }) =>
+          group.members.every(member => member.email !== email)
+        )
+        .map(({ name, email }) => ({ name, email, userId: null })),
+    ]
+
+    if (
+      new Set(participants.map(({ email }) => email)).size !==
+        participants.length ||
+      new Set(extra.map(({ email }) => email)).size !== extra.length
+    ) {
+      throw new Error(t("draw.duplicateEmail"))
+    }
 
     if (participants.length < 2) {
       throw new Error(t("draw.tooFewParticipants"))
@@ -111,7 +143,7 @@ export const createDraw = async (groupId: string, data: FormData) => {
           budget: budget ?? null,
           date: date ? new Date(date) : null,
           redraw,
-          member: true,
+          member: participant.userId !== null,
         })
       )
     )

@@ -327,7 +327,8 @@
     },
     "draw": {
       "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting",
-      "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting"
+      "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting",
+      "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig"
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
@@ -761,6 +762,16 @@
       "title": "Lootjes trekken",
       "text": "Iedereen krijgt een e-mail met wie diegene heeft getrokken, en ziet dat ook in de groep.",
       "participants": "Wie doen er mee?",
+      "extra": {
+        "title": "Iemand anders erbij?",
+        "text": "Doet er iemand mee die nog niet in de groep zit? Die krijgt het lootje per e-mail, met een uitnodiging voor de groep.",
+        "name": "Naam",
+        "namePlaceholder": "Opa",
+        "email": "E-mailadres",
+        "emailPlaceholder": "opa@voorbeeld.nl",
+        "add": "Voeg toe",
+        "remove": "Haal {name} weg"
+      },
       "budget": "Budget in euro <small>(optioneel)</small>",
       "date": "Datum <small>(optioneel)</small>",
       "submit": "Trek lootjes"
