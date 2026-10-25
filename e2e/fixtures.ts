@@ -170,6 +170,54 @@ export async function createItem(
   })
 }
 
+// Each participant draws the next one, the last one draws the first.
+export async function createDraw(
+  group: { id: string },
+  participants: (User | { name: string; email: string })[],
+  {
+    budget = null,
+    date = null,
+    cancelled = false,
+  }: { budget?: number | null; date?: Date | null; cancelled?: boolean } = {}
+) {
+  const draw = await prisma.draw.create({
+    data: {
+      groupId: group.id,
+      createdAt: new Date(),
+      cancelledAt: cancelled ? new Date() : null,
+      budget,
+      date,
+    },
+  })
+  const rows = []
+
+  for (const participant of participants) {
+    const isUser = "id" in participant
+    rows.push(
+      await prisma.drawParticipant.create({
+        data: {
+          drawId: draw.id,
+          name: isUser
+            ? (participant.firstName ?? participant.name ?? "")
+            : participant.name,
+          email: participant.email!.toLowerCase(),
+          userId: isUser ? participant.id : null,
+          lastSentAt: new Date(),
+        },
+      })
+    )
+  }
+
+  for (const [index, row] of rows.entries()) {
+    await prisma.drawParticipant.update({
+      where: { id: row.id },
+      data: { receiverId: rows[(index + 1) % rows.length].id },
+    })
+  }
+
+  return { draw, participants: rows }
+}
+
 type SentEmail = {
   id: string
   to: string[]

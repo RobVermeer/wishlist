@@ -10,7 +10,8 @@ import {
   Section,
   Text,
 } from "@react-email/components"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
+import type { ReactNode } from "react"
 import type { contactTopics } from "@/lib/schema"
 
 const baseUrl = process.env.BASE_URL!
@@ -222,6 +223,94 @@ export const ContactEmail = async ({
             </Text>
             <Text style={text}>{t("reply", { name: from.name })}</Text>
           </Section>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
+
+interface DrawLotsEmailProps {
+  name: string
+  receiver: string
+  group: { id: string; title: string }
+  creator: string
+  budget: number | null
+  date: Date | null
+  redraw: boolean
+  member: boolean
+}
+
+export const DrawLotsEmail = async ({
+  name,
+  receiver,
+  group,
+  creator,
+  budget,
+  date,
+  redraw,
+  member,
+}: DrawLotsEmailProps) => {
+  const t = await getTranslations("EmailDrawLots")
+  const format = await getFormatter()
+  const strong = (chunks: ReactNode) => <strong>{chunks}</strong>
+
+  return (
+    <Html>
+      <Head />
+      <Preview>{t("preview", { receiver })}</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Img
+            src={`${baseUrl}/gift.png`}
+            width="32"
+            height="32"
+            alt="Wishlist"
+          />
+
+          <Text style={title}>{t.rich("title", { strong, name })}</Text>
+
+          <Section style={section}>
+            <Text style={text}>
+              {t.rich(redraw ? "redraw" : "draw", {
+                strong,
+                creator,
+                group: group.title,
+              })}
+            </Text>
+            <Text style={text}>{t.rich("lot", { strong, receiver })}</Text>
+            {budget !== null && (
+              <Text style={text}>
+                {t("budget", {
+                  budget: format.number(budget, {
+                    style: "currency",
+                    currency: "EUR",
+                    maximumFractionDigits: 0,
+                  }),
+                })}
+              </Text>
+            )}
+            {date && (
+              <Text style={text}>
+                {t("date", {
+                  date: format.dateTime(date, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    timeZone: "UTC",
+                  }),
+                })}
+              </Text>
+            )}
+            <Text style={text}>
+              {t(member ? "member" : "invite", { receiver })}
+            </Text>
+
+            <Button style={button} href={`${baseUrl}/group/${group.id}`}>
+              {t(member ? "button" : "join", { group: group.title })}
+            </Button>
+          </Section>
+
+          <Text style={text}>{t.rich("goodbye", { strong, creator })}</Text>
         </Container>
       </Body>
     </Html>

@@ -1,7 +1,12 @@
 import "server-only"
 
 import { getTranslations } from "next-intl/server"
-import { ContactEmail, DrawUserEmail, RemindUserEmail } from "./templates"
+import {
+  ContactEmail,
+  DrawLotsEmail,
+  DrawUserEmail,
+  RemindUserEmail,
+} from "./templates"
 import type { contactTopics } from "@/lib/schema"
 import { resend } from "@/lib/resend"
 import { trackIssue } from "@/lib/trackIssue"
@@ -112,5 +117,41 @@ export const sendContactEmail = async ({
     trackIssue("Email contact message error", "error", { error, from, topic })
     const tErrors = await getTranslations("Errors")
     throw new Error(tErrors("contact.failed"))
+  }
+}
+
+interface SendDrawLotsEmail {
+  to: string
+  name: string
+  receiver: string
+  group: { id: string; title: string }
+  creator: string
+  budget: number | null
+  date: Date | null
+  redraw: boolean
+  member: boolean
+}
+
+export const sendDrawLotsEmail = async ({
+  to,
+  ...props
+}: SendDrawLotsEmail) => {
+  try {
+    const t = await getTranslations("EmailDrawLots")
+    const subject = props.redraw ? "subject.redraw" : "subject.draw"
+
+    const { error } = await resend.emails.send({
+      from: "Wishlist <no-reply@ru-coding.nl>",
+      to: [to],
+      subject: t(subject, { name: props.name, group: props.group.title }),
+      react: await DrawLotsEmail(props),
+    })
+
+    if (error) throw error
+  } catch (error) {
+    trackIssue("Email draw lots error", "error", {
+      error,
+      groupId: props.group.id,
+    })
   }
 }
