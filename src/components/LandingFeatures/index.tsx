@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ListTitle } from "@/components/ListTitle"
+import { cn } from "@/lib/utils"
 
 const features = [
   { key: "groups", Icon: Group, color: "text-pink-500" },
@@ -27,9 +28,17 @@ export const LandingFeatures = () => {
 
       <ul className="grid gap-2 sm:grid-cols-2">
         {features.map(({ key, Icon, color }) => (
-          <li key={key} className="grid gap-1 rounded-md bg-secondary p-4">
-            <h3 className="flex items-center gap-2 font-semibold">
-              <Icon aria-hidden className={color} size="20" strokeWidth="2.5" />
+          <li
+            key={key}
+            className="row-span-2 grid grid-rows-subgrid gap-1 rounded-md bg-secondary p-4"
+          >
+            <h3 className="flex items-start gap-2 font-semibold">
+              <Icon
+                aria-hidden
+                className={cn("mt-0.5 shrink-0", color)}
+                size="20"
+                strokeWidth="2.5"
+              />
               {t(`${key}.title`)}
             </h3>
             <p className="text-sm text-muted-foreground">{t(`${key}.text`)}</p>
