@@ -411,6 +411,35 @@
     "description": "Deel je verlanglijstjes met familie en vrienden, en streep stiekem af wat je gaat kopen."
   },
   "Landing": {
+    "groups": {
+      "title": "Eén verlanglijstje voor al je feestjes",
+      "label": "Het verlanglijstje van Sanne voor elk feestje",
+      "owner": "Sanne",
+      "shared": "Gedeeld met een link voor de verjaardag",
+      "sinterklaas": {
+        "title": "Sinterklaas",
+        "members": ["Sanne", "Opa", "Oma"]
+      },
+      "christmas": {
+        "title": "Kerst",
+        "members": ["Sanne", "Lisa", "Mo"]
+      },
+      "other": "En elk ander feestje",
+      "points": {
+        "multiple": {
+          "title": "Eén lijstje om bij te houden",
+          "text": "Deel je verlanglijstje met een link en zet hetzelfde lijstje in een groep voor elk feestje dat je viert. Je hoeft dus maar één verlanglijstje bij te houden."
+        },
+        "oneLink": {
+          "title": "Eén link voor de hele groep",
+          "text": "Geen losse link per persoon: met de link van de groep zie je de verlanglijstjes van iedereen die meedoet."
+        },
+        "noDouble": {
+          "title": "Niets dubbel",
+          "text": "Wat voor het ene feestje al gekocht is, staat bij het volgende ook afgestreept."
+        }
+      }
+    },
     "example": {
       "title": "Zo werkt het",
       "owner": "Sanne",

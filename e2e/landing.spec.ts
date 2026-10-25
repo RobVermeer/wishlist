@@ -11,7 +11,7 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
     "Deel je verlanglijstjes met familie en vrienden, en streep stiekem af wat je gaat kopen."
   )
 
-  const example = page.getByRole("figure")
+  const example = page.getByRole("figure", { name: /Sanne ziet dat niet/ })
   await expect(example.getByRole("listitem")).toHaveText([
     /^Fiets\s*Ik koop dit$/,
     /^Boeken\s*Onbeperkt$/,
@@ -79,4 +79,38 @@ test("the call to action at the bottom goes back to logging in", async ({
 
   await expect(page).toHaveURL("/login#inloggen")
   await expect(login).toBeInViewport()
+})
+
+test("visitors see that one wishlist works for all their groups", async ({
+  page,
+}) => {
+  await page.goto("/login")
+
+  const section = page
+    .getByRole("heading", { name: "Eén verlanglijstje voor al je feestjes" })
+    .locator("..")
+  const figure = section.getByRole("figure", {
+    name: "Het verlanglijstje van Sanne voor elk feestje",
+  })
+  await expect(
+    figure.getByRole("listitem").filter({ has: page.getByRole("heading") })
+  ).toHaveText([
+    /^Sanne\s*Gedeeld met een link voor de verjaardag$/,
+    /^Sinterklaas\s*Sanne\s*Opa\s*Oma$/,
+    /^Kerst\s*Sanne\s*Lisa\s*Mo$/,
+    /^En elk ander feestje$/,
+  ])
+  await expect(figure).toContainText("met een link voor de verjaardag")
+
+  for (const [title, text] of [
+    ["Eén lijstje om bij te houden", "Deel je verlanglijstje met een link"],
+    ["Eén link voor de hele groep", "de verlanglijstjes van iedereen"],
+    ["Niets dubbel", "staat bij het volgende ook afgestreept"],
+  ]) {
+    await expect(
+      section
+        .getByRole("listitem")
+        .filter({ has: page.getByRole("heading", { name: title }) })
+    ).toContainText(text)
+  }
 })
