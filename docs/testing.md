@@ -1,10 +1,11 @@
 # Testing
 
-Every feature and every fix is covered by a Playwright e2e test. The tests run against a production build with its own database and a fake mail server, see the [README](../README.md#testing) for how they start.
+Every new feature, every change to an existing feature and every fix is covered by a Playwright e2e test, in the same pull request. The tests run against a production build with its own database and a fake mail server, see the [README](../README.md#testing) for how they start.
 
 ## Rules
 
 - **New feature:** add tests to the `e2e/<area>.spec.ts` it belongs to, or a new file for a new area. Cover the main flow, validation errors and what other users (group members, outsiders) see.
+- **Changed feature:** update the tests for the new behaviour, or add them when they're missing. Write or change the test first and see it fail on the old behaviour, then change the feature.
 - **Bug fix:** write the test first and see it fail, then fix the bug.
 - **Authorization:** every check on who may see or change something gets a test showing that someone else can't, see `e2e/security.spec.ts`. When the UI can't trigger the request, change the form before submitting, like the group membership test does.
 - **Behaviour, not implementation:** use the page like a user would. Find elements by role and label with the Dutch text users see, check the result on the page, and use the database only to set things up or to verify what the page can't show.
