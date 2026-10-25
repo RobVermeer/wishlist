@@ -224,7 +224,9 @@ export default async function GroupPage({ params }: Props) {
                 managers={managerOptions}
                 defaultGroupIds={[group.id]}
                 trigger={
-                  <Button variant="outline">
+                  <Button
+                    variant={ownToChoose.length > 0 ? "outline" : "default"}
+                  >
                     <Plus size="16" className="mr-2" /> {t("newWishlist")}
                   </Button>
                 }
@@ -309,7 +311,12 @@ export default async function GroupPage({ params }: Props) {
         groups={groupOptions}
         managers={managerOptions}
       />
-      {!groupIsEmpty && <ShareButton title={group.title} />}
+      {!groupIsEmpty && (
+        <ShareButton
+          title={group.title}
+          variant={ownInGroup.length === 1 ? "default" : "outline"}
+        />
+      )}
     </List>
   )
 }
