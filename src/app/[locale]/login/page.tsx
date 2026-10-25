@@ -6,6 +6,7 @@ import { InstallApp } from "@/components/InstallApp"
 import { LoginForm } from "@/components/LoginForm"
 import { LandingExample } from "@/components/LandingExample"
 import { LandingFeatures } from "@/components/LandingFeatures"
+import { LandingGroups } from "@/components/LandingGroups"
 import { LandingOccasions } from "@/components/LandingOccasions"
 import { LandingSteps } from "@/components/LandingSteps"
 import { Button } from "@/components/ui/button"
@@ -34,6 +35,7 @@ export default async function Login({ searchParams }: Props) {
 
       <InstallApp hideOnDesktop />
 
+      <LandingGroups />
       <LandingExample />
       <LandingFeatures />
       <LandingOccasions />
