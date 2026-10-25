@@ -579,6 +579,10 @@
           {
             "question": "Kan ik een verlanglijstje samen met iemand beheren?",
             "answer": "Ja, een verlanglijstje voor iemand anders, zoals je kind, kun je samen beheren met iemand met wie je in een groep zit. Kies diegene bij ‘Wie beheert dit verlanglijstje nog meer?’. Jullie kunnen dan allebei wensen toevoegen, wijzigen en verplaatsen, en geen van jullie ziet wat er wordt gekocht. Alleen wie het verlanglijstje heeft gemaakt, kan het verwijderen of kiezen wie het mee beheert. Wil je niet meer meedoen, kies dan ‘Stop met beheren’."
+          },
+          {
+            "question": "Hoe verwijder ik mijn verlanglijstje?",
+            "answer": "Open je verlanglijstje, kies ‘Wijzig verlanglijstje’ en dan ‘Verwijder’. Het verlanglijstje wordt dan met alle wensen verwijderd. Dat kan alleen wie het verlanglijstje heeft gemaakt, niet wie het mee beheert."
           }
         ]
       },
@@ -592,6 +596,10 @@
           {
             "question": "Wat is het verschil tussen een groep en een link?",
             "answer": "Met een link deel je één verlanglijstje. In een groep zien alle leden elkaars verlanglijstjes, met één link voor de hele groep."
+          },
+          {
+            "question": "Kan iedereen mijn verlanglijstje zien?",
+            "answer": "Nee. Ook met de link moet iemand eerst inloggen om je verlanglijstje te zien. Je e-mailadres zien de anderen nooit."
           },
           {
             "question": "Hoe maak ik een groep?",
@@ -620,6 +628,10 @@
           {
             "question": "Ik heb mijn link met de verkeerde persoon gedeeld. Wat nu?",
             "answer": "Maak een nieuwe link via ‘Deel dit verlanglijstje’. De oude link werkt dan niet meer. Wie je verlanglijstje al volgt, houdt toegang."
+          },
+          {
+            "question": "Hoe stop ik met het volgen van een verlanglijstje?",
+            "answer": "Open het verlanglijstje en kies ‘Stop met volgen’. Met de link kun je het later weer volgen."
           }
         ]
       },
@@ -647,6 +659,14 @@
       {
         "title": "Je account",
         "questions": [
+          {
+            "question": "Kost Wishlist iets?",
+            "answer": "Nee, Wishlist is gratis."
+          },
+          {
+            "question": "Waarom heb ik geen wachtwoord?",
+            "answer": "Je logt in met Google of met een link die we naar je e-mailadres sturen. Zo hoef je geen wachtwoord te onthouden."
+          },
           {
             "question": "Kan ik Wishlist op mijn telefoon zetten?",
             "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt."
