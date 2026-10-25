@@ -326,7 +326,8 @@
       "notFound": "Categorie niet gevonden"
     },
     "draw": {
-      "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting"
+      "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting",
+      "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting"
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
@@ -741,5 +742,48 @@
     },
     "from": "Van {name} ({email}), gebruiker {id}.",
     "reply": "Beantwoord deze e-mail om {name} te antwoorden."
+  },
+  "Draw": {
+    "lot": {
+      "title": "Jouw lootje",
+      "drawn": "Je hebt <strong>{name}</strong> getrokken",
+      "budget": "Budget: {budget}",
+      "date": "Datum: {date}",
+      "wishlist": "Bekijk het verlanglijstje van {name}",
+      "noWishlist": "{name} heeft nog geen verlanglijstje in deze groep."
+    },
+    "manage": {
+      "title": "Lootjes trekken",
+      "text": "Trek lootjes voor deze groep: iedereen krijgt één persoon om een cadeau voor te kopen. Niemand ziet wie wie heeft getrokken, ook jij niet.",
+      "button": "Lootjes trekken"
+    },
+    "form": {
+      "title": "Lootjes trekken",
+      "text": "Iedereen krijgt een e-mail met wie diegene heeft getrokken, en ziet dat ook in de groep.",
+      "participants": "Wie doen er mee?",
+      "budget": "Budget in euro <small>(optioneel)</small>",
+      "date": "Datum <small>(optioneel)</small>",
+      "submit": "Trek lootjes"
+    },
+    "toast": "De lootjes zijn getrokken",
+    "anonymous": "Iemand zonder naam"
+  },
+  "EmailDrawLots": {
+    "subject": {
+      "draw": "{name}, je hebt een lootje getrokken voor {group}",
+      "redraw": "{name}, de lootjes voor {group} zijn opnieuw getrokken"
+    },
+    "preview": "Je hebt {receiver} getrokken",
+    "title": "<strong>{name}</strong>, je hebt een lootje getrokken!",
+    "draw": "{creator} heeft de lootjes getrokken voor <strong>{group}</strong>.",
+    "redraw": "{creator} heeft de lootjes opnieuw getrokken voor <strong>{group}</strong>. Je vorige lootje telt niet meer.",
+    "lot": "Je hebt <strong>{receiver}</strong> getrokken.",
+    "budget": "Budget: {budget}",
+    "date": "Datum: {date}",
+    "member": "In de groep zie je je lootje terug en vind je het verlanglijstje van {receiver}.",
+    "invite": "Doe mee met de groep, dan zie je het verlanglijstje van {receiver} en kun je je eigen verlanglijstje maken.",
+    "button": "Ga naar {group}",
+    "join": "Doe mee met {group}",
+    "goodbye": "Groetjes, <strong>{creator}</strong>"
   }
 }

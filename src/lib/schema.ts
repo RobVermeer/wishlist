@@ -85,3 +85,14 @@ export const contactSchema = z
       })
     }
   })
+
+export const drawSchema = z.object({
+  members: z.array(z.string()),
+  budget: z.coerce
+    .number({ error: "Vul het budget in hele euro's in" })
+    .int({ error: "Vul het budget in hele euro's in" })
+    .min(1, { error: "Het budget moet minimaal 1 euro zijn" })
+    .max(10000, { error: "Het budget mag maximaal 10.000 euro zijn" })
+    .optional(),
+  date: z.iso.date({ error: "Kies een geldige datum" }).optional(),
+})

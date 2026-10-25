@@ -24,6 +24,9 @@ import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { getFirstName } from "@/lib/users/getFirstName"
+import { getLotForUser } from "@/lib/draws/getLotForUser"
+import { DrawLot } from "@/components/DrawLot"
+import { DrawLots } from "@/components/DrawLots"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { groupId } = await params
@@ -90,6 +93,9 @@ export default async function GroupPage({ params }: Props) {
       }),
     }))
   const groupInfo = { id: group.id, title: group.title }
+  const isCreator = group.createdBy.id === session.user.id
+  const lot = await getLotForUser(group.id)
+  const tDraw = await getTranslations("Draw")
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
     group.wishlist.length === 1 && !onlyWishlist.isOwnList
@@ -110,7 +116,7 @@ export default async function GroupPage({ params }: Props) {
       >
         <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10" />
         <div className="relative flex justify-end">
-          {group.createdBy.id === session.user.id ? (
+          {isCreator ? (
             <EditGroup
               group={{ ...groupInfo, theme: group.theme }}
               members={group.members
@@ -138,6 +144,8 @@ export default async function GroupPage({ params }: Props) {
           </p>
         </div>
       </div>
+
+      {lot && <DrawLot groupId={group.id} lot={lot} />}
 
       {ownInGroup.length === 0 && (
         <section className="grid gap-3 rounded-md border p-4">
@@ -190,6 +198,21 @@ export default async function GroupPage({ params }: Props) {
       )}
 
       {group.wishlist.length === 0 && <EmptyState title={t("empty.title")} />}
+
+      {isCreator && (
+        <section className="grid gap-3 rounded-md border p-4">
+          <EmptyState title={tDraw("manage.title")}>
+            {tDraw("manage.text")}
+          </EmptyState>
+          <DrawLots
+            groupId={group.id}
+            members={group.members.map(member => ({
+              id: member.id,
+              name: getFirstName(member) || tDraw("anonymous"),
+            }))}
+          />
+        </section>
+      )}
 
       <Separator className="my-3" />
 

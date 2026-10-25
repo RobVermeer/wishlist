@@ -9,6 +9,7 @@ import {
   createWishlist,
   createCategory,
   createItem,
+  emailsTo,
   prisma,
   toasts,
 } from "./fixtures"
@@ -839,4 +840,25 @@ test("the creator of a group can't remove themself from it", async ({
     include: { members: true },
   })
   expect(untouched.members).toHaveLength(2)
+})
+
+test("only the creator of a group can draw lots", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const other = await createUser({ firstName: "Pia" })
+  const group = await createGroup(owner, { members: [member, other] })
+  const ownGroup = await createGroup(member, { members: [other] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  await page
+    .getByRole("dialog", { name: "Lootjes trekken" })
+    .getByRole("button", { name: "Trek lootjes" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+  expect(await emailsTo(other.email!)).toHaveLength(0)
 })
