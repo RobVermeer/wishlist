@@ -1060,6 +1060,26 @@ async function shoppersSetup() {
   return { owner, member, group, wishlist, own }
 }
 
+test("only the owner and managers can change a wish", async ({ signIn }) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const item = await createItem(wishlist, { title: "Fiets" })
+  const ownItem = await createItem(own, { title: "Boek" })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, item.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .title
+  ).toBe("Fiets")
+})
+
 test("only the owner and managers can remove a wish", async ({ signIn }) => {
   const { member, wishlist, own } = await shoppersSetup()
   const item = await createItem(wishlist, { title: "Fiets" })
@@ -1083,4 +1103,100 @@ test("only the owner and managers can remove a wish", async ({ signIn }) => {
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .removed
   ).toBe(false)
+})
+
+test("only the owner and managers can change a wishlist", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  await dialog.getByLabel("Beschrijving").fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .description
+  ).toBe("Van Olga")
+})
+
+test("only the owner and managers can reorder categories", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  for (const [index, title] of ["Boeken", "Kleding"].entries()) {
+    const category = await createCategory(wishlist, title, index)
+    await createItem(wishlist, { category })
+    const ownCategory = await createCategory(own, title, index)
+    await createItem(own, { category: ownCategory })
+  }
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  const handle = page.getByRole("button", {
+    name: "Verplaats categorie Boeken",
+  })
+  const announcement = page
+    .locator('[role="status"][id^="DndLiveRegion"]')
+    .filter({ hasText: /./ })
+  await handle.focus()
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText(/opgepakt/)
+  await expect(async () => {
+    await page.keyboard.press("ArrowDown")
+    await expect(announcement).toHaveText(/positie 2 van 2/, { timeout: 500 })
+  }).toPass()
+  await page.keyboard.press("Space")
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  const categories = await prisma.wishlistCategory.findMany({
+    where: { wishlistId: wishlist.id },
+    orderBy: { position: "asc" },
+  })
+  expect(categories.map(({ title }) => title)).toEqual(["Boeken", "Kleding"])
+})
+
+test("only the owner and managers can get the share link of a wishlist", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .shareToken
+  ).toBeNull()
+})
+
+test("more wishes can only be asked of someone who shares a list with you", async ({
+  signIn,
+}) => {
+  const { owner, member, group, wishlist } = await shoppersSetup()
+  const outsider = await createUser({ firstName: "Pia" })
+  await createWishlist(outsider)
+  const page = await signIn(member)
+
+  await forgeActions(
+    page,
+    `/group/${group.id}/${wishlist.id}`,
+    owner.id,
+    outsider.id
+  )
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
+
+  await expect(toasts(page)).toContainText("Gebruiker niet gevonden")
+  expect(await emailsTo(outsider.email!)).toHaveLength(0)
+  expect(await prisma.reminder.count({ where: { to: outsider.id } })).toBe(0)
 })
