@@ -944,3 +944,26 @@ test("only the creator of a group can send a lootje again", async ({
   await expect(toasts(page)).toContainText("Deelnemer niet gevonden")
   expect(await emailsTo(opa)).toHaveLength(0)
 })
+
+test("the creator of a group can't leave it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const otherGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(owner)
+
+  await forgeActions(page, `/group/${otherGroup.id}`, otherGroup.id, group.id)
+  await page.goto(`/group/${otherGroup.id}`)
+  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page
+    .getByRole("dialog", { name: "Verlaat groep" })
+    .getByRole("button", { name: "Stap uit de groep" })
+    .click()
+  await expect(page).toHaveURL("/")
+
+  const untouched = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true },
+  })
+  expect(untouched.members.map(({ id }) => id)).toContain(owner.id)
+})

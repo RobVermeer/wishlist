@@ -32,6 +32,10 @@ export const leaveGroupById = async (id: string) => {
       throw new Error(t("group.notFound"))
     }
 
+    if (groupToLeave.userId === userId) {
+      throw new Error(t("noAccess"))
+    }
+
     const wishlistsToTakeOut = await getWishlistsLeavingGroup(id, userId)
 
     await prisma.group.update({
