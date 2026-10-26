@@ -967,3 +967,82 @@ test("the creator of a group can't leave it", async ({ signIn }) => {
   })
   expect(untouched.members.map(({ id }) => id)).toContain(owner.id)
 })
+
+const actionResponse = (page: Page) =>
+  page.waitForResponse(
+    response =>
+      response.request().method() === "POST" &&
+      !!response.request().headers()["next-action"]
+  )
+
+test("only the creator of a group can change it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, {
+    title: "Familie",
+    members: [member],
+  })
+  const ownGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
+  await dialog.getByLabel(/^Naam/).fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  expect(
+    (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).title
+  ).toBe("Familie")
+})
+
+test("only the creator of a group can remove it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const ownGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig groep" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  for (const { id } of [group, ownGroup]) {
+    expect(
+      (await prisma.group.findUniqueOrThrow({ where: { id } })).removed
+    ).toBe(false)
+  }
+})
+
+test("a removed group can't be joined", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const visitor = await createUser({ firstName: "Pia" })
+  const removed = await createGroup(owner, { removed: true })
+  const open = await createGroup(owner)
+  const page = await signIn(visitor)
+
+  await forgeActions(page, `/group/${open.id}`, open.id, removed.id)
+  await page.goto(`/group/${open.id}`)
+  const response = actionResponse(page)
+  await page.getByRole("button", { name: "Volg de groep" }).click()
+  await response
+
+  const group = await prisma.group.findUniqueOrThrow({
+    where: { id: removed.id },
+    include: { members: true },
+  })
+  expect(group.members.map(({ id }) => id)).not.toContain(visitor.id)
+})
