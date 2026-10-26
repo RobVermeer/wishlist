@@ -4,6 +4,7 @@ import { crc32, deflateSync } from "node:zlib"
 import {
   test,
   expect,
+  createAdmin,
   createUser,
   createGroup,
   createWishlist,
@@ -1199,4 +1200,103 @@ test("more wishes can only be asked of someone who shares a list with you", asyn
   await expect(toasts(page)).toContainText("Gebruiker niet gevonden")
   expect(await emailsTo(outsider.email!)).toHaveLength(0)
   expect(await prisma.reminder.count({ where: { to: outsider.id } })).toBe(0)
+})
+
+// Regular users can't open the admin, so these tests stop the admin's own
+// request and send it again with a regular user's session, like an attacker
+// who copied it would.
+async function captureAction(page: Page, path: string) {
+  return new Promise<{
+    url: string
+    headers: Record<string, string>
+    body: string
+  }>(resolve => {
+    page.route(`**${path}`, async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        resolve({
+          url: request.url(),
+          headers: request.headers(),
+          body: request.postData()!,
+        })
+        return route.abort()
+      }
+      return route.continue()
+    })
+  })
+}
+
+async function replayAs(
+  page: Page,
+  action: Awaited<ReturnType<typeof captureAction>>
+) {
+  const { url, headers, body } = action
+  const response = await page.request.post(url, {
+    headers: {
+      "next-action": headers["next-action"],
+      "next-router-state-tree": headers["next-router-state-tree"],
+      "content-type": headers["content-type"],
+      accept: headers["accept"],
+      origin: new URL(url).origin,
+    },
+    data: body,
+  })
+  await response.body()
+}
+
+test("only admins can remove users", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const user = await createUser()
+  const victim = await createUser({ name: `Slachtoffer ${user.id}` })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, "/admin/users")
+  await adminPage.goto("/admin/users")
+  adminPage.once("dialog", dialog => dialog.accept())
+  await adminPage
+    .locator("div.rounded-2xl")
+    .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await replayAs(await signIn(user), await action)
+
+  expect(await prisma.user.count({ where: { id: victim.id } })).toBe(1)
+})
+
+test("only admins can draw lots from the admin", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser({ firstName: "Anna" })
+  const member = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [member] })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, `/admin/groups/${group.id}`)
+  await adminPage.goto(`/admin/groups/${group.id}`)
+  await adminPage.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await replayAs(await signIn(member), await action)
+
+  for (const { email } of [owner, member]) {
+    expect(await emailsTo(email!)).toHaveLength(0)
+  }
+})
+
+test("only the creator or an admin can restore a group", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member], removed: true })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, `/admin/groups/${group.id}`)
+  await adminPage.goto(`/admin/groups/${group.id}`)
+  adminPage.once("dialog", dialog => dialog.accept())
+  await adminPage.getByRole("button", { name: "Zet groep terug" }).click()
+
+  await replayAs(await signIn(member), await action)
+
+  expect(
+    (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).removed
+  ).toBe(true)
 })
