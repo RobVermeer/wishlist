@@ -84,7 +84,7 @@ Keep the tone warm but calm:
 
 ## Database changes
 
-- Change `prisma/schema.prisma` and create a migration with `npx prisma migrate dev --name <what changed>`.
+- Change `prisma/schema.prisma` and create a migration with `npx prisma migrate dev --name <what changed>`. `npm run db:check` fails when the schema and the migrations don't match, CI runs it too.
 - Migrations run on the production database during deploy, so they must keep existing data working: add nullable columns or defaults, don't rename or drop without a data migration.
 - Dates are stored as unix epoch milliseconds (`timestampFormat: "unixepoch-ms"`), which keeps them compatible with data from before Prisma 7.
 - Production uses an absolute `DATABASE_URL`, the deploy stops when it isn't.
@@ -103,6 +103,7 @@ Finish every feature and fix with a pull request from its own branch, as soon as
   npm run lint
   npm run format:check
   npm run typecheck
+  npm run db:check
   npm run knip
   npm run test:e2e
   ```
