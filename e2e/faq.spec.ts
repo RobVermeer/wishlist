@@ -24,6 +24,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
       .locator("..")
       .locator("summary")
   ).toHaveText([
+    "Hoe maak ik een verlanglijstje?",
     "Hoe zet ik een wens op mijn verlanglijstje?",
     "Hoe verwijder ik een wens?",
     "Hoe werken categorieën?",
@@ -31,6 +32,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Wat is een onbeperkte wens?",
     "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
     "Kan ik een verlanglijstje samen met iemand beheren?",
+    "Wat doen de thema's?",
     "Hoe verwijder ik mijn verlanglijstje?",
   ])
 
@@ -46,6 +48,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Hoe maak ik een groep?",
     "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
     "Kan mijn verlanglijstje in meerdere groepen staan?",
+    "Hoeveel verlanglijstjes kan ik in een groep zetten?",
     "Hoe nodig ik iemand uit voor een groep?",
     "Wat mag ik als maker van een groep?",
     "Wat gebeurt er als ik uit een groep stap?",

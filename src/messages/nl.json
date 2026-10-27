@@ -597,6 +597,10 @@
         "title": "Je verlanglijstje",
         "questions": [
           {
+            "question": "Hoe maak ik een verlanglijstje?",
+            "answer": "Kies op je overzicht ‘Nieuw verlanglijstje’. Kies of het voor jezelf is of voor iemand anders, geef het eventueel een beschrijving en een thema, en vink de groepen aan waar het in moet. Daarna zet je er wensen op."
+          },
+          {
             "question": "Hoe zet ik een wens op mijn verlanglijstje?",
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
           },
@@ -623,6 +627,10 @@
           {
             "question": "Kan ik een verlanglijstje samen met iemand beheren?",
             "answer": "Ja, een verlanglijstje voor iemand anders, zoals je kind, kun je samen beheren met iemand met wie je in een groep zit. Kies diegene bij ‘Wie beheert dit verlanglijstje nog meer?’. Jullie kunnen dan allebei wensen toevoegen, wijzigen en verplaatsen, en geen van jullie ziet wat er wordt gekocht. Alleen wie het verlanglijstje heeft gemaakt, kan het verwijderen of kiezen wie het mee beheert. Wil je niet meer meedoen, kies dan ‘Stop met beheren’."
+          },
+          {
+            "question": "Wat doen de thema's?",
+            "answer": "Met een thema geef je een verlanglijstje of groep een eigen uiterlijk. Een verlanglijstje krijgt een kleur en een icoon op je overzicht, zoals een taart bij Verjaardag of een rugzak bij Reizen. Een groep krijgt een foto bovenaan, voor Sinterklaas, Kerst, een verjaardag of een baby. Je kiest het thema bij het maken, of later via ‘Wijzig’."
           },
           {
             "question": "Hoe verwijder ik mijn verlanglijstje?",
@@ -656,7 +664,11 @@
           },
           {
             "question": "Kan mijn verlanglijstje in meerdere groepen staan?",
-            "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. In een groep staat wel één verlanglijstje van jezelf: voeg je er een ander toe, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders kunnen er gewoon naast staan."
+            "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. Je hoeft dus maar één verlanglijstje bij te houden."
+          },
+          {
+            "question": "Hoeveel verlanglijstjes kan ik in een groep zetten?",
+            "answer": "Van jezelf één per groep, zodat de anderen weten welk verlanglijstje van jou ze moeten bekijken. Zet je er een ander verlanglijstje van jezelf in, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders, zoals je kinderen, kun je er zoveel in zetten als je wilt."
           },
           {
             "question": "Hoe nodig ik iemand uit voor een groep?",
