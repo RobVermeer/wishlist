@@ -960,8 +960,11 @@ test("the creator of a group can't leave it", async ({ signIn }) => {
     .getByRole("dialog", { name: "Verlaat groep" })
     .getByRole("button", { name: "Stap uit de groep" })
     .click()
-  await expect(page).toHaveURL("/")
 
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  await expect(page).toHaveURL(`/group/${otherGroup.id}`)
   const untouched = await prisma.group.findUniqueOrThrow({
     where: { id: group.id },
     include: { members: true },
