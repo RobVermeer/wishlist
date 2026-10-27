@@ -44,6 +44,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   ).toHaveText([
     "Hoe deel ik mijn verlanglijstje, bijvoorbeeld voor mijn verjaardag?",
     "Wat is het verschil tussen een groep en een link?",
+    "Maak ik een groep voor mijn familie of voor één feestje?",
     "Kan iedereen mijn verlanglijstje zien?",
     "Hoe maak ik een groep?",
     "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
@@ -132,4 +133,22 @@ test("jump to a subject in the frequently asked questions", async ({
     .getByRole("link", { name: "Terug naar boven" })
     .click()
   await expect(subjects).toBeInViewport()
+})
+
+test("the frequently asked questions explain what a group is for", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page
+    .getByText("Maak ik een groep voor mijn familie of voor één feestje?")
+    .click()
+
+  await expect(
+    page.getByText(
+      "Allebei kan. Een groep voor je familie of vrienden gebruik je elk jaar opnieuw"
+    )
+  ).toBeVisible()
 })
