@@ -162,6 +162,16 @@ test("the frequently asked questions say bought gifts stay when a wish is remove
   await page.goto("/vragen")
   await page
     .getByRole("region", { name: "Cadeaus kopen" })
+    .getByText("Waar zie ik wat ik heb gekocht?")
+    .click()
+  await expect(
+    page.getByText(
+      "Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept."
+    )
+  ).toBeVisible()
+
+  await page
+    .getByRole("region", { name: "Cadeaus kopen" })
     .getByText("Wat gebeurt er met wat ik kocht als een wens wordt verwijderd?")
     .click()
 
