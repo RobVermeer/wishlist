@@ -747,6 +747,10 @@
             "answer": "Op je profiel, onder ‘Gekochte cadeaus’. Daar staat wat je voor wie koopt."
           },
           {
+            "question": "Wat gebeurt er met wat ik kocht als een wens wordt verwijderd?",
+            "answer": "Het blijft staan onder ‘Gekochte cadeaus’ op je profiel, met erbij dat de wens is verwijderd. Dat geldt ook als het hele verlanglijstje wordt verwijderd. Zo weet je altijd wat je al hebt gekocht."
+          },
+          {
             "question": "Hoe vraag ik om meer wensen?",
             "answer": "Kies op het verlanglijstje van iemand anders ‘Vraag om meer wensen’. Diegene krijgt dan een e-mail. Je kunt iemand één keer per dag om meer wensen vragen."
           }
