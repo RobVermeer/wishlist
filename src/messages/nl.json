@@ -198,7 +198,7 @@
   },
   "NewGroup": {
     "title": "Nieuwe groep",
-    "text": "Een groep is voor de mensen met wie je cadeaus uitwisselt, zoals je familie, je vrienden of iedereen die meedoet aan één feestje. In de groep zien jullie elkaars verlanglijstjes. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>.",
+    "text": "Een groep is voor de mensen met wie je cadeaus uitwisselt, zoals je familie, je vrienden of iedereen die meedoet aan één feestje. In de groep zien jullie elkaars verlanglijstjes. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: {hasWishlist, select, true {open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>} other {maak een verlanglijstje met <b>Nieuw verlanglijstje</b> en kies daarin <b>Deel dit verlanglijstje</b>}}.",
     "form": {
       "title": "Naam van de groep",
       "placeholder": "Bijvoorbeeld Familie Jansen of Sinterklaas.",

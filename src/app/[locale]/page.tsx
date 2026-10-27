@@ -132,7 +132,10 @@ export default async function Home() {
             </Link>
           ))}
           {followedWishlists.map(renderWishlist)}
-          <NewGroup trigger={<AddTile label={t("following.newGroup")} />} />
+          <NewGroup
+            hasWishlist={wishlists.length > 0}
+            trigger={<AddTile label={t("following.newGroup")} />}
+          />
         </div>
 
         {groups.length === 0 && followedWishlists.length === 0 && (
