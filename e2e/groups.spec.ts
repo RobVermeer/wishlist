@@ -766,7 +766,7 @@ test("add an existing wishlist for someone else to a group from its page", async
 
   const dialog = page.getByRole("dialog", { name: "Verlanglijstje toevoegen" })
   await expect(dialog).toContainText(
-    "Kies welk verlanglijstje je aan Familie toevoegt."
+    "Je eigen verlanglijstje staat al in Familie. Zet er een voor iemand anders naast, of kies een ander verlanglijstje van jezelf: dat vervangt je huidige."
   )
   const forSomeoneElse = dialog.getByRole("group", {
     name: "Voor iemand anders",
@@ -788,6 +788,32 @@ test("add an existing wishlist for someone else to a group from its page", async
   expect(inGroup.map(({ id }) => id).sort()).toEqual(
     [own.id, grandma.id, grandpa.id].sort()
   )
+})
+
+test("the add dialog of a group says when your own wishlist is already in it", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const group = await createGroup(user, { title: "Familie" })
+  await createWishlist(user, { title: "Opa" })
+  const page = await signIn(user)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Verlanglijstje toevoegen" }).click()
+  const dialog = page.getByRole("dialog", { name: "Verlanglijstje toevoegen" })
+  await expect(dialog).toContainText(
+    "Kies welk verlanglijstje je aan Familie toevoegt."
+  )
+  await expect(dialog).not.toContainText("staat al in")
+  await page.keyboard.press("Escape")
+
+  await createWishlist(user, { groups: [group] })
+  await page.reload()
+  await page.getByRole("button", { name: "Verlanglijstje toevoegen" }).click()
+  await expect(dialog).toContainText(
+    "Je eigen verlanglijstje staat al in Familie. Zet er een voor iemand anders naast, of maak een nieuw verlanglijstje voor jezelf: dat vervangt je huidige."
+  )
+  await expect(dialog.getByRole("group", { name: "Van jou" })).toBeHidden()
 })
 
 test("make a new wishlist from the add dialog of a group", async ({

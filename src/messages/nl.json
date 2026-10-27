@@ -149,6 +149,10 @@
       "button": "Verlanglijstje toevoegen",
       "title": "Verlanglijstje toevoegen",
       "text": "Kies welk verlanglijstje je aan {group} toevoegt.",
+      "ownInGroup": {
+        "choose": "Je eigen verlanglijstje staat al in {group}. Zet er een voor iemand anders naast, of kies een ander verlanglijstje van jezelf: dat vervangt je huidige.",
+        "new": "Je eigen verlanglijstje staat al in {group}. Zet er een voor iemand anders naast, of maak een nieuw verlanglijstje voor jezelf: dat vervangt je huidige."
+      },
       "own": "Van jou",
       "forSomeoneElse": "Voor iemand anders",
       "replaces": "Vervangt ‘{name}’ in deze groep",

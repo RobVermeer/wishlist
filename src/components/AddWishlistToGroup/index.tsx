@@ -31,6 +31,7 @@ interface Option {
 interface Props {
   group: { id: string; title: string }
   own: Option[]
+  ownInGroup: boolean
   forSomeoneElse: Option[]
   groups: GroupOption[]
   managers: ManagerOption[]
@@ -39,6 +40,7 @@ interface Props {
 export const AddWishlistToGroup = ({
   group,
   own,
+  ownInGroup,
   forSomeoneElse,
   groups,
   managers,
@@ -130,7 +132,11 @@ export const AddWishlistToGroup = ({
           <DialogHeader>
             <DialogTitle>{t("title")}</DialogTitle>
             <DialogDescription>
-              {t("text", { group: group.title })}
+              {ownInGroup
+                ? t(own.length > 0 ? "ownInGroup.choose" : "ownInGroup.new", {
+                    group: group.title,
+                  })
+                : t("text", { group: group.title })}
             </DialogDescription>
           </DialogHeader>
           <form id={`add-${group.id}`} onSubmit={onSubmit}>
