@@ -34,6 +34,10 @@ export const WishlistGroupsField = ({
           ownList &&
           checked.includes(group.id) &&
           group.ownWishlistIds.some(id => id !== wishlistId)
+        const leaves =
+          wishlistId !== undefined &&
+          defaultGroupIds.includes(group.id) &&
+          !checked.includes(group.id)
 
         return (
           <div key={group.id} className="grid">
@@ -52,6 +56,11 @@ export const WishlistGroupsField = ({
             {replaces && (
               <small className="ml-6 text-muted-foreground">
                 {t("replaces")}
+              </small>
+            )}
+            {leaves && (
+              <small className="ml-6 text-muted-foreground">
+                {t("leaves")}
               </small>
             )}
           </div>

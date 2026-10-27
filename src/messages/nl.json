@@ -77,7 +77,8 @@
         "placeholder": "Bijvoorbeeld de naam van je kind"
       },
       "groups": {
-        "replaces": "Vervangt je andere verlanglijstje in deze groep"
+        "replaces": "Vervangt je andere verlanglijstje in deze groep",
+        "leaves": "De leden van deze groep zien dit verlanglijstje dan niet meer."
       },
       "managers": {
         "label": "Wie beheert dit verlanglijstje nog meer?",
