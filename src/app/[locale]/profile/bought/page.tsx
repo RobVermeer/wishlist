@@ -5,6 +5,7 @@ import { getBoughtWishlistItemsForUser } from "@/lib/wishlistItems/getBoughtWish
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { authOptions } from "@/lib/nextAuth"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { redirect } from "next/navigation"
 
 interface Props {
@@ -44,14 +45,13 @@ export default async function ProfileBoughtPage() {
         <Card key={item.id}>
           {item.title}{" "}
           <small className="block text-muted-foreground">
-            {t("boughtFor", {
-              name:
-                item.wishlist.title ||
-                item.wishlist.user.firstName ||
-                item.wishlist.user.name?.split(" ")[0] ||
-                "",
-            })}
+            {t("boughtFor", { name: getWishlistName(item.wishlist) })}
           </small>
+          {(item.wishlist.removed || item.removed) && (
+            <small className="block text-muted-foreground">
+              {item.wishlist.removed ? t("removedWishlist") : t("removedItem")}
+            </small>
+          )}
         </Card>
       ))}
     </List>
