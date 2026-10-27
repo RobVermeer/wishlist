@@ -196,6 +196,7 @@
       "text": "Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug wat je voor wie koopt."
     },
     "boughtFor": "Gekocht voor {name}",
+    "boughtForOn": "Gekocht voor {name} op {date, date, long}",
     "removedItem": "Deze wens is verwijderd.",
     "removedWishlist": "Dit verlanglijstje is verwijderd."
   },

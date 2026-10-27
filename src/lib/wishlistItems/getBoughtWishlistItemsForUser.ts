@@ -21,6 +21,7 @@ export const getBoughtWishlistItemsForUser = cache(async () => {
       id: true,
       title: true,
       removed: true,
+      boughtAt: true,
       wishlist: {
         select: {
           title: true,
