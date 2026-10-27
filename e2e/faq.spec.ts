@@ -166,7 +166,7 @@ test("the frequently asked questions say bought gifts stay when a wish is remove
     .click()
   await expect(
     page.getByText(
-      "Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept."
+      "Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept, het nieuwste bovenaan. Wat je meer dan een jaar geleden kocht, staat onder ‘Eerdere cadeaus’."
     )
   ).toBeVisible()
 
