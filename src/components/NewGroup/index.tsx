@@ -73,7 +73,12 @@ export const NewGroup = ({ trigger }: Props) => {
         </DialogHeader>
         <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">{t("NewGroup.form.title")}</Label>
-          <Input required id="title" name="title" />
+          <Input
+            required
+            id="title"
+            name="title"
+            placeholder={t("NewGroup.form.placeholder")}
+          />
           <Label htmlFor="theme">{t("Common.group.theme.label")}</Label>
           <Select name="theme">
             <SelectTrigger id="theme">
