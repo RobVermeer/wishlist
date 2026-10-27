@@ -230,7 +230,7 @@ test("leaving a group that fails shows the error", async ({ signIn }) => {
     data: { removed: true },
   })
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep 🥺" })
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
   await expect(toasts(page)).toContainText("Groep niet gevonden")
