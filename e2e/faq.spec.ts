@@ -152,3 +152,22 @@ test("the frequently asked questions explain what a group is for", async ({
     )
   ).toBeVisible()
 })
+
+test("the frequently asked questions say bought gifts stay when a wish is removed", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page
+    .getByRole("region", { name: "Cadeaus kopen" })
+    .getByText("Wat gebeurt er met wat ik kocht als een wens wordt verwijderd?")
+    .click()
+
+  await expect(
+    page.getByText(
+      "Het blijft staan onder ‘Gekochte cadeaus’ op je profiel, met erbij dat de wens is verwijderd."
+    )
+  ).toBeVisible()
+})
