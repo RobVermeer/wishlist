@@ -407,7 +407,7 @@ test("bought presents page lists what you bought for whom", async ({
   await expect(page.getByText("Knuffel")).toBeHidden()
 })
 
-test("bought presents page leaves out removed wishes and wishlists", async ({
+test("bought presents page keeps removed wishes and wishlists", async ({
   signIn,
 }) => {
   const { shopper, wishlist } = await setup()
@@ -431,9 +431,15 @@ test("bought presents page leaves out removed wishes and wishlists", async ({
 
   await page.goto("/profile/bought")
 
-  await expect(itemCard(page, "Sokken")).toBeVisible()
-  await expect(page.getByText("Weggehaald")).toBeHidden()
-  await expect(page.getByText("Van oud lijstje")).toBeHidden()
+  await expect(itemCard(page, "Sokken")).toHaveText(
+    /^Sokken\s*Gekocht voor Olga$/
+  )
+  await expect(itemCard(page, "Weggehaald")).toHaveText(
+    /^Weggehaald\s*Gekocht voor Olga\s*Deze wens is verwijderd\.$/
+  )
+  await expect(itemCard(page, "Van oud lijstje")).toHaveText(
+    /^Van oud lijstje\s*Gekocht voor Oud lijstje\s*Dit verlanglijstje is verwijderd\.$/
+  )
 })
 
 test("the buttons of a wish fit on a small phone", async ({ signIn }) => {

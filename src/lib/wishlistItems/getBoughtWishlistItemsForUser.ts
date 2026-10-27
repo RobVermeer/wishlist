@@ -1,8 +1,6 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { wishlistProperties } from "@/lib/wishlists/publicProperties"
-import { wishlistItemProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { cache } from "react"
@@ -20,12 +18,18 @@ export const getBoughtWishlistItemsForUser = cache(async () => {
 
   const data = await prisma.wishlistItem.findMany({
     select: {
-      ...wishlistItemProperties,
+      id: true,
+      title: true,
+      removed: true,
       wishlist: {
-        select: wishlistProperties,
+        select: {
+          title: true,
+          removed: true,
+          user: { select: { firstName: true, name: true } },
+        },
       },
     },
-    where: { userId, removed: false, wishlist: { removed: false } },
+    where: { userId },
   })
 
   return data
