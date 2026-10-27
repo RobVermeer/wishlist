@@ -138,9 +138,14 @@ test("buy a wish and change your mind", async ({ signIn }) => {
       .userId
   ).toBe(shopper.id)
 
+  const today = new Intl.DateTimeFormat("nl-NL", {
+    dateStyle: "long",
+    timeZone: "Europe/Amsterdam",
+  }).format(new Date())
   await page.goto("/profile/bought")
-  await expect(page.getByText("Sokken")).toBeVisible()
-  await expect(page.getByText("Gekocht voor Olga")).toBeVisible()
+  await expect(itemCard(page, "Sokken")).toHaveText(
+    `Sokken Gekocht voor Olga op ${today}`
+  )
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
   await card.getByRole("button", { name: "Toch niet" }).click()
@@ -148,10 +153,11 @@ test("buy a wish and change your mind", async ({ signIn }) => {
   await expect(toasts(page)).toContainText("Je koopt dit toch niet")
   await expect(card.getByRole("button", { name: "Ik koop dit" })).toBeVisible()
   await expect(card).not.toContainText("Jij koopt dit")
-  expect(
-    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
-      .userId
-  ).toBeNull()
+  const unbought = await prisma.wishlistItem.findUniqueOrThrow({
+    where: { id: item.id },
+  })
+  expect(unbought.userId).toBeNull()
+  expect(unbought.boughtAt).toBeNull()
 
   await page.goto("/profile/bought")
   await expect(page.getByText("Je hebt nog niets afgestreept")).toBeVisible()
@@ -392,7 +398,11 @@ test("bought presents page lists what you bought for whom", async ({
   const { shopper, wishlist } = await setup()
   const other = await createUser({ firstName: "Piet" })
   const managedList = await createWishlist(other, { title: "Baby Bo" })
-  await createItem(wishlist, { title: "Sokken", boughtBy: shopper })
+  await createItem(wishlist, {
+    title: "Sokken",
+    boughtBy: shopper,
+    boughtAt: new Date("2025-12-04T23:30:00Z"),
+  })
   await createItem(managedList, { title: "Rammelaar", boughtBy: shopper })
   await createItem(managedList, { title: "Knuffel", boughtBy: other })
   const page = await signIn(shopper)
@@ -400,9 +410,11 @@ test("bought presents page lists what you bought for whom", async ({
   await page.goto("/profile/bought")
 
   await expect(page).toHaveTitle("Mijn gekochte cadeaus - Profiel - Wishlist")
-  await expect(itemCard(page, "Sokken")).toContainText("Gekocht voor Olga")
-  await expect(itemCard(page, "Rammelaar")).toContainText(
-    "Gekocht voor Baby Bo"
+  await expect(itemCard(page, "Sokken")).toHaveText(
+    /^Sokken\s*Gekocht voor Olga op 5 december 2025$/
+  )
+  await expect(itemCard(page, "Rammelaar")).toHaveText(
+    /^Rammelaar\s*Gekocht voor Baby Bo$/
   )
   await expect(page.getByText("Knuffel")).toBeHidden()
 })

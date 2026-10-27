@@ -45,7 +45,12 @@ export default async function ProfileBoughtPage() {
         <Card key={item.id}>
           {item.title}{" "}
           <small className="block text-muted-foreground">
-            {t("boughtFor", { name: getWishlistName(item.wishlist) })}
+            {item.boughtAt
+              ? t("boughtForOn", {
+                  name: getWishlistName(item.wishlist),
+                  date: item.boughtAt,
+                })
+              : t("boughtFor", { name: getWishlistName(item.wishlist) })}
           </small>
           {(item.wishlist.removed || item.removed) && (
             <small className="block text-muted-foreground">

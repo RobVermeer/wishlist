@@ -140,12 +140,14 @@ export async function createItem(
     url = null,
     unlimited = false,
     boughtBy = null,
+    boughtAt = null,
     category = null,
   }: {
     title?: string
     url?: string | null
     unlimited?: boolean
     boughtBy?: User | null
+    boughtAt?: Date | null
     category?: { id: string } | null
   } = {}
 ) {
@@ -157,6 +159,7 @@ export async function createItem(
       createdAt: new Date(),
       wishlistId: wishlist.id,
       userId: boughtBy?.id ?? null,
+      boughtAt,
       categoryId: category?.id ?? null,
       position: await prisma.wishlistItem.count({
         where: { wishlistId: wishlist.id },

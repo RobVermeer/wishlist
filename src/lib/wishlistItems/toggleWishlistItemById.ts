@@ -51,6 +51,7 @@ export const toggleWishlistItemById = async (id: string) => {
       where: { id },
       data: {
         boughtBy,
+        boughtAt: wishlistItem.boughtBy ? null : new Date(),
       },
       select: wishlistItemProperties,
     })
