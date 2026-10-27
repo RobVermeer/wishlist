@@ -128,8 +128,17 @@ test("edit a wishlist", async ({ signIn }) => {
   await dialog.getByLabel("Voor iemand anders").click()
   await dialog.getByLabel("Naam", { exact: true }).fill("Opa Jan")
   await dialog.getByLabel("Beschrijving").fill("Zijn 80e verjaardag")
+  const leaves = dialog.getByText(
+    "De leden van deze groep zien dit verlanglijstje dan niet meer."
+  )
+  await expect(leaves).toBeHidden()
+  await dialog.getByLabel("Familie").click()
+  await expect(leaves).toBeVisible()
+  await dialog.getByLabel("Familie").click()
+  await expect(leaves).toBeHidden()
   await dialog.getByLabel("Familie").click()
   await dialog.getByLabel("Vrienden").click()
+  await expect(leaves).toHaveCount(1)
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
