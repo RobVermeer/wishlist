@@ -112,6 +112,7 @@ model WishlistItem {
   removed    Boolean           @default(false)
   userId     String?
   boughtBy   User?             @relation(fields: [userId], references: [id])
+  boughtAt   DateTime?
   wishlistId String
   wishlist   Wishlist          @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
   categoryId String?
