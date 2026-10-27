@@ -307,6 +307,7 @@ export default async function GroupPage({ params }: Props) {
                 ? t("addWishlist.replacesMany")
                 : undefined,
         }))}
+        ownInGroup={ownInGroup.length > 0}
         forSomeoneElse={wishlistNames(forSomeoneElseToAdd)}
         groups={groupOptions}
         managers={managerOptions}
