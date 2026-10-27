@@ -454,6 +454,50 @@ test("bought presents page keeps removed wishes and wishlists", async ({
   )
 })
 
+test("bought presents page shows the newest first and folds away older ones", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
+  await createItem(wishlist, {
+    title: "Zonder datum",
+    boughtBy: shopper,
+  })
+  await createItem(wishlist, {
+    title: "Vorige week",
+    boughtBy: shopper,
+    boughtAt: daysAgo(7),
+  })
+  await createItem(wishlist, {
+    title: "Vorig jaar",
+    boughtBy: shopper,
+    boughtAt: daysAgo(400),
+  })
+  await createItem(wishlist, {
+    title: "Gisteren",
+    boughtBy: shopper,
+    boughtAt: daysAgo(1),
+  })
+  const page = await signIn(shopper)
+
+  await page.goto("/profile/bought")
+
+  const earlier = page.getByRole("group").filter({
+    has: page.getByText("Eerdere cadeaus"),
+  })
+  await expect(
+    page.locator("div.rounded-2xl").filter({ visible: true })
+  ).toHaveText([/^Gisteren/, /^Vorige week/, /^Zonder datum/])
+  await expect(earlier.getByText("Vorig jaar")).toBeHidden()
+
+  await earlier.getByText("Eerdere cadeaus").click()
+
+  await expect(itemCard(page, "Vorig jaar")).toBeVisible()
+  await expect(earlier).toContainText(
+    "Wat je meer dan een jaar geleden hebt gekocht."
+  )
+})
+
 test("the buttons of a wish fit on a small phone", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
   await createItem(wishlist, {

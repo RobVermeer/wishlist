@@ -31,6 +31,10 @@ export const getBoughtWishlistItemsForUser = cache(async () => {
       },
     },
     where: { userId },
+    orderBy: [
+      { boughtAt: { sort: "desc", nulls: "last" } },
+      { createdAt: "desc" },
+    ],
   })
 
   return data
