@@ -28,9 +28,10 @@ import { useTranslations } from "next-intl"
 
 interface Props {
   trigger: ReactNode
+  hasWishlist: boolean
 }
 
-export const NewGroup = ({ trigger }: Props) => {
+export const NewGroup = ({ trigger, hasWishlist }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const t = useTranslations()
@@ -65,6 +66,7 @@ export const NewGroup = ({ trigger }: Props) => {
           <DialogTitle>{t("NewGroup.title")}</DialogTitle>
           <DialogDescription>
             {t.rich("NewGroup.text", {
+              hasWishlist: String(hasWishlist),
               b: chunks => (
                 <b className="font-medium text-foreground">{chunks}</b>
               ),
@@ -73,7 +75,12 @@ export const NewGroup = ({ trigger }: Props) => {
         </DialogHeader>
         <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
           <Label htmlFor="title">{t("NewGroup.form.title")}</Label>
-          <Input required id="title" name="title" />
+          <Input
+            required
+            id="title"
+            name="title"
+            placeholder={t("NewGroup.form.placeholder")}
+          />
           <Label htmlFor="theme">{t("Common.group.theme.label")}</Label>
           <Select name="theme">
             <SelectTrigger id="theme">

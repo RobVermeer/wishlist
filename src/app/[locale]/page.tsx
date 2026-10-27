@@ -144,6 +144,7 @@ export default async function Home() {
         )}
 
         <NewGroup
+          hasWishlist={wishlists.length > 0}
           trigger={
             <Button variant="outline">
               <Plus size="16" className="mr-2" /> {t("following.newGroup")}

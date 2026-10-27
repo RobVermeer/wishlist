@@ -19,9 +19,13 @@ test("create a group with a theme", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
   await expect(dialog).toHaveAccessibleDescription(
-    /Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig/
+    /zoals je familie, je vrienden of iedereen die meedoet aan één feestje\..*Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig: maak een verlanglijstje met Nieuw verlanglijstje en kies daarin Deel dit verlanglijstje\.$/
   )
-  await dialog.getByLabel("Naam").fill(title)
+  await expect(dialog.getByLabel("Naam van de groep")).toHaveAttribute(
+    "placeholder",
+    "Bijvoorbeeld Familie Jansen of Sinterklaas."
+  )
+  await dialog.getByLabel("Naam van de groep").fill(title)
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Kerst" }).click()
   await dialog.getByRole("button", { name: "Maak aan" }).click()
@@ -42,6 +46,23 @@ test("create a group with a theme", async ({ signIn }) => {
   await expect(page.getByRole("heading", { name: title })).toBeVisible()
 })
 
+test("someone with a wishlist is told to share it instead of making a group", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+
+  await expect(
+    page.getByRole("dialog", { name: /Nieuwe groep/ })
+  ).toHaveAccessibleDescription(
+    /Dan heb je geen groep nodig: open je verlanglijstje en kies Deel dit verlanglijstje\.$/
+  )
+})
+
 test("group title must be at least 2 characters", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
@@ -50,14 +71,14 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill("A")
+  await dialog.getByLabel("Naam van de groep").fill("A")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
     "Groep titel moet minimaal uit 2 tekens bestaan"
   )
   await expect(dialog).toBeVisible()
-  await expect(dialog.getByLabel("Naam")).toHaveValue("A")
+  await expect(dialog.getByLabel("Naam van de groep")).toHaveValue("A")
   expect(await prisma.group.count({ where: { userId: user.id } })).toBe(0)
 })
 
@@ -70,7 +91,7 @@ test("owner can edit a group", async ({ signIn }) => {
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
-  await dialog.getByLabel("Naam").fill("Nieuwe naam")
+  await dialog.getByLabel("Naam van de groep").fill("Nieuwe naam")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Sinterklaas" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -161,7 +182,7 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
   await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
-  await expect(dialog.getByLabel("Naam")).toBeHidden()
+  await expect(dialog.getByLabel("Naam van de groep")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
   await expect(page).toHaveURL("/")
@@ -215,6 +236,26 @@ test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
     expect(wishlist.groups).toEqual([])
     expect(wishlist.removed).toBe(false)
   }
+})
+
+test("leaving a group that fails shows the error", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Verlaat" }).click()
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { removed: true },
+  })
+
+  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
+  await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  await expect(page).toHaveURL(`/group/${group.id}`)
 })
 
 test("visiting a group you don't follow lets you follow it", async ({

@@ -12,8 +12,9 @@ import {
 import { leaveGroupById } from "@/lib/groups/leaveGroupById"
 import { UserMinus } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useState } from "react"
+import { FormEvent, startTransition, useState } from "react"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Props {
   group: { id: string }
@@ -25,11 +26,24 @@ export const LeaveGroup = ({ group, className }: Props) => {
   const router = useRouter()
   const { id } = group
   const t = useTranslations()
+  const { toast } = useToast()
 
-  async function handleLeave() {
-    await leaveGroupById(id)
-    setOpen(false)
-    router.push("/")
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    startTransition(async () => {
+      const result = await leaveGroupById(id)
+
+      if (result.type === "error") {
+        result.errors.forEach(title => {
+          toast({ variant: "destructive", title })
+        })
+        return
+      }
+
+      setOpen(false)
+      router.push("/")
+    })
   }
 
   return (
@@ -45,7 +59,7 @@ export const LeaveGroup = ({ group, className }: Props) => {
         </DialogHeader>
         <p>{t("LeaveGroup.text")}</p>
         <DialogFooter>
-          <form action={handleLeave}>
+          <form onSubmit={onSubmit}>
             <Button className="w-full" type="submit">
               <UserMinus size="16" className="mr-2" /> {t("LeaveGroup.leave")}
             </Button>

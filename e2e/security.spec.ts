@@ -4,6 +4,7 @@ import { crc32, deflateSync } from "node:zlib"
 import {
   test,
   expect,
+  createAdmin,
   createUser,
   createGroup,
   createWishlist,
@@ -536,7 +537,7 @@ test("groups only get the themes you can choose", async ({ signIn }) => {
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
-  await dialog.getByLabel("Naam").fill("Thema groep")
+  await dialog.getByLabel("Naam van de groep").fill("Thema groep")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Kerst" }).click()
   await dialog
@@ -943,4 +944,362 @@ test("only the creator of a group can send a lootje again", async ({
 
   await expect(toasts(page)).toContainText("Deelnemer niet gevonden")
   expect(await emailsTo(opa)).toHaveLength(0)
+})
+
+test("the creator of a group can't leave it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const otherGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(owner)
+
+  await forgeActions(page, `/group/${otherGroup.id}`, otherGroup.id, group.id)
+  await page.goto(`/group/${otherGroup.id}`)
+  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page
+    .getByRole("dialog", { name: "Verlaat groep" })
+    .getByRole("button", { name: "Stap uit de groep" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  await expect(page).toHaveURL(`/group/${otherGroup.id}`)
+  const untouched = await prisma.group.findUniqueOrThrow({
+    where: { id: group.id },
+    include: { members: true },
+  })
+  expect(untouched.members.map(({ id }) => id)).toContain(owner.id)
+})
+
+const actionResponse = (page: Page) =>
+  page.waitForResponse(
+    response =>
+      response.request().method() === "POST" &&
+      !!response.request().headers()["next-action"]
+  )
+
+test("only the creator of a group can change it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, {
+    title: "Familie",
+    members: [member],
+  })
+  const ownGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
+  await dialog.getByLabel(/^Naam/).fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  expect(
+    (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).title
+  ).toBe("Familie")
+})
+
+test("only the creator of a group can remove it", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const ownGroup = await createGroup(member, { members: [owner] })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
+  await page.goto(`/group/${ownGroup.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig groep" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  for (const { id } of [group, ownGroup]) {
+    expect(
+      (await prisma.group.findUniqueOrThrow({ where: { id } })).removed
+    ).toBe(false)
+  }
+})
+
+test("a removed group can't be joined", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const visitor = await createUser({ firstName: "Pia" })
+  const removed = await createGroup(owner, { removed: true })
+  const open = await createGroup(owner)
+  const page = await signIn(visitor)
+
+  await forgeActions(page, `/group/${open.id}`, open.id, removed.id)
+  await page.goto(`/group/${open.id}`)
+  const response = actionResponse(page)
+  await page.getByRole("button", { name: "Volg de groep" }).click()
+  await response
+
+  const group = await prisma.group.findUniqueOrThrow({
+    where: { id: removed.id },
+    include: { members: true },
+  })
+  expect(group.members.map(({ id }) => id)).not.toContain(visitor.id)
+})
+
+async function shoppersSetup() {
+  const owner = await createUser({ firstName: "Olga" })
+  const member = await createUser({ firstName: "Mo" })
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, {
+    description: "Van Olga",
+    groups: [group],
+  })
+  const own = await createWishlist(member)
+
+  return { owner, member, group, wishlist, own }
+}
+
+test("only the owner and managers can change a wish", async ({ signIn }) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const item = await createItem(wishlist, { title: "Fiets" })
+  const ownItem = await createItem(own, { title: "Boek" })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, item.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .title
+  ).toBe("Fiets")
+})
+
+test("only the owner and managers can remove a wish", async ({ signIn }) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const item = await createItem(wishlist, { title: "Fiets" })
+  const ownItem = await createItem(own, { title: "Boek" })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, item.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig wens" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .removed
+  ).toBe(false)
+})
+
+test("only the owner and managers can change a wishlist", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  await dialog.getByLabel("Beschrijving").fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .description
+  ).toBe("Van Olga")
+})
+
+test("only the owner and managers can reorder categories", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  for (const [index, title] of ["Boeken", "Kleding"].entries()) {
+    const category = await createCategory(wishlist, title, index)
+    await createItem(wishlist, { category })
+    const ownCategory = await createCategory(own, title, index)
+    await createItem(own, { category: ownCategory })
+  }
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  const handle = page.getByRole("button", {
+    name: "Verplaats categorie Boeken",
+  })
+  const announcement = page
+    .locator('[role="status"][id^="DndLiveRegion"]')
+    .filter({ hasText: /./ })
+  await handle.focus()
+  await page.keyboard.press("Space")
+  await expect(announcement).toHaveText(/opgepakt/)
+  await expect(async () => {
+    await page.keyboard.press("ArrowDown")
+    await expect(announcement).toHaveText(/positie 2 van 2/, { timeout: 500 })
+  }).toPass()
+  await page.keyboard.press("Space")
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  const categories = await prisma.wishlistCategory.findMany({
+    where: { wishlistId: wishlist.id },
+    orderBy: { position: "asc" },
+  })
+  expect(categories.map(({ title }) => title)).toEqual(["Boeken", "Kleding"])
+})
+
+test("only the owner and managers can get the share link of a wishlist", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .shareToken
+  ).toBeNull()
+})
+
+test("more wishes can only be asked of someone who shares a list with you", async ({
+  signIn,
+}) => {
+  const { owner, member, group, wishlist } = await shoppersSetup()
+  const outsider = await createUser({ firstName: "Pia" })
+  await createWishlist(outsider)
+  const page = await signIn(member)
+
+  await forgeActions(
+    page,
+    `/group/${group.id}/${wishlist.id}`,
+    owner.id,
+    outsider.id
+  )
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
+
+  await expect(toasts(page)).toContainText("Gebruiker niet gevonden")
+  expect(await emailsTo(outsider.email!)).toHaveLength(0)
+  expect(await prisma.reminder.count({ where: { to: outsider.id } })).toBe(0)
+})
+
+// Regular users can't open the admin, so these tests stop the admin's own
+// request and send it again with a regular user's session, like an attacker
+// who copied it would.
+async function captureAction(page: Page, path: string) {
+  return new Promise<{
+    url: string
+    headers: Record<string, string>
+    body: string
+  }>(resolve => {
+    page.route(`**${path}`, async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        resolve({
+          url: request.url(),
+          headers: request.headers(),
+          body: request.postData()!,
+        })
+        return route.abort()
+      }
+      return route.continue()
+    })
+  })
+}
+
+async function replayAs(
+  page: Page,
+  action: Awaited<ReturnType<typeof captureAction>>
+) {
+  const { url, headers, body } = action
+  const response = await page.request.post(url, {
+    headers: {
+      "next-action": headers["next-action"],
+      "next-router-state-tree": headers["next-router-state-tree"],
+      "content-type": headers["content-type"],
+      accept: headers["accept"],
+      origin: new URL(url).origin,
+    },
+    data: body,
+  })
+  await response.body()
+}
+
+test("only admins can remove users", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const user = await createUser()
+  const victim = await createUser({ name: `Slachtoffer ${user.id}` })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, "/admin/users")
+  await adminPage.goto("/admin/users")
+  adminPage.once("dialog", dialog => dialog.accept())
+  await adminPage
+    .locator("div.rounded-2xl")
+    .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await replayAs(await signIn(user), await action)
+
+  expect(await prisma.user.count({ where: { id: victim.id } })).toBe(1)
+})
+
+test("only admins can draw lots from the admin", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser({ firstName: "Anna" })
+  const member = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [member] })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, `/admin/groups/${group.id}`)
+  await adminPage.goto(`/admin/groups/${group.id}`)
+  await adminPage.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await replayAs(await signIn(member), await action)
+
+  for (const { email } of [owner, member]) {
+    expect(await emailsTo(email!)).toHaveLength(0)
+  }
+})
+
+test("only the creator or an admin can restore a group", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member], removed: true })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, `/admin/groups/${group.id}`)
+  await adminPage.goto(`/admin/groups/${group.id}`)
+  adminPage.once("dialog", dialog => dialog.accept())
+  await adminPage.getByRole("button", { name: "Zet groep terug" }).click()
+
+  await replayAs(await signIn(member), await action)
+
+  expect(
+    (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).removed
+  ).toBe(true)
 })

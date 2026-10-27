@@ -198,9 +198,10 @@
   },
   "NewGroup": {
     "title": "Nieuwe groep",
-    "text": "Een groep is voor familie of vrienden die elkaars verlanglijstjes willen zien. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>.",
+    "text": "Een groep is voor de mensen met wie je cadeaus uitwisselt, zoals je familie, je vrienden of iedereen die meedoet aan één feestje. In de groep zien jullie elkaars verlanglijstjes. Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag? Dan heb je geen groep nodig: {hasWishlist, select, true {open je verlanglijstje en kies <b>Deel dit verlanglijstje</b>} other {maak een verlanglijstje met <b>Nieuw verlanglijstje</b> en kies daarin <b>Deel dit verlanglijstje</b>}}.",
     "form": {
-      "title": "Naam",
+      "title": "Naam van de groep",
+      "placeholder": "Bijvoorbeeld Familie Jansen of Sinterklaas.",
       "save": "Maak aan"
     }
   },
@@ -211,7 +212,7 @@
       "description": "De groep wordt voor alle leden verwijderd."
     },
     "form": {
-      "title": "Naam",
+      "title": "Naam van de groep",
       "save": "Opslaan"
     },
     "members": {
@@ -456,7 +457,7 @@
       "points": {
         "multiple": {
           "title": "Eén lijstje om bij te houden",
-          "text": "Deel je verlanglijstje met een link en zet hetzelfde lijstje in een groep voor elk feestje dat je viert. Je hoeft dus maar één verlanglijstje bij te houden."
+          "text": "Deel je verlanglijstje met een link en zet hetzelfde lijstje in je groepen: voor je familie, je vrienden of dat ene feestje. Je hoeft dus maar één verlanglijstje bij te houden."
         },
         "oneLink": {
           "title": "Eén link voor de hele groep",
@@ -597,6 +598,10 @@
         "title": "Je verlanglijstje",
         "questions": [
           {
+            "question": "Hoe maak ik een verlanglijstje?",
+            "answer": "Kies op je overzicht ‘Nieuw verlanglijstje’. Kies of het voor jezelf is of voor iemand anders, geef het eventueel een beschrijving en een thema, en vink de groepen aan waar het in moet. Daarna zet je er wensen op."
+          },
+          {
             "question": "Hoe zet ik een wens op mijn verlanglijstje?",
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
           },
@@ -625,6 +630,10 @@
             "answer": "Ja, een verlanglijstje voor iemand anders, zoals je kind, kun je samen beheren met iemand met wie je in een groep zit. Kies diegene bij ‘Wie beheert dit verlanglijstje nog meer?’. Jullie kunnen dan allebei wensen toevoegen, wijzigen en verplaatsen, en geen van jullie ziet wat er wordt gekocht. Alleen wie het verlanglijstje heeft gemaakt, kan het verwijderen of kiezen wie het mee beheert. Wil je niet meer meedoen, kies dan ‘Stop met beheren’."
           },
           {
+            "question": "Wat doen de thema's?",
+            "answer": "Met een thema geef je een verlanglijstje of groep een eigen uiterlijk. Een verlanglijstje krijgt een kleur en een icoon op je overzicht, zoals een taart bij Verjaardag of een rugzak bij Reizen. Een groep krijgt een foto bovenaan, voor Sinterklaas, Kerst, een verjaardag of een baby. Je kiest het thema bij het maken, of later via ‘Wijzig’."
+          },
+          {
             "question": "Hoe verwijder ik mijn verlanglijstje?",
             "answer": "Open je verlanglijstje, kies ‘Wijzig verlanglijstje’ en dan ‘Verwijder’. Het verlanglijstje wordt dan met alle wensen verwijderd. Dat kan alleen wie het verlanglijstje heeft gemaakt, niet wie het mee beheert."
           }
@@ -643,6 +652,10 @@
             "answer": "Met een link deel je één verlanglijstje. In een groep zien alle leden elkaars verlanglijstjes, met één link voor de hele groep."
           },
           {
+            "question": "Maak ik een groep voor mijn familie of voor één feestje?",
+            "answer": "Allebei kan. Een groep voor je familie of vrienden gebruik je elk jaar opnieuw, voor Sinterklaas, kerst en verjaardagen. Een groep voor één feestje is handig als er andere mensen meedoen, zoals Sinterklaas op het werk, of als je voor twee feestjes tegelijk lootjes trekt: elke groep heeft één loting. Je verlanglijstje kan in allebei staan."
+          },
+          {
             "question": "Kan iedereen mijn verlanglijstje zien?",
             "answer": "Nee. Ook met de link moet iemand eerst inloggen om je verlanglijstje te zien. Je e-mailadres zien de anderen nooit."
           },
@@ -656,7 +669,11 @@
           },
           {
             "question": "Kan mijn verlanglijstje in meerdere groepen staan?",
-            "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. In een groep staat wel één verlanglijstje van jezelf: voeg je er een ander toe, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders kunnen er gewoon naast staan."
+            "answer": "Ja, zet hetzelfde verlanglijstje in de groep voor elk feestje. Je hoeft dus maar één verlanglijstje bij te houden."
+          },
+          {
+            "question": "Hoeveel verlanglijstjes kan ik in een groep zetten?",
+            "answer": "Van jezelf één per groep, zodat de anderen weten welk verlanglijstje van jou ze moeten bekijken. Zet je er een ander verlanglijstje van jezelf in, dan vervangt dat het vorige. Verlanglijstjes voor iemand anders, zoals je kinderen, kun je er zoveel in zetten als je wilt."
           },
           {
             "question": "Hoe nodig ik iemand uit voor een groep?",

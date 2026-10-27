@@ -61,7 +61,15 @@ export const EditItem = ({ item, categories }: Props) => {
   }
 
   async function handleRemove() {
-    await deleteWishlistItemById(id)
+    const { type, errors } = await deleteWishlistItemById(id)
+
+    if (type === "error") {
+      errors.forEach(title => {
+        toast({ variant: "destructive", title })
+      })
+      return
+    }
+
     setOpen(false)
   }
 

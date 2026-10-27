@@ -20,6 +20,11 @@ npm run dev
 
 Defaults for local development live in `.env.development`, put overrides in `.env.local`. Log in with any e-mail address and run `npm run login-link` to get the link from the fake mail server.
 
+- Keep `npm run mail` running in a terminal. It keeps e-mails in memory, so a login e-mail sent while it's down is lost and has to be requested again.
+- A login link without the mail server: add a row to `VerificationToken` in `prisma/dev.db` with the e-mail address as `identifier`, the SHA-256 of a random token followed by `NEXTAUTH_SECRET` from `.env.development` as `token`, and an `expires` in epoch milliseconds. Then open `http://localhost:3000/api/auth/callback/email?token=<random token>&email=<e-mail address>`. It works once.
+- To try admin features locally, like the admin pages and messages from the contact form, put `ADMIN_USER_ID=<your user id>` in `.env.local`. Messages then land in the fake mail server.
+- Restart `npm run dev` after a new migration: a running dev server keeps its Prisma client and doesn't know the new tables.
+
 ## Structure
 
 | Path                              | What goes there                                                                      |
@@ -64,24 +69,47 @@ All user facing text goes through next-intl, also on admin pages. Write informal
 | A group of people sharing lists | groep                                    |
 | Managing a list together        | samen beheren                            |
 
+Keep the tone warm but calm:
+
+- No emoji in titles, dialogs and error messages. Use one only where it adds something, like the 🎁 after buying a wish.
+- An empty state says what to do next, and fits who is looking: the owner of a verlanglijstje sees something else than the people it's shared with.
+- Labels say exactly what to fill in, like "Naam van de groep" instead of "Naam".
+- Sentences end with a period, also hints and placeholders.
+
+## Screens
+
+- One red (primary) button per screen: the next step. Other actions use quiet `outline` buttons.
+- Show a block only when it can be used. Drawing lots only shows once there's someone to draw with, for example.
+- Don't say the same thing twice on one screen, and keep things where they belong: a button to make a new group doesn't go between the groups you follow.
+
 ## Database changes
 
-- Change `prisma/schema.prisma` and create a migration with `npx prisma migrate dev --name <what changed>`.
+- Change `prisma/schema.prisma` and create a migration with `npx prisma migrate dev --name <what changed>`. `npm run db:check` fails when the schema and the migrations don't match, CI runs it too.
 - Migrations run on the production database during deploy, so they must keep existing data working: add nullable columns or defaults, don't rename or drop without a data migration.
 - Dates are stored as unix epoch milliseconds (`timestampFormat: "unixepoch-ms"`), which keeps them compatible with data from before Prisma 7.
 - Production uses an absolute `DATABASE_URL`, the deploy stops when it isn't.
 
-## Before opening a pull request
+## Pull requests
 
-```sh
-npm run lint
-npm run format:check
-npm run typecheck
-npm run knip
-npm run test:e2e
-```
+Finish every feature and fix with a pull request from its own branch, as soon as the work and its checks are done.
 
-CI runs the same checks. Keep commits small: the subject says what changed, the body why when it isn't obvious.
+- **Atomic commits:** one logical change per commit, and every commit passes its own tests. Something the change needs, like a refactor or a fix, goes first in its own commit. The subject says what changed, the body why when it isn't obvious.
+- **Authorship:** commit with your own git name and e-mail address. Don't add `Co-Authored-By` lines for AI assistants.
+- **Landing page and FAQ:** when a feature is added or changes, update the landing page (`src/components/Landing*`, `Landing` in `nl.json`) and the FAQ (`Faq.sections` in `nl.json`, shown at `/vragen`) in the same pull request, as their own commit and with tests. Check every claim against what the app does.
+- **Screenshots:** put screenshots before and after in the description, in light, dark and mobile, see [testing](testing.md). `gh` can't upload images, so push them to the `pr-screenshots` branch, in a folder named after your branch, and link them as `https://raw.githubusercontent.com/RobVermeer/wishlist/<commit>/<folder>/<file>.jpg` with the commit of that branch, so the links keep working. Only show test data.
+- **Checks:** run them before pushing. CI runs the same.
+
+  ```sh
+  npm run lint
+  npm run format:check
+  npm run typecheck
+  npm run db:check
+  npm run knip
+  npm run test:e2e
+  ```
+
+- **Merging:** `main` only accepts a pull request when "Checks 🔍" and "E2E tests 🎭" are green and the branch includes the latest `main`. Update the branch before merging ("Update branch", or merge `main` in), so it's tested against what's there now: pull requests that each pass on their own can still break `main` together.
+- **With Claude Code:** turn on Auto-fix for the pull request, so CI failures, merge conflicts and review comments get picked up.
 
 ## Dependencies
 
