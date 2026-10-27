@@ -25,6 +25,8 @@ jobs:
         run: npm run format:check
       - name: Typecheck 🔷
         run: npm run typecheck
+      - name: Check migrations match the schema 🗃️
+        run: npm run db:check
       - name: Find unused code 🗑️
         run: npm run knip
       - name: Audit production dependencies 🔒
