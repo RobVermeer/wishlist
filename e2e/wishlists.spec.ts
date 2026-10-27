@@ -189,7 +189,7 @@ test("remove a wishlist", async ({ signIn }) => {
 
   await dialog.getByRole("button", { name: "Verwijder" }).click()
   await expect(confirm).toContainText(
-    "Je verlanglijstje wordt met alle wensen verwijderd."
+    "Je verlanglijstje wordt met alle wensen verwijderd. Je groepen en wie het volgt, zien het daarna niet meer. Wat anderen al hebben gekocht, blijft bij hen staan."
   )
   await confirm.getByRole("button", { name: "Toch niet" }).click()
   await expect(confirm).toBeHidden()

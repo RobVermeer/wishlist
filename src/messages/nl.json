@@ -276,7 +276,7 @@
     "button": "Wijzig",
     "title": "Wijzig verlanglijstje",
     "remove": {
-      "description": "Je verlanglijstje wordt met alle wensen verwijderd."
+      "description": "Je verlanglijstje wordt met alle wensen verwijderd. Je groepen en wie het volgt, zien het daarna niet meer. Wat anderen al hebben gekocht, blijft bij hen staan."
     },
     "form": {
       "description": "Beschrijving <small>(optioneel)</small>",
