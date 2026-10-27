@@ -19,7 +19,7 @@ test("create a group with a theme", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
   await expect(dialog).toHaveAccessibleDescription(
-    /zoals je familie, je vrienden of iedereen die meedoet aan één feestje\..*Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig/
+    /zoals je familie, je vrienden of iedereen die meedoet aan één feestje\..*Wil je alleen je eigen verlanglijstje delen, bijvoorbeeld voor je verjaardag\? Dan heb je geen groep nodig: maak een verlanglijstje met Nieuw verlanglijstje en kies daarin Deel dit verlanglijstje\.$/
   )
   await expect(dialog.getByLabel("Naam van de groep")).toHaveAttribute(
     "placeholder",
@@ -44,6 +44,23 @@ test("create a group with a theme", async ({ signIn }) => {
   await page.getByRole("link", { name: title }).click()
   await expect(page).toHaveURL(`/group/${group.id}`)
   await expect(page.getByRole("heading", { name: title })).toBeVisible()
+})
+
+test("someone with a wishlist is told to share it instead of making a group", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+
+  await expect(
+    page.getByRole("dialog", { name: /Nieuwe groep/ })
+  ).toHaveAccessibleDescription(
+    /Dan heb je geen groep nodig: open je verlanglijstje en kies Deel dit verlanglijstje\.$/
+  )
 })
 
 test("group title must be at least 2 characters", async ({ signIn }) => {
