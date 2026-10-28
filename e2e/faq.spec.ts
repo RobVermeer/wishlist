@@ -195,7 +195,7 @@ test("the frequently asked questions say what the description of a wishlist is f
 
   await expect(
     page.getByText(
-      "geef het eventueel een beschrijving, zoals een kledingmaat of lievelingskleur, en een thema"
+      "geef het eventueel een beschrijving, zoals ‘Verjaardag Bram’ of ‘Mijn 50e verjaardag’, en een thema"
     )
   ).toBeVisible()
 })
