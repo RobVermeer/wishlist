@@ -181,3 +181,21 @@ test("the frequently asked questions say bought gifts stay when a wish is remove
     )
   ).toBeVisible()
 })
+
+test("the frequently asked questions say what the description of a wishlist is for", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page
+    .getByText("Hoe maak ik een verlanglijstje?", { exact: true })
+    .click()
+
+  await expect(
+    page.getByText(
+      "geef het eventueel een beschrijving, zoals een kledingmaat of lievelingskleur, en een thema"
+    )
+  ).toBeVisible()
+})
