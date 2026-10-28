@@ -15,11 +15,11 @@ import { Page } from "@playwright/test"
 // own project after all other tests, when nothing else changes the counts.
 
 const tiles = {
-  Gebruikers: ["Totaal", "Actief in het afgelopen jaar"],
-  Verlanglijstjes: ["Actief", "Verwijderd", "Voor iemand anders"],
-  Groepen: ["Actief", "Verwijderd"],
-  Wensen: ["Op actieve verlanglijstjes", "Afgestreept", "Verwijderd"],
-  Lootjes: ["Trekkingen", "Deelnemers", "Nog niet aangemeld"],
+  Gebruikers: ["in totaal", "Actief in het afgelopen jaar"],
+  Verlanglijstjes: ["actief", "Verwijderd", "Voor iemand anders"],
+  Groepen: ["actief", "Verwijderd"],
+  Wensen: ["op actieve verlanglijstjes", "Afgestreept", "Verwijderd"],
+  Lootjes: ["trekkingen", "Deelnemers", "Nog niet aangemeld"],
 } as const
 
 async function readFigures(page: Page) {
@@ -90,17 +90,17 @@ test("the admin overview counts what is active and what is removed", async ({
   )
 
   expect(difference).toEqual({
-    "Gebruikers Totaal": 2,
+    "Gebruikers in totaal": 2,
     "Gebruikers Actief in het afgelopen jaar": 1,
-    "Verlanglijstjes Actief": 2,
+    "Verlanglijstjes actief": 2,
     "Verlanglijstjes Verwijderd": 1,
     "Verlanglijstjes Voor iemand anders": 1,
-    "Groepen Actief": 1,
+    "Groepen actief": 1,
     "Groepen Verwijderd": 1,
-    "Wensen Op actieve verlanglijstjes": 2,
+    "Wensen op actieve verlanglijstjes": 2,
     "Wensen Afgestreept": 1,
     "Wensen Verwijderd": 2,
-    "Lootjes Trekkingen": 1,
+    "Lootjes trekkingen": 1,
     "Lootjes Deelnemers": 3,
     "Lootjes Nog niet aangemeld": 1,
   })

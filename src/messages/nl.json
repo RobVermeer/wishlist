@@ -428,30 +428,30 @@
     "stats": {
       "users": {
         "title": "Gebruikers",
-        "total": "Totaal",
+        "total": "in totaal",
         "active": "Actief in het afgelopen jaar"
       },
       "wishlists": {
         "title": "Verlanglijstjes",
-        "active": "Actief",
+        "active": "actief",
         "removed": "Verwijderd",
         "forSomeoneElse": "Voor iemand anders"
       },
       "groups": {
         "title": "Groepen",
-        "active": "Actief",
+        "active": "actief",
         "removed": "Verwijderd",
         "averageMembers": "Gemiddeld aantal leden"
       },
       "items": {
         "title": "Wensen",
-        "active": "Op actieve verlanglijstjes",
+        "active": "op actieve verlanglijstjes",
         "bought": "Afgestreept",
         "removed": "Verwijderd"
       },
       "draws": {
         "title": "Lootjes",
-        "active": "Trekkingen",
+        "active": "trekkingen",
         "participants": "Deelnemers",
         "invited": "Nog niet aangemeld"
       }

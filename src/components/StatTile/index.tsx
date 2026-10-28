@@ -32,8 +32,8 @@ export const StatTile = ({
         {title}
       </h2>
       <dl className="grid gap-1">
-        <div className="flex flex-col-reverse">
-          <dt className="text-sm text-muted-foreground">{main.label}</dt>
+        <div className="flex flex-row-reverse items-baseline justify-end gap-2">
+          <dt className="text-muted-foreground">{main.label}</dt>
           <dd className="font-display text-4xl font-semibold tabular-nums">
             {main.value}
           </dd>
