@@ -34,7 +34,7 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
 
   await expect(dialog.getByLabel("Beschrijving")).toHaveAttribute(
     "placeholder",
-    "Bijvoorbeeld een kledingmaat of lievelingskleur."
+    "Bijvoorbeeld Mijn 50e verjaardag."
   )
   await dialog.getByLabel("Familie").click()
   await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
@@ -128,12 +128,16 @@ test("edit a wishlist", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
   await expect(dialog.getByLabel("Familie")).toBeChecked()
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
+  await expect(dialog.getByLabel("Beschrijving")).toHaveAttribute(
+    "placeholder",
+    "Bijvoorbeeld Mijn 50e verjaardag."
+  )
 
   await dialog.getByLabel("Voor iemand anders").click()
   await dialog.getByLabel("Naam", { exact: true }).fill("Opa Jan")
   await expect(dialog.getByLabel("Beschrijving")).toHaveAttribute(
     "placeholder",
-    "Bijvoorbeeld een kledingmaat of lievelingskleur."
+    "Bijvoorbeeld Verjaardag Bram."
   )
   await dialog.getByLabel("Beschrijving").fill("Zijn 80e verjaardag")
   const leaves = dialog.getByText(

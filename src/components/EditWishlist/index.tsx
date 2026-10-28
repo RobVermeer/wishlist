@@ -148,7 +148,9 @@ export const EditWishlist = ({
           <Input
             id="description"
             name="description"
-            placeholder={t("Common.wishlist.description.placeholder")}
+            placeholder={t("Common.wishlist.description.placeholder", {
+              ownList: String(ownList),
+            })}
             defaultValue={description || ""}
           />
 

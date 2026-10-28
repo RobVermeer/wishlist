@@ -100,7 +100,9 @@ export const NewWishlist = ({
           <Input
             id="description"
             name="description"
-            placeholder={t("Common.wishlist.description.placeholder")}
+            placeholder={t("Common.wishlist.description.placeholder", {
+              ownList: String(ownList),
+            })}
           />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>

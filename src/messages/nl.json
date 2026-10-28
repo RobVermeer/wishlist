@@ -77,7 +77,7 @@
         "placeholder": "Bijvoorbeeld de naam van je kind"
       },
       "description": {
-        "placeholder": "Bijvoorbeeld een kledingmaat of lievelingskleur."
+        "placeholder": "{ownList, select, true {Bijvoorbeeld Mijn 50e verjaardag.} other {Bijvoorbeeld Verjaardag Bram.}}"
       },
       "groups": {
         "replaces": "Vervangt je andere verlanglijstje in deze groep",
