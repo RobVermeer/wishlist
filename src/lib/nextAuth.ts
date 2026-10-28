@@ -6,6 +6,7 @@ import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email"
 import { sendVerificationRequest } from "@/lib/email/sendVerificationRequest"
 import { trackIssue } from "@/lib/trackIssue"
+import { updateLastSeen } from "@/lib/users/updateLastSeen"
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -29,7 +30,9 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    session: ({ session, user }: { session: Session; user: User }) => {
+    session: async ({ session, user }: { session: Session; user: User }) => {
+      await updateLastSeen(user)
+
       session.user.id = user.id
       session.user.firstName = user.firstName
       session.user.isAdmin = user.id === process.env.ADMIN_USER_ID

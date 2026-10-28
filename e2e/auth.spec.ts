@@ -231,3 +231,34 @@ test("the old profile pages for wishlists and groups go to the dashboard", async
     await expect(page).toHaveURL("/")
   }
 })
+
+test("using the app remembers when you were last seen, once a day", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const lastSeenAt = async () =>
+    (await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).lastSeenAt
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await expect.poll(lastSeenAt).not.toBeNull()
+
+  const anHourAgo = new Date(Date.now() - 60 * 60 * 1000)
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastSeenAt: anHourAgo },
+  })
+  await page.goto("/profile")
+  await expect(page.getByRole("heading", { name: "Profiel" })).toBeVisible()
+  expect(await lastSeenAt()).toEqual(anHourAgo)
+
+  const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastSeenAt: twoDaysAgo },
+  })
+  await page.goto("/")
+  await expect
+    .poll(async () => (await lastSeenAt())!.getTime())
+    .toBeGreaterThan(Date.now() - 60 * 1000)
+})

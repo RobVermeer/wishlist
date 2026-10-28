@@ -3,6 +3,7 @@ import { DefaultSession } from "next-auth"
 declare module "next-auth" {
   interface User {
     firstName: string | undefined
+    lastSeenAt?: Date | null
   }
 
   interface Profile {
