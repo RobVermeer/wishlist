@@ -32,10 +32,14 @@ test("admin can open the admin from their profile", async ({ signIn }) => {
   await page.getByRole("link", { name: "Admin" }).click()
 
   await expect(page).toHaveURL("/admin")
-  for (const label of ["Gebruikers", "Verlanglijstjes", "Groepen", "Wensen"]) {
-    await expect(
-      page.locator("div.text-lg").filter({ hasText: label })
-    ).toHaveText(new RegExp(`^\\s*${label}\\s*\\d+$`))
+  for (const title of [
+    "Gebruikers",
+    "Verlanglijstjes",
+    "Groepen",
+    "Wensen",
+    "Lootjes",
+  ]) {
+    await expect(page.getByRole("region", { name: title })).toBeVisible()
   }
 })
 

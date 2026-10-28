@@ -16,7 +16,20 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: "admin-stats.spec.ts",
+    },
+    // Counts the whole database, so it runs once the other tests are done.
+    {
+      name: "admin-stats",
+      use: { ...devices["Desktop Chrome"] },
+      testMatch: "admin-stats.spec.ts",
+      dependencies: ["chromium"],
+    },
+  ],
   webServer: [
     {
       command: "node e2e/support/mock-resend.mjs",
