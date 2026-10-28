@@ -97,7 +97,11 @@ export const NewWishlist = ({
               small: chunks => <small>{chunks}</small>,
             })}
           </Label>
-          <Input id="description" name="description" />
+          <Input
+            id="description"
+            name="description"
+            placeholder={t("Common.wishlist.description.placeholder")}
+          />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme">

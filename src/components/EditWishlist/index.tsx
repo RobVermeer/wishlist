@@ -148,6 +148,7 @@ export const EditWishlist = ({
           <Input
             id="description"
             name="description"
+            placeholder={t("Common.wishlist.description.placeholder")}
             defaultValue={description || ""}
           />
 

@@ -76,6 +76,9 @@
         "name": "Naam",
         "placeholder": "Bijvoorbeeld de naam van je kind"
       },
+      "description": {
+        "placeholder": "Bijvoorbeeld een kledingmaat of lievelingskleur."
+      },
       "groups": {
         "replaces": "Vervangt je andere verlanglijstje in deze groep",
         "leaves": "De leden van deze groep zien dit verlanglijstje dan niet meer."

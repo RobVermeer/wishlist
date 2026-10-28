@@ -32,6 +32,10 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await expect(dialog.getByLabel("Familie")).not.toBeChecked()
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
+  await expect(dialog.getByLabel("Beschrijving")).toHaveAttribute(
+    "placeholder",
+    "Bijvoorbeeld een kledingmaat of lievelingskleur."
+  )
   await dialog.getByLabel("Familie").click()
   await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
   await dialog.getByLabel("Thema").click()
@@ -127,6 +131,10 @@ test("edit a wishlist", async ({ signIn }) => {
 
   await dialog.getByLabel("Voor iemand anders").click()
   await dialog.getByLabel("Naam", { exact: true }).fill("Opa Jan")
+  await expect(dialog.getByLabel("Beschrijving")).toHaveAttribute(
+    "placeholder",
+    "Bijvoorbeeld een kledingmaat of lievelingskleur."
+  )
   await dialog.getByLabel("Beschrijving").fill("Zijn 80e verjaardag")
   const leaves = dialog.getByText(
     "De leden van deze groep zien dit verlanglijstje dan niet meer."
