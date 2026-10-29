@@ -224,13 +224,12 @@ test("managers change the wishlist but not who manages it", async ({
   await expect(dialog.getByLabel("Werk")).toHaveCount(0)
 
   await dialog.getByLabel("Naam", { exact: true }).fill("Emma 🎂")
-  await dialog.getByLabel("Beschrijving").fill("Voor haar verjaardag")
+  await expect(dialog.getByLabel("Beschrijving")).toHaveCount(0)
   await dialog.getByLabel("Familie Vermeer").click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
   await expect(page.getByRole("heading", { name: /Emma 🎂/ })).toBeVisible()
-  await expect(page.getByText("Voor haar verjaardag")).toBeVisible()
 
   const updated = await findWishlist(wishlist)
   expect(ids(updated.groups)).toEqual(ids([family, work, fathersFamily]))

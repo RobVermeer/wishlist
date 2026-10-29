@@ -5,7 +5,6 @@ import { categoryProperties } from "@/lib/wishlistCategories"
 export const wishlistProperties = {
   id: true,
   title: true,
-  description: true,
   theme: true,
   user: {
     select: userProperties,

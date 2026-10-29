@@ -618,7 +618,8 @@ test("managers can't change who manages a wishlist", async ({ signIn }) => {
     input.value = id
     form.append(input)
   }, member.id)
-  await dialog.getByLabel("Beschrijving").fill("Voor haar verjaardag")
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Feestdagen" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
   await expect(dialog).toBeHidden()
 
@@ -626,7 +627,7 @@ test("managers can't change who manages a wishlist", async ({ signIn }) => {
     where: { id: wishlist.id },
     include: { managers: true },
   })
-  expect(updated.description).toBe("Voor haar verjaardag")
+  expect(updated.theme).toBe("holidays")
   expect(updated.managers.map(({ id }) => id)).toEqual([manager.id])
 })
 
@@ -1056,7 +1057,7 @@ async function shoppersSetup() {
   const member = await createUser({ firstName: "Mo" })
   const group = await createGroup(owner, { members: [member] })
   const wishlist = await createWishlist(owner, {
-    description: "Van Olga",
+    theme: "birthday",
     groups: [group],
   })
   const own = await createWishlist(member)
@@ -1119,14 +1120,15 @@ test("only the owner and managers can change a wishlist", async ({
   await page.goto(`/wishlist/${own.id}`)
   await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
-  await dialog.getByLabel("Beschrijving").fill("Overgenomen")
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Feestdagen" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
   expect(
     (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
-      .description
-  ).toBe("Van Olga")
+      .theme
+  ).toBe("birthday")
 })
 
 test("only the owner and managers can reorder categories", async ({

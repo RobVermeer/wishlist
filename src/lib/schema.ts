@@ -27,12 +27,6 @@ export const wishlistSchema = z.object({
     .min(2, { error: "Naam moet minimaal uit 2 tekens bestaan" })
     .max(40, { error: "Naam mag maximaal uit 40 tekens bestaan" })
     .optional(),
-  description: z
-    .string()
-    .trim()
-    .min(2, { error: "Beschrijving moet minimaal uit 2 tekens bestaan" })
-    .max(300, { error: "Beschrijving mag maximaal uit 300 tekens bestaan" })
-    .optional(),
   theme: z.string().optional(),
   groups: z.array(z.string()).optional(),
   managers: z.array(z.string()).optional(),

@@ -28,10 +28,6 @@ export const SharedWishlist = async ({
       <div className="text-center">
         <ListTitle>{name}</ListTitle>
         <p>{t("intro", { name })}</p>
-
-        {wishlist.description && (
-          <small className="italic text-sm">{wishlist.description}</small>
-        )}
       </div>
 
       <section className="grid gap-2 rounded-lg bg-secondary p-4 text-center">
