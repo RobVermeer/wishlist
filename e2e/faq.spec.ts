@@ -181,3 +181,22 @@ test("the frequently asked questions say bought gifts stay when a wish is remove
     )
   ).toBeVisible()
 })
+
+test("the frequently asked questions explain how to make a wishlist", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page
+    .getByText("Hoe maak ik een verlanglijstje?", { exact: true })
+    .click()
+
+  await expect(
+    page.getByText(
+      "Kies op je overzicht ‘Nieuw verlanglijstje’. Kies of het voor jezelf is of voor iemand anders, kies eventueel een thema en vink de groepen aan waar het in moet. Daarna zet je er wensen op.",
+      { exact: true }
+    )
+  ).toBeVisible()
+})
