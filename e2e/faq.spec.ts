@@ -94,17 +94,6 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   await expect(answer).toBeHidden()
 })
 
-test("the frequently asked questions ask to log in first", async ({ page }) => {
-  await page.goto("/login")
-  await expect(
-    page.getByRole("link", { name: "Veelgestelde vragen" })
-  ).toHaveCount(0)
-
-  await page.goto("/vragen")
-
-  await expect(page).toHaveURL("/login?callbackUrl=%2Fvragen")
-})
-
 test("jump to a subject in the frequently asked questions", async ({
   signIn,
 }) => {

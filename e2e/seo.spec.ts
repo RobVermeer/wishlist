@@ -148,3 +148,40 @@ test("the home page tells search engines it is a free web app", async ({
     }),
   ])
 })
+
+test("visitors can read the frequently asked questions", async ({ page }) => {
+  await page.goto("/")
+  await page.getByRole("link", { name: "Veelgestelde vragen" }).click()
+
+  await expect(page).toHaveURL("/vragen")
+  await expect(page).toHaveTitle("Veelgestelde vragen - Wishlist")
+  await page.getByText("Kost Wishlist iets?").click()
+  await expect(page.getByText("Nee, Wishlist is gratis.")).toBeVisible()
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    `${baseURL}/vragen`
+  )
+
+  await expect(
+    page.getByRole("button", { name: "Stuur ons een bericht" })
+  ).toHaveCount(0)
+  await page
+    .getByRole("link", { name: "Log in om ons een bericht te sturen" })
+    .click()
+  await expect(page).toHaveURL("/login?callbackUrl=%2Fvragen")
+})
+
+test("the frequently asked questions are structured data", async ({ page }) => {
+  await page.goto("/vragen")
+
+  const [faq] = await jsonLd(page)
+  expect(faq["@type"]).toBe("FAQPage")
+  expect(faq.mainEntity).toContainEqual({
+    "@type": "Question",
+    name: "Kost Wishlist iets?",
+    acceptedAnswer: { "@type": "Answer", text: "Nee, Wishlist is gratis." },
+  })
+  expect(faq.mainEntity).toHaveLength(
+    await page.locator("details summary").count()
+  )
+})
