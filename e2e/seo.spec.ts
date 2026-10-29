@@ -56,3 +56,28 @@ test("logged in users still see their dashboard on the home page", async ({
   await expect(page.getByRole("heading", { name: "Hoi Lotte" })).toBeVisible()
   await expect(meta(page, "robots")).toHaveAttribute("content", /noindex/)
 })
+
+test("robots.txt keeps private pages out and points to the sitemap", async ({
+  request,
+}) => {
+  const response = await request.get("/robots.txt")
+
+  expect(response.status()).toBe(200)
+  const text = await response.text()
+  expect(text).toContain("Allow: /")
+  for (const path of ["/admin", "/api", "/profile"]) {
+    expect(text).toContain(`Disallow: ${path}`)
+  }
+  expect(text).not.toContain("Disallow: /lijstje")
+  expect(text).toContain(`Sitemap: ${baseURL}/sitemap.xml`)
+})
+
+test("the sitemap lists the public pages", async ({ request }) => {
+  const response = await request.get("/sitemap.xml")
+
+  expect(response.status()).toBe(200)
+  const locations = [...(await response.text()).matchAll(/<loc>(.*?)<\/loc>/g)]
+    .map(([, location]) => location)
+    .sort()
+  expect(locations).toEqual([`${baseURL}`, `${baseURL}/vragen`].sort())
+})
