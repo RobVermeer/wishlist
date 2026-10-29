@@ -1,4 +1,4 @@
-import { test, expect, createUser } from "./fixtures"
+import { test, expect, createUser, createWishlist } from "./fixtures"
 import { baseURL } from "./support/env"
 import { Page } from "@playwright/test"
 
@@ -80,4 +80,46 @@ test("the sitemap lists the public pages", async ({ request }) => {
     .map(([, location]) => location)
     .sort()
   expect(locations).toEqual([`${baseURL}`, `${baseURL}/vragen`].sort())
+})
+
+test("a shared link of the home page shows a preview", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/")
+
+  await expect(meta(page, "og:title")).toHaveAttribute("content", title)
+  await expect(meta(page, "og:description")).toHaveAttribute(
+    "content",
+    description
+  )
+  await expect(meta(page, "og:locale")).toHaveAttribute("content", "nl_NL")
+  await expect(meta(page, "twitter:card")).toHaveAttribute(
+    "content",
+    "summary_large_image"
+  )
+  const image = await meta(page, "og:image").getAttribute("content")
+  expect(image).toMatch(new RegExp(`^${baseURL}/`))
+  const response = await request.get(image!, { maxRedirects: 0 })
+  expect(response.status()).toBe(200)
+  expect(response.headers()["content-type"]).toBe("image/png")
+})
+
+test("a shared wishlist shows a preview but stays out of search results", async ({
+  page,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  await createWishlist(owner, { shareToken: `seo-${owner.id}` })
+
+  await page.goto(`/lijstje/seo-${owner.id}`)
+
+  await expect(meta(page, "og:title")).toHaveAttribute(
+    "content",
+    "Olga heeft een verlanglijstje met je gedeeld"
+  )
+  await expect(meta(page, "og:image")).toHaveAttribute(
+    "content",
+    `${baseURL}/og.png`
+  )
+  await expect(meta(page, "robots")).toHaveAttribute("content", /noindex/)
 })

@@ -476,6 +476,10 @@
     "title": "Wishlist – Maak en deel je verlanglijstje",
     "description": "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
   },
+  "OpenGraph": {
+    "title": "Maak en deel je verlanglijstje",
+    "text": "Eén verlanglijstje voor al je feestjes, gratis."
+  },
   "Landing": {
     "groups": {
       "title": "Eén verlanglijstje voor al je feestjes",
@@ -578,6 +582,10 @@
   },
   "SharedWishlist": {
     "intro": "{name} heeft een verlanglijstje met je gedeeld 🎁",
+    "preview": {
+      "title": "{name} heeft een verlanglijstje met je gedeeld",
+      "text": "Bekijk wat {name} graag wil en streep stiekem af wat je gaat kopen."
+    },
     "loggedOut": {
       "title": "Log in om het te bekijken",
       "text": "Na het inloggen zie je de wensen en wat er al gekocht is, zodat niemand iets dubbel geeft.",

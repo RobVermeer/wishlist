@@ -10,6 +10,7 @@ import { Layout } from "@/components/Layout"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
 import { siteUrl } from "@/lib/siteUrl"
+import { openGraphImage } from "@/lib/openGraph"
 
 const body = Figtree({ subsets: ["latin"], variable: "--font-body" })
 const heading = Fraunces({
@@ -27,6 +28,15 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t("description"),
     // Only pages meant for search results opt in, everything else is private.
     robots: { index: false, follow: true },
+    openGraph: {
+      type: "website",
+      siteName: "Wishlist",
+      locale: "nl_NL",
+      title: t("title"),
+      description: t("description"),
+      images: [openGraphImage],
+    },
+    twitter: { card: "summary_large_image" },
     manifest: "/manifest.json",
     appleWebApp: {
       capable: true,
