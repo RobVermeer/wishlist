@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createWishlistForUser } from "@/lib/wishlists/createWishlistForUser"
 import { FormEvent, ReactNode, startTransition, useState } from "react"
@@ -91,13 +90,6 @@ export const NewWishlist = ({
           {!ownList && <WishlistManagersField managers={managers} />}
 
           <Separator />
-
-          <Label htmlFor="description">
-            {t.rich("NewWishlist.form.description", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input id="description" name="description" />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme">

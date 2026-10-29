@@ -32,8 +32,8 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await expect(dialog.getByLabel("Familie")).not.toBeChecked()
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
+  await expect(dialog.getByLabel("Beschrijving")).toHaveCount(0)
   await dialog.getByLabel("Familie").click()
-  await dialog.getByLabel("Beschrijving").fill("Voor mijn verjaardag")
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Verjaardag" }).click()
   await dialog.getByRole("button", { name: "Maak aan" }).click()
@@ -46,7 +46,6 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
     include: { groups: true },
   })
   expect(wishlist.title).toBeNull()
-  expect(wishlist.description).toBe("Voor mijn verjaardag")
   expect(wishlist.theme).toBe("birthday")
   expect(wishlist.groups.map(({ id }) => id)).toEqual([family.id])
 
@@ -54,7 +53,6 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await page.getByRole("link", { name: "Mijn lijstje" }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
   await expect(page).toHaveTitle("Mijn lijstje - Wishlist")
-  await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
 })
 
 test("create a wishlist for someone else", async ({ signIn }) => {
@@ -99,14 +97,6 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
   )
   await expect(dialog.getByLabel("Voor iemand anders")).toBeChecked()
   await expect(dialog.getByLabel("Naam", { exact: true })).toHaveValue("B")
-
-  await dialog.getByLabel("Naam", { exact: true }).fill("Bram")
-  await dialog.getByLabel("Beschrijving").fill("x")
-  await dialog.getByRole("button", { name: "Maak aan" }).click()
-
-  await expect(toasts(page)).toContainText(
-    "Beschrijving moet minimaal uit 2 tekens bestaan"
-  )
   await expect(dialog).toBeVisible()
   expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
 })
@@ -127,7 +117,7 @@ test("edit a wishlist", async ({ signIn }) => {
 
   await dialog.getByLabel("Voor iemand anders").click()
   await dialog.getByLabel("Naam", { exact: true }).fill("Opa Jan")
-  await dialog.getByLabel("Beschrijving").fill("Zijn 80e verjaardag")
+  await expect(dialog.getByLabel("Beschrijving")).toHaveCount(0)
   const leaves = dialog.getByText(
     "De leden van deze groep zien dit verlanglijstje dan niet meer."
   )
@@ -143,14 +133,12 @@ test("edit a wishlist", async ({ signIn }) => {
 
   await expect(dialog).toBeHidden()
   await expect(page.getByRole("heading", { name: "Opa Jan" })).toBeVisible()
-  await expect(page.getByText("Zijn 80e verjaardag")).toBeVisible()
 
   const updated = await prisma.wishlist.findUniqueOrThrow({
     where: { id: wishlist.id },
     include: { groups: true },
   })
   expect(updated.title).toBe("Opa Jan")
-  expect(updated.description).toBe("Zijn 80e verjaardag")
   expect(updated.groups.map(({ id }) => id)).toEqual([friends.id])
 })
 

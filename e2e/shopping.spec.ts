@@ -22,10 +22,7 @@ async function setup() {
     title: "Familie",
     members: [shopper],
   })
-  const wishlist = await createWishlist(owner, {
-    description: "Alles is welkom",
-    groups: [group],
-  })
+  const wishlist = await createWishlist(owner, { groups: [group] })
 
   return { owner, shopper, group, wishlist }
 }
@@ -48,7 +45,6 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(
     page.getByRole("heading", { name: "Olga in Familie" })
   ).toBeVisible()
-  await expect(page.getByText("Alles is welkom")).toBeVisible()
   await expect(
     page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
   ).toBeVisible()

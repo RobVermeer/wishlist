@@ -70,7 +70,6 @@ test("a shared wishlist asks to log in before showing anything", async ({
   const owner = await createUser({ firstName: "Olga" })
   const buyer = await createUser({ firstName: "Bob" })
   const wishlist = await createWishlist(owner, {
-    description: "Voor mijn verjaardag",
     shareToken: `token-${owner.id}`,
   })
   const secretWish = `Geheime wens ${owner.id}`
@@ -90,7 +89,6 @@ test("a shared wishlist asks to log in before showing anything", async ({
   await expect(
     page.getByText("Olga heeft een verlanglijstje met je gedeeld 🎁")
   ).toBeVisible()
-  await expect(page.getByText("Voor mijn verjaardag")).toBeVisible()
 
   const html = await page.content()
   for (const hidden of [

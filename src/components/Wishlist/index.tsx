@@ -108,10 +108,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           )}
         </ListTitle>
 
-        {wishlist.description && (
-          <small className="italic text-sm">{wishlist.description}</small>
-        )}
-
         {wishlist.managedWith.length > 0 && (
           <p className="mt-2 text-sm text-muted-foreground">
             {t("hint.together", {
@@ -131,7 +127,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
             wishlist={{
               id: wishlist.id,
               title: wishlist.title,
-              description: wishlist.description,
               theme: wishlist.theme,
               groups: wishlist.groups
                 .filter(({ id }) => ownGroups.some(group => group.id === id))

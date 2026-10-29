@@ -53,7 +53,6 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
 
     const data = wishlistSchema.parse({
       name: formData.get("name")?.toString() || undefined,
-      description: formData.get("description")?.toString() || undefined,
       theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map(group => group.toString()),
       managers: formData.getAll("managers").map(manager => manager.toString()),
@@ -81,7 +80,6 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
         where: { id },
         data: {
           title: data.name || null,
-          description: data.description || null,
           theme: data.theme || null,
           groups: {
             set: [

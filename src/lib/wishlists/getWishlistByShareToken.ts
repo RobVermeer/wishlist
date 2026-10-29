@@ -10,7 +10,6 @@ export const getWishlistByShareToken = cache(async (shareToken: string) =>
     select: {
       id: true,
       title: true,
-      description: true,
       user: { select: userProperties },
     },
   })

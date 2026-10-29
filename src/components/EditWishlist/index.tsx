@@ -9,7 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { deleteWishlistById } from "@/lib/wishlists/deleteWishlistById"
 import { updateWishlistById } from "@/lib/wishlists/updateWishlistById"
@@ -38,7 +37,6 @@ interface Props {
   wishlist: {
     id: string
     title: string | null
-    description: string | null
     theme: string | null
     groups: { id: string }[]
     managers: { id: string }[]
@@ -60,7 +58,7 @@ export const EditWishlist = ({
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const { id, title, description, isManager } = wishlist
+  const { id, title, isManager } = wishlist
   const [ownList, setOwnList] = useState(!title)
   const t = useTranslations()
 
@@ -139,17 +137,6 @@ export const EditWishlist = ({
           )}
 
           <Separator />
-
-          <Label htmlFor="description">
-            {t.rich("EditWishlist.form.description", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input
-            id="description"
-            name="description"
-            defaultValue={description || ""}
-          />
 
           <Label htmlFor="theme">{t("Common.wishlist.theme.label")}</Label>
           <Select name="theme" defaultValue={wishlist.theme || undefined}>
