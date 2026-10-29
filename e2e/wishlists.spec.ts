@@ -248,6 +248,28 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
   ).toHaveAttribute("href", `/wishlist/${wishlist.id}`)
 })
 
+test("your own wishlists on the dashboard say which groups they are in", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const family = await createGroup(user, { title: "Familie" })
+  const friends = await createGroup(user, { title: "Vrienden" })
+  await createWishlist(user, { groups: [family, friends] })
+  await createWishlist(user)
+  await createWishlist(user, { title: "Opa", groups: [family] })
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  await expect(
+    page.getByRole("link").filter({ hasText: /^(Mijn lijstje|Opa)/ })
+  ).toHaveText([
+    /^Mijn lijstje\s*In groepen Familie en Vrienden$/,
+    /^Mijn lijstje\s*Nog in geen groep$/,
+    /^Opa$/,
+  ])
+})
+
 test("the dashboard shows what you follow first, then your own wishlists", async ({
   signIn,
 }) => {
