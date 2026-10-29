@@ -92,7 +92,6 @@ export async function createWishlist(
   owner: User,
   {
     title = null,
-    description = null,
     theme = null,
     groups = [],
     followers = [],
@@ -100,7 +99,6 @@ export async function createWishlist(
     shareToken = null,
   }: {
     title?: string | null
-    description?: string | null
     theme?: string | null
     groups?: { id: string }[]
     followers?: { id: string }[]
@@ -111,7 +109,6 @@ export async function createWishlist(
   return prisma.wishlist.create({
     data: {
       title,
-      description,
       theme,
       shareToken,
       createdAt: new Date(),

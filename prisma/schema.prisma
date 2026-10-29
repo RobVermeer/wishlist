@@ -79,7 +79,6 @@ model Group {
 model Wishlist {
   id           String             @id @default(cuid())
   title        String?
-  description  String?
   createdAt    DateTime
   theme        String?
   removed      Boolean            @default(false)
