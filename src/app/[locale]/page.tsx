@@ -21,7 +21,9 @@ import { NewWishlist } from "@/components/NewWishlist"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { Metadata } from "next"
+import { JsonLd } from "@/components/JsonLd"
 import { Landing } from "@/components/Landing"
+import { siteUrl } from "@/lib/siteUrl"
 
 interface Props {
   params: Promise<{ locale: string }>
@@ -50,7 +52,28 @@ export const generateMetadata = async ({
 export default async function Home() {
   const session = await getServerSession(authOptions)
 
-  if (!session) return <Landing />
+  if (!session) {
+    const t = await getTranslations("Metadata")
+
+    return (
+      <>
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "Wishlist",
+            url: siteUrl.origin,
+            description: t("description"),
+            inLanguage: "nl",
+            applicationCategory: "LifestyleApplication",
+            operatingSystem: "Web",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+          }}
+        />
+        <Landing />
+      </>
+    )
+  }
 
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()

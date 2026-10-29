@@ -9,6 +9,13 @@ const description =
 const meta = (page: Page, name: string) =>
   page.locator(`meta[name="${name}"], meta[property="${name}"]`)
 
+async function jsonLd(page: Page) {
+  const scripts = await page
+    .locator('script[type="application/ld+json"]')
+    .allTextContents()
+  return scripts.map(script => JSON.parse(script))
+}
+
 test("visitors see the landing page on the home page", async ({ page }) => {
   await page.goto("/")
 
@@ -122,4 +129,22 @@ test("a shared wishlist shows a preview but stays out of search results", async 
     `${baseURL}/og.png`
   )
   await expect(meta(page, "robots")).toHaveAttribute("content", /noindex/)
+})
+
+test("the home page tells search engines it is a free web app", async ({
+  page,
+}) => {
+  await page.goto("/")
+
+  expect(await jsonLd(page)).toEqual([
+    expect.objectContaining({
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: "Wishlist",
+      url: baseURL,
+      inLanguage: "nl",
+      applicationCategory: "LifestyleApplication",
+      offers: expect.objectContaining({ price: "0", priceCurrency: "EUR" }),
+    }),
+  ])
 })
