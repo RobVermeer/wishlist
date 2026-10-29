@@ -9,7 +9,7 @@ import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlistsForUser"
 import Link from "next/link"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
 import { WishlistIcon, wishlistColors } from "@/components/WishlistIcon"
 import { Gift } from "lucide-react"
 import { DrawDetails } from "@/components/DrawDetails"
@@ -46,9 +46,17 @@ export default async function Home() {
   const followedWishlists = await getFollowedWishlistsForUser()
   const lots = await getLotsForUser()
   const t = await getTranslations("Home")
+  const format = await getFormatter()
+
+  const ownListGroups = (wishlist: (typeof wishlists)[number]) =>
+    t("wishlists.groups", {
+      count: wishlist.groups.length,
+      names: format.list(wishlist.groups.map(({ title }) => title)),
+    })
 
   const renderWishlist = (
-    wishlist: (typeof wishlists)[number] | (typeof followedWishlists)[number]
+    wishlist: (typeof wishlists)[number] | (typeof followedWishlists)[number],
+    details?: string
   ) => (
     <Link
       key={wishlist.id}
@@ -61,10 +69,15 @@ export default async function Home() {
       <span className="flex size-11 items-center justify-center rounded-full bg-white/70 shadow-sm transition-transform group-hover:scale-110 dark:bg-white/15">
         <WishlistIcon theme={wishlist.theme} className="size-5" />
       </span>
-      <WishlistTitle
-        className="font-display text-lg font-semibold leading-tight text-foreground"
-        wishlist={wishlist}
-      />
+      <span className="grid gap-0.5">
+        <WishlistTitle
+          className="font-display text-lg font-semibold leading-tight text-foreground"
+          wishlist={wishlist}
+        />
+        {details && (
+          <small className="text-xs text-muted-foreground">{details}</small>
+        )}
+      </span>
     </Link>
   )
 
@@ -131,7 +144,7 @@ export default async function Home() {
               </span>
             </Link>
           ))}
-          {followedWishlists.map(renderWishlist)}
+          {followedWishlists.map(wishlist => renderWishlist(wishlist))}
           <NewGroup
             hasWishlist={wishlists.length > 0}
             trigger={<AddTile label={t("following.newGroup")} />}
@@ -149,7 +162,12 @@ export default async function Home() {
         <ListTitle>{t("wishlists.title")}</ListTitle>
 
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {wishlists.map(renderWishlist)}
+          {wishlists.map(wishlist =>
+            renderWishlist(
+              wishlist,
+              wishlist.title ? undefined : ownListGroups(wishlist)
+            )
+          )}
           <NewWishlist
             groups={await getGroupOptionsForUser()}
             managers={await getManagerOptionsForUser()}

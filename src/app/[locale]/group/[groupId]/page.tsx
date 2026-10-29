@@ -19,7 +19,7 @@ import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
-import { getTranslations } from "next-intl/server"
+import { getFormatter, getTranslations } from "next-intl/server"
 import { notFound, redirect } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
@@ -56,6 +56,7 @@ export default async function GroupPage({ params }: Props) {
   const group = await getGroupById(groupId)
   const t = await getTranslations("Group")
   const tCommon = await getTranslations("Common")
+  const format = await getFormatter()
 
   if (!group) {
     notFound()
@@ -89,9 +90,11 @@ export default async function GroupPage({ params }: Props) {
   const wishlistNames = (wishlists: typeof ownWishlists) =>
     wishlists.map(wishlist => ({
       id: wishlist.id,
-      name: wishlist.title || wishlist.description || tCommon("myList"),
-      details: t("chooseWishlist.wishes", {
-        count: wishlist.wishlistItem.length,
+      name: wishlist.title || tCommon("myList"),
+      details: t("chooseWishlist.details", {
+        wishes: wishlist.wishlistItem.length,
+        groups: wishlist.groups.length,
+        names: format.list(wishlist.groups.map(({ title }) => title)),
       }),
     }))
   const groupInfo = { id: group.id, title: group.title }
@@ -300,9 +303,7 @@ export default async function GroupPage({ params }: Props) {
           ...option,
           replaces:
             ownInGroup.length === 1
-              ? t("addWishlist.replaces", {
-                  name: wishlistNames(ownInGroup)[0].name,
-                })
+              ? t("addWishlist.replaces")
               : ownInGroup.length > 1
                 ? t("addWishlist.replacesMany")
                 : undefined,
