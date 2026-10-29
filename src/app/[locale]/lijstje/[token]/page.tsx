@@ -1,5 +1,7 @@
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
+import { getTranslations } from "next-intl/server"
+import { openGraphImage } from "@/lib/openGraph"
 import { notFound, redirect } from "next/navigation"
 import { SharedWishlist } from "@/components/SharedWishlist"
 import { authOptions } from "@/lib/nextAuth"
@@ -17,8 +19,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!wishlist) return {}
 
+  const name = getWishlistName(wishlist)
+  const t = await getTranslations("SharedWishlist.preview")
+
+  // A preview in WhatsApp and the like, but no search results: the layout
+  // keeps this page out of the index.
   return {
-    title: `${getWishlistName(wishlist)} - Wishlist`,
+    title: `${name} - Wishlist`,
+    openGraph: {
+      type: "website",
+      siteName: "Wishlist",
+      locale: "nl_NL",
+      title: t("title", { name }),
+      description: t("text", { name }),
+      images: [openGraphImage],
+    },
   }
 }
 
