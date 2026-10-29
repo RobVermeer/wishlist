@@ -10,12 +10,12 @@ import {
 import { testEnv } from "./support/env"
 
 test.describe("unauthenticated visitor", () => {
-  test("is sent to the login page from the dashboard", async ({ page }) => {
+  test("sees the landing page instead of the dashboard", async ({ page }) => {
     await page.goto("/")
 
-    await expect(page).toHaveURL("/login")
+    await expect(page).toHaveURL("/")
     await expect(
-      page.getByRole("heading", { name: "Welkom bij Wishlist" })
+      page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
     ).toBeVisible()
   })
 

@@ -9,6 +9,7 @@ import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
+import { siteUrl } from "@/lib/siteUrl"
 
 const body = Figtree({ subsets: ["latin"], variable: "--font-body" })
 const heading = Fraunces({
@@ -21,8 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata")
 
   return {
-    title: "Wishlist",
+    metadataBase: siteUrl,
+    title: t("title"),
     description: t("description"),
+    // Only pages meant for search results opt in, everything else is private.
+    robots: { index: false, follow: true },
     manifest: "/manifest.json",
     appleWebApp: {
       capable: true,
