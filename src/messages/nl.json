@@ -98,7 +98,7 @@
     "faq": "Veelgestelde vragen"
   },
   "Login": {
-    "title": "Welkom bij Wishlist",
+    "title": "Maak en deel je verlanglijstje",
     "text": "Houd één verlanglijstje bij voor elk feestje, van je verjaardag tot kerst. Deel het met een link of zet het in je groepen: iedereen in een groep ziet met één link alle verlanglijstjes.",
     "google": "Inloggen met Google",
     "email": "Inloggen met e-mail",
@@ -473,7 +473,8 @@
     }
   },
   "Metadata": {
-    "description": "Eén verlanglijstje voor al je feestjes. Deel het met een link of in groepen met familie en vrienden, en streep stiekem af wat je gaat kopen."
+    "title": "Wishlist – Maak en deel je verlanglijstje",
+    "description": "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
   },
   "Landing": {
     "groups": {

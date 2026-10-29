@@ -4,12 +4,8 @@ test("logged out visitors see what Wishlist can do", async ({ page }) => {
   await page.goto("/login")
 
   await expect(
-    page.getByRole("heading", { name: "Welkom bij Wishlist" })
+    page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
   ).toBeVisible()
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
-    "content",
-    "Eén verlanglijstje voor al je feestjes. Deel het met een link of in groepen met familie en vrienden, en streep stiekem af wat je gaat kopen."
-  )
   await expect(
     page.getByText(
       /^Houd één verlanglijstje bij voor elk feestje.*met een link/

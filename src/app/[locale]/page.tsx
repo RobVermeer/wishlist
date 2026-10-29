@@ -20,14 +20,25 @@ import { NewGroup } from "@/components/NewGroup"
 import { NewWishlist } from "@/components/NewWishlist"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
-import { redirect } from "next/navigation"
+import { Metadata } from "next"
+import { Landing } from "@/components/Landing"
 
 interface Props {
   params: Promise<{ locale: string }>
 }
 
-export const generateMetadata = async ({ params }: Props) => {
+export const generateMetadata = async ({
+  params,
+}: Props): Promise<Metadata> => {
   const { locale } = await params
+  const session = await getServerSession(authOptions)
+
+  if (!session) {
+    return {
+      robots: { index: true, follow: true },
+      alternates: { canonical: "/" },
+    }
+  }
 
   const t = await getTranslations({ locale, namespace: "Home" })
 
@@ -39,7 +50,7 @@ export const generateMetadata = async ({ params }: Props) => {
 export default async function Home() {
   const session = await getServerSession(authOptions)
 
-  if (!session) redirect("/login")
+  if (!session) return <Landing />
 
   const groups = await getGroupsForUser()
   const wishlists = await getWishlistsForUser()
