@@ -43,10 +43,22 @@ jobs:
           npm install --no-audit --no-fund \
             prisma@$(node -p "require('../../../node_modules/prisma/package.json').version") \
             dotenv@$(node -p "require('../../../node_modules/dotenv/package.json').version")
+      # Copy the contents (/.): the build already creates these folders when it
+      # traces a file in them, and copying the folder itself then nests it.
       - name: Copy public folder 🚝
-        run: cp -R public/ .next/standalone/public/
+        run: |
+          mkdir -p .next/standalone/public
+          cp -R public/. .next/standalone/public/
       - name: Copy static folder 🗂
-        run: cp -R .next/static/ .next/standalone/.next/static/
+        run: |
+          mkdir -p .next/standalone/.next/static
+          cp -R .next/static/. .next/standalone/.next/static/
+      - name: Check the copied folders 🔎
+        run: |
+          test -f .next/standalone/public/manifest.json
+          test -f .next/standalone/public/theme/sinterklaas.webp
+          test ! -e .next/standalone/public/public
+          test ! -e .next/standalone/.next/static/static
       - name: Install SSH Key 🔑
         uses: shimataro/ssh-key-action@v2
         with:
