@@ -11,6 +11,8 @@ import {
 import { useTranslations } from "next-intl"
 import { ListTitle } from "@/components/ListTitle"
 import { ContactForm } from "@/components/ContactForm"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface Section {
   id: string
@@ -26,7 +28,11 @@ const icons: Record<string, typeof Gift> = {
   "je-account": UserRound,
 }
 
-export const Faq = () => {
+interface Props {
+  loggedIn: boolean
+}
+
+export const Faq = ({ loggedIn }: Props) => {
   const t = useTranslations("Faq")
   const sections = t.raw("sections") as Section[]
 
@@ -109,7 +115,15 @@ export const Faq = () => {
       <section className="grid gap-3 rounded-lg bg-secondary p-6 text-center">
         <h2 className="text-xl font-semibold">{t("contact.title")}</h2>
         <p className="text-muted-foreground">{t("contact.text")}</p>
-        <ContactForm />
+        {loggedIn ? (
+          <ContactForm />
+        ) : (
+          <Button asChild variant="outline" className="justify-self-center">
+            <Link href={`/login?callbackUrl=${encodeURIComponent("/vragen")}`}>
+              {t("contact.login")}
+            </Link>
+          </Button>
+        )}
       </section>
     </>
   )

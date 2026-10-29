@@ -634,6 +634,7 @@
     "title": "Veelgestelde vragen",
     "metaTitle": "Veelgestelde vragen - Wishlist",
     "intro": "Waar heb je een vraag over?",
+    "metaDescription": "Antwoorden op vragen over Wishlist: een verlanglijstje maken en delen, groepen, lootjes trekken en stiekem afstrepen wat je gaat kopen.",
     "subjects": "Onderwerpen",
     "questions": "{count, plural, one {# vraag} other {# vragen}}",
     "top": "Terug naar boven",
@@ -831,7 +832,8 @@
     ],
     "contact": {
       "title": "Staat je vraag er niet bij?",
-      "text": "Of heb je een fout gevonden? Stuur ons een bericht, dan antwoorden we per e-mail."
+      "text": "Of heb je een fout gevonden? Stuur ons een bericht, dan antwoorden we per e-mail.",
+      "login": "Log in om ons een bericht te sturen"
     }
   },
   "Contact": {

@@ -18,15 +18,15 @@ export function Header({ session }: Props) {
       <div className="mx-auto flex h-16 items-center justify-between px-4 md:max-w-[640px]">
         <Logo inverted />
 
-        {session && (
-          <nav className="flex items-center gap-3">
-            <Link
-              href="/vragen"
-              aria-label={t("faq")}
-              className="rounded-full p-1.5 text-primary-foreground/90 transition-colors hover:bg-white/15 hover:text-primary-foreground"
-            >
-              <CircleHelp aria-hidden size="24" />
-            </Link>
+        <nav className="flex items-center gap-3">
+          <Link
+            href="/vragen"
+            aria-label={t("faq")}
+            className="rounded-full p-1.5 text-primary-foreground/90 transition-colors hover:bg-white/15 hover:text-primary-foreground"
+          >
+            <CircleHelp aria-hidden size="24" />
+          </Link>
+          {session && (
             <Link href="/profile" aria-label={t("profile")}>
               <Avatar className="text-foreground ring-2 ring-white/70 shadow-sm transition-transform hover:scale-105">
                 {session.user.image && (
@@ -37,8 +37,8 @@ export function Header({ session }: Props) {
                 </AvatarFallback>
               </Avatar>
             </Link>
-          </nav>
-        )}
+          )}
+        </nav>
       </div>
     </header>
   )
