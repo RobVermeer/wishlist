@@ -125,7 +125,10 @@ export const Faq = ({ loggedIn }: Props) => {
         </section>
       ))}
 
-      <section className="grid gap-3 rounded-lg bg-secondary p-6 text-center">
+      <section
+        id="stel-je-vraag"
+        className="grid scroll-mt-24 gap-3 rounded-lg bg-secondary p-6 text-center"
+      >
         <h2 className="text-xl font-semibold">{t("contact.title")}</h2>
         <p className="text-muted-foreground">{t("contact.text")}</p>
         {loggedIn ? (
