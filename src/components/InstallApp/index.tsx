@@ -4,6 +4,7 @@ import { Ellipsis, EllipsisVertical, Share, Smartphone } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { ReactNode, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -12,7 +13,7 @@ interface InstallPromptEvent extends Event {
 
 type Platform = "prompt" | "ios" | "android" | "desktop" | "installed"
 
-const isInstalled = () =>
+export const isInstalled = () =>
   window.matchMedia("(display-mode: standalone)").matches ||
   ("standalone" in navigator && navigator.standalone === true)
 
@@ -31,10 +32,11 @@ const detectPlatform = (): Platform => {
 }
 
 interface Props {
+  className?: string
   hideOnDesktop?: boolean
 }
 
-export const InstallApp = ({ hideOnDesktop = false }: Props) => {
+export const InstallApp = ({ className, hideOnDesktop = false }: Props) => {
   const t = useTranslations("InstallApp")
   const [platform, setPlatform] = useState<Platform | null>(null)
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(
@@ -110,7 +112,10 @@ export const InstallApp = ({ hideOnDesktop = false }: Props) => {
   return (
     <section
       aria-labelledby="install-app"
-      className="grid gap-3 rounded-2xl border bg-card p-4 shadow-sm"
+      className={cn(
+        "grid gap-3 rounded-2xl border bg-card p-4 shadow-sm",
+        className
+      )}
     >
       <div className="flex items-start gap-3">
         <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">

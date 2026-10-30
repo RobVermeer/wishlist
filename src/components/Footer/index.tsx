@@ -1,11 +1,16 @@
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { SockIcon } from "@/components/SockIcon"
+import { InstallAppLink } from "@/components/InstallAppLink"
 
 const linkClassName =
   "rounded-sm transition-colors hover:text-primary hover:underline"
 
-export function Footer() {
+interface Props {
+  loggedIn: boolean
+}
+
+export function Footer({ loggedIn }: Props) {
   const t = useTranslations("Footer")
 
   return (
@@ -41,6 +46,7 @@ export function Footer() {
                 {t("privacy")}
               </Link>
             </li>
+            <InstallAppLink loggedIn={loggedIn} className={linkClassName} />
           </ul>
         </nav>
       </div>
