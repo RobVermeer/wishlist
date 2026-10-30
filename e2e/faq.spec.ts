@@ -80,6 +80,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Waarom heb ik geen wachtwoord?",
     "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
     "Hoe pas ik mijn naam of profielfoto aan?",
+    "Wat doen jullie met mijn gegevens?",
     "Hoe verwijder ik mijn account?",
     "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
   ])
