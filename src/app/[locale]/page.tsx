@@ -61,7 +61,7 @@ export default async function Home() {
           data={{
             "@context": "https://schema.org",
             "@type": "WebApplication",
-            name: "Wishlist",
+            name: "Niet Weer Sokken",
             url: siteUrl.origin,
             description: t("description"),
             inLanguage: "nl",

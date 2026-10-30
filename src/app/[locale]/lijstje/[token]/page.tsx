@@ -25,10 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // A preview in WhatsApp and the like, but no search results: the layout
   // keeps this page out of the index.
   return {
-    title: `${name} - Wishlist`,
+    title: `${name} - Niet Weer Sokken`,
     openGraph: {
       type: "website",
-      siteName: "Wishlist",
+      siteName: "Niet Weer Sokken",
       locale: "nl_NL",
       title: t("title", { name }),
       description: t("text", { name }),

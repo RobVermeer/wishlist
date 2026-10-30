@@ -2,7 +2,7 @@ import { test, expect, createUser, createWishlist } from "./fixtures"
 import { baseURL } from "./support/env"
 import { Page } from "@playwright/test"
 
-const title = "Wishlist – Maak en deel je verlanglijstje"
+const title = "Niet Weer Sokken – Maak en deel je verlanglijstje"
 const description =
   "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
 
@@ -140,7 +140,7 @@ test("the home page tells search engines it is a free web app", async ({
     expect.objectContaining({
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      name: "Wishlist",
+      name: "Niet Weer Sokken",
       url: baseURL,
       inLanguage: "nl",
       applicationCategory: "LifestyleApplication",
@@ -154,9 +154,9 @@ test("visitors can read the frequently asked questions", async ({ page }) => {
   await page.getByRole("link", { name: "Veelgestelde vragen" }).click()
 
   await expect(page).toHaveURL("/vragen")
-  await expect(page).toHaveTitle("Veelgestelde vragen - Wishlist")
-  await page.getByText("Kost Wishlist iets?").click()
-  await expect(page.getByText("Nee, Wishlist is gratis.")).toBeVisible()
+  await expect(page).toHaveTitle("Veelgestelde vragen - Niet Weer Sokken")
+  await page.getByText("Kost Niet Weer Sokken iets?").click()
+  await expect(page.getByText("Nee, Niet Weer Sokken is gratis.")).toBeVisible()
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     `${baseURL}/vragen`
@@ -178,10 +178,24 @@ test("the frequently asked questions are structured data", async ({ page }) => {
   expect(faq["@type"]).toBe("FAQPage")
   expect(faq.mainEntity).toContainEqual({
     "@type": "Question",
-    name: "Kost Wishlist iets?",
-    acceptedAnswer: { "@type": "Answer", text: "Nee, Wishlist is gratis." },
+    name: "Kost Niet Weer Sokken iets?",
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: "Nee, Niet Weer Sokken is gratis.",
+    },
   })
   expect(faq.mainEntity).toHaveLength(
     await page.locator("details summary").count()
   )
+})
+
+test("the app installs as Niet Weer Sokken", async ({ request }) => {
+  const manifest = await (await request.get("/manifest.json")).json()
+
+  expect(manifest).toMatchObject({
+    name: "Niet Weer Sokken",
+    short_name: "Niet Weer Sokken",
+    description:
+      "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+  })
 })

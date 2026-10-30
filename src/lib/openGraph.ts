@@ -4,5 +4,5 @@ export const openGraphImage = {
   url: "/og.png",
   width: 1200,
   height: 630,
-  alt: "Wishlist – Maak en deel je verlanglijstje",
+  alt: "Niet Weer Sokken – Maak en deel je verlanglijstje",
 }

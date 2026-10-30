@@ -38,7 +38,7 @@ export const sendGroupDraw = async ({
     const t = await getTranslations("EmailDraw")
 
     const { error } = await resend.emails.send({
-      from: "Wishlist <no-reply@ru-coding.nl>",
+      from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
       to: [person1.email!],
       subject: t("subject", {
         name: userName,
@@ -76,7 +76,7 @@ export const sendReminder = async ({ toUser, userName }: SendReminder) => {
     const t = await getTranslations("EmailReminder")
 
     const { error } = await resend.emails.send({
-      from: "Wishlist <no-reply@ru-coding.nl>",
+      from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
       to: [toUser.email!],
       subject: t("subject"),
       react: await RemindUserEmail({ userName }),
@@ -106,7 +106,7 @@ export const sendContactEmail = async ({
   const t = await getTranslations("EmailContact")
 
   const { error } = await resend.emails.send({
-    from: "Wishlist <no-reply@ru-coding.nl>",
+    from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
     to: [to],
     replyTo: from.email,
     subject: t(`subject.${topic}`, { name: from.name }),
@@ -141,7 +141,7 @@ export const sendDrawLotsEmail = async ({
     const subject = props.redraw ? "subject.redraw" : "subject.draw"
 
     const { error } = await resend.emails.send({
-      from: "Wishlist <no-reply@ru-coding.nl>",
+      from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
       to: [to],
       subject: t(subject, { name: props.name, group: props.group.title }),
       react: await DrawLotsEmail(props),

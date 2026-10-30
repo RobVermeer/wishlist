@@ -221,6 +221,7 @@ export async function createDraw(
 
 type SentEmail = {
   id: string
+  from: string
   to: string[]
   subject: string
   html: string

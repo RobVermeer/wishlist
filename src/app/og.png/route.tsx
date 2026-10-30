@@ -42,7 +42,7 @@ export async function GET() {
           {/* eslint-disable-next-line @next/next/no-img-element -- drawn into the PNG, not a page */}
           <img src={icon} width={72} height={72} alt="" />
         </div>
-        <div style={{ fontSize: 88, fontWeight: 700 }}>Wishlist</div>
+        <div style={{ fontSize: 88, fontWeight: 700 }}>Niet Weer Sokken</div>
       </div>
       <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 1.1 }}>
         {t("title")}

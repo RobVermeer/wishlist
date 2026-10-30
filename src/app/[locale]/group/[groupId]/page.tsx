@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!group) return {}
 
   return {
-    title: `${group.title} - Wishlist`,
+    title: `${group.title} - Niet Weer Sokken`,
   }
 }
 

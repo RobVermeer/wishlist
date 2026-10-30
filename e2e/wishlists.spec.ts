@@ -52,7 +52,7 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await page.goto("/")
   await page.getByRole("link", { name: "Mijn lijstje" }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
-  await expect(page).toHaveTitle("Mijn lijstje - Wishlist")
+  await expect(page).toHaveTitle("Mijn lijstje - Niet Weer Sokken")
 })
 
 test("create a wishlist for someone else", async ({ signIn }) => {
@@ -76,7 +76,7 @@ test("create a wishlist for someone else", async ({ signIn }) => {
   expect(wishlist.title).toBe("Baby Bram")
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await expect(page).toHaveTitle("Baby Bram - Wishlist")
+  await expect(page).toHaveTitle("Baby Bram - Niet Weer Sokken")
   await expect(page.getByRole("heading", { name: "Baby Bram" })).toBeVisible()
 })
 
@@ -227,7 +227,7 @@ test("dashboard links to your groups and wishlists", async ({ signIn }) => {
 
   await page.goto("/")
 
-  await expect(page).toHaveTitle("Overzicht - Wishlist")
+  await expect(page).toHaveTitle("Overzicht - Niet Weer Sokken")
   await expect(
     page.getByRole("link", { name: "Dashboard groep" })
   ).toHaveAttribute("href", `/group/${group.id}`)

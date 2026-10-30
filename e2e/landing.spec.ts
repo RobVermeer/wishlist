@@ -1,6 +1,8 @@
 import { test, expect } from "./fixtures"
 
-test("logged out visitors see what Wishlist can do", async ({ page }) => {
+test("logged out visitors see what Niet Weer Sokken can do", async ({
+  page,
+}) => {
   await page.goto("/login")
 
   await expect(

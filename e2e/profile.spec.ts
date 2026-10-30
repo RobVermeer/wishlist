@@ -13,7 +13,7 @@ test("profile tabs navigate between profile pages", async ({ signIn }) => {
 
   await page.goto("/profile")
   await expect(page.getByRole("heading", { name: "Profiel" })).toBeVisible()
-  await expect(page).toHaveTitle("Profiel - Wishlist")
+  await expect(page).toHaveTitle("Profiel - Niet Weer Sokken")
 
   for (const [name, path] of [
     ["Gekochte cadeaus", "/profile/bought"],

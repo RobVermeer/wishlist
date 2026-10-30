@@ -78,7 +78,8 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
 
   const [loginEmail] = await emailsTo(email)
-  expect(loginEmail.subject).toBe("Inloggen Wishlist")
+  expect(loginEmail.subject).toBe("Inloggen Niet Weer Sokken")
+  expect(loginEmail.from).toBe("Niet Weer Sokken <no-reply@ru-coding.nl>")
 
   const link = loginEmail.html
     .match(/href="([^"]*\/api\/auth\/callback\/email[^"]*)"/)?.[1]
@@ -199,7 +200,7 @@ test("the header links to the dashboard and your profile", async ({
   await expect(header.getByRole("button")).toHaveCount(0)
   await expect(header.getByText("PP")).toBeVisible()
 
-  await header.getByRole("link", { name: "Wishlist" }).click()
+  await header.getByRole("link", { name: "Niet Weer Sokken" }).click()
   await expect(page).toHaveURL("/")
 
   await header.getByRole("link", { name: "Je profiel" }).click()

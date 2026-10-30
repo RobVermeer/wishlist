@@ -299,7 +299,7 @@ test("group page lists the wishlists of its members", async ({ signIn }) => {
 
   await page.goto(`/group/${group.id}`)
 
-  await expect(page).toHaveTitle("Feest - Wishlist")
+  await expect(page).toHaveTitle("Feest - Niet Weer Sokken")
   await expect(page.getByRole("link", { name: "Olga" })).toHaveAttribute(
     "href",
     `/group/${group.id}/${ownerList.id}`
