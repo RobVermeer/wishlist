@@ -1,5 +1,5 @@
 import { test, expect, createUser, prisma, toasts } from "./fixtures"
-import { rm } from "node:fs/promises"
+import { readdir, rm } from "node:fs/promises"
 import { testEnv } from "./support/env"
 
 const pixel = Buffer.from(
@@ -110,5 +110,39 @@ test("upload a profile picture", async ({ signIn }) => {
       recursive: true,
       force: true,
     })
+  }
+})
+
+test("uploading a new profile picture removes the previous one", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+  const folder = `.next/standalone/public/avatars/${user.id}`
+  const upload = async () => {
+    await page.goto("/profile")
+    await page.getByLabel("Profielfoto").setInputFiles({
+      name: "avatar.png",
+      mimeType: "image/png",
+      buffer: pixel,
+    })
+    await page.getByRole("button", { name: "Opslaan" }).click()
+    await expect(toasts(page)).toContainText("Je gegevens zijn opgeslagen")
+
+    const { image } = await prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+    })
+    return image!.split("/").pop()
+  }
+
+  try {
+    const first = await upload()
+    expect(await readdir(folder)).toEqual([first])
+
+    const second = await upload()
+    expect(second).not.toBe(first)
+    expect(await readdir(folder)).toEqual([second])
+  } finally {
+    await rm(folder, { recursive: true, force: true })
   }
 })
