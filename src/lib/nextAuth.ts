@@ -24,7 +24,7 @@ export const authOptions: AuthOptions = {
     }),
     EmailProvider({
       server: "",
-      from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
+      from: "Niet Weer Sokken <no-reply@nietweersokken.nl>",
       sendVerificationRequest,
     }),
   ],
