@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { Gift } from "lucide-react"
+import { SockIcon } from "@/components/SockIcon"
 import Link from "next/link"
 
 interface Props {
@@ -27,7 +27,7 @@ export function Logo({ className, inverted = false, onClick }: Props) {
             : "bg-primary text-primary-foreground"
         )}
       >
-        <Gift size="20" strokeWidth="2.25" />
+        <SockIcon size={26} />
       </span>
       Wishlist
     </Link>
