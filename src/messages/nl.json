@@ -840,6 +840,121 @@
       "login": "Log in om ons een bericht te sturen"
     }
   },
+  "Privacy": {
+    "title": "Privacy",
+    "metaTitle": "Privacy - Niet Weer Sokken",
+    "metaDescription": "Wat Niet Weer Sokken van je bewaart en waarom, wie het ziet, welke cookies we gebruiken en hoe je je account laat verwijderen.",
+    "intro": "Niet Weer Sokken bewaart alleen wat nodig is om je verlanglijstje te maken en te delen. Hier lees je wat dat is, waarom we het bewaren en wat je ermee kunt.",
+    "updated": "Bijgewerkt op 30 oktober 2026.",
+    "sections": [
+      {
+        "id": "wat-we-bewaren",
+        "title": "Wat we bewaren",
+        "text": ["Als je Niet Weer Sokken gebruikt, bewaren we:"],
+        "items": [
+          "Je naam, voornaam en e-mailadres.",
+          "Je profielfoto: die van je Google-account, of een foto die je zelf uploadt.",
+          "Je verlanglijstjes met hun wensen, linkjes en categorieën.",
+          "De groepen die je hebt gemaakt of waar je lid van bent, en de verlanglijstjes die je volgt of samen beheert.",
+          "Welke wensen je hebt afgestreept, en wanneer.",
+          "Bij lootjes trekken: wie er meedoet, met naam en e-mailadres, en het budget en de datum. Ook van wie nog geen account heeft en door de maker van de groep is opgegeven.",
+          "Wanneer je iemand om meer wensen hebt gevraagd, zodat dat één keer per dag kan.",
+          "Wanneer je Niet Weer Sokken voor het laatst hebt gebruikt.",
+          "Je sessies, zodat je ingelogd blijft. Log je in met Google, dan ook de koppeling met je Google-account."
+        ]
+      },
+      {
+        "id": "waarom",
+        "title": "Waarom we dat bewaren",
+        "text": [
+          "Alleen om Niet Weer Sokken te laten werken: zodat je kunt inloggen, de anderen je verlanglijstje kunnen zien, niemand iets dubbel koopt en we je de e-mails kunnen sturen die bij de app horen.",
+          "We tonen geen reclame, verkopen je gegevens niet en gebruiken ze nergens anders voor."
+        ]
+      },
+      {
+        "id": "wie-wat-ziet",
+        "title": "Wie wat ziet",
+        "items": [
+          "Wie met je in een groep zit of je verlanglijstje volgt, ziet je naam, je profielfoto en je verlanglijstje.",
+          "Je e-mailadres zien de anderen nooit.",
+          "Wat je afstreept, ziet degene die het wenst niet. De anderen zien alleen dat een wens al wordt gekocht.",
+          "Wie je bij het lootjes trekken hebt getrokken, zie alleen jij.",
+          "De beheerder van Niet Weer Sokken ziet de accounts met hun e-mailadres en de groepen, om fouten op te lossen en accounts te verwijderen."
+        ]
+      },
+      {
+        "id": "inloggen",
+        "title": "Inloggen",
+        "text": [
+          "Je logt in met Google of met een link die we naar je e-mailadres sturen. Een wachtwoord hebben we dus nooit. Het inloggen regelt NextAuth, open source software die op onze eigen server draait.",
+          "Log je in met Google, dan krijgen we van Google je naam, voornaam, e-mailadres en profielfoto. Die profielfoto blijft bij Google staan, je browser haalt hem daar op.",
+          "Een link om in te loggen werkt één keer en is 24 uur geldig."
+        ]
+      },
+      {
+        "id": "e-mail",
+        "title": "E-mail",
+        "text": [
+          "We sturen e-mails via Resend, een bedrijf uit de Verenigde Staten. Resend krijgt daarvoor het e-mailadres en de inhoud van de e-mail. Je krijgt van ons:"
+        ],
+        "items": [
+          "Een link om in te loggen, als je daarom vraagt.",
+          "Je lootje, als de maker van een groep lootjes trekt.",
+          "Een vraag om meer wensen, als iemand je die stuurt."
+        ],
+        "more": [
+          "Een bericht dat je ons stuurt, gaat ook via Resend naar de beheerder. Die antwoordt op je e-mailadres. Nieuwsbrieven of reclame sturen we niet."
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies",
+        "text": [
+          "Niet Weer Sokken gebruikt alleen cookies die nodig zijn om de app te laten werken. Daarom vragen we je er ook niet om toestemming."
+        ],
+        "items": [
+          "Een sessiecookie, zodat je ingelogd blijft.",
+          "Tijdens het inloggen twee cookies van NextAuth: één tegen misbruik van het inlogformulier, en één om je daarna terug te sturen naar de pagina waar je was.",
+          "Een cookie dat een jaar lang onthoudt welke categorieën je hebt opengeklapt."
+        ],
+        "more": [
+          "Cookies om je te volgen, voor statistieken of voor reclame gebruiken we niet."
+        ]
+      },
+      {
+        "id": "waar-je-gegevens-staan",
+        "title": "Waar je gegevens staan",
+        "text": [
+          "Niet Weer Sokken draait op een server van DigitalOcean in Amsterdam. Daar staan de database en de profielfoto's die je zelf uploadt.",
+          "Behalve Google bij het inloggen en Resend voor e-mail krijgt geen andere partij je gegevens."
+        ]
+      },
+      {
+        "id": "hoe-lang",
+        "title": "Hoe lang we het bewaren",
+        "text": [
+          "Zolang je een account hebt. We verwijderen niets vanzelf, ook niet als je Niet Weer Sokken een tijd niet gebruikt.",
+          "Gebruik je Niet Weer Sokken 30 dagen niet, dan verloopt je sessie en log je opnieuw in.",
+          "Wat je verwijdert, zoals een wens, een verlanglijstje of een groep, zie je en zien de anderen niet meer. We bewaren het nog wel, zodat bijvoorbeeld de gekochte cadeaus op het profiel van de anderen blijven kloppen. Het verdwijnt als het account van wie het heeft gemaakt wordt verwijderd."
+        ]
+      },
+      {
+        "id": "je-gegevens",
+        "title": "Je gegevens inzien, wijzigen of verwijderen",
+        "text": [
+          "Op je profiel wijzig je je voornaam en profielfoto. Je verlanglijstjes, wensen en groepen wijzig of verwijder je in de app zelf.",
+          "Wil je weten welke gegevens we van je hebben, of wil je je account verwijderen? Stuur ons een bericht, onderaan deze pagina of op je profiel, en kies bij een verwijdering ‘Verwijder mijn account’.",
+          "We verwijderen dan je account, je verlanglijstjes met hun wensen, de groepen die je hebt gemaakt en je sessies. Wensen die je bij anderen hebt afgestreept, staan daarna weer open. Bij een loting in de groep van iemand anders blijven je naam en e-mailadres staan, zodat die loting blijft kloppen.",
+          "Ben je het niet eens met wat we met je gegevens doen? Laat het ons weten. Je kunt ook een klacht indienen bij de Autoriteit Persoonsgegevens."
+        ]
+      }
+    ],
+    "contact": {
+      "title": "Vragen over je privacy?",
+      "text": "Stuur ons een bericht, dan antwoorden we per e-mail. Heb je nog geen account, bijvoorbeeld omdat iemand je voor een loting heeft opgegeven? Log dan in met dat e-mailadres.",
+      "login": "Log in om ons een bericht te sturen"
+    }
+  },
   "Contact": {
     "button": "Stuur ons een bericht",
     "title": "Stuur ons een bericht",
@@ -951,5 +1066,8 @@
     "button": "Ga naar {group}",
     "join": "Doe mee met {group}",
     "goodbye": "Groetjes, <strong>{creator}</strong>"
+  },
+  "Footer": {
+    "privacy": "Privacy"
   }
 }

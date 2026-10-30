@@ -87,7 +87,9 @@ test("the sitemap lists the public pages", async ({ request }) => {
   const locations = [...(await response.text()).matchAll(/<loc>(.*?)<\/loc>/g)]
     .map(([, location]) => location)
     .sort()
-  expect(locations).toEqual([`${baseURL}`, `${baseURL}/vragen`].sort())
+  expect(locations).toEqual(
+    [`${baseURL}`, `${baseURL}/vragen`, `${baseURL}/privacy`].sort()
+  )
 })
 
 test("a shared link of the home page shows a preview", async ({
@@ -170,6 +172,21 @@ test("visitors can read the frequently asked questions", async ({ page }) => {
     .getByRole("link", { name: "Log in om ons een bericht te sturen" })
     .click()
   await expect(page).toHaveURL("/login?callbackUrl=%2Fvragen")
+})
+
+test("search engines can find the privacy policy", async ({ page }) => {
+  await page.goto("/privacy")
+
+  await expect(page).toHaveTitle("Privacy - Niet Weer Sokken")
+  await expect(meta(page, "description")).toHaveAttribute(
+    "content",
+    "Wat Niet Weer Sokken van je bewaart en waarom, wie het ziet, welke cookies we gebruiken en hoe je je account laat verwijderen."
+  )
+  await expect(meta(page, "robots")).toHaveAttribute("content", "index, follow")
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    `${baseURL}/privacy`
+  )
 })
 
 test("the frequently asked questions are structured data", async ({ page }) => {
