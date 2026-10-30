@@ -6,7 +6,6 @@ import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { managedByUser } from "@/lib/wishlists/visibility"
 
 export const reorderCategoriesForWishlist = async (
@@ -58,8 +57,6 @@ export const reorderCategoriesForWishlist = async (
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Reorder categories for wishlist", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

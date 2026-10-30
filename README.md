@@ -31,7 +31,7 @@ npm run test:e2e:ui             # interactive mode
 
 - A fresh SQLite database at `prisma/e2e.db` (`dev.db` is never touched).
 - A production build of the app, run as the standalone server like in production, on http://localhost:3100.
-- A fake Resend API on http://localhost:3101 that captures all outgoing e-mails and tracked errors.
+- A fake Resend API on http://localhost:3101 that captures all outgoing e-mails.
 
 Tests seed their own data through Prisma with unique users, so they run in parallel without resetting the database. Logging in is done by seeding a NextAuth session and setting its cookie (`signIn` fixture in `e2e/fixtures.ts`).
 

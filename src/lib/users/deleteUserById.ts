@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -31,8 +30,6 @@ export const deleteUserById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Delete user by ID", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

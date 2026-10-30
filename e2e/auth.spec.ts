@@ -1,12 +1,4 @@
-import {
-  test,
-  expect,
-  createUser,
-  emailsTo,
-  prisma,
-  toasts,
-  trackedIssues,
-} from "./fixtures"
+import { test, expect, createUser, emailsTo, prisma, toasts } from "./fixtures"
 import { testEnv } from "./support/env"
 
 test.describe("unauthenticated visitor", () => {
@@ -121,14 +113,6 @@ test("an address gets at most three login e-mails in ten minutes", async ({
   }
 
   expect(await emailsTo(email)).toHaveLength(3)
-  await expect
-    .poll(async () =>
-      (await trackedIssues()).filter(
-        ({ message, extra }) =>
-          message === "Too many login e-mails" && extra.identifier === email
-      )
-    )
-    .toHaveLength(1)
 })
 
 test("login with Google redirects to the Google consent screen", async ({

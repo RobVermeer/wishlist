@@ -8,7 +8,6 @@ import {
   emailsTo,
   prisma,
   toasts,
-  trackedIssues,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -305,16 +304,6 @@ test("buying a wish someone else just bought shows an error", async ({
   await expect(toasts(page)).toContainText(
     "Deze wens is al door iemand anders gekocht"
   )
-  await expect
-    .poll(async () =>
-      (await trackedIssues()).some(
-        ({ message, extra }) =>
-          message === "Toggle wishlist item by ID" &&
-          (extra.error as { message?: string })?.message ===
-            "Deze wens is al door iemand anders gekocht"
-      )
-    )
-    .toBe(true)
   expect(
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .userId

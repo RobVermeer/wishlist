@@ -9,7 +9,6 @@ import { wishlistItemSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
 import * as z from "zod"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { nextWishlistItemPosition } from "./nextWishlistItemPosition"
 import {
   findOrCreateCategory,
@@ -89,8 +88,6 @@ export const updateWishlistItemById = async (
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Update wishlist item by ID", "error", { error })
 
     return {
       type: "error" as const,

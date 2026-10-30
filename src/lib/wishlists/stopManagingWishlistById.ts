@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 export const stopManagingWishlistById = async (id: string) => {
   try {
@@ -26,8 +25,6 @@ export const stopManagingWishlistById = async (id: string) => {
 
     return { type: "success" as const }
   } catch (error) {
-    trackIssue("Stop managing wishlist by ID", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

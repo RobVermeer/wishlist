@@ -9,7 +9,6 @@ import { wishlistSchema } from "@/lib/schema"
 import * as z from "zod"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { assertGroupsOfUser } from "./assertGroupsOfUser"
 import { assertManagersOfUser } from "./assertManagersOfUser"
 import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
@@ -111,8 +110,6 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Update wishlist by ID", "error", { error })
 
     return {
       type: "error" as const,

@@ -10,7 +10,6 @@ import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/nextAuth"
 import { getServerSession } from "next-auth"
 import { Jimp } from "jimp"
-import { trackIssue } from "@/lib/trackIssue"
 import { userSchema } from "@/lib/schema"
 import * as z from "zod"
 
@@ -120,8 +119,6 @@ export async function updateProfile(data: FormData) {
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Update first name by ID", "error", { error })
 
     return {
       type: "error" as const,

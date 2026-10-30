@@ -9,7 +9,6 @@ import {
 } from "./templates"
 import type { contactTopics } from "@/lib/schema"
 import { resend } from "@/lib/resend"
-import { trackIssue } from "@/lib/trackIssue"
 
 interface SendGroupDraw {
   person1: {
@@ -54,13 +53,7 @@ export const sendGroupDraw = async ({
 
     if (error) throw error
   } catch (error) {
-    trackIssue("Email group draw error", "error", {
-      error,
-      groupId,
-      groupName,
-      person1,
-      person2,
-    })
+    console.error(error)
   }
 }
 
@@ -83,10 +76,8 @@ export const sendReminder = async ({ toUser, userName }: SendReminder) => {
     })
 
     if (error) throw error
-
-    trackIssue("Email reminder sent", "info", { toUser, userName })
   } catch (error) {
-    trackIssue("Email reminder error", "error", { toUser, userName, error })
+    console.error(error)
   }
 }
 
@@ -114,7 +105,6 @@ export const sendContactEmail = async ({
   })
 
   if (error) {
-    trackIssue("Email contact message error", "error", { error, from, topic })
     const tErrors = await getTranslations("Errors")
     throw new Error(tErrors("contact.failed"))
   }
@@ -149,9 +139,6 @@ export const sendDrawLotsEmail = async ({
 
     if (error) throw error
   } catch (error) {
-    trackIssue("Email draw lots error", "error", {
-      error,
-      groupId: props.group.id,
-    })
+    console.error(error)
   }
 }

@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { sendReminder } from "@/lib/email"
-import { trackIssue } from "@/lib/trackIssue"
 import { canBeRemindedForUser } from "./canBeRemindedForUser"
 import { sharedWithUser } from "@/lib/wishlists/visibility"
 
@@ -67,8 +66,6 @@ export const sendReminderToUser = async (to: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Send reminder to user", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

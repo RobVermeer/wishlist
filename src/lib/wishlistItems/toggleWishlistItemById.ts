@@ -7,7 +7,6 @@ import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { managedByUser, sharedWithUser } from "@/lib/wishlists/visibility"
 
 export const toggleWishlistItemById = async (id: string) => {
@@ -62,8 +61,6 @@ export const toggleWishlistItemById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Toggle wishlist item by ID", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],
