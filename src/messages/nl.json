@@ -804,6 +804,10 @@
         "title": "Je account",
         "questions": [
           {
+            "question": "Waarom heet het Niet Weer Sokken?",
+            "answer": "Omdat je vast weleens iets hebt gekregen waar je niet om vroeg, zoals sokken. Zet op je verlanglijstje wat je echt wenst, dan weten de anderen wat ze kunnen kopen. Wil je juist wel sokken? Zet ze er dan gewoon op."
+          },
+          {
             "question": "Kost Niet Weer Sokken iets?",
             "answer": "Nee, Niet Weer Sokken is gratis."
           },

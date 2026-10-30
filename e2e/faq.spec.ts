@@ -75,6 +75,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
       .locator("..")
       .locator("summary")
   ).toHaveText([
+    "Waarom heet het Niet Weer Sokken?",
     "Kost Niet Weer Sokken iets?",
     "Waarom heb ik geen wachtwoord?",
     "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
@@ -186,6 +187,20 @@ test("the frequently asked questions explain how to make a wishlist", async ({
     page.getByText(
       "Kies op je overzicht ‘Nieuw verlanglijstje’. Kies of het voor jezelf is of voor iemand anders, kies eventueel een thema en vink de groepen aan waar het in moet. Daarna zet je er wensen op.",
       { exact: true }
+    )
+  ).toBeVisible()
+})
+
+test("the frequently asked questions explain the name", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page.getByText("Waarom heet het Niet Weer Sokken?").click()
+
+  await expect(
+    page.getByText(
+      "Omdat je vast weleens iets hebt gekregen waar je niet om vroeg, zoals sokken."
     )
   ).toBeVisible()
 })
