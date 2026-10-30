@@ -97,6 +97,33 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   expect(user.emailVerified).not.toBeNull()
 })
 
+test("the login link only holds the page to come back to", async ({ page }) => {
+  const email = `callback-${Date.now()}@e2e.test`
+
+  await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile/bought")}`)
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  const link = new URL(
+    loginEmail.html
+      .match(/href="([^"]*\/api\/auth\/callback\/email[^"]*)"/)![1]
+      .replaceAll("&amp;", "&")
+  )
+  expect(link.searchParams.get("callbackUrl")).toBe(
+    `${testEnv.NEXTAUTH_URL}/profile/bought`
+  )
+
+  await page.goto(link.href)
+
+  await expect(page).toHaveURL("/profile/bought")
+})
+
 test("an address gets at most three login e-mails in ten minutes", async ({
   page,
 }) => {
@@ -122,10 +149,15 @@ test("login with Google redirects to the Google consent screen", async ({
     route.fulfill({ body: "Google" })
   )
 
-  await page.goto("/login")
+  await page.goto(`/login?callbackUrl=${encodeURIComponent("/profile")}`)
   await page.getByRole("button", { name: "Inloggen met Google" }).click()
 
   await page.waitForURL(/accounts\.google\.com/)
+  expect(
+    (await page.context().cookies()).find(
+      ({ name }) => name === "next-auth.callback-url"
+    )?.value
+  ).toBe(encodeURIComponent(`${testEnv.NEXTAUTH_URL}/profile`))
 
   const url = new URL(page.url())
   expect(url.searchParams.get("client_id")).toBe(testEnv.GOOGLE_CLIENT_ID)

@@ -22,5 +22,5 @@ export default async function Login({ searchParams }: Props) {
     redirect(getLocalPath(callbackUrl))
   }
 
-  return <Landing />
+  return <Landing callbackUrl={getLocalPath(callbackUrl)} />
 }

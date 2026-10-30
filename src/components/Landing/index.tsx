@@ -8,13 +8,17 @@ import { LandingGroups } from "@/components/LandingGroups"
 import { LandingSteps } from "@/components/LandingSteps"
 import { Button } from "@/components/ui/button"
 
-export async function Landing() {
+interface Props {
+  callbackUrl?: string
+}
+
+export async function Landing({ callbackUrl }: Props) {
   const t = await getTranslations("Landing")
 
   return (
     <div className="grid gap-12">
       <div id="inloggen" className="scroll-mt-4">
-        <LoginForm />
+        <LoginForm callbackUrl={callbackUrl} />
       </div>
 
       <InstallApp hideOnDesktop />

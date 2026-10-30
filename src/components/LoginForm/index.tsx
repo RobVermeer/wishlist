@@ -33,7 +33,11 @@ const EmailButton = () => {
   )
 }
 
-export function LoginForm() {
+interface Props {
+  callbackUrl?: string
+}
+
+export function LoginForm({ callbackUrl = "/" }: Props) {
   const [emailSent, setEmailSent] = useState<string | null>(null)
   const t = useTranslations()
 
@@ -42,7 +46,7 @@ export function LoginForm() {
 
     if (!email) return
 
-    await signIn("email", { email, redirect: false })
+    await signIn("email", { email, callbackUrl, redirect: false })
 
     setEmailSent(email)
   }
@@ -52,7 +56,7 @@ export function LoginForm() {
       <h1 className="text-primary text-2xl">{t("Login.title")}</h1>
       <p className="text-lg mb-4">{t("Login.text")}</p>
 
-      <Button onClick={() => signIn("google")}>
+      <Button onClick={() => signIn("google", { callbackUrl })}>
         <LogIn size="18" className="mr-2" /> {t("Login.google")}
       </Button>
 
