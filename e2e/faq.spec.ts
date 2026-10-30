@@ -96,6 +96,21 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   await expect(answer).toBeHidden()
 })
 
+test("the frequently asked questions link to the privacy policy", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Wat doen jullie met mijn gegevens?").click()
+  await page
+    .getByRole("region", { name: "Je account" })
+    .getByRole("link", { name: "Privacy" })
+    .click()
+
+  await expect(page).toHaveURL("/privacy")
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Privacy")
+})
+
 test("jump to a subject in the frequently asked questions", async ({
   signIn,
 }) => {

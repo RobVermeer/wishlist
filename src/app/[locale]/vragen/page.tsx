@@ -41,7 +41,11 @@ export default async function FaqPage() {
             questions.map(({ question, answer }) => ({
               "@type": "Question",
               name: question,
-              acceptedAnswer: { "@type": "Answer", text: answer },
+              acceptedAnswer: {
+                "@type": "Answer",
+                // Search engines get the text of links, not the markup.
+                text: answer.replace(/<\/?\w+>/g, ""),
+              },
             }))
           ),
         }}

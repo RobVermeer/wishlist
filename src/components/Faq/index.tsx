@@ -75,7 +75,7 @@ export const Faq = ({ loggedIn }: Props) => {
         </ul>
       </nav>
 
-      {sections.map(({ id, title, questions }) => (
+      {sections.map(({ id, title, questions }, sectionIndex) => (
         <section
           key={id}
           id={id}
@@ -86,7 +86,7 @@ export const Faq = ({ loggedIn }: Props) => {
             <span id={`${id}-title`}>{title}</span>
           </ListTitle>
 
-          {questions.map(({ question, answer }) => (
+          {questions.map(({ question }, index) => (
             <details
               key={question}
               className="group rounded-md bg-secondary px-4 py-3"
@@ -99,7 +99,18 @@ export const Faq = ({ loggedIn }: Props) => {
                   className="mt-0.5 shrink-0 text-primary transition-transform group-open:rotate-180"
                 />
               </summary>
-              <p className="mt-2 text-muted-foreground">{answer}</p>
+              <p className="mt-2 text-muted-foreground">
+                {t.rich(`sections.${sectionIndex}.questions.${index}.answer`, {
+                  privacy: chunks => (
+                    <Link
+                      href="/privacy"
+                      className="text-primary underline underline-offset-2"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
+              </p>
             </details>
           ))}
 
