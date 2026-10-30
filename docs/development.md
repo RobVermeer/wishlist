@@ -58,6 +58,8 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 
 ## Texts
 
+The app is called **Niet Weer Sokken**: three words, each with a capital, also in page titles (`Profiel - Niet Weer Sokken`). The name is the joke, so the texts don't have to joke all the time, and never make fun of people who like socks.
+
 All user facing text goes through next-intl, also on admin pages. Write informal Dutch (`je`, not `u`) and use the same words everywhere:
 
 | Concept                         | Word                                     |
