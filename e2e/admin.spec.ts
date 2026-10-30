@@ -9,6 +9,8 @@ import {
   toasts,
 } from "./fixtures"
 import { Page } from "@playwright/test"
+import { access, mkdir, rm, writeFile } from "node:fs/promises"
+import { testEnv } from "./support/env"
 
 const card = (page: Page, text: string) =>
   page.locator("div.rounded-2xl").filter({ hasText: text })
@@ -62,6 +64,40 @@ test("admin can remove a user", async ({ signIn }) => {
 
   await expect(userCard).toBeHidden()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(0)
+})
+
+test("removing a user removes their uploaded profile picture", async ({
+  signIn,
+}) => {
+  const admin = await createAdmin()
+  const user = await createUser({ name: "Weg Met Foto" })
+  const other = await createUser()
+  const folder = (id: string) => `.next/standalone/public/avatars/${id}`
+
+  try {
+    for (const { id } of [user, other]) {
+      await mkdir(folder(id), { recursive: true })
+      await writeFile(`${folder(id)}/foto.png`, "")
+      await prisma.user.update({
+        where: { id },
+        data: { image: `${testEnv.BASE_URL}/avatars/${id}/foto.png` },
+      })
+    }
+    const page = await signIn(admin)
+
+    await page.goto("/admin/users")
+    const userCard = card(page, user.email!)
+    page.once("dialog", dialog => dialog.accept())
+    await userCard.getByRole("button", { name: "Verwijder" }).click()
+    await expect(userCard).toBeHidden()
+
+    await expect(access(folder(user.id))).rejects.toThrow()
+    await access(`${folder(other.id)}/foto.png`)
+  } finally {
+    for (const { id } of [user, other]) {
+      await rm(folder(id), { recursive: true, force: true })
+    }
+  }
 })
 
 test("admin can remove and restore a group", async ({ signIn }) => {
