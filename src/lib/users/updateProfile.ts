@@ -1,6 +1,6 @@
 "use server"
 
-import { mkdir } from "fs/promises"
+import { mkdir, readdir, rm } from "fs/promises"
 import { join } from "path"
 import { randomUUID } from "crypto"
 import { revalidatePath } from "next/cache"
@@ -12,6 +12,7 @@ import { getServerSession } from "next-auth"
 import { Jimp } from "jimp"
 import { trackIssue } from "@/lib/trackIssue"
 import { userSchema } from "@/lib/schema"
+import { avatarFolder } from "@/lib/users/avatarFolder"
 import * as z from "zod"
 
 const maxMegapixels = 25
@@ -55,6 +56,20 @@ async function readAvatar(file: File) {
   }).catch(() => null)
 }
 
+async function removeOtherAvatars(folder: string, keep: string) {
+  try {
+    const files = await readdir(folder)
+
+    await Promise.all(
+      files
+        .filter(file => file !== keep)
+        .map(file => rm(join(folder, file), { recursive: true, force: true }))
+    )
+  } catch (error) {
+    trackIssue("Remove previous avatars", "error", { error })
+  }
+}
+
 export async function updateProfile(data: FormData) {
   try {
     const session = await getServerSession(authOptions)
@@ -73,7 +88,9 @@ export async function updateProfile(data: FormData) {
       throw new Error(t("nothingChanged"))
     }
 
+    const folder = avatarFolder(session.user.id)
     let uploadedImage
+    let uploadedFile
 
     if (avatar?.size) {
       const image = await readAvatar(avatar)
@@ -82,14 +99,9 @@ export async function updateProfile(data: FormData) {
         throw new Error(t("user.avatar"))
       }
 
-      await mkdir(join("./public/avatars", session.user.id), {
-        recursive: true,
-      })
-      const imagePath = join(
-        "./public/avatars",
-        session.user.id,
-        `${randomUUID()}.png`
-      ) as `${string}.png`
+      uploadedFile = `${randomUUID()}.png`
+      await mkdir(folder, { recursive: true })
+      const imagePath = join(folder, uploadedFile) as `${string}.png`
 
       await image.cover({ w: 96, h: 96 }).write(imagePath)
 
@@ -108,6 +120,10 @@ export async function updateProfile(data: FormData) {
         id: session.user.id,
       },
     })
+
+    if (uploadedFile) {
+      await removeOtherAvatars(folder, uploadedFile)
+    }
 
     revalidatePath("/")
     return {
