@@ -7,7 +7,6 @@ import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 export const followGroupById = async (id: string) => {
   try {
@@ -58,8 +57,6 @@ export const followGroupById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Follow group by ID", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

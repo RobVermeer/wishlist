@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache"
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
 import { sendDrawLotsEmail } from "@/lib/email"
-import { trackIssue } from "@/lib/trackIssue"
 import { getErrorMessage } from "@/lib/utils"
 import { getFirstName } from "@/lib/users/getFirstName"
 
@@ -82,8 +81,6 @@ export const resendDrawLot = async (participantId: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Resend draw lot", "error", { error, participantId })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

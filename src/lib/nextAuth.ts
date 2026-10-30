@@ -5,7 +5,6 @@ import { AuthOptions, Session, User } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email"
 import { sendVerificationRequest } from "@/lib/email/sendVerificationRequest"
-import { trackIssue } from "@/lib/trackIssue"
 import { updateLastSeen } from "@/lib/users/updateLastSeen"
 
 export const authOptions: AuthOptions = {
@@ -42,18 +41,9 @@ export const authOptions: AuthOptions = {
   },
   events: {
     signIn: async ({ profile, user, isNewUser }) => {
-      if (isNewUser) {
-        trackIssue("User registered", "info", user)
-      } else {
-        trackIssue("User sign in", "info", user)
-      }
-
       if (!isNewUser && !user.firstName && profile?.firstName) {
         await updateFirstNameById(user.id, profile.firstName)
       }
-    },
-    signOut: ({ session }) => {
-      trackIssue("User sign out", "info", session.user)
     },
   },
 }

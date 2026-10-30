@@ -8,7 +8,6 @@ import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
 import { drawSchema } from "@/lib/schema"
 import { sendDrawLotsEmail } from "@/lib/email"
-import { trackIssue } from "@/lib/trackIssue"
 import { getErrorMessage } from "@/lib/utils"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { drawLots, maxParticipants } from "./drawLots"
@@ -174,8 +173,6 @@ export const createDraw = async (groupId: string, data: FormData) => {
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Create draw", "error", { error, groupId })
 
     return {
       type: "error" as const,

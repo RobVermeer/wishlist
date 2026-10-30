@@ -9,7 +9,6 @@ import * as z from "zod"
 import { getErrorMessage } from "@/lib/utils"
 import { wishlistItemSchema } from "@/lib/schema"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { nextWishlistItemPosition } from "./nextWishlistItemPosition"
 import { findOrCreateCategory } from "@/lib/wishlistCategories"
 import { managedByUser } from "@/lib/wishlists/visibility"
@@ -79,8 +78,6 @@ export const createWishlistItemForUser = async (
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Create wishlist item for user", "error", { error })
 
     return {
       type: "error" as const,

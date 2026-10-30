@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma"
 import { resend } from "@/lib/resend"
 import { LoginWithEmail } from "@/lib/email/templates"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 const tenMinutes = 10 * 60 * 1000
 
@@ -21,7 +20,6 @@ export const sendVerificationRequest = async (
   })
 
   if (recentEmails >= 3) {
-    trackIssue("Too many login e-mails", "warn", { identifier })
     return
   }
 

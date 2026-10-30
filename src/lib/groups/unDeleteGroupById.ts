@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache"
 import { groupProperties } from "./publicProperties"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 export const unDeleteGroupById = async (id: string) => {
   try {
@@ -44,8 +43,6 @@ export const unDeleteGroupById = async (id: string) => {
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Un delete group by ID", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

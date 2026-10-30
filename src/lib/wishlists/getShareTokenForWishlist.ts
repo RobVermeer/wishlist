@@ -6,7 +6,6 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { managedByUser } from "./visibility"
 
 export const getShareTokenForWishlist = async (id: string) => {
@@ -39,8 +38,6 @@ export const getShareTokenForWishlist = async (id: string) => {
 
     return { type: "success" as const, shareToken: shareToken! }
   } catch (error) {
-    trackIssue("Get share token for wishlist", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

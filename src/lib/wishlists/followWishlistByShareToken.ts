@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { managedByUser } from "./visibility"
 
 export const followWishlistByShareToken = async (shareToken: string) => {
@@ -38,8 +37,6 @@ export const followWishlistByShareToken = async (shareToken: string) => {
 
     return { type: "success" as const, wishlistId: wishlist.id }
   } catch (error) {
-    trackIssue("Follow wishlist by share token", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

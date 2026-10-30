@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 
 export const removeWishlistFromGroup = async (
   groupId: string,
@@ -45,8 +44,6 @@ export const removeWishlistFromGroup = async (
       type: "success" as const,
     }
   } catch (error) {
-    trackIssue("Remove wishlist from group", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

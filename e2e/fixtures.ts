@@ -235,17 +235,6 @@ export async function emailsTo(address: string): Promise<SentEmail[]> {
   return emails.filter(({ to }) => to.includes(address))
 }
 
-type TrackedIssue = {
-  message: string
-  level: string
-  extra: Record<string, unknown>
-}
-
-export async function trackedIssues(): Promise<TrackedIssue[]> {
-  const response = await fetch(`${mailURL}/__issues`)
-  return response.json()
-}
-
 export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
 

@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
-import { trackIssue } from "@/lib/trackIssue"
 import { keepOneOwnWishlistPerGroup } from "./keepOneOwnWishlistPerGroup"
 import { managedByUser } from "./visibility"
 
@@ -57,8 +56,6 @@ export const addWishlistToGroup = async (
 
     return { type: "success" as const }
   } catch (error) {
-    trackIssue("Add wishlist to group", "error", { error })
-
     return {
       type: "error" as const,
       errors: [getErrorMessage(error)],

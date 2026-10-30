@@ -6,7 +6,6 @@ import { getErrorMessage } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
-import { trackIssue } from "@/lib/trackIssue"
 import { userSchema } from "@/lib/schema"
 import * as z from "zod"
 
@@ -42,8 +41,6 @@ export const updateFirstNameById = async (id: string, firstName: string) => {
         errors: error.issues.map(issue => issue.message),
       }
     }
-
-    trackIssue("Update first name by ID", "error", { error })
 
     return {
       type: "error" as const,
