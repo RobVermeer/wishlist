@@ -1078,6 +1078,11 @@
     "goodbye": "Groetjes, <strong>{creator}</strong>"
   },
   "Footer": {
-    "privacy": "Privacy"
+    "tagline": "Verlanglijstjes delen, zonder dubbele cadeaus.",
+    "links": "Meer over Niet Weer Sokken",
+    "faq": "Vragen",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "copyright": "© {year} Niet Weer Sokken"
   }
 }
