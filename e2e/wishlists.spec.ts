@@ -17,6 +17,18 @@ test("new user sees empty states for wishlists", async ({ signIn }) => {
   await expect(page.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
 })
 
+test("the dashboard explains the name", async ({ signIn }) => {
+  const page = await signIn(await createUser({ firstName: "Lotte" }))
+
+  await page.goto("/")
+  await expect(page.getByRole("heading", { name: "Hoi Lotte" })).toBeVisible()
+  await expect(
+    page.getByText(
+      "Kijk wat je familie en vrienden graag willen, of zet je eigen wensen op een rij, zodat je niet weer sokken krijgt."
+    )
+  ).toBeVisible()
+})
+
 test("create your own wishlist in your groups", async ({ signIn }) => {
   const user = await createUser()
   const family = await createGroup(user, { title: "Familie" })
