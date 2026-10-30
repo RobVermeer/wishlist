@@ -4,6 +4,7 @@ import {
   ChevronRight,
   Dices,
   Gift,
+  Info,
   ScrollText,
   UserRound,
   Users,
@@ -21,6 +22,7 @@ interface Section {
 }
 
 const icons: Record<string, typeof Gift> = {
+  algemeen: Info,
   "je-verlanglijstje": ScrollText,
   "delen-en-groepen": Users,
   "lootjes-trekken": Dices,

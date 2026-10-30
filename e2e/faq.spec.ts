@@ -10,6 +10,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   await expect(page).toHaveURL("/vragen")
   await expect(page).toHaveTitle("Veelgestelde vragen - Niet Weer Sokken")
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+    "Algemeen",
     "Je verlanglijstje",
     "Delen en groepen",
     "Lootjes trekken",
@@ -71,18 +72,25 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   ])
   await expect(
     page
-      .getByRole("heading", { name: "Je account" })
+      .getByRole("heading", { name: "Algemeen" })
       .locator("..")
       .locator("summary")
   ).toHaveText([
     "Waarom heet het Niet Weer Sokken?",
     "Kost Niet Weer Sokken iets?",
-    "Waarom heb ik geen wachtwoord?",
     "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
+    "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
+  ])
+  await expect(
+    page
+      .getByRole("heading", { name: "Je account" })
+      .locator("..")
+      .locator("summary")
+  ).toHaveText([
+    "Waarom heb ik geen wachtwoord?",
     "Hoe pas ik mijn naam of profielfoto aan?",
     "Wat doen jullie met mijn gegevens?",
     "Hoe verwijder ik mijn account?",
-    "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
   ])
 
   const question = page.getByText("Ziet degene die het wenst wat ik koop?")
@@ -121,11 +129,12 @@ test("jump to a subject in the frequently asked questions", async ({
 
   const subjects = page.getByRole("navigation", { name: "Onderwerpen" })
   await expect(subjects.getByRole("link")).toHaveText([
+    /Algemeen\s*4 vragen/,
     /Je verlanglijstje\s*\d+ vragen/,
     /Delen en groepen\s*\d+ vragen/,
     /Lootjes trekken\s*6 vragen/,
     /Cadeaus kopen\s*\d+ vragen/,
-    /Je account\s*\d+ vragen/,
+    /Je account\s*4 vragen/,
   ])
 
   await subjects.getByRole("link", { name: /Lootjes trekken/ }).click()
