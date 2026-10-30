@@ -32,6 +32,16 @@ test("visitors can read the privacy policy from the landing page", async ({
     /^Een cookie dat een jaar lang onthoudt/,
   ])
 
+  const yourData = page.getByRole("region", {
+    name: "Je gegevens inzien, wijzigen of verwijderen",
+  })
+  await expect(yourData).toContainText(
+    "Upload je een nieuwe foto, dan verwijderen we de oude."
+  )
+  await expect(yourData).toContainText(
+    "We verwijderen dan je account, je profielfoto, je verlanglijstjes"
+  )
+
   await expect(
     page.getByRole("button", { name: "Stuur ons een bericht" })
   ).toHaveCount(0)
