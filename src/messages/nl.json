@@ -388,12 +388,14 @@
     "button": "Naar Niet Weer Sokken"
   },
   "EmailLogin": {
-    "subject": "Inloggen Niet Weer Sokken",
-    "preview": "Inloggen bij Niet Weer Sokken",
-    "hello": "Hey,",
-    "text1": "Je hebt net aangevraagd om in te loggen bij Niet Weer Sokken. Om in te loggen moet je op de rode knop hieronder klikken.",
-    "text2": "Veel plezier bij het gebruik van Niet Weer Sokken!",
-    "button": "Log nu in"
+    "subject": "Inloggen bij Niet Weer Sokken",
+    "preview": "Klik op de knop om in te loggen.",
+    "hello": "Hoi,",
+    "text": "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "button": "Inloggen",
+    "expires": "De knop werkt één keer en 24 uur lang.",
+    "ignore": "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
+    "reason": "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken."
   },
   "Category": {
     "move": "Verplaats categorie {name}",

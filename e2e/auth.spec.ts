@@ -72,12 +72,21 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
 
   const [loginEmail] = await emailsTo(email)
-  expect(loginEmail.subject).toBe("Inloggen Niet Weer Sokken")
+  expect(loginEmail.subject).toBe("Inloggen bij Niet Weer Sokken")
   expect(loginEmail.from).toBe("Niet Weer Sokken <no-reply@nietweersokken.nl>")
 
   const mail = await page.context().newPage()
   await mail.setContent(loginEmail.html)
   await expect(mail.locator("html")).toHaveAttribute("lang", "nl")
+  await expect(mail.getByRole("link", { name: "Inloggen" })).toBeVisible()
+  for (const text of [
+    "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "De knop werkt één keer en 24 uur lang.",
+    "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
+    "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken.",
+  ]) {
+    await expect(mail.getByText(text)).toBeVisible()
+  }
   await mail.close()
 
   const link = loginEmail.html
