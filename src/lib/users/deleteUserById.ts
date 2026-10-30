@@ -1,5 +1,6 @@
 "use server"
 
+import { rm } from "fs/promises"
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
@@ -7,6 +8,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { trackIssue } from "@/lib/trackIssue"
+import { avatarFolder } from "@/lib/users/avatarFolder"
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -21,9 +23,13 @@ export const deleteUserById = async (id: string) => {
       throw new Error(t("noAccess"))
     }
 
-    await prisma.user.delete({
+    const user = await prisma.user.delete({
       where: { id },
+      select: { id: true },
     })
+    await rm(avatarFolder(user.id), { recursive: true, force: true }).catch(
+      error => trackIssue("Remove avatars of deleted user", "error", { error })
+    )
 
     revalidatePath("/")
 
