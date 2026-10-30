@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       wishlist.title ||
       wishlist.user.firstName ||
       wishlist.user.name?.split(" ")[0]
-    } - ${group.title} - Wishlist`,
+    } - ${group.title} - Niet Weer Sokken`,
   }
 }
 

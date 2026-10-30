@@ -41,7 +41,7 @@ export const DrawUserEmail = async ({
             src={`${baseUrl}/gift.png`}
             width="32"
             height="32"
-            alt="Wishlist"
+            alt="Niet Weer Sokken"
           />
 
           <Text style={title}>
@@ -84,7 +84,7 @@ export const DrawUserEmail = async ({
 
           <Text style={footer}>
             <Link style={link} href={baseUrl}>
-              Wishlist
+              Niet Weer Sokken
             </Link>
           </Text>
         </Container>
@@ -110,7 +110,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
             src={`${baseUrl}/gift.png`}
             width="32"
             height="32"
-            alt="Wishlist"
+            alt="Niet Weer Sokken"
           />
 
           <Text style={title}>
@@ -136,7 +136,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
 
           <Text style={footer}>
             <Link style={link} href={baseUrl}>
-              Wishlist
+              Niet Weer Sokken
             </Link>
           </Text>
         </Container>
@@ -162,7 +162,7 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
             src={`${baseUrl}/gift.png`}
             width="32"
             height="32"
-            alt="Wishlist"
+            alt="Niet Weer Sokken"
           />
 
           <Section style={section}>
@@ -177,7 +177,7 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
 
           <Text style={footer}>
             <Link style={link} href={baseUrl}>
-              Wishlist
+              Niet Weer Sokken
             </Link>
           </Text>
         </Container>
@@ -209,7 +209,7 @@ export const ContactEmail = async ({
             src={`${baseUrl}/gift.png`}
             width="32"
             height="32"
-            alt="Wishlist"
+            alt="Niet Weer Sokken"
           />
 
           <Text style={title}>{t(`topic.${topic}`)}</Text>
@@ -264,7 +264,7 @@ export const DrawLotsEmail = async ({
             src={`${baseUrl}/gift.png`}
             width="32"
             height="32"
-            alt="Wishlist"
+            alt="Niet Weer Sokken"
           />
 
           <Text style={title}>{t.rich("title", { strong, name })}</Text>

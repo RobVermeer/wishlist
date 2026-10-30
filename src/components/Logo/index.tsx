@@ -29,7 +29,7 @@ export function Logo({ className, inverted = false, onClick }: Props) {
       >
         <SockIcon size={26} />
       </span>
-      Wishlist
+      Niet Weer Sokken
     </Link>
   )
 }

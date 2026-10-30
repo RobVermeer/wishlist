@@ -1,6 +1,6 @@
 {
   "Home": {
-    "title": "Overzicht - Wishlist",
+    "title": "Overzicht - Niet Weer Sokken",
     "greeting": {
       "name": "Hoi {name}",
       "anonymous": "Hoi",
@@ -190,12 +190,12 @@
   },
   "Profile": {
     "title": "Profiel",
-    "metaTitle": "Profiel - Wishlist",
+    "metaTitle": "Profiel - Niet Weer Sokken",
     "admin": "Admin",
     "logout": "Uitloggen"
   },
   "ProfileBoughtPresents": {
-    "title": "Mijn gekochte cadeaus - Profiel - Wishlist",
+    "title": "Mijn gekochte cadeaus - Profiel - Niet Weer Sokken",
     "empty": {
       "title": "Je hebt nog niets afgestreept",
       "text": "Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug wat je voor wie koopt."
@@ -385,14 +385,14 @@
     "title": "<strong>{name}</strong>, heb je nog wensen?",
     "hello": "Hey <strong>{name}</strong>,",
     "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje kunt zetten. Klik op de rode knop hieronder om dat meteen te doen.",
-    "button": "Naar Wishlist"
+    "button": "Naar Niet Weer Sokken"
   },
   "EmailLogin": {
-    "subject": "Inloggen Wishlist",
-    "preview": "Inloggen bij Wishlist",
+    "subject": "Inloggen Niet Weer Sokken",
+    "preview": "Inloggen bij Niet Weer Sokken",
     "hello": "Hey,",
-    "text1": "Je hebt net aangevraagd om in te loggen bij Wishlist. Om in te loggen moet je op de rode knop hieronder klikken.",
-    "text2": "Veel plezier bij het gebruik van Wishlist!",
+    "text1": "Je hebt net aangevraagd om in te loggen bij Niet Weer Sokken. Om in te loggen moet je op de rode knop hieronder klikken.",
+    "text2": "Veel plezier bij het gebruik van Niet Weer Sokken!",
     "button": "Log nu in"
   },
   "Category": {
@@ -473,7 +473,7 @@
     }
   },
   "Metadata": {
-    "title": "Wishlist – Maak en deel je verlanglijstje",
+    "title": "Niet Weer Sokken – Maak en deel je verlanglijstje",
     "description": "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
   },
   "OpenGraph": {
@@ -530,7 +530,7 @@
       },
       "phone": {
         "title": "Op je telefoon",
-        "text": "Zet Wishlist op je beginscherm, dan open je het met één tik, net als een app."
+        "text": "Zet Niet Weer Sokken op je beginscherm, dan open je het met één tik, net als een app."
       },
       "title": "Wat kun je allemaal?",
       "secret": {
@@ -614,9 +614,9 @@
     "cancelled": "Verplaatsen van wens {name} geannuleerd."
   },
   "InstallApp": {
-    "title": "Zet Wishlist op je telefoon",
+    "title": "Zet Niet Weer Sokken op je telefoon",
     "text": "Dan open je hem met één tik vanaf je beginscherm, net als een app.",
-    "desktop": "Open Wishlist op je telefoon en volg de stappen hieronder.",
+    "desktop": "Open Niet Weer Sokken op je telefoon en volg de stappen hieronder.",
     "install": "Installeer de app",
     "ios": {
       "title": "iPhone of iPad",
@@ -632,9 +632,9 @@
   },
   "Faq": {
     "title": "Veelgestelde vragen",
-    "metaTitle": "Veelgestelde vragen - Wishlist",
+    "metaTitle": "Veelgestelde vragen - Niet Weer Sokken",
     "intro": "Waar heb je een vraag over?",
-    "metaDescription": "Antwoorden op vragen over Wishlist: een verlanglijstje maken en delen, groepen, lootjes trekken en stiekem afstrepen wat je gaat kopen.",
+    "metaDescription": "Antwoorden op vragen over Niet Weer Sokken: een verlanglijstje maken en delen, groepen, lootjes trekken en stiekem afstrepen wat je gaat kopen.",
     "subjects": "Onderwerpen",
     "questions": "{count, plural, one {# vraag} other {# vragen}}",
     "top": "Terug naar boven",
@@ -657,7 +657,7 @@
           },
           {
             "question": "Hoe werken categorieën?",
-            "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Wishlist onthoudt dat voor de volgende keer. Een categorie zonder wensen verdwijnt vanzelf."
+            "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Niet Weer Sokken onthoudt dat voor de volgende keer. Een categorie zonder wensen verdwijnt vanzelf."
           },
           {
             "question": "Hoe zet ik mijn wensen in een andere volgorde?",
@@ -804,15 +804,15 @@
         "title": "Je account",
         "questions": [
           {
-            "question": "Kost Wishlist iets?",
-            "answer": "Nee, Wishlist is gratis."
+            "question": "Kost Niet Weer Sokken iets?",
+            "answer": "Nee, Niet Weer Sokken is gratis."
           },
           {
             "question": "Waarom heb ik geen wachtwoord?",
             "answer": "Je logt in met Google of met een link die we naar je e-mailadres sturen. Zo hoef je geen wachtwoord te onthouden."
           },
           {
-            "question": "Kan ik Wishlist op mijn telefoon zetten?",
+            "question": "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
             "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt."
           },
           {

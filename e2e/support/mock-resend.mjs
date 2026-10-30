@@ -23,6 +23,7 @@ createServer(async (request, response) => {
 
     emails.push({
       id,
+      from: payload.from,
       to: [payload.to].flat(),
       subject: payload.subject,
       html: payload.html,

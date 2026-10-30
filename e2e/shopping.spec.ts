@@ -41,7 +41,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await page.getByRole("link", { name: "Olga" }).click()
 
   await expect(page).toHaveURL(`/group/${group.id}/${wishlist.id}`)
-  await expect(page).toHaveTitle("Olga - Familie - Wishlist")
+  await expect(page).toHaveTitle("Olga - Familie - Niet Weer Sokken")
   await expect(
     page.getByRole("heading", { name: "Olga in Familie" })
   ).toBeVisible()
@@ -405,7 +405,9 @@ test("bought presents page lists what you bought for whom", async ({
 
   await page.goto("/profile/bought")
 
-  await expect(page).toHaveTitle("Mijn gekochte cadeaus - Profiel - Wishlist")
+  await expect(page).toHaveTitle(
+    "Mijn gekochte cadeaus - Profiel - Niet Weer Sokken"
+  )
   await expect(itemCard(page, "Sokken")).toHaveText(
     /^Sokken\s*Gekocht voor Olga op 5 december 2025$/
   )

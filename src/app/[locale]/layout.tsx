@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     robots: { index: false, follow: true },
     openGraph: {
       type: "website",
-      siteName: "Wishlist",
+      siteName: "Niet Weer Sokken",
       locale: "nl_NL",
       title: t("title"),
       description: t("description"),
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
     manifest: "/manifest.json",
     appleWebApp: {
       capable: true,
-      title: "Wishlist",
+      title: "Niet Weer Sokken",
       statusBarStyle: "default",
     },
   }

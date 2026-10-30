@@ -8,7 +8,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   await page.getByRole("link", { name: "Veelgestelde vragen" }).click()
 
   await expect(page).toHaveURL("/vragen")
-  await expect(page).toHaveTitle("Veelgestelde vragen - Wishlist")
+  await expect(page).toHaveTitle("Veelgestelde vragen - Niet Weer Sokken")
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
     "Je verlanglijstje",
     "Delen en groepen",
@@ -75,9 +75,9 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
       .locator("..")
       .locator("summary")
   ).toHaveText([
-    "Kost Wishlist iets?",
+    "Kost Niet Weer Sokken iets?",
     "Waarom heb ik geen wachtwoord?",
-    "Kan ik Wishlist op mijn telefoon zetten?",
+    "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
     "Hoe pas ik mijn naam of profielfoto aan?",
     "Hoe verwijder ik mijn account?",
     "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",

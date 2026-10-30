@@ -82,7 +82,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
 
   await page.goto(`/lijstje/token-${owner.id}`)
 
-  await expect(page).toHaveTitle("Olga - Wishlist")
+  await expect(page).toHaveTitle("Olga - Niet Weer Sokken")
   await expect(
     page.getByRole("heading", { name: "Olga", level: 2 })
   ).toBeVisible()

@@ -122,7 +122,7 @@ test("wishlists are only visible to their owner and the members of their groups"
 
   const memberPage = await signIn(member)
   await memberPage.goto(`/wishlist/${wishlist.id}`)
-  await expect(memberPage).toHaveTitle("Olga - Wishlist")
+  await expect(memberPage).toHaveTitle("Olga - Niet Weer Sokken")
   await memberPage.goto(`/group/${group.id}/${wishlist.id}`)
   await expect(
     memberPage.getByRole("heading", { name: /Olga/, level: 2 })

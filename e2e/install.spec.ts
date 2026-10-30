@@ -14,7 +14,7 @@ const android = {
 }
 
 const card = (page: Page) =>
-  page.getByRole("region", { name: "Zet Wishlist op je telefoon" })
+  page.getByRole("region", { name: "Zet Niet Weer Sokken op je telefoon" })
 
 const pretendInstalled = (page: Page) =>
   page.addInitScript(() => {
@@ -28,7 +28,7 @@ const pretendInstalled = (page: Page) =>
 test.describe("on an iPhone", () => {
   test.use(iPhone)
 
-  test("visitors see how to add Wishlist to their home screen", async ({
+  test("visitors see how to add Niet Weer Sokken to their home screen", async ({
     page,
   }) => {
     await page.goto("/login")
@@ -41,7 +41,7 @@ test.describe("on an iPhone", () => {
     ).toHaveCount(0)
   })
 
-  test("nothing is shown once Wishlist is opened as an app", async ({
+  test("nothing is shown once Niet Weer Sokken is opened as an app", async ({
     page,
   }) => {
     await pretendInstalled(page)
@@ -58,7 +58,9 @@ test.describe("on an iPhone", () => {
 test.describe("on Android", () => {
   test.use(android)
 
-  test("visitors install Wishlist with one button", async ({ page }) => {
+  test("visitors install Niet Weer Sokken with one button", async ({
+    page,
+  }) => {
     await page.goto("/login")
     await expect(card(page)).toContainText("Kies App installeren")
 
@@ -109,7 +111,7 @@ test("on a computer only the profile explains it, for both phones", async ({
   const loggedIn = await signIn(await createUser())
   await loggedIn.goto("/profile")
   await expect(card(loggedIn)).toContainText(
-    "Open Wishlist op je telefoon en volg de stappen hieronder."
+    "Open Niet Weer Sokken op je telefoon en volg de stappen hieronder."
   )
   await expect(
     card(loggedIn).getByRole("heading", { name: "iPhone of iPad" })
