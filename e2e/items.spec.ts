@@ -80,6 +80,7 @@ test("add a wish with a link", async ({ signIn }) => {
   const link = page.getByRole("link", { name: "Lego kasteel" })
   await expect(link).toHaveAttribute("href", "https://example.com/lego")
   await expect(link).toHaveAttribute("target", "_blank")
+  await expect(link).toHaveAttribute("rel", "ugc nofollow noopener noreferrer")
 
   const item = await prisma.wishlistItem.findFirstOrThrow({
     where: { wishlistId: wishlist.id },
@@ -89,6 +90,26 @@ test("add a wish with a link", async ({ signIn }) => {
     url: "https://example.com/lego",
     unlimited: false,
   })
+})
+
+test("group members see a link on a wish as a link from a user", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  await createItem(wishlist, {
+    title: "Lego kasteel",
+    url: "https://example.com/lego",
+  })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const link = page.getByRole("link", { name: "Lego kasteel" })
+  await expect(link).toHaveAttribute("href", "https://example.com/lego")
+  await expect(link).toHaveAttribute("rel", "ugc nofollow noopener noreferrer")
 })
 
 test("wishes are listed in their order and new ones go last", async ({
