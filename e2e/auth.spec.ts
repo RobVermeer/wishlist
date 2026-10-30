@@ -15,7 +15,9 @@ test.describe("unauthenticated visitor", () => {
 
     await expect(page).toHaveURL("/")
     await expect(
-      page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
+      page.getByRole("heading", {
+        name: "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+      })
     ).toBeVisible()
   })
 

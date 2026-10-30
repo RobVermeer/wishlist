@@ -49,7 +49,9 @@ test.describe("on an iPhone", () => {
     await page.goto("/login")
 
     await expect(
-      page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
+      page.getByRole("heading", {
+        name: "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+      })
     ).toBeVisible()
     await expect(card(page)).toBeHidden()
   })
@@ -104,7 +106,9 @@ test("on a computer only the profile explains it, for both phones", async ({
 }) => {
   await page.goto("/login")
   await expect(
-    page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
+    page.getByRole("heading", {
+      name: "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+    })
   ).toBeVisible()
   await expect(card(page)).toBeHidden()
 
