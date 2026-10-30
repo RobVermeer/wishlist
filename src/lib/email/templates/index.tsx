@@ -167,15 +167,19 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
 
           <Section style={section}>
             <Text style={text}>{t("hello")}</Text>
-            <Text style={text}>{t("text1")}</Text>
-            <Text style={text}>{t("text2")}</Text>
+            <Text style={text}>{t("text")}</Text>
 
             <Button style={button} href={url}>
               {t("button")}
             </Button>
+
+            <Text style={{ ...text, marginTop: "16px" }}>{t("expires")}</Text>
+            <Text style={text}>{t("ignore")}</Text>
           </Section>
 
           <Text style={footer}>
+            {t("reason")}
+            <br />
             <Link style={link} href={baseUrl}>
               Niet Weer Sokken
             </Link>
