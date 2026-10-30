@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth"
 import { Figtree, Fraunces } from "next/font/google"
 import { authOptions } from "@/lib/nextAuth"
 import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
 import { Toaster } from "@/components/ui/toaster"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
@@ -70,6 +71,8 @@ export default async function RootLayout({
           <Header session={session} />
 
           <Layout>{children}</Layout>
+
+          <Footer />
 
           {session && <UserInfoDialog session={session} />}
 
