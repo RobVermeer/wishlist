@@ -286,6 +286,7 @@ test("responses include security headers", async ({ request }) => {
     "x-frame-options": "DENY",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "camera=(), microphone=(), geolocation=()",
+    "strict-transport-security": "max-age=31536000",
   })
   expect(headers["x-powered-by"]).toBeUndefined()
 })
