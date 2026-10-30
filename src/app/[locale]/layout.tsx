@@ -72,7 +72,7 @@ export default async function RootLayout({
 
           <Layout>{children}</Layout>
 
-          <Footer />
+          <Footer loggedIn={!!session} />
 
           {session && <UserInfoDialog session={session} />}
 
