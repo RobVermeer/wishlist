@@ -75,6 +75,11 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   expect(loginEmail.subject).toBe("Inloggen Niet Weer Sokken")
   expect(loginEmail.from).toBe("Niet Weer Sokken <no-reply@nietweersokken.nl>")
 
+  const mail = await page.context().newPage()
+  await mail.setContent(loginEmail.html)
+  await expect(mail.locator("html")).toHaveAttribute("lang", "nl")
+  await mail.close()
+
   const link = loginEmail.html
     .match(/href="([^"]*\/api\/auth\/callback\/email[^"]*)"/)?.[1]
     ?.replaceAll("&amp;", "&")

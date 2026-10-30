@@ -32,7 +32,7 @@ export const DrawUserEmail = async ({
   const t = await getTranslations("EmailDraw")
 
   return (
-    <Html>
+    <Html lang="nl">
       <Head />
       <Preview>{t("preview")}</Preview>
       <Body style={main}>
@@ -101,7 +101,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
   const t = await getTranslations("EmailReminder")
 
   return (
-    <Html>
+    <Html lang="nl">
       <Head />
       <Preview>{t("preview")}</Preview>
       <Body style={main}>
@@ -153,7 +153,7 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
   const t = await getTranslations("EmailLogin")
 
   return (
-    <Html>
+    <Html lang="nl">
       <Head />
       <Preview>{t("preview")}</Preview>
       <Body style={main}>
@@ -200,7 +200,7 @@ export const ContactEmail = async ({
   const t = await getTranslations("EmailContact")
 
   return (
-    <Html>
+    <Html lang="nl">
       <Head />
       <Preview>{t(`subject.${topic}`, { name: from.name })}</Preview>
       <Body style={main}>
@@ -255,7 +255,7 @@ export const DrawLotsEmail = async ({
   const strong = (chunks: ReactNode) => <strong>{chunks}</strong>
 
   return (
-    <Html>
+    <Html lang="nl">
       <Head />
       <Preview>{t("preview", { receiver })}</Preview>
       <Body style={main}>
