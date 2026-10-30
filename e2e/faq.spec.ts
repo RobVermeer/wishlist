@@ -229,3 +229,29 @@ test("the frequently asked questions explain the name", async ({ signIn }) => {
     )
   ).toBeVisible()
 })
+
+test("the frequently asked questions point to installing the app", async ({
+  signIn,
+}) => {
+  const page = await signIn(await createUser())
+
+  await page.goto("/vragen")
+  await page
+    .getByText("Kan ik Niet Weer Sokken op mijn telefoon zetten?")
+    .click()
+  await expect(
+    page.getByText(
+      "Op je profiel staat hoe dat werkt, en onderaan de pagina via Installeer de app."
+    )
+  ).toBeVisible()
+
+  await page
+    .getByRole("contentinfo")
+    .getByRole("button", { name: "Installeer de app" })
+    .click()
+  await expect(
+    page
+      .getByRole("dialog", { name: "Installeer de app" })
+      .getByRole("heading", { name: "Zet Niet Weer Sokken op je telefoon" })
+  ).toBeVisible()
+})
