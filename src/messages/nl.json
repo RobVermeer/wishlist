@@ -640,6 +640,28 @@
     "top": "Terug naar boven",
     "sections": [
       {
+        "id": "algemeen",
+        "title": "Algemeen",
+        "questions": [
+          {
+            "question": "Waarom heet het Niet Weer Sokken?",
+            "answer": "Omdat je vast weleens iets hebt gekregen waar je niet om vroeg, zoals sokken. Zet op je verlanglijstje wat je echt wenst, dan weten de anderen wat ze kunnen kopen. Wil je juist wel sokken? Zet ze er dan gewoon op."
+          },
+          {
+            "question": "Kost Niet Weer Sokken iets?",
+            "answer": "Nee, Niet Weer Sokken is gratis."
+          },
+          {
+            "question": "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
+            "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt."
+          },
+          {
+            "question": "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
+            "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’. We antwoorden per e-mail."
+          }
+        ]
+      },
+      {
         "id": "je-verlanglijstje",
         "title": "Je verlanglijstje",
         "questions": [
@@ -804,20 +826,8 @@
         "title": "Je account",
         "questions": [
           {
-            "question": "Waarom heet het Niet Weer Sokken?",
-            "answer": "Omdat je vast weleens iets hebt gekregen waar je niet om vroeg, zoals sokken. Zet op je verlanglijstje wat je echt wenst, dan weten de anderen wat ze kunnen kopen. Wil je juist wel sokken? Zet ze er dan gewoon op."
-          },
-          {
-            "question": "Kost Niet Weer Sokken iets?",
-            "answer": "Nee, Niet Weer Sokken is gratis."
-          },
-          {
             "question": "Waarom heb ik geen wachtwoord?",
             "answer": "Je logt in met Google of met een link die we naar je e-mailadres sturen. Zo hoef je geen wachtwoord te onthouden."
-          },
-          {
-            "question": "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
-            "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt."
           },
           {
             "question": "Hoe pas ik mijn naam of profielfoto aan?",
@@ -830,10 +840,6 @@
           {
             "question": "Hoe verwijder ik mijn account?",
             "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’ en dan ‘Verwijder mijn account’. We verwijderen dan je account, samen met je verlanglijstjes en de groepen die je hebt gemaakt."
-          },
-          {
-            "question": "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
-            "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’. We antwoorden per e-mail."
           }
         ]
       }
