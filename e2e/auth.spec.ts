@@ -73,7 +73,7 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
 
   const [loginEmail] = await emailsTo(email)
   expect(loginEmail.subject).toBe("Inloggen Niet Weer Sokken")
-  expect(loginEmail.from).toBe("Niet Weer Sokken <no-reply@ru-coding.nl>")
+  expect(loginEmail.from).toBe("Niet Weer Sokken <no-reply@nietweersokken.nl>")
 
   const link = loginEmail.html
     .match(/href="([^"]*\/api\/auth\/callback\/email[^"]*)"/)?.[1]

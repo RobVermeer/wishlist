@@ -25,7 +25,7 @@ export const sendVerificationRequest = async (
 
   try {
     const { error } = await resend.emails.send({
-      from: "Niet Weer Sokken <no-reply@ru-coding.nl>",
+      from: "Niet Weer Sokken <no-reply@nietweersokken.nl>",
       to: identifier,
       subject: t("subject"),
       react: await LoginWithEmail({ url }),
