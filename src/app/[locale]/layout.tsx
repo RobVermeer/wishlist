@@ -66,7 +66,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${body.variable} ${heading.variable}`}>
+      <body
+        className={`${body.variable} ${heading.variable} flex min-h-dvh flex-col`}
+      >
         <NextIntlClientProvider>
           <Header session={session} />
 

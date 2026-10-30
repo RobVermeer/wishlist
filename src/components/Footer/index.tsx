@@ -14,7 +14,7 @@ export function Footer({ loggedIn }: Props) {
   const t = useTranslations("Footer")
 
   return (
-    <footer className="mx-auto px-4 pb-10 text-sm text-muted-foreground md:max-w-[640px]">
+    <footer className="mx-auto mt-auto w-full px-4 pb-10 text-sm text-muted-foreground md:max-w-[640px]">
       <div className="grid gap-6 border-t pt-8 sm:grid-cols-[1fr_auto] sm:items-start">
         <div className="grid gap-2">
           <Link
