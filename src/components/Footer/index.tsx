@@ -14,9 +14,9 @@ export function Footer({ loggedIn }: Props) {
   const t = useTranslations("Footer")
 
   return (
-    <footer className="mx-auto mt-auto w-full px-4 pb-10 text-sm text-muted-foreground md:max-w-[640px]">
-      <div className="grid gap-6 border-t pt-8 sm:grid-cols-[1fr_auto] sm:items-start">
-        <div className="grid gap-2">
+    <footer className="mx-auto mt-auto w-full px-4 pb-6 text-sm text-muted-foreground md:max-w-[640px]">
+      <div className="grid gap-4 border-t pt-6 sm:grid-cols-[1fr_auto] sm:items-start">
+        <div className="grid gap-1.5">
           <Link
             href="/"
             className="flex items-center gap-2 justify-self-start font-display text-lg font-semibold leading-none tracking-tight text-foreground"
@@ -51,7 +51,7 @@ export function Footer({ loggedIn }: Props) {
         </nav>
       </div>
 
-      <p className="mt-6 text-xs">
+      <p className="mt-4 text-xs">
         {t("copyright", { year: new Date().getFullYear() })}
       </p>
     </footer>

@@ -17,7 +17,7 @@ const installLink = (page: Page) =>
 
 async function followFooterLinks(page: Page) {
   await expect(footer(page)).toContainText(
-    "Verlanglijstjes delen, zonder dubbele cadeaus."
+    "Maak en deel je verlanglijstje, zonder dubbele cadeaus."
   )
   await expect(footer(page)).toContainText(
     `© ${new Date().getFullYear()} Niet Weer Sokken`
