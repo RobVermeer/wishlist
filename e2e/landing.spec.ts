@@ -6,7 +6,9 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
   await page.goto("/login")
 
   await expect(
-    page.getByRole("heading", { name: "Maak en deel je verlanglijstje" })
+    page.getByRole("heading", {
+      name: "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+    })
   ).toBeVisible()
   await expect(
     page.getByText(

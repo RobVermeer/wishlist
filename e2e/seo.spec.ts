@@ -24,7 +24,8 @@ test("visitors see the landing page on the home page", async ({ page }) => {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Maak en deel je verlanglijstje",
+      name: "Maak en deel je verlanglijstje, zodat je niet weer sokken krijgt.",
+      exact: true,
     })
   ).toBeVisible()
   await expect(
