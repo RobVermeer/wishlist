@@ -6,8 +6,8 @@ import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
 import { notOver } from "./notOver"
 
-// The current user's lootjes in the active draws of all groups they're in,
-// the ones with a date first.
+// The groups where the current user has a lootje in an active draw, the ones
+// with a date first. Who they drew only shows in the group.
 export const getLotsForUser = cache(async () => {
   const session = await getServerSession(authOptions)
 
@@ -25,7 +25,6 @@ export const getLotsForUser = cache(async () => {
       },
     },
     select: {
-      receiver: { select: { name: true } },
       draw: {
         select: {
           budget: true,
@@ -37,8 +36,7 @@ export const getLotsForUser = cache(async () => {
   })
 
   return participants
-    .map(({ receiver, draw }) => ({
-      receiver: receiver!.name,
+    .map(({ draw }) => ({
       budget: draw.budget,
       date: draw.date,
       group: draw.group,
