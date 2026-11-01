@@ -19,7 +19,10 @@ test("profile tabs navigate between profile pages", async ({ signIn }) => {
     ["Gekochte cadeaus", "/profile/bought"],
     ["Profiel", "/profile"],
   ]) {
-    await page.getByRole("link", { name, exact: true }).click()
+    await page
+      .getByRole("link", { name, exact: true })
+      .and(page.locator(":not(nav *)"))
+      .click()
     await expect(page).toHaveURL(path)
   }
 })

@@ -36,5 +36,5 @@ export default async function WishlistPage({ params }: Props) {
     redirect(`/login?callbackUrl=${encodeURIComponent(`/wishlist/${id}`)}`)
   }
 
-  return <Wishlist id={id} />
+  return <Wishlist id={id} breadcrumbs />
 }

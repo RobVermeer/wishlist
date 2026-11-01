@@ -2,6 +2,7 @@ import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { YourItemCard } from "@/components/YourItemCard"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { NewItem } from "@/components/NewItem"
@@ -14,7 +15,6 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 import { canBeRemindedForUser } from "@/lib/reminders/canBeRemindedForUser"
 import { RemindButton } from "../RemindButton"
 import { ItemCard } from "../ItemCard"
-import Link from "next/link"
 import { CategoryList } from "../CategoryList"
 import { ItemList } from "@/components/ItemList"
 import { ShareWishlist } from "@/components/ShareWishlist"
@@ -31,13 +31,16 @@ import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
 interface Props {
   id: string
   groupId?: string
+  breadcrumbs?: boolean
 }
 
-export const Wishlist = async ({ id, groupId }: Props) => {
+export const Wishlist = async ({ id, groupId, breadcrumbs = false }: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
   const t = await getTranslations("GroupWishlist")
+  const tBreadcrumbs = await getTranslations("Breadcrumbs")
+  const tCommon = await getTranslations("Common")
   const tEdit = await getTranslations("EditWishlist")
   const format = await getFormatter()
 
@@ -76,6 +79,18 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
   return (
     <List>
+      {breadcrumbs && (
+        <Breadcrumbs
+          parents={
+            group ? [{ label: group.title, href: `/group/${group.id}` }] : []
+          }
+          current={
+            wishlist.isOwnList && !wishlist.title
+              ? tCommon("myList")
+              : tBreadcrumbs("wishlistOf", { name: getWishlistName(wishlist) })
+          }
+        />
+      )}
       <div className="text-center">
         {!wishlist.title && wishlist.user.image && (
           <Avatar className="inline-block w-14 h-14 border border-slate-500">
@@ -90,22 +105,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           <WishlistTitle
             wishlist={wishlist}
             showGroups={wishlist.isOwnList && !group}
-          />{" "}
-          {group && (
-            <small className="text-base text-foreground">
-              {t.rich("inGroup", {
-                group: group.title,
-                link: chunks => (
-                  <Link
-                    className="underline underline-offset-2"
-                    href={`/group/${group.id}`}
-                  >
-                    {chunks}
-                  </Link>
-                ),
-              })}
-            </small>
-          )}
+          />
         </ListTitle>
 
         {wishlist.managedWith.length > 0 && (

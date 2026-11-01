@@ -39,5 +39,5 @@ export default async function GroupWishlistPage({ params }: Props) {
     )
   }
 
-  return <Wishlist id={wishlistId} groupId={groupId} />
+  return <Wishlist id={wishlistId} groupId={groupId} breadcrumbs />
 }

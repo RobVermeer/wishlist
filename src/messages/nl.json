@@ -41,6 +41,11 @@
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
+  "Breadcrumbs": {
+    "label": "Kruimelpad",
+    "home": "Home",
+    "wishlistOf": "Verlanglijstje van {name}"
+  },
   "Common": {
     "myList": "Mijn lijstje",
     "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
@@ -181,7 +186,6 @@
         "later": "Kijk later nog eens."
       }
     },
-    "inGroup": "in <link>{group}</link>",
     "hint": {
       "together": "Je beheert dit verlanglijstje samen met {names}.",
       "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",

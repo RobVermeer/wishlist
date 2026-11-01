@@ -1,4 +1,6 @@
+import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
+import { ProfileBreadcrumbs } from "@/components/ProfileBreadcrumbs"
 import { ProfileTabs } from "@/components/ProfileTabs"
 import { useTranslations } from "next-intl"
 import { ReactNode } from "react"
@@ -12,7 +14,10 @@ export default function ProfileLayout({ children }: Props) {
 
   return (
     <>
-      <ListTitle>{t("title")}</ListTitle>
+      <List>
+        <ProfileBreadcrumbs />
+        <ListTitle>{t("title")}</ListTitle>
+      </List>
 
       <ProfileTabs />
 

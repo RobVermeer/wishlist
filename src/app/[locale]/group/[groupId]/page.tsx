@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { EmptyState } from "@/components/EmptyState"
 import { FollowGroup } from "@/components/FollowGroup"
 import { List } from "@/components/List"
@@ -62,9 +63,12 @@ export default async function GroupPage({ params }: Props) {
     notFound()
   }
 
+  const breadcrumbs = <Breadcrumbs current={group.title} />
+
   if (!group.subscribed) {
     return (
       <>
+        {breadcrumbs}
         <EmptyState title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
@@ -115,6 +119,7 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <List>
+      {breadcrumbs}
       <div
         className="relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-cover bg-center p-5 text-white shadow-md"
         style={{
