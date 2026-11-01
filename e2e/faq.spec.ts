@@ -183,7 +183,15 @@ test("the frequently asked questions explain how a lootje stays secret", async (
   ).toBeVisible()
   await lots.getByText("Waar zie ik wie ik heb getrokken?").click()
   await expect(
-    lots.getByText("Wie je hebt getrokken, zie je pas als je ‘Laat zien’ kiest")
+    lots.getByText(
+      "In de e-mail en in de groep. Daar zie je het pas als je ‘Laat zien’ kiest"
+    )
+  ).toBeVisible()
+  await lots.getByText("Kan ik in meerdere groepen lootjes trekken?").click()
+  await expect(
+    lots.getByText(
+      "Op je overzicht zie je onder ‘Je lootjes’ in welke groepen je een lootje hebt"
+    )
   ).toBeVisible()
   await lots.getByText("Hoelang zie ik mijn lootje?").click()
   await expect(
