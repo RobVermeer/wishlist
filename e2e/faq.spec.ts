@@ -204,6 +204,7 @@ test("the frequently asked questions explain how a lootje stays secret", async (
       "In de e-mail en in de groep. Daar zie je het pas als je ‘Laat zien’ kiest"
     )
   ).toBeVisible()
+  await expect(lots.getByText(/link naar het verlanglijstje/)).toHaveCount(0)
   await lots.getByText("Kan ik in meerdere groepen lootjes trekken?").click()
   await expect(
     lots.getByText(
