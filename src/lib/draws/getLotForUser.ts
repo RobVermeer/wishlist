@@ -47,7 +47,7 @@ export const getLotForUser = cache(async (groupId: string) => {
 
   return {
     receiver: receiver.name,
-    wishlistId: wishlist?.id ?? null,
+    hasWishlist: wishlist !== null,
     budget: draw.budget,
     date: draw.date,
   }

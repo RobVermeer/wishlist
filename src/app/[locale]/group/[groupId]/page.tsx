@@ -177,7 +177,7 @@ export default async function GroupPage({ params }: Props) {
         </div>
       </div>
 
-      {lot && <DrawLot groupId={group.id} lot={lot} />}
+      {lot && <DrawLot lot={lot} />}
 
       {groupIsEmpty ? (
         <section

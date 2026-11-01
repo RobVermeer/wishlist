@@ -1050,7 +1050,6 @@
       "hide": "Verberg",
       "budget": "Budget: {budget}",
       "date": "Datum: {date}",
-      "wishlist": "Bekijk het verlanglijstje van {name}",
       "noWishlist": "{name} heeft nog geen verlanglijstje in deze groep."
     },
     "manage": {
