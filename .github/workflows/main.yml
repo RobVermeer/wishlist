@@ -14,6 +14,12 @@ jobs:
     name: Do it 💪
     needs: ci
     runs-on: ubuntu-latest
+    # One deploy at a time, so an older one can't switch to its release after
+    # a newer one or remove a release that is still being copied. A running
+    # deploy is never cancelled; of the ones waiting only the newest runs.
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
     env:
       APP: /var/www/wishlist.ru-coding.nl
     steps:
