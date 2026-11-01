@@ -427,18 +427,10 @@ test("the overview shows your lootjes from all your groups", async ({
   await page.goto("/")
 
   const lots = page.getByRole("list", { name: "Je lootjes" })
-  await expect(lots.getByRole("listitem")).toHaveCount(2)
-  for (const item of await lots.getByRole("listitem").all()) {
-    await reveal(item)
-  }
   await expect(lots.getByRole("listitem")).toHaveText([
-    new RegExp(`Familie ${bert.id}\\s*Je hebt Anna getrokken`),
-    new RegExp(`Vrienden ${bert.id}\\s*Je hebt Carla getrokken`),
+    new RegExp(`Familie ${bert.id}\\s*Budget: €\\s25 · Datum: 5 december 2026`),
+    new RegExp(`^Vrienden ${bert.id}$`),
   ])
-  await expect(lots.getByRole("listitem").first()).toContainText(/€\s25/)
-  await expect(lots.getByRole("listitem").first()).toContainText(
-    "5 december 2026"
-  )
   await lots
     .getByRole("link", { name: new RegExp(`Vrienden ${bert.id}`) })
     .click()
@@ -536,17 +528,17 @@ test("a lootje stays hidden until you show it", async ({ signIn }) => {
   await page.goto("/")
   const lots = page.getByRole("list", { name: "Je lootjes" })
   await expect(lots).toContainText(`Familie ${bert.id}`)
+  await expect(lots.getByRole("button")).toHaveCount(0)
   await expect(page.getByRole("main")).not.toContainText(`Carla ${bert.id}`)
   expect(await page.getByRole("main").ariaSnapshot()).not.toContain(
     `Carla ${bert.id}`
   )
 
-  await reveal(lots)
-  await expect(lots).toContainText(drawn)
-
-  await page.reload()
-  await expect(lots).toContainText(`Familie ${bert.id}`)
-  await expect(page.getByRole("main")).not.toContainText(`Carla ${bert.id}`)
+  await lots
+    .getByRole("link", { name: new RegExp(`Familie ${bert.id}`) })
+    .click()
+  await expect(page).toHaveURL(`/group/${group.id}`)
+  await expect(lot(page)).toContainText("Je hebt iemand getrokken")
 })
 
 test("the overview has no lootjes without a draw", async ({ signIn }) => {

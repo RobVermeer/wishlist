@@ -11,9 +11,8 @@ import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlist
 import Link from "next/link"
 import { getFormatter, getTranslations } from "next-intl/server"
 import { WishlistIcon, wishlistColors } from "@/components/WishlistIcon"
-import { Gift } from "lucide-react"
+import { ChevronRight, Gift } from "lucide-react"
 import { DrawDetails } from "@/components/DrawDetails"
-import { LotReveal } from "@/components/LotReveal"
 import { getLotsForUser } from "@/lib/draws/getLotsForUser"
 import { cn } from "@/lib/utils"
 import { AddTile } from "@/components/AddTile"
@@ -134,22 +133,26 @@ export default async function Home() {
           </ListTitle>
           <ul aria-labelledby="lots-title" className="grid gap-2">
             {lots.map(lot => (
-              <li
-                key={lot.group.id}
-                className="grid gap-1 rounded-lg bg-secondary p-4"
-              >
+              <li key={lot.group.id}>
                 <Link
                   href={`/group/${lot.group.id}`}
-                  className="flex items-center gap-2 justify-self-start text-sm font-medium text-muted-foreground hover:text-foreground hover:underline"
+                  className="flex items-center gap-3 rounded-lg bg-secondary px-4 py-3 transition-colors hover:bg-secondary/70"
                 >
-                  <Gift aria-hidden size="16" className="text-primary" />
-                  {lot.group.title}
+                  <Gift
+                    aria-hidden
+                    size="18"
+                    className="shrink-0 text-primary"
+                  />
+                  <div className="grid">
+                    <span className="font-medium">{lot.group.title}</span>
+                    <DrawDetails budget={lot.budget} date={lot.date} />
+                  </div>
+                  <ChevronRight
+                    aria-hidden
+                    size="18"
+                    className="ml-auto shrink-0 text-muted-foreground"
+                  />
                 </Link>
-                <LotReveal
-                  name={lot.receiver}
-                  className="text-xl"
-                  details={<DrawDetails budget={lot.budget} date={lot.date} />}
-                />
               </li>
             ))}
           </ul>
