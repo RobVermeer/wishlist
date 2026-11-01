@@ -93,14 +93,11 @@ Keep the tone warm but calm:
 
 ## Deploys
 
-Every push to `main` deploys through `.github/workflows/main.yml` without downtime: the standalone build goes into a new folder in `releases/` in the app folder on the server, migrations run, the `current` symlink switches to the new release and `pm2 reload wishlist` restarts the app.
+Every push to `main` deploys without downtime: each deploy gets its own release folder, and pm2 starts the new release before it stops the old one. See `.github/workflows/main.yml` and `ecosystem.config.cjs` for how. For code that means:
 
-- pm2 runs the app in cluster mode with one instance (`ecosystem.config.cjs`). A reload then starts the new process and stops the old one once the new one listens. In fork mode pm2 stops the app first, and nginx answers with a 502 until it's back.
-- The running app keeps its own release folder, so a deploy never changes files under it. Files that didn't change are hard links to the previous release, which keeps releases small.
-- What must survive a deploy lives outside the releases and is linked into each one: `.env.local`, `database/` (through the absolute `DATABASE_URL`) and `public/avatars/`, which nginx serves itself. Something new like that needs a link in the workflow too.
-- The last three releases are kept. To go back to one, run `ln -sfn releases/<release> current.new && mv -Tf current.new current && pm2 reload wishlist` in the app folder. Migrations aren't undone, so they have to work with the previous release too.
-- pm2 only reads `ecosystem.config.cjs` on `pm2 start`. After changing it, run `pm2 delete wishlist && pm2 start current/ecosystem.config.cjs && pm2 save` in the app folder, which takes the app down for a moment.
-- During a reload two processes use the database for a moment. Transactions start with `BEGIN IMMEDIATE` (`src/lib/prisma.ts`), so they wait for each other instead of failing.
+- Migrations run while the previous release is still serving, and a rollback doesn't undo them. A migration has to work with the code before it too.
+- Each deploy starts from an empty folder. Files the app writes at runtime, like `public/avatars/`, live outside it and are linked into every release by the workflow. Something new like that needs a link there too.
+- During a deploy two processes use the database for a moment. Transactions start with `BEGIN IMMEDIATE` (`src/lib/prisma.ts`), so they wait for each other instead of failing.
 
 ## Pull requests
 
