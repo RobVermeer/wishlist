@@ -181,16 +181,7 @@
       "other": {
         "title": "{name} heeft nog geen wensen",
         "remind": "Vraag om meer wensen, dan krijgt {name} een e-mail.",
-        "later": "Kijk later nog eens.",
-        "interests": {
-          "title": "Verras {name}",
-          "text": "Er staan geen wensen op, dus bedenk zelf iets bij waar {name} blij van wordt."
-        }
-      },
-      "interests": {
-        "title": "Alleen interesses is ook goed",
-        "own": "De anderen zien waar je blij van wordt en bedenken zelf iets. Wil je toch iets specifieks, voeg dan een wens toe.",
-        "managed": "De anderen zien waar {name} blij van wordt en bedenken zelf iets. Wil je toch iets specifieks, voeg dan een wens toe."
+        "later": "Kijk later nog eens."
       }
     },
     "hint": {
@@ -207,6 +198,16 @@
     "hint": {
       "own": "Hou je niet zo van wensen? Zet hier wat je graag doet of leuk vindt, dan bedenken de anderen zelf iets.",
       "managed": "Zet hier wat {name} graag doet of leuk vindt, dan bedenken de anderen zelf iets."
+    },
+    "withWishes": {
+      "own": "Hiermee kunnen de anderen je ook verrassen, naast je wensen hieronder.",
+      "managed": "Hiermee kunnen de anderen {name} ook verrassen, naast de wensen hieronder.",
+      "other": "Naast de wensen hieronder kun je {name} ook verrassen met iets wat hierbij past."
+    },
+    "withoutWishes": {
+      "own": "Er staan geen wensen op je verlanglijstje, en dat is goed. De anderen bedenken hiermee zelf een cadeau. Wil je toch iets specifieks, voeg dan een wens toe.",
+      "managed": "Er staan geen wensen op dit verlanglijstje, en dat is goed. De anderen bedenken hiermee zelf een cadeau voor {name}. Wil je toch iets specifieks, voeg dan een wens toe.",
+      "other": "Er staan geen wensen op dit verlanglijstje, maar hiermee bedenk je vast een cadeau om {name} mee te verrassen."
     },
     "label": "Nieuwe interesse",
     "placeholder": "Bijvoorbeeld wandelen.",

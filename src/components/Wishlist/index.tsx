@@ -61,6 +61,27 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const onlyInterests = !hasItems && wishlist.interests.length > 0
   const showRemind = canBeReminded && !wishlist.isOwnList && !onlyInterests
 
+  const interestsHint = () => {
+    if (wishlist.isOwnList && wishlist.interests.length === 0) {
+      return isOwnWishlist
+        ? tInterests("hint.own")
+        : tInterests("hint.managed", { name })
+    }
+    if (!hasItems) return undefined
+    if (isOwnWishlist) return tInterests("withWishes.own")
+    return wishlist.isOwnList
+      ? tInterests("withWishes.managed", { name })
+      : tInterests("withWishes.other", { name })
+  }
+
+  const interestsNote = () => {
+    if (!onlyInterests) return undefined
+    if (isOwnWishlist) return tInterests("withoutWishes.own")
+    return wishlist.isOwnList
+      ? tInterests("withoutWishes.managed", { name })
+      : tInterests("withoutWishes.other", { name })
+  }
+
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
     if (wishlist.isOwnList) {
       return (
@@ -143,13 +164,8 @@ export const Wishlist = async ({ id, groupId }: Props) => {
               : tInterests("title.other", { name })
           }
           interests={wishlist.interests}
-          hint={
-            wishlist.isOwnList && wishlist.interests.length === 0
-              ? isOwnWishlist
-                ? tInterests("hint.own")
-                : tInterests("hint.managed", { name })
-              : undefined
-          }
+          hint={interestsHint()}
+          note={interestsNote()}
           editable={wishlist.isOwnList}
         />
       )}
@@ -183,14 +199,9 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       )}
 
       {!hasItems &&
+        !onlyInterests &&
         (wishlist.isOwnList ? (
-          onlyInterests ? (
-            <EmptyState title={t("empty.interests.title")}>
-              {isOwnWishlist
-                ? t("empty.interests.own")
-                : t("empty.interests.managed", { name })}
-            </EmptyState>
-          ) : wishlist.title ? (
+          wishlist.title ? (
             <EmptyState title={t("empty.managed.title")}>
               {t("empty.managed.text", { name })}
             </EmptyState>
@@ -199,10 +210,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
               {t("empty.own.text")}
             </EmptyState>
           )
-        ) : onlyInterests ? (
-          <EmptyState title={t("empty.other.interests.title", { name })}>
-            {t("empty.other.interests.text", { name })}
-          </EmptyState>
         ) : (
           <EmptyState title={t("empty.other.title", { name })}>
             {canBeReminded
