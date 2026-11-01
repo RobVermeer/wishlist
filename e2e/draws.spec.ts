@@ -14,6 +14,9 @@ import { Page } from "@playwright/test"
 
 const lot = (page: Page) => page.getByRole("region", { name: "Jouw lootje" })
 
+const reveal = (scope: Page | ReturnType<Page["getByRole"]>) =>
+  scope.getByRole("button", { name: "Laat zien" }).click()
+
 const drawnName = (html: string) =>
   html.match(/Je hebt <strong>([^<]+)<\/strong> getrokken/)?.[1]
 
@@ -68,6 +71,7 @@ test("the creator draws lots for the group", async ({ signIn }) => {
 
     const participantPage = await signIn(participant)
     await participantPage.goto(`/group/${group.id}`)
+    await reveal(lot(participantPage))
     await expect(lot(participantPage)).toContainText(
       `Je hebt ${name} getrokken`
     )
@@ -92,6 +96,7 @@ test("a participant only sees their own lootje", async ({ signIn }) => {
   const page = await signIn(bert)
 
   await page.goto(`/group/${group.id}`)
+  await reveal(lot(page))
 
   await expect(lot(page)).toContainText("Je hebt Carla getrokken")
   await expect(page.getByText(/getrokken/)).toHaveCount(1)
@@ -110,6 +115,7 @@ test("a lootje says when someone has no wishlist yet", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
+  await reveal(lot(page))
 
   await expect(lot(page)).toContainText("Je hebt Bert getrokken")
   await expect(lot(page)).toContainText(
@@ -231,6 +237,7 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   const opaPage = await signIn(opa)
   await opaPage.goto(`/group/${group.id}`)
   await opaPage.getByRole("button", { name: "Volg de groep" }).click()
+  await reveal(lot(opaPage))
   await expect(lot(opaPage)).toContainText(`Je hebt ${drawn} getrokken`)
 })
 
@@ -305,6 +312,7 @@ test("the creator sees who joined, but not who drew whom", async ({
     /Carla\s*Niet meer in de groep/,
     /Opa\s*Nog niet aangemeld/,
   ])
+  await reveal(lot(page))
   await expect(page.getByText(/Je hebt .+ getrokken/)).toHaveCount(1)
   await expect(lot(page)).toContainText("Je hebt Bert getrokken")
 
@@ -425,6 +433,10 @@ test("the overview shows your lootjes from all your groups", async ({
   await page.goto("/")
 
   const lots = page.getByRole("list", { name: "Je lootjes" })
+  await expect(lots.getByRole("listitem")).toHaveCount(2)
+  for (const item of await lots.getByRole("listitem").all()) {
+    await reveal(item)
+  }
   await expect(lots.getByRole("listitem")).toHaveText([
     new RegExp(`Familie ${bert.id}\\s*Je hebt Anna getrokken`),
     new RegExp(`Vrienden ${bert.id}\\s*Je hebt Carla getrokken`),
@@ -489,6 +501,58 @@ test("a lootje no longer shows after the date of the party", async ({
     annaPage.getByRole("button", { name: "Lootjes trekken" })
   ).toBeVisible()
   await expect(lot(annaPage)).toHaveCount(0)
+})
+
+test("a lootje stays hidden until you show it", async ({ signIn }) => {
+  const anna = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: `Carla ${bert.id}` })
+  const group = await createGroup(anna, {
+    title: `Familie ${bert.id}`,
+    members: [bert, carla],
+  })
+  await createWishlist(carla, { groups: [group] })
+  await createDraw(group, [anna, bert, carla])
+  const page = await signIn(bert)
+  const drawn = `Je hebt Carla ${bert.id} getrokken`
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(lot(page)).toContainText("Je hebt iemand getrokken")
+  await expect(lot(page)).not.toContainText("Carla")
+  expect(await lot(page).ariaSnapshot()).not.toContain("Carla")
+  await expect(lot(page).getByRole("link")).toHaveCount(0)
+
+  await reveal(lot(page))
+  await expect(lot(page)).toContainText(drawn)
+  await expect(
+    lot(page).getByRole("link", {
+      name: `Bekijk het verlanglijstje van Carla ${bert.id}`,
+    })
+  ).toBeVisible()
+
+  await lot(page).getByRole("button", { name: "Verberg" }).click()
+  await expect(lot(page)).not.toContainText("Carla")
+
+  await reveal(lot(page))
+  await page.reload()
+  await expect(lot(page)).toContainText("Je hebt iemand getrokken")
+  await expect(lot(page)).not.toContainText("Carla")
+
+  await page.goto("/")
+  const lots = page.getByRole("list", { name: "Je lootjes" })
+  await expect(lots).toContainText(`Familie ${bert.id}`)
+  await expect(page.getByRole("main")).not.toContainText(`Carla ${bert.id}`)
+  expect(await page.getByRole("main").ariaSnapshot()).not.toContain(
+    `Carla ${bert.id}`
+  )
+
+  await reveal(lots)
+  await expect(lots).toContainText(drawn)
+
+  await page.reload()
+  await expect(lots).toContainText(`Familie ${bert.id}`)
+  await expect(page.getByRole("main")).not.toContainText(`Carla ${bert.id}`)
 })
 
 test("the overview has no lootjes without a draw", async ({ signIn }) => {
