@@ -41,7 +41,7 @@ test("share your wishlist with a link", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Deel de link" }).click()
   await expect(toasts(page)).toContainText("Link van verlanglijstje gekopieerd")
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    `http://localhost:3100/lijstje/${shareToken}`
+    `Bekijk mijn verlanglijstje op Niet Weer Sokken.\nhttp://localhost:3100/lijstje/${shareToken}`
   )
 
   await page.reload()
@@ -307,6 +307,51 @@ async function shared(page: Page) {
     () => (window as unknown as { shared: ShareData }).shared
   )
 }
+
+async function shareWishlist(page: Page, wishlistId: string) {
+  await page.goto(`/wishlist/${wishlistId}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+  await expect(page.getByLabel("Link naar je verlanglijstje")).toHaveValue(
+    /lijstje/
+  )
+  await page.getByRole("button", { name: "Deel de link" }).click()
+}
+
+test("sharing your wishlist starts with a short intro", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner)
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await shareWishlist(page, wishlist.id)
+
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  expect(await shared(page)).toEqual({
+    title: "Olga",
+    text: `Bekijk mijn verlanglijstje op Niet Weer Sokken.\n${baseURL}/lijstje/${shareToken}`,
+  })
+})
+
+test("sharing a wishlist for someone else names them in the intro", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner, { title: "Sam" })
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await shareWishlist(page, wishlist.id)
+
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  expect(await shared(page)).toEqual({
+    title: "Sam",
+    text: `Bekijk het verlanglijstje van Sam op Niet Weer Sokken.\n${baseURL}/lijstje/${shareToken}`,
+  })
+})
 
 test("sharing a group invites with a short intro", async ({ signIn }) => {
   const owner = await createUser()

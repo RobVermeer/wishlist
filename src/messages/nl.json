@@ -578,6 +578,7 @@
     "text": "Iedereen met deze link kan je verlanglijstje bekijken nadat ze zijn ingelogd en het volgen. Wat er al gekocht is, zie je zelf nooit.",
     "link": "Link naar je verlanglijstje",
     "share": "Deel de link",
+    "intro": "{forSomeoneElse, select, true {Bekijk het verlanglijstje van {name}} other {Bekijk mijn verlanglijstje}} op Niet Weer Sokken.",
     "copied": "Link van verlanglijstje gekopieerd",
     "reset": "Maak een nieuwe link",
     "resetText": "Maak je een nieuwe link, dan werkt de oude niet meer. Wie je verlanglijstje al volgt, houdt toegang.",

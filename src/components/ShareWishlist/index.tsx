@@ -22,9 +22,10 @@ import { useShareOrCopy } from "@/lib/useShareOrCopy"
 interface Props {
   wishlistId: string
   name: string
+  forSomeoneElse: boolean
 }
 
-export const ShareWishlist = ({ wishlistId, name }: Props) => {
+export const ShareWishlist = ({ wishlistId, name, forSomeoneElse }: Props) => {
   const t = useTranslations("ShareWishlist")
   const { toast } = useToast()
   const shareOrCopy = useShareOrCopy()
@@ -89,6 +90,10 @@ export const ShareWishlist = ({ wishlistId, name }: Props) => {
               url &&
               shareOrCopy({
                 title: name,
+                intro: t("intro", {
+                  name,
+                  forSomeoneElse: String(forSomeoneElse),
+                }),
                 url,
                 copied: t("copied"),
               })
