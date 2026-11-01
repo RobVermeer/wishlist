@@ -1,7 +1,8 @@
 import { Card } from "@/components/Card"
 import type { getWishlistById } from "@/lib/wishlists/getWishlistById"
-import { InfinityIcon, Link } from "lucide-react"
+import { InfinityIcon } from "lucide-react"
 import { EditItem } from "@/components/EditItem"
+import { ItemTitle } from "@/components/ItemTitle"
 
 interface Props {
   item: NonNullable<
@@ -11,24 +12,18 @@ interface Props {
 }
 
 export const YourItemCard = ({ item, categories }: Props) => {
-  const { title, url, unlimited } = item
+  const { title, links, unlimited } = item
 
   return (
     <Card className="flex items-center pr-24">
       {unlimited && <InfinityIcon className="mr-1" />}
-      {url && (
-        <a href={url} target="_blank" rel="ugc nofollow noopener noreferrer">
-          <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
-        </a>
-      )}
-
-      {!url && title}
+      <ItemTitle title={title} links={links} />
 
       <EditItem
         item={{
           id: item.id,
           title,
-          url,
+          links: links.map(({ url }) => url),
           unlimited,
           category: item.category,
         }}

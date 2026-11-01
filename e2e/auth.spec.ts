@@ -16,7 +16,6 @@ test.describe("unauthenticated visitor", () => {
   for (const path of [
     "/profile",
     "/profile/bought",
-    "/group/some-group",
     "/group/some-group/some-wishlist",
     "/wishlist/some-wishlist",
   ]) {
@@ -78,10 +77,14 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   const mail = await page.context().newPage()
   await mail.setContent(loginEmail.html)
   await expect(mail.locator("html")).toHaveAttribute("lang", "nl")
+  await expect(
+    mail.getByRole("heading", { name: "Inloggen bij Niet Weer Sokken" })
+  ).toBeVisible()
   await expect(mail.getByRole("link", { name: "Inloggen" })).toBeVisible()
   for (const text of [
-    "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "Klik op de knop hieronder om in te loggen.",
     "De knop werkt één keer en 24 uur lang.",
+    "Werkt de knop niet? Kopieer dan deze link en plak hem in je browser.",
     "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
     "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken.",
   ]) {
@@ -136,6 +139,94 @@ test("the login link only holds the page to come back to", async ({ page }) => {
   await page.goto(link.href)
 
   await expect(page).toHaveURL("/profile/bought")
+})
+
+test("the login e-mail uses the same red as the app", async ({ page }) => {
+  const email = `red-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  // The red of the logo, the icons and the primary button in the app.
+  const red = "rgb(219, 36, 60)"
+
+  const mail = await page.context().newPage()
+  await mail.setContent(loginEmail.html)
+  const button = mail.getByRole("link", { name: "Inloggen" })
+  await expect(button).toHaveCSS("background-color", red)
+  await expect(button).toHaveCSS("color", "rgb(255, 255, 255)")
+  await expect(button.locator("xpath=ancestor::table[1]")).toHaveCSS(
+    "border-color",
+    red
+  )
+  await expect(mail.getByRole("link", { name: "Niet Weer Sokken" })).toHaveCSS(
+    "color",
+    red
+  )
+  await mail.close()
+})
+
+test("the login e-mail shows the link to copy when the button doesn't work", async ({
+  page,
+}) => {
+  const email = `copy-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  const mail = await page.context().newPage()
+  await mail.setContent(loginEmail.html)
+  const href = await mail
+    .getByRole("link", { name: "Inloggen" })
+    .getAttribute("href")
+  expect(href).toContain("/api/auth/callback/email")
+  const copy = mail.getByRole("link", { name: href!, exact: true })
+  await expect(copy).toBeVisible()
+  await expect(copy).toHaveAttribute("href", href!)
+  await mail.close()
+
+  await page.goto(href!)
+
+  await expect(page).toHaveURL("/")
+})
+
+test("the login e-mail fits on a phone", async ({ page, browser }) => {
+  const email = `phone-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  const phone = await browser.newPage({
+    viewport: { width: 375, height: 667 },
+    isMobile: true,
+  })
+  await phone.setContent(loginEmail.html)
+  await expect(phone.getByRole("link", { name: "Inloggen" })).toBeInViewport()
+  expect(
+    await phone.evaluate(() => document.documentElement.scrollWidth)
+  ).toBeLessThanOrEqual(375)
+  await phone.close()
 })
 
 test("an address gets at most three login e-mails in ten minutes", async ({
@@ -211,7 +302,9 @@ test("logging out ends the session", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto("/profile")
-  await page.getByRole("button", { name: "Uitloggen" }).click()
+  const account = page.getByRole("region", { name: "Account" })
+  await expect(account).toContainText(`Ingelogd als ${user.email}.`)
+  await account.getByRole("button", { name: "Uitloggen" }).click()
 
   await expect(page).toHaveURL(/\/login/)
   await expect

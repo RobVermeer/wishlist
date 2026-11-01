@@ -18,7 +18,7 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
 
   const example = page.getByRole("figure", { name: /Sanne ziet dat niet/ })
   await expect(example.getByRole("listitem")).toHaveText([
-    /^Fiets\s*Ik koop dit$/,
+    /^Fiets\s*bol\.com\s*coolblue\.nl\s*Ik koop dit$/,
     /^Boeken\s*Onbeperkt$/,
     /^LEGO kasteel\s*Wordt al gekocht$/,
     /^Bordspel\s*Jij koopt dit\s*Toch niet$/,

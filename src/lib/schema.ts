@@ -32,6 +32,8 @@ export const wishlistSchema = z.object({
   managers: z.array(z.string()).optional(),
 })
 
+export const maxWishlistItemLinks = 5
+
 export const wishlistItemSchema = z.object({
   title: z
     .string()
@@ -39,9 +41,11 @@ export const wishlistItemSchema = z.object({
     .min(2, { error: "Je wens moet minimaal uit 2 tekens bestaan" })
     .max(100, { error: "Je wens mag maximaal uit 100 tekens bestaan" }),
   unlimited: z.boolean(),
-  url: z
-    .url({ protocol: /^https?$/, error: "Vul een geldige URL in" })
-    .optional(),
+  links: z
+    .array(z.url({ protocol: /^https?$/, error: "Vul een geldige URL in" }))
+    .max(maxWishlistItemLinks, {
+      error: `Een wens kan maximaal ${maxWishlistItemLinks} linkjes hebben`,
+    }),
   category: z
     .string()
     .trim()

@@ -1,4 +1,10 @@
-import { test, expect, createUser, createWishlist } from "./fixtures"
+import {
+  test,
+  expect,
+  createUser,
+  createGroup,
+  createWishlist,
+} from "./fixtures"
 import { baseURL } from "./support/env"
 import { Page } from "@playwright/test"
 
@@ -126,6 +132,29 @@ test("a shared wishlist shows a preview but stays out of search results", async 
   await expect(meta(page, "og:title")).toHaveAttribute(
     "content",
     "Olga heeft een verlanglijstje met je gedeeld"
+  )
+  await expect(meta(page, "og:image")).toHaveAttribute(
+    "content",
+    `${baseURL}/og.png`
+  )
+  await expect(meta(page, "robots")).toHaveAttribute("content", /noindex/)
+})
+
+test("a group invite shows a preview but stays out of search results", async ({
+  page,
+}) => {
+  const owner = await createUser()
+  const group = await createGroup(owner, { title: "Familie" })
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(meta(page, "og:title")).toHaveAttribute(
+    "content",
+    "Je bent uitgenodigd voor de groep Familie"
+  )
+  await expect(meta(page, "og:description")).toHaveAttribute(
+    "content",
+    "Doe mee op Niet Weer Sokken en bekijk elkaars verlanglijstjes, zodat niemand iets dubbel koopt."
   )
   await expect(meta(page, "og:image")).toHaveAttribute(
     "content",

@@ -134,14 +134,14 @@ export async function createItem(
   wishlist: { id: string },
   {
     title = `Wens ${uniqueId()}`,
-    url = null,
+    links = [],
     unlimited = false,
     boughtBy = null,
     boughtAt = null,
     category = null,
   }: {
     title?: string
-    url?: string | null
+    links?: string[]
     unlimited?: boolean
     boughtBy?: User | null
     boughtAt?: Date | null
@@ -151,8 +151,10 @@ export async function createItem(
   return prisma.wishlistItem.create({
     data: {
       title,
-      url,
       unlimited,
+      links: {
+        create: links.map((url, position) => ({ url, position })),
+      },
       createdAt: new Date(),
       wishlistId: wishlist.id,
       userId: boughtBy?.id ?? null,
