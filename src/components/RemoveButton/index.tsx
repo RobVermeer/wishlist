@@ -1,5 +1,6 @@
 "use client"
 
+import { ReactNode } from "react"
 import { Trash } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,7 @@ interface Props {
   label?: string
   size?: "default" | "sm"
   className?: string
+  children?: ReactNode
 }
 
 export const RemoveButton = ({
@@ -29,20 +31,23 @@ export const RemoveButton = ({
   label,
   size,
   className = "w-full",
+  children,
 }: Props) => {
   const t = useTranslations("Remove")
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          className={className}
-          size={size}
-          type="button"
-          variant="outline"
-        >
-          <Trash size="16" className="mr-2" /> {label ?? t("button")}
-        </Button>
+        {children ?? (
+          <Button
+            className={className}
+            size={size}
+            type="button"
+            variant="outline"
+          >
+            <Trash size="16" className="mr-2" /> {label ?? t("button")}
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
