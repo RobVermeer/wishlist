@@ -4,7 +4,10 @@ export const wishlistItemProperties = {
   id: true,
   title: true,
   unlimited: true,
-  url: true,
+  links: {
+    select: { url: true },
+    orderBy: { position: "asc" as const },
+  },
   boughtBy: {
     select: userProperties,
   },

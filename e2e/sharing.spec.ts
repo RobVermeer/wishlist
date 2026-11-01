@@ -77,7 +77,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
   const boughtWish = `Gekochte wens ${owner.id}`
   await createItem(wishlist, {
     title: secretWish,
-    url: `https://example.com/${owner.id}`,
+    links: [`https://example.com/${owner.id}`],
   })
   await createItem(wishlist, { title: boughtWish, boughtBy: buyer })
 

@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const ItemCard = ({ item }: Props) => {
-  const { id, title, url, boughtBy, boughtByMe, unlimited } = item
+  const { id, title, boughtBy, boughtByMe, unlimited } = item
+  const url = item.links[0]?.url
   const t = useTranslations("Toggle")
   const bought = Boolean(boughtBy) && !unlimited
 

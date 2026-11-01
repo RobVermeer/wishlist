@@ -11,7 +11,8 @@ interface Props {
 }
 
 export const YourItemCard = ({ item, categories }: Props) => {
-  const { title, url, unlimited } = item
+  const { title, unlimited } = item
+  const url = item.links[0]?.url
 
   return (
     <Card className="flex items-center pr-24">
@@ -28,7 +29,7 @@ export const YourItemCard = ({ item, categories }: Props) => {
         item={{
           id: item.id,
           title,
-          url,
+          url: url ?? null,
           unlimited,
           category: item.category,
         }}

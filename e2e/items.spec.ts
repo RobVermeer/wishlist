@@ -84,10 +84,11 @@ test("add a wish with a link", async ({ signIn }) => {
 
   const item = await prisma.wishlistItem.findFirstOrThrow({
     where: { wishlistId: wishlist.id },
+    include: { links: true },
   })
   expect(item).toMatchObject({
     title: "Lego kasteel",
-    url: "https://example.com/lego",
+    links: [{ url: "https://example.com/lego", position: 0 }],
     unlimited: false,
   })
 })
@@ -101,7 +102,7 @@ test("group members see a link on a wish as a link from a user", async ({
   const wishlist = await createWishlist(owner, { groups: [group] })
   await createItem(wishlist, {
     title: "Lego kasteel",
-    url: "https://example.com/lego",
+    links: ["https://example.com/lego"],
   })
   const page = await signIn(member)
 
@@ -162,8 +163,9 @@ test("add an unlimited wish without a link", async ({ signIn }) => {
 
   const item = await prisma.wishlistItem.findFirstOrThrow({
     where: { wishlistId: wishlist.id },
+    include: { links: true },
   })
-  expect(item).toMatchObject({ title: "Boeken", url: null, unlimited: true })
+  expect(item).toMatchObject({ title: "Boeken", links: [], unlimited: true })
 })
 
 test("wish validation errors are shown", async ({ signIn }) => {
@@ -200,7 +202,7 @@ test("edit a wish", async ({ signIn }) => {
   const wishlist = await createWishlist(user)
   const item = await createItem(wishlist, {
     title: "Fiets",
-    url: "https://example.com/fiets",
+    links: ["https://example.com/fiets"],
   })
   const page = await signIn(user)
 
@@ -226,10 +228,11 @@ test("edit a wish", async ({ signIn }) => {
 
   const updated = await prisma.wishlistItem.findUniqueOrThrow({
     where: { id: item.id },
+    include: { links: true },
   })
   expect(updated).toMatchObject({
     title: "Elektrische fiets",
-    url: null,
+    links: [],
     unlimited: true,
   })
 })
