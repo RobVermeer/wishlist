@@ -801,7 +801,7 @@
           },
           {
             "question": "Waar zie ik wie ik heb getrokken?",
-            "answer": "In de e-mail, in de groep, en op je overzicht onder ‘Je lootjes’, met het budget en de datum. Wie je hebt getrokken, zie je pas als je ‘Laat zien’ kiest, zodat niemand het ziet als je de app aan iemand laat zien. Bij je volgende bezoek is het weer verborgen. In de groep staat dan ook een link naar het verlanglijstje van wie je hebt getrokken."
+            "answer": "In de e-mail en in de groep. Daar zie je het pas als je ‘Laat zien’ kiest, zodat niemand het ziet als je de app aan iemand laat zien. Bij je volgende bezoek is het weer verborgen. Je ziet dan ook een link naar het verlanglijstje van wie je hebt getrokken. Op je overzicht staat onder ‘Je lootjes’ in welke groepen je een lootje hebt, zonder de naam."
           },
           {
             "question": "Hoelang zie ik mijn lootje?",
@@ -821,7 +821,7 @@
           },
           {
             "question": "Kan ik in meerdere groepen lootjes trekken?",
-            "answer": "Ja, elke groep heeft een eigen loting. Op je overzicht zie je onder ‘Je lootjes’ al je lootjes bij elkaar."
+            "answer": "Ja, elke groep heeft een eigen loting. Op je overzicht zie je onder ‘Je lootjes’ in welke groepen je een lootje hebt, met de datum en het budget."
           }
         ]
       },
