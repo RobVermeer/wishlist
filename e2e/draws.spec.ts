@@ -5,6 +5,7 @@ import {
   createGroup,
   createWishlist,
   createDraw,
+  dateInAmsterdam,
   emailsTo,
   prisma,
   toasts,
@@ -37,7 +38,7 @@ test("the creator draws lots for the group", async ({ signIn }) => {
   await expect(dialog.getByRole("checkbox")).toHaveCount(4)
   await dialog.getByLabel("Dirk").uncheck()
   await dialog.getByLabel("Budget").fill("25")
-  await dialog.getByLabel("Datum").fill("2026-12-05")
+  await dialog.getByLabel("Datum van het feest").fill("2026-12-05")
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
@@ -123,6 +124,7 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await dialog.getByLabel("Bert").uncheck()
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -130,6 +132,40 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
   )
   await expect(dialog).toBeVisible()
   expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+})
+
+test("drawing lots needs the date of the party", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  const date = dialog.getByLabel("Datum van het feest")
+  await expect(date).toHaveAttribute("required")
+  await date.evaluate(input => {
+    input.removeAttribute("required")
+    input.removeAttribute("min")
+  })
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("Kies de datum van het feest")
+  await expect(dialog).toBeVisible()
+
+  await date.fill(dateInAmsterdam(-1))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("Kies een datum vanaf vandaag")
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+  expect(await emailsTo(bert.email!)).toHaveLength(0)
+
+  await date.fill(dateInAmsterdam())
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+  await expect(dialog).toBeHidden()
 })
 
 test("only the creator of a group sees the button to draw lots", async ({
@@ -173,6 +209,7 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", opa.email!.toUpperCase())
   await expect(dialog.getByRole("listitem")).toHaveText([/Opa/])
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
 
@@ -203,6 +240,7 @@ test("someone added to the draw must have a valid e-mail address", async ({
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", "geen-adres")
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Vul een geldig e-mailadres in")
@@ -222,6 +260,7 @@ test("everyone in the draw needs their own e-mail address", async ({
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", "opa@e2e.test")
   await addPerson(dialog, "Oma", "opa@e2e.test")
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -322,6 +361,7 @@ test("drawing lots again replaces the previous draw", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Opnieuw lootjes trekken" })
   await expect(dialog).toContainText("De vorige loting telt dan niet meer")
   await expect(dialog.getByLabel("Opa")).toBeChecked()
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")

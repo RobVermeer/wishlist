@@ -1043,7 +1043,7 @@
         "remove": "Haal {name} weg"
       },
       "budget": "Budget in euro <small>(optioneel)</small>",
-      "date": "Datum <small>(optioneel)</small>",
+      "date": "Datum van het feest",
       "submit": "Trek lootjes",
       "redrawTitle": "Opnieuw lootjes trekken",
       "redrawText": "De vorige loting telt dan niet meer: iedereen krijgt een nieuw lootje, per e-mail en in de groep.",

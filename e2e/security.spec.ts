@@ -11,6 +11,7 @@ import {
   createCategory,
   createItem,
   createDraw,
+  dateInAmsterdam,
   emailsTo,
   prisma,
   toasts,
@@ -861,10 +862,9 @@ test("only the creator of a group can draw lots", async ({ signIn }) => {
   await forgeActions(page, `/group/${ownGroup.id}`, ownGroup.id, group.id)
   await page.goto(`/group/${ownGroup.id}`)
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
-  await page
-    .getByRole("dialog", { name: "Lootjes trekken" })
-    .getByRole("button", { name: "Trek lootjes" })
-    .click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Groep niet gevonden")
   expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
