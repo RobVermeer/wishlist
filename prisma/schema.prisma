@@ -107,8 +107,6 @@ model WishlistItem {
   id         String             @id @default(cuid())
   title      String
   unlimited  Boolean            @default(false)
-  // Replaced by links, still read by the running server during a deploy.
-  url        String?
   links      WishlistItemLink[]
   createdAt  DateTime
   removed    Boolean            @default(false)

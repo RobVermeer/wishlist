@@ -64,10 +64,6 @@ export const updateWishlistItemById = async (
         data: {
           title: data.title,
           unlimited: data.unlimited,
-          // Links are in their own table now. Clearing the old column lets
-          // the migration that drops it copy what an older server wrote there
-          // during the deploy, without bringing back a removed link.
-          url: null,
           links: {
             deleteMany: {},
             create: data.links.map((url, position) => ({ url, position })),
