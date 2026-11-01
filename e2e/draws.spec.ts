@@ -88,7 +88,7 @@ test("a participant only sees their own lootje", async ({ signIn }) => {
   const bert = await createUser({ firstName: "Bert" })
   const carla = await createUser({ firstName: "Carla" })
   const group = await createGroup(owner, { members: [bert, carla] })
-  const carlasList = await createWishlist(carla, { groups: [group] })
+  await createWishlist(carla, { groups: [group] })
   await createDraw(group, [owner, bert, carla])
   const page = await signIn(bert)
 
@@ -98,10 +98,7 @@ test("a participant only sees their own lootje", async ({ signIn }) => {
   await expect(lot(page)).toContainText("Je hebt Carla getrokken")
   await expect(page.getByText(/getrokken/)).toHaveCount(1)
   await expect(page.getByText("Je hebt Anna getrokken")).toHaveCount(0)
-  await lot(page)
-    .getByRole("link", { name: "Bekijk het verlanglijstje van Carla" })
-    .click()
-  await expect(page).toHaveURL(`/group/${group.id}/${carlasList.id}`)
+  await expect(lot(page).getByRole("link")).toHaveCount(0)
 })
 
 test("a lootje says when someone has no wishlist yet", async ({ signIn }) => {
@@ -511,11 +508,7 @@ test("a lootje stays hidden until you show it", async ({ signIn }) => {
 
   await reveal(lot(page))
   await expect(lot(page)).toContainText(drawn)
-  await expect(
-    lot(page).getByRole("link", {
-      name: `Bekijk het verlanglijstje van Carla ${bert.id}`,
-    })
-  ).toBeVisible()
+  await expect(lot(page).getByRole("link")).toHaveCount(0)
 
   await lot(page).getByRole("button", { name: "Verberg" }).click()
   await expect(lot(page)).not.toContainText("Carla")

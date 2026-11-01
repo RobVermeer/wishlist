@@ -1,19 +1,16 @@
-import Link from "next/link"
 import { Gift } from "lucide-react"
 import { getTranslations } from "next-intl/server"
 import { DrawDetails } from "@/components/DrawDetails"
 import { LotReveal } from "@/components/LotReveal"
-import { Button } from "@/components/ui/button"
 import type { getLotForUser } from "@/lib/draws/getLotForUser"
 
 interface Props {
-  groupId: string
   lot: NonNullable<Awaited<ReturnType<typeof getLotForUser>>>
 }
 
-export const DrawLot = async ({ groupId, lot }: Props) => {
+export const DrawLot = async ({ lot }: Props) => {
   const t = await getTranslations("Draw.lot")
-  const { receiver, wishlistId, budget, date } = lot
+  const { receiver, hasWishlist, budget, date } = lot
 
   return (
     <section
@@ -31,13 +28,7 @@ export const DrawLot = async ({ groupId, lot }: Props) => {
         className="text-2xl"
         details={<DrawDetails budget={budget} date={date} />}
       >
-        {wishlistId ? (
-          <Button asChild className="justify-self-start">
-            <Link href={`/group/${groupId}/${wishlistId}`}>
-              {t("wishlist", { name: receiver })}
-            </Link>
-          </Button>
-        ) : (
+        {!hasWishlist && (
           <p className="text-sm text-muted-foreground">
             {t("noWishlist", { name: receiver })}
           </p>
