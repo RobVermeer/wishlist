@@ -195,6 +195,10 @@
     "title": "Profiel",
     "metaTitle": "Profiel - Niet Weer Sokken",
     "admin": "Admin",
+    "account": {
+      "title": "Account",
+      "email": "Ingelogd als <strong>{email}</strong>."
+    },
     "logout": "Uitloggen"
   },
   "ProfileBoughtPresents": {

@@ -52,8 +52,27 @@ export default async function ProfilePage() {
           </Button>
         )}
         <ContactForm />
-        <LogoutButton />
       </List>
+
+      <section
+        aria-labelledby="account"
+        className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 shadow-sm"
+      >
+        <div className="grid gap-1">
+          <h2 id="account" className="text-lg font-semibold leading-tight">
+            {t("account.title")}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {t.rich("account.email", {
+              email: session.user.email ?? "",
+              strong: chunks => (
+                <strong className="break-all text-foreground">{chunks}</strong>
+              ),
+            })}
+          </p>
+        </div>
+        <LogoutButton />
+      </section>
     </>
   )
 }
