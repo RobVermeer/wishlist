@@ -9,6 +9,7 @@ import { getTranslations } from "next-intl/server"
 import { visibleToUser } from "./visibility"
 import { userProperties } from "@/lib/users/publicProperties"
 import { interestProperties } from "@/lib/wishlistInterests/publicProperties"
+import { removeBoughtItemsAfterParty } from "@/lib/wishlistItems/removeBoughtItemsAfterParty"
 
 export const getWishlistById = cache(async (id: string) => {
   try {
@@ -18,6 +19,8 @@ export const getWishlistById = cache(async (id: string) => {
     if (!session) {
       throw new Error(t("notLoggedIn"))
     }
+
+    await removeBoughtItemsAfterParty()
 
     const userId = session.user.id
     const result = await prisma.wishlist.findUnique({

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { getTranslations } from "next-intl/server"
+import { removeBoughtItemsAfterParty } from "@/lib/wishlistItems/removeBoughtItemsAfterParty"
 
 export const getStats = async () => {
   const session = await getServerSession(authOptions)
@@ -16,6 +17,8 @@ export const getStats = async () => {
   if (!session.user.isAdmin) {
     throw new Error(t("noAccess"))
   }
+
+  await removeBoughtItemsAfterParty()
 
   const yearAgo = new Date()
   yearAgo.setFullYear(yearAgo.getFullYear() - 1)
