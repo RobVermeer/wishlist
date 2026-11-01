@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer"
 import { Toaster } from "@/components/ui/toaster"
 import { UserInfoDialog } from "@/components/UserInfoDialog"
 import { Layout } from "@/components/Layout"
+import { NavigationStatus } from "@/components/NavigationStatus"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
 import { siteUrl } from "@/lib/siteUrl"
@@ -79,6 +80,7 @@ export default async function RootLayout({
           {session && <UserInfoDialog session={session} />}
 
           <Toaster />
+          <NavigationStatus />
         </NextIntlClientProvider>
       </body>
     </html>
