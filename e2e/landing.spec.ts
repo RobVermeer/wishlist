@@ -70,7 +70,9 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Lootjes trekken" }),
     })
-  ).toContainText("Ook wie nog niet in de groep zit, kan meedoen")
+  ).toContainText(
+    "Trek lootjes in je groep voor de datum van het feest, met een budget als je wilt."
+  )
 
   await expect(
     page.getByRole("heading", { name: "Voor elke gelegenheid" })
