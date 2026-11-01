@@ -32,6 +32,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Hoe werken categorieën?",
     "Hoe zet ik mijn wensen in een andere volgorde?",
     "Wat is een onbeperkte wens?",
+    "Ik hou niet van verlanglijstjes, kan het ook anders?",
     "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
     "Kan ik een verlanglijstje samen met iemand beheren?",
     "Wat doen de thema's?",
@@ -303,4 +304,17 @@ test("the frequently asked questions point to installing the app", async ({
       .getByRole("dialog", { name: "Installeer de app" })
       .getByRole("heading", { name: "Zet Niet Weer Sokken op je telefoon" })
   ).toBeVisible()
+})
+
+test("the frequently asked questions explain sharing interests instead of wishes", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page
+    .getByText("Ik hou niet van verlanglijstjes, kan het ook anders?")
+    .click()
+  await expect(
+    page.getByText(/^Ja\. Zet bij ‘Waar ik blij van word’ op je verlanglijstje/)
+  ).toContainText("Wensen erbij mag, maar hoeft niet.")
 })

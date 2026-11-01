@@ -514,7 +514,7 @@
   },
   "Metadata": {
     "title": "Niet Weer Sokken – Maak en deel je verlanglijstje",
-    "description": "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
+    "description": "Maak gratis je verlanglijstje, met wensen of met waar je blij van wordt, en deel het met een link of in groepen. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
   },
   "OpenGraph": {
     "title": "Maak en deel je verlanglijstje",
@@ -561,7 +561,14 @@
         "socks": "Warme sokken"
       },
       "caption": "Iemand anders koopt het LEGO kasteel en jij het bordspel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
-      "buy": "Ik koop dit"
+      "buy": "Ik koop dit",
+      "interests": "Waar Sanne blij van wordt",
+      "interestItems": {
+        "drawing": "tekenen",
+        "dinos": "dino's",
+        "swimming": "zwemmen"
+      },
+      "wishes": "Wensen van Sanne"
     },
     "features": {
       "draw": {
@@ -588,6 +595,10 @@
       "managed": {
         "title": "Ook voor een ander",
         "text": "Beheer naast je eigen lijstje ook een verlanglijstje voor je kinderen of de baby, samen met de andere ouder als je wilt."
+      },
+      "interests": {
+        "title": "Liever geen wensen?",
+        "text": "Zet op je verlanglijstje waar je blij van wordt, zoals lezen of wandelen. Dan bedenken de anderen zelf iets, met of zonder wensen erbij."
       },
       "unlimited": {
         "title": "Onbeperkte wensen",
@@ -685,7 +696,7 @@
     "title": "Veelgestelde vragen",
     "metaTitle": "Veelgestelde vragen - Niet Weer Sokken",
     "intro": "Waar heb je een vraag over?",
-    "metaDescription": "Antwoorden op vragen over Niet Weer Sokken: een verlanglijstje maken en delen, groepen, lootjes trekken en stiekem afstrepen wat je gaat kopen.",
+    "metaDescription": "Antwoorden op vragen over Niet Weer Sokken: een verlanglijstje maken en delen, met wensen of met waar je blij van wordt, groepen, lootjes trekken en stiekem afstrepen wat je gaat kopen.",
     "subjects": "Onderwerpen",
     "questions": "{count, plural, one {# vraag} other {# vragen}}",
     "top": "Terug naar boven",
@@ -743,6 +754,10 @@
           {
             "question": "Wat is een onbeperkte wens?",
             "answer": "Een wens die meer mensen kunnen kopen, zoals boeken of een cadeaubon. Vink bij de wens ‘Deze wens mag onbeperkt vervuld worden’ aan, dan blijft hij open, hoe vaak hij ook gekocht wordt."
+          },
+          {
+            "question": "Ik hou niet van verlanglijstjes, kan het ook anders?",
+            "answer": "Ja. Zet bij ‘Waar ik blij van word’ op je verlanglijstje wat je graag doet of leuk vindt, zoals lezen, sudoku of wandelen. Wie je verlanglijstje kan zien, ziet dat ook en bedenkt zelf iets. Wensen erbij mag, maar hoeft niet. Je kunt er 20 kwijt per verlanglijstje, en met het kruisje haal je er een weg. Wie een verlanglijstje mee beheert, kan ze ook toevoegen en weghalen."
           },
           {
             "question": "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",

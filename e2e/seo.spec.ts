@@ -10,7 +10,7 @@ import { Page } from "@playwright/test"
 
 const title = "Niet Weer Sokken – Maak en deel je verlanglijstje"
 const description =
-  "Maak gratis je verlanglijstje en deel het met een link of in groepen met familie en vrienden. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
+  "Maak gratis je verlanglijstje, met wensen of met waar je blij van wordt, en deel het met een link of in groepen. Voor je verjaardag, Sinterklaas, kerst en elk ander feestje, en streep stiekem af wat je gaat kopen."
 
 const meta = (page: Page, name: string) =>
   page.locator(`meta[name="${name}"], meta[property="${name}"]`)
@@ -176,6 +176,9 @@ test("the home page tells search engines it is a free web app", async ({
       url: baseURL,
       inLanguage: "nl",
       applicationCategory: "LifestyleApplication",
+      description: expect.stringContaining(
+        "met wensen of met waar je blij van wordt"
+      ),
       offers: expect.objectContaining({ price: "0", priceCurrency: "EUR" }),
     }),
   ])
