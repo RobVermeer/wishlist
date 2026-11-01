@@ -601,6 +601,16 @@
       "button": "Volg dit verlanglijstje"
     }
   },
+  "GroupInvite": {
+    "intro": "Je bent uitgenodigd voor deze groep.",
+    "preview": {
+      "title": "Je bent uitgenodigd voor de groep {group}",
+      "text": "Doe mee op Niet Weer Sokken en bekijk elkaars verlanglijstjes, zodat niemand iets dubbel koopt."
+    },
+    "title": "Log in en volg de groep",
+    "text": "Dan zie je de verlanglijstjes van iedereen die meedoet en kun je je eigen verlanglijstje erbij zetten.",
+    "button": "Log in om mee te doen"
+  },
   "UnfollowWishlist": {
     "button": "Stop met volgen",
     "toast": "Je volgt dit verlanglijstje niet meer"
