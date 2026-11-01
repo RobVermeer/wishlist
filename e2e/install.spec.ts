@@ -138,3 +138,49 @@ test("the installed app doesn't show it on the profile either", async ({
   await expect(page.getByLabel("Voornaam")).toBeVisible()
   await expect(card(page)).toBeHidden()
 })
+
+test("the start screen of the app shows the logo in the same red as its background", async ({
+  page,
+}) => {
+  await page.goto("/login")
+  const manifestUrl = await page
+    .locator('link[rel="manifest"]')
+    .getAttribute("href")
+  const manifest = await (await page.request.get(manifestUrl!)).json()
+
+  // Android draws the start screen in background_color, with the status bar in
+  // theme_color and the icon in the middle.
+  expect(manifest.background_color).toBe("#db243c")
+  expect(manifest.theme_color).toBe("#db243c")
+  await expect(
+    page.locator('meta[name="theme-color"][media*="light"]')
+  ).toHaveAttribute("content", "#db243c")
+
+  const icons: string[] = manifest.icons
+    .map((icon: { src: string }) => icon.src)
+    .filter((src: string) => /^(android|maskable)\//.test(src))
+    .concat("apple-touch-icon.png")
+  expect(icons.length).toBeGreaterThan(0)
+
+  for (const src of icons) {
+    // The red tile of the icon, left of the sock in the middle.
+    const color = await page.evaluate(async src => {
+      const image = new Image()
+      image.src = `/${src}`
+      await image.decode()
+      const canvas = document.createElement("canvas")
+      canvas.width = image.width
+      canvas.height = image.height
+      const context = canvas.getContext("2d")!
+      context.drawImage(image, 0, 0)
+      const [r, g, b] = context.getImageData(
+        Math.floor(image.width * 0.1),
+        Math.floor(image.height / 2),
+        1,
+        1
+      ).data
+      return "#" + [r, g, b].map(c => c.toString(16).padStart(2, "0")).join("")
+    }, src)
+    expect(color, src).toBe(manifest.background_color)
+  }
+})
