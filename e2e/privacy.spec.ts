@@ -103,3 +103,16 @@ test("the privacy policy says who sees what makes you happy", async ({
     "Haal je iets weg bij waar je blij van wordt, dan verwijderen we het meteen."
   )
 })
+
+test("the privacy policy says bought wishes go after a party", async ({
+  page,
+}) => {
+  await page.goto("/privacy")
+
+  await expect(page.getByText("Bijgewerkt op 1 november 2026.")).toBeVisible()
+  await expect(
+    page.getByRole("region", { name: "Hoe lang we het bewaren" })
+  ).toContainText(
+    "Twee weken na de datum van een loting halen we de wensen die al gekocht zijn van de verlanglijstjes in die groep."
+  )
+})
