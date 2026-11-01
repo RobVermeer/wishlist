@@ -7,7 +7,7 @@ import { getTranslations } from "next-intl/server"
 import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { redirect } from "next/navigation"
-import { ChevronDown } from "lucide-react"
+import { ShowMore } from "@/components/ShowMore"
 
 interface Props {
   params: Promise<{ locale: string }>
@@ -26,6 +26,8 @@ export const generateMetadata = async ({ params }: Props) => {
   }
 }
 
+const maxShown = 15
+
 export default async function ProfileBoughtPage() {
   const session = await getServerSession(authOptions)
 
@@ -41,7 +43,11 @@ export default async function ProfileBoughtPage() {
   const isEarlier = (item: (typeof boughtWishlistItems)[number]) =>
     item.boughtAt !== null && item.boughtAt < yearAgo
   const recent = boughtWishlistItems.filter(item => !isEarlier(item))
-  const earlier = boughtWishlistItems.filter(isEarlier)
+  const shown = recent.slice(0, maxShown)
+  const more = [
+    ...recent.slice(maxShown),
+    ...boughtWishlistItems.filter(isEarlier),
+  ]
 
   const renderItem = (item: (typeof boughtWishlistItems)[number]) => (
     <Card key={item.id}>
@@ -68,23 +74,12 @@ export default async function ProfileBoughtPage() {
         <EmptyState title={t("empty.title")}>{t("empty.text")}</EmptyState>
       )}
 
-      {recent.map(renderItem)}
+      {shown.map(renderItem)}
 
-      {earlier.length > 0 && (
-        <details className="group grid gap-2">
-          <summary className="flex cursor-pointer list-none items-center gap-2 font-semibold [&::-webkit-details-marker]:hidden">
-            {t("earlier.title", { count: earlier.length })}
-            <ChevronDown
-              aria-hidden
-              size="16"
-              className="text-muted-foreground transition-transform group-open:rotate-180"
-            />
-          </summary>
-          <p className="mb-2 text-sm text-muted-foreground">
-            {t("earlier.text")}
-          </p>
-          <div className="grid gap-2">{earlier.map(renderItem)}</div>
-        </details>
+      {more.length > 0 && (
+        <ShowMore label={t("showMore", { count: more.length })}>
+          {more.map(renderItem)}
+        </ShowMore>
       )}
     </List>
   )

@@ -441,11 +441,15 @@ test("bought presents page keeps removed wishes and wishlists", async ({
   )
 })
 
-test("bought presents page shows the newest first and folds away older ones", async ({
+const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
+
+const visibleCards = (page: Page) =>
+  page.locator("div.rounded-2xl").filter({ visible: true })
+
+test("bought presents page shows the newest first and keeps older ones behind a button", async ({
   signIn,
 }) => {
   const { shopper, wishlist } = await setup()
-  const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
   await createItem(wishlist, {
     title: "Zonder datum",
     boughtBy: shopper,
@@ -469,20 +473,84 @@ test("bought presents page shows the newest first and folds away older ones", as
 
   await page.goto("/profile/bought")
 
-  const earlier = page.getByRole("group").filter({
-    has: page.getByText("Eerdere cadeaus"),
-  })
+  await expect(visibleCards(page)).toHaveText([
+    /^Gisteren/,
+    /^Vorige week/,
+    /^Zonder datum/,
+  ])
+  await expect(page.getByText("Vorig jaar")).toBeHidden()
+
+  await page.getByRole("button", { name: "Toon eerdere cadeaus (1)" }).click()
+
+  await expect(visibleCards(page)).toHaveText([
+    /^Gisteren/,
+    /^Vorige week/,
+    /^Zonder datum/,
+    /^Vorig jaar/,
+  ])
   await expect(
-    page.locator("div.rounded-2xl").filter({ visible: true })
-  ).toHaveText([/^Gisteren/, /^Vorige week/, /^Zonder datum/])
-  await expect(earlier.getByText("Vorig jaar")).toBeHidden()
+    page.getByRole("button", { name: /Toon eerdere cadeaus/ })
+  ).toBeHidden()
+})
 
-  await earlier.getByText("Eerdere cadeaus").click()
+test("bought presents page shows at most 15 gifts at first", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  for (let day = 1; day <= 17; day++) {
+    await createItem(wishlist, {
+      title: `Cadeau van dag ${day}.`,
+      boughtBy: shopper,
+      boughtAt: daysAgo(day),
+    })
+  }
+  await createItem(wishlist, {
+    title: "Vorig jaar",
+    boughtBy: shopper,
+    boughtAt: daysAgo(400),
+  })
+  const page = await signIn(shopper)
 
-  await expect(itemCard(page, "Vorig jaar")).toBeVisible()
-  await expect(earlier).toContainText(
-    "Wat je meer dan een jaar geleden hebt gekocht."
+  await page.goto("/profile/bought")
+
+  await expect(visibleCards(page)).toHaveText(
+    Array.from(
+      { length: 15 },
+      (_, i) => new RegExp(`^Cadeau van dag ${i + 1}\\.`)
+    )
   )
+  await expect(page.getByText("Vorig jaar")).toBeHidden()
+
+  await page.getByRole("button", { name: "Toon eerdere cadeaus (3)" }).click()
+
+  await expect(visibleCards(page)).toHaveText([
+    ...Array.from(
+      { length: 17 },
+      (_, i) => new RegExp(`^Cadeau van dag ${i + 1}\\.`)
+    ),
+    /^Vorig jaar/,
+  ])
+})
+
+test("bought presents page has no button when everything is shown", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  for (let day = 1; day <= 15; day++) {
+    await createItem(wishlist, {
+      title: `Cadeau van dag ${day}.`,
+      boughtBy: shopper,
+      boughtAt: daysAgo(day),
+    })
+  }
+  const page = await signIn(shopper)
+
+  await page.goto("/profile/bought")
+
+  await expect(visibleCards(page)).toHaveCount(15)
+  await expect(
+    page.getByRole("button", { name: /Toon eerdere cadeaus/ })
+  ).toHaveCount(0)
 })
 
 test("the buttons of a wish fit on a small phone", async ({ signIn }) => {

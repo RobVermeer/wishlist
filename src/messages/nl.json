@@ -204,10 +204,7 @@
     "boughtForOn": "Gekocht voor {name} op {date, date, long}",
     "removedItem": "Deze wens is verwijderd.",
     "removedWishlist": "Dit verlanglijstje is verwijderd.",
-    "earlier": {
-      "title": "Eerdere cadeaus ({count})",
-      "text": "Wat je meer dan een jaar geleden hebt gekocht."
-    }
+    "showMore": "Toon eerdere cadeaus ({count})"
   },
   "NewGroup": {
     "title": "Nieuwe groep",
