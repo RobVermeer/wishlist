@@ -200,8 +200,8 @@
       "title": "Je hebt nog niets afgestreept",
       "text": "Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug wat je voor wie koopt."
     },
-    "boughtFor": "Gekocht voor {name}",
-    "boughtForOn": "Gekocht voor {name} op {date, date, long}",
+    "boughtFor": "Voor {name}",
+    "boughtForOn": "Voor {name} · {date, date, long}",
     "removedItem": "Deze wens is verwijderd.",
     "removedWishlist": "Dit verlanglijstje is verwijderd.",
     "showMore": "Toon eerdere cadeaus ({count})"

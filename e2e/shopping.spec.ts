@@ -139,7 +139,7 @@ test("buy a wish and change your mind", async ({ signIn }) => {
   }).format(new Date())
   await page.goto("/profile/bought")
   await expect(itemCard(page, "Sokken")).toHaveText(
-    `Sokken Gekocht voor Olga op ${today}`
+    `Sokken Voor Olga · ${today}`
   )
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
@@ -398,10 +398,10 @@ test("bought presents page lists what you bought for whom", async ({
     "Mijn gekochte cadeaus - Profiel - Niet Weer Sokken"
   )
   await expect(itemCard(page, "Sokken")).toHaveText(
-    /^Sokken\s*Gekocht voor Olga op 5 december 2025$/
+    /^Sokken\s*Voor Olga · 5 december 2025$/
   )
   await expect(itemCard(page, "Rammelaar")).toHaveText(
-    /^Rammelaar\s*Gekocht voor Baby Bo$/
+    /^Rammelaar\s*Voor Baby Bo$/
   )
   await expect(page.getByText("Knuffel")).toBeHidden()
 })
@@ -431,13 +431,13 @@ test("bought presents page keeps removed wishes and wishlists", async ({
   await page.goto("/profile/bought")
 
   await expect(itemCard(page, "Sokken")).toHaveText(
-    /^Sokken\s*Gekocht voor Olga$/
+    /^Sokken\s*Voor Olga$/
   )
   await expect(itemCard(page, "Weggehaald")).toHaveText(
-    /^Weggehaald\s*Gekocht voor Olga\s*Deze wens is verwijderd\.$/
+    /^Weggehaald\s*Voor Olga\s*Deze wens is verwijderd\.$/
   )
   await expect(itemCard(page, "Van oud lijstje")).toHaveText(
-    /^Van oud lijstje\s*Gekocht voor Oud lijstje\s*Dit verlanglijstje is verwijderd\.$/
+    /^Van oud lijstje\s*Voor Oud lijstje\s*Dit verlanglijstje is verwijderd\.$/
   )
 })
 
