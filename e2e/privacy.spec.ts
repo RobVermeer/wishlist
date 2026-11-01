@@ -72,3 +72,26 @@ test("the privacy policy says who sees the name of a group", async ({
     "Wie de link van een groep heeft, ziet de naam van de groep, ook zonder in te loggen. De leden en hun verlanglijstjes zie je pas als je bent ingelogd en de groep volgt.",
   ])
 })
+
+test("the privacy policy says who sees what makes you happy", async ({
+  page,
+}) => {
+  await page.goto("/privacy")
+
+  await expect(page.getByText("Bijgewerkt op 1 november 2026.")).toBeVisible()
+  await expect(
+    page.getByRole("region", { name: "Wat we bewaren" })
+  ).toContainText(
+    "Je verlanglijstjes met hun wensen, linkjes, categorieën en waar je blij van wordt."
+  )
+  await expect(
+    page.getByRole("region", { name: "Wie wat ziet" })
+  ).toContainText(
+    "Wie de link van je verlanglijstje opent en inlogt, ziet je naam en waar je blij van wordt, ook voordat diegene het volgt."
+  )
+  await expect(
+    page.getByRole("region", { name: "Hoe lang we het bewaren" })
+  ).toContainText(
+    "Haal je iets weg bij waar je blij van wordt, dan verwijderen we het meteen."
+  )
+})
