@@ -12,13 +12,13 @@ export function useShareOrCopy() {
     copied,
   }: {
     title: string
-    intro?: string
+    intro: string
     url: string
     copied: string
   }) {
     // The link goes in the text on its own line, not in a separate url: some
     // targets, like copying on macOS, glue that to the text and break the link.
-    const text = intro ? `${intro}\n${url}` : url
+    const text = `${intro}\n${url}`
 
     if (navigator.share) {
       try {

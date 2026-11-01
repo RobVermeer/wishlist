@@ -203,6 +203,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           <ShareWishlist
             wishlistId={wishlist.id}
             name={getWishlistName(wishlist)}
+            forSomeoneElse={Boolean(wishlist.title)}
           />
         </>
       )}
