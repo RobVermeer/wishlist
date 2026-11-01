@@ -38,9 +38,16 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
   ).toBeVisible()
   await expect(
     page.getByText(
-      "Voeg je eerste wens toe, of vul hierboven in waar je blij van wordt."
+      "Voeg je eerste wens toe, of vul hieronder in waar je blij van wordt."
     )
   ).toBeVisible()
+  const empty = await page
+    .getByRole("heading", { name: "Je verlanglijstje is nog leeg" })
+    .boundingBox()
+  const block = await page
+    .getByRole("region", { name: "Waar ik blij van word" })
+    .boundingBox()
+  expect(empty!.y).toBeLessThan(block!.y)
   await expect(
     page.getByRole("region", { name: "Waar ik blij van word" })
   ).toContainText(
