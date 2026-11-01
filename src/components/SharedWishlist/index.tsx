@@ -2,6 +2,7 @@ import Link from "next/link"
 import { LogIn } from "lucide-react"
 import { getTranslations } from "next-intl/server"
 import { FollowWishlist } from "@/components/FollowWishlist"
+import { Interests } from "@/components/Interests"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,7 @@ export const SharedWishlist = async ({
   loggedIn,
 }: Props) => {
   const t = await getTranslations("SharedWishlist")
+  const tInterests = await getTranslations("Interests")
   const name = getWishlistName(wishlist)
   const action = loggedIn ? "follow" : "loggedOut"
 
@@ -29,6 +31,14 @@ export const SharedWishlist = async ({
         <ListTitle>{name}</ListTitle>
         <p>{t("intro", { name })}</p>
       </div>
+
+      {loggedIn && wishlist.interests.length > 0 && (
+        <Interests
+          wishlistId={wishlist.id}
+          title={tInterests("title.other", { name })}
+          interests={wishlist.interests}
+        />
+      )}
 
       <section className="grid gap-2 rounded-lg bg-secondary p-4 text-center">
         <h3 className="text-lg font-semibold">{t(`${action}.title`)}</h3>

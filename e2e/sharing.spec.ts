@@ -5,6 +5,7 @@ import {
   createGroup,
   createWishlist,
   createItem,
+  createInterest,
   emailsTo,
   prisma,
   toasts,
@@ -80,6 +81,8 @@ test("a shared wishlist asks to log in before showing anything", async ({
     links: [`https://example.com/${owner.id}`],
   })
   await createItem(wishlist, { title: boughtWish, boughtBy: buyer })
+  const interest = `Geheime interesse ${owner.id}`
+  await createInterest(wishlist, interest)
 
   await page.goto(`/lijstje/token-${owner.id}`)
 
@@ -95,6 +98,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
   for (const hidden of [
     secretWish,
     boughtWish,
+    interest,
     `example.com/${owner.id}`,
     buyer.id,
     buyer.email!,

@@ -89,7 +89,9 @@ test("create a wishlist for someone else", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(page).toHaveTitle("Baby Bram - Niet Weer Sokken")
-  await expect(page.getByRole("heading", { name: "Baby Bram" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Baby Bram", level: 2 })
+  ).toBeVisible()
 })
 
 test("wishlist validation errors are shown", async ({ signIn }) => {
@@ -144,7 +146,9 @@ test("edit a wishlist", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("heading", { name: "Opa Jan" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Opa Jan", level: 2 })
+  ).toBeVisible()
 
   const updated = await prisma.wishlist.findUniqueOrThrow({
     where: { id: wishlist.id },
