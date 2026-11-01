@@ -155,6 +155,28 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         )}
       </div>
 
+      {!hasItems &&
+        !onlyInterests &&
+        (wishlist.isOwnList ? (
+          wishlist.title ? (
+            <EmptyState title={t("empty.managed.title")}>
+              {t("empty.managed.text", { name })}
+            </EmptyState>
+          ) : (
+            <EmptyState title={t("empty.own.title")}>
+              {t("empty.own.text")}
+            </EmptyState>
+          )
+        ) : (
+          <EmptyState title={t("empty.other.title", { name })}>
+            {canBeReminded
+              ? t("empty.other.remind", {
+                  name: getFirstName(wishlist.user),
+                })
+              : t("empty.other.later")}
+          </EmptyState>
+        ))}
+
       {(wishlist.isOwnList || wishlist.interests.length > 0) && (
         <Interests
           wishlistId={wishlist.id}
@@ -197,28 +219,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           sortable={wishlist.isOwnList}
         />
       )}
-
-      {!hasItems &&
-        !onlyInterests &&
-        (wishlist.isOwnList ? (
-          wishlist.title ? (
-            <EmptyState title={t("empty.managed.title")}>
-              {t("empty.managed.text", { name })}
-            </EmptyState>
-          ) : (
-            <EmptyState title={t("empty.own.title")}>
-              {t("empty.own.text")}
-            </EmptyState>
-          )
-        ) : (
-          <EmptyState title={t("empty.other.title", { name })}>
-            {canBeReminded
-              ? t("empty.other.remind", {
-                  name: getFirstName(wishlist.user),
-                })
-              : t("empty.other.later")}
-          </EmptyState>
-        ))}
 
       {(wishlist.isOwnList || showRemind || wishlist.isFollowing) && (
         <Separator className="my-3" />
