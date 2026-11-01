@@ -66,6 +66,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   ).toHaveText([
     "Hoe trek ik lootjes?",
     "Waar zie ik wie ik heb getrokken?",
+    "Hoelang zie ik mijn lootje?",
     "Ziet iemand wie wie heeft getrokken?",
     "Kan iemand meedoen die nog niet in de groep zit?",
     "Kan ik de lootjes opnieuw trekken?",
@@ -149,7 +150,7 @@ test("jump to a subject in the frequently asked questions", async ({
     /Algemeen\s*4 vragen/,
     /Je verlanglijstje\s*\d+ vragen/,
     /Delen en groepen\s*\d+ vragen/,
-    /Lootjes trekken\s*6 vragen/,
+    /Lootjes trekken\s*7 vragen/,
     /Cadeaus kopen\s*\d+ vragen/,
     /Je account\s*4 vragen/,
   ])
@@ -182,6 +183,28 @@ test("the frequently asked questions explain what a group is for", async ({
     page.getByText(
       "Allebei kan. Een groep voor je familie of vrienden gebruik je elk jaar opnieuw"
     )
+  ).toBeVisible()
+})
+
+test("the frequently asked questions explain how a lootje stays secret", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  const lots = page.getByRole("region", { name: "Lootjes trekken" })
+  await lots.getByText("Hoe trek ik lootjes?").click()
+  await expect(
+    lots.getByText("kies de datum van het feest en een budget als je wilt")
+  ).toBeVisible()
+  await lots.getByText("Waar zie ik wie ik heb getrokken?").click()
+  await expect(
+    lots.getByText("Wie je hebt getrokken, zie je pas als je ‘Laat zien’ kiest")
+  ).toBeVisible()
+  await lots.getByText("Hoelang zie ik mijn lootje?").click()
+  await expect(
+    lots.getByText("Tot en met de datum van het feest.")
   ).toBeVisible()
 })
 
