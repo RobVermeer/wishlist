@@ -118,14 +118,15 @@ for (const file of icons) {
   )
 }
 
-// The small logo in the e-mails: the red sock on transparent.
+// The logo in the e-mails: the red sock on transparent, three times the 32
+// pixels it is shown at, so it stays sharp on high resolution screens.
 writeFileSync(
   "public/gift.png",
   Buffer.from(
     await render({
-      w: 32,
-      h: 32,
-      box: { x: 0, y: 0, w: 32, h: 32 },
+      w: 96,
+      h: 96,
+      box: { x: 0, y: 0, w: 96, h: 96 },
       sockShare: 1,
       plain: true,
     }),
