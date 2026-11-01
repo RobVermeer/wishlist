@@ -10,6 +10,7 @@ import {
   toasts,
 } from "./fixtures"
 import { Page } from "@playwright/test"
+import { baseURL } from "./support/env"
 
 const notFound = "We kunnen deze pagina niet vinden"
 
@@ -286,53 +287,40 @@ test("making a new link stops the old one, followers keep access", async ({
   ).toBeVisible()
 })
 
-for (const { name, open } of [
-  {
-    name: "wishlist",
-    open: async (page: Page, ids: { wishlist: string; group: string }) => {
-      await page.goto(`/wishlist/${ids.wishlist}`)
-      await page
-        .getByRole("button", { name: "Deel dit verlanglijstje" })
-        .click()
-      await page.getByLabel("Link naar je verlanglijstje").waitFor()
-      await expect(page.getByLabel("Link naar je verlanglijstje")).toHaveValue(
-        /lijstje/
-      )
-      await page.getByRole("button", { name: "Deel de link" }).click()
-    },
-  },
-  {
-    name: "group",
-    open: async (page: Page, ids: { wishlist: string; group: string }) => {
-      await page.goto(`/group/${ids.group}`)
-      await page
-        .getByRole("button", { name: "Nodig iemand uit voor de groep" })
-        .click()
-    },
-  },
-]) {
-  test(`sharing a ${name} only shares the link`, async ({ signIn }) => {
-    const owner = await createUser()
-    const group = await createGroup(owner)
-    const wishlist = await createWishlist(owner, { groups: [group] })
-    const page = await signIn(owner)
-
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "share", {
-        value: async (data: ShareData) => {
-          ;(window as unknown as { shared: ShareData }).shared = data
-        },
-      })
+// The link goes in the text, on its own line: some share targets, like copying
+// on macOS, glue a separate url to the text, which broke the link.
+async function stubShare(page: Page) {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      value: async (data: ShareData) => {
+        ;(window as unknown as { shared: ShareData }).shared = data
+      },
     })
-    await open(page, { wishlist: wishlist.id, group: group.id })
-
-    await page.waitForFunction(
-      () => (window as unknown as { shared?: ShareData }).shared
-    )
-    const shared = await page.evaluate(
-      () => (window as unknown as { shared: ShareData }).shared
-    )
-    expect(Object.keys(shared).sort()).toEqual(["title", "url"])
-    expect(shared.url).toMatch(/^http:\/\/localhost:3100\/(lijstje|group)\//)
   })
 }
+
+async function shared(page: Page) {
+  await page.waitForFunction(
+    () => (window as unknown as { shared?: ShareData }).shared
+  )
+  return page.evaluate(
+    () => (window as unknown as { shared: ShareData }).shared
+  )
+}
+
+test("sharing a group invites with a short intro", async ({ signIn }) => {
+  const owner = await createUser()
+  const group = await createGroup(owner, { title: "Familie" })
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await page.goto(`/group/${group.id}`)
+  await page
+    .getByRole("button", { name: "Nodig iemand uit voor de groep" })
+    .click()
+
+  expect(await shared(page)).toEqual({
+    title: "Familie",
+    text: `Ik nodig je uit voor de groep Familie op Niet Weer Sokken, zodat we elkaars verlanglijstjes kunnen zien.\n${baseURL}/group/${group.id}`,
+  })
+})

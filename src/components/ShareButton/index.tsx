@@ -22,6 +22,7 @@ export const ShareButton = ({ title, variant, className }: Props) => {
       onClick={() =>
         shareOrCopy({
           title,
+          intro: t("Share.intro", { group: title }),
           url: window.location.toString(),
           copied: t("Share.copied"),
         })
