@@ -3,7 +3,8 @@ import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { getUserForAdmin } from "@/lib/users/getUserForAdmin"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
-import { RemoveBoughtItem } from "./components/RemoveBoughtItem"
+import { RemoveItem } from "./components/RemoveItem"
+import { RemoveWishlist } from "./components/RemoveWishlist"
 import { notFound, redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { getServerSession } from "next-auth"
@@ -33,31 +34,47 @@ export default async function AdminUserPage({ params }: Props) {
 
       {user.wishlists.length === 0 && <p>{t("user.noWishlists")}</p>}
 
-      {user.wishlists.map(wishlist => (
-        <section key={wishlist.id} className="grid gap-2 mt-4">
-          <h3 className="text-xl font-semibold">
-            {getWishlistName({ ...wishlist, user })}
-          </h3>
+      {user.wishlists.map(wishlist => {
+        const name = getWishlistName({ ...wishlist, user })
 
-          {wishlist.items.length === 0 && (
-            <p className="text-muted-foreground">{t("user.noItems")}</p>
-          )}
+        return (
+          <section
+            key={wishlist.id}
+            aria-labelledby={`wishlist-${wishlist.id}`}
+            className="grid gap-2 mt-4"
+          >
+            <div className="flex flex-wrap gap-2 items-center">
+              <h3
+                id={`wishlist-${wishlist.id}`}
+                className="text-xl font-semibold"
+              >
+                {name}
+              </h3>
+              <RemoveWishlist id={wishlist.id} name={name} />
+            </div>
 
-          {wishlist.items.map(item => (
-            <Card key={item.id} className="flex flex-wrap gap-2 items-center">
-              {item.title}
-              {item.bought && (
-                <>
+            {wishlist.items.length === 0 && (
+              <p className="text-muted-foreground">{t("user.noItems")}</p>
+            )}
+
+            {wishlist.items.map(item => (
+              <Card key={item.id} className="flex flex-wrap gap-2 items-center">
+                {item.title}
+                {item.bought && (
                   <small className="rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
                     {t("user.bought")}
                   </small>
-                  <RemoveBoughtItem id={item.id} title={item.title} />
-                </>
-              )}
-            </Card>
-          ))}
-        </section>
-      ))}
+                )}
+                <RemoveItem
+                  id={item.id}
+                  title={item.title}
+                  bought={item.bought}
+                />
+              </Card>
+            ))}
+          </section>
+        )
+      })}
     </List>
   )
 }

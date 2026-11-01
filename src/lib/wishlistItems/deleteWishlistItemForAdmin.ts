@@ -8,10 +8,10 @@ import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { removeEmptyCategories } from "@/lib/wishlistCategories"
 
-// Lets admins clean up a verlanglijstje whose owner doesn't, without
-// touching what hasn't been bought yet. The buyer keeps the gift on their
-// bought presents page.
-export const deleteBoughtWishlistItemById = async (id: string) => {
+// Lets admins clean up bought wishes on a verlanglijstje whose owner doesn't,
+// and remove wishes that break the huisregels. The buyer keeps the gift on
+// their bought presents page.
+export const deleteWishlistItemForAdmin = async (id: string) => {
   try {
     const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
@@ -28,7 +28,6 @@ export const deleteBoughtWishlistItemById = async (id: string) => {
       where: {
         id,
         removed: false,
-        userId: { not: null },
       },
     })
 
