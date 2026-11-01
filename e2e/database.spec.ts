@@ -1,4 +1,6 @@
 import { setTimeout } from "node:timers/promises"
+import { readdirSync, readFileSync } from "node:fs"
+import { DatabaseSync } from "node:sqlite"
 import { test, expect, createUser, createGroup, prisma } from "./fixtures"
 
 test("dates are stored as unix epoch milliseconds", async ({ signIn }) => {
@@ -51,4 +53,41 @@ test("changes wait for another connection that is writing", async ({
     include: { members: true },
   })
   expect(members.map(({ id }) => id)).toEqual([owner.id])
+})
+
+test("moving links to their own table keeps the link of every wish", () => {
+  const db = new DatabaseSync(":memory:")
+  const migrations = readdirSync("prisma/migrations")
+    .filter(name => name !== "migration_lock.toml")
+    .sort()
+  const migrate = (name: string) =>
+    db.exec(readFileSync(`prisma/migrations/${name}/migration.sql`, "utf8"))
+  const links = migrations.findIndex(name =>
+    name.endsWith("_add_wishlist_item_links")
+  )
+
+  migrations.slice(0, links).forEach(migrate)
+  db.exec(`
+    INSERT INTO "User" ("id") VALUES ('user');
+    INSERT INTO "Wishlist" ("id", "createdAt", "userId") VALUES ('list', 0, 'user');
+    INSERT INTO "WishlistItem" ("id", "title", "createdAt", "wishlistId", "url") VALUES
+      ('bike', 'Fiets', 0, 'list', 'https://example.com/fiets'),
+      ('book', 'Boek', 0, 'list', NULL),
+      ('game', 'Spel', 0, 'list', '');
+  `)
+  migrations.slice(links).forEach(migrate)
+
+  expect(
+    db
+      .prepare(
+        `SELECT "wishlistItemId", "url", "position" FROM "WishlistItemLink"`
+      )
+      .all()
+  ).toEqual([
+    {
+      wishlistItemId: "bike",
+      url: "https://example.com/fiets",
+      position: 0,
+    },
+  ])
 })

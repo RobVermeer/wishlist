@@ -32,7 +32,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await createItem(wishlist, { title: "Sokken" })
   await createItem(wishlist, {
     title: "Koptelefoon",
-    url: "https://example.com/koptelefoon",
+    links: ["https://example.com/koptelefoon"],
   })
   const page = await signIn(shopper)
 

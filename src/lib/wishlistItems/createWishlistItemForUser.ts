@@ -57,7 +57,9 @@ export const createWishlistItemForUser = async (
         data: {
           title: data.title,
           unlimited: data.unlimited,
-          url: data.url || null,
+          links: {
+            create: data.url ? [{ url: data.url, position: 0 }] : [],
+          },
           createdAt: new Date(),
           wishlistId,
           categoryId,
