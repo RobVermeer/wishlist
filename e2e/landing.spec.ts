@@ -17,7 +17,15 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
   ).toBeVisible()
 
   const example = page.getByRole("figure", { name: /Sanne ziet dat niet/ })
-  await expect(example.getByRole("listitem")).toHaveText([
+  await expect(
+    example
+      .getByRole("list", { name: "Waar Sanne blij van wordt" })
+      .getByRole("listitem")
+  ).toHaveText(["tekenen", "dino's", "zwemmen"])
+  const wishes = example
+    .getByRole("list", { name: "Wensen van Sanne" })
+    .getByRole("listitem")
+  await expect(wishes).toHaveText([
     /^Fiets\s*bol\.com\s*coolblue\.nl\s*Ik koop dit$/,
     /^Boeken\s*Onbeperkt$/,
     /^LEGO kasteel\s*Wordt al gekocht$/,
@@ -28,9 +36,7 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     [2, "LEGO kasteel"],
     [3, "Bordspel"],
   ] as const) {
-    await expect(
-      example.getByRole("listitem").nth(index).getByText(title)
-    ).toHaveClass(/line-through/)
+    await expect(wishes.nth(index).getByText(title)).toHaveClass(/line-through/)
   }
   await expect(example).toContainText("Sanne ziet dat niet")
 
@@ -41,6 +47,7 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     "Je gekochte cadeaus op een rij",
     "Overzichtelijk",
     "Ook voor een ander",
+    "Liever geen wensen?",
     "Onbeperkte wensen",
     "Vraag om meer wensen",
   ]) {
@@ -51,6 +58,11 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
       has: page.getByRole("heading", { name: "Ook voor een ander" }),
     })
   ).toContainText("samen met de andere ouder")
+  await expect(
+    page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Liever geen wensen?" }),
+    })
+  ).toContainText("met of zonder wensen erbij")
   await expect(
     page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Stiekem afstrepen" }),

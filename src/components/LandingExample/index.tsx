@@ -11,6 +11,8 @@ const items = [
   { key: "socks" },
 ] as const
 
+const interests = ["drawing", "dinos", "swimming"] as const
+
 export const LandingExample = () => {
   const t = useTranslations("Landing.example")
   const tToggle = useTranslations("Toggle")
@@ -22,7 +24,26 @@ export const LandingExample = () => {
       <figure className="grid gap-2 rounded-lg border p-4">
         <p className="text-center text-xl text-primary">{t("owner")}</p>
 
-        <ul className="grid gap-2">
+        <div className="grid gap-2 rounded-md bg-secondary p-3">
+          <p id="landing-interests" className="text-sm font-semibold">
+            {t("interests")}
+          </p>
+          <ul
+            aria-labelledby="landing-interests"
+            className="flex flex-wrap gap-2"
+          >
+            {interests.map(key => (
+              <li
+                key={key}
+                className="rounded-full bg-background px-3 py-1 text-sm"
+              >
+                {t(`interestItems.${key}`)}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <ul aria-label={t("wishes")} className="grid gap-2">
           {items.map(item => (
             <li
               key={item.key}
