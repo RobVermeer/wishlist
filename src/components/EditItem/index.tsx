@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
+import { LinkFields } from "@/components/LinkFields"
 import { RemoveButton } from "@/components/RemoveButton"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
@@ -25,7 +26,7 @@ interface Props {
   item: {
     id: string
     title: string
-    url: string | null
+    links: string[]
     unlimited: boolean
     category: { title: string } | null
   }
@@ -35,7 +36,7 @@ interface Props {
 export const EditItem = ({ item, categories }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
-  const { id, title, url, unlimited } = item
+  const { id, title, links, unlimited } = item
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -104,12 +105,7 @@ export const EditItem = ({ item, categories }: Props) => {
             <Label htmlFor="unlimited">{t("EditItem.form.unlimited")}</Label>
           </div>
 
-          <Label htmlFor="url">
-            {t.rich("EditItem.form.url", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input id="url" name="url" defaultValue={url || ""} />
+          <LinkFields defaultValues={links} />
           <Label htmlFor="category">
             {t.rich("EditItem.form.category", {
               small: chunks => <small>{chunks}</small>,
