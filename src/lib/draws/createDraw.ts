@@ -117,7 +117,7 @@ export const createDraw = async (groupId: string, data: FormData) => {
           groupId,
           createdAt: now,
           budget: budget ?? null,
-          date: date ? new Date(date) : null,
+          date: new Date(date),
         },
       })
       const rows = []
@@ -154,7 +154,7 @@ export const createDraw = async (groupId: string, data: FormData) => {
           group,
           creator,
           budget: budget ?? null,
-          date: date ? new Date(date) : null,
+          date: new Date(date),
           redraw,
           member: participant.userId !== null,
         })

@@ -237,6 +237,12 @@ export async function emailsTo(address: string): Promise<SentEmail[]> {
   return emails.filter(({ to }) => to.includes(address))
 }
 
+// A date in the time zone of the app, as the date input fills it in.
+export const dateInAmsterdam = (daysFromToday = 0) =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format(
+    new Date(Date.now() + daysFromToday * 24 * 60 * 60 * 1000)
+  )
+
 export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
 

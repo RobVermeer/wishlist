@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { createDraw } from "@/lib/draws/createDraw"
+import { today } from "@/lib/today"
 
 interface Props {
   groupId: string
@@ -209,10 +210,14 @@ export const DrawLots = ({
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="draw-date">
-                {t.rich("date", { small: chunks => <small>{chunks}</small> })}
-              </Label>
-              <Input id="draw-date" name="date" type="date" />
+              <Label htmlFor="draw-date">{t("date")}</Label>
+              <Input
+                id="draw-date"
+                name="date"
+                type="date"
+                min={today()}
+                required
+              />
             </div>
           </div>
         </form>

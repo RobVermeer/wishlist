@@ -1,5 +1,6 @@
 import * as z from "zod"
 import { groupThemes } from "@/lib/groups/themes"
+import { today } from "@/lib/today"
 
 export const groupSchema = z.object({
   title: z
@@ -104,5 +105,14 @@ export const drawSchema = z.object({
     .min(1, { error: "Het budget moet minimaal 1 euro zijn" })
     .max(10000, { error: "Het budget mag maximaal 10.000 euro zijn" })
     .optional(),
-  date: z.iso.date({ error: "Kies een geldige datum" }).optional(),
+  date: z.iso
+    .date({
+      error: issue =>
+        issue.input === undefined
+          ? "Kies de datum van het feest"
+          : "Kies een geldige datum",
+    })
+    .refine(date => date >= today(), {
+      error: "Kies een datum vanaf vandaag",
+    }),
 })
