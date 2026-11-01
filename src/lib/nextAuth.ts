@@ -6,6 +6,7 @@ import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email"
 import { sendVerificationRequest } from "@/lib/email/sendVerificationRequest"
 import { updateLastSeen } from "@/lib/users/updateLastSeen"
+import { isSuperAdmin } from "@/lib/users/isSuperAdmin"
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -34,7 +35,8 @@ export const authOptions: AuthOptions = {
 
       session.user.id = user.id
       session.user.firstName = user.firstName
-      session.user.isAdmin = user.id === process.env.ADMIN_USER_ID
+      session.user.isSuperAdmin = isSuperAdmin(user.id)
+      session.user.isAdmin = session.user.isSuperAdmin || !!user.isAdmin
 
       return session
     },

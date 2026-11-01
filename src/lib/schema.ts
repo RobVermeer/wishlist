@@ -21,6 +21,10 @@ export const userSchema = z.object({
     .max(40, { error: "Voornaam mag maximaal uit 40 tekens bestaan" }),
 })
 
+export const adminSchema = z.object({
+  isAdmin: z.boolean({ error: "Kies of iemand admin is" }),
+})
+
 export const wishlistSchema = z.object({
   name: z
     .string()

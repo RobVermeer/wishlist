@@ -32,19 +32,22 @@ async function createSession(user: User): Promise<TestUser> {
 export async function createUser({
   firstName = "Tester",
   name,
-}: { firstName?: string | null; name?: string } = {}) {
+  isAdmin = false,
+}: { firstName?: string | null; name?: string; isAdmin?: boolean } = {}) {
   const id = uniqueId()
   const user = await prisma.user.create({
     data: {
       name: name ?? `${firstName ?? "Anoniem"} ${id}`,
       firstName,
       email: `user-${id}@e2e.test`,
+      isAdmin,
     },
   })
 
   return createSession(user)
 }
 
+// The super admin, whose id is in ADMIN_USER_ID.
 export async function createAdmin() {
   const user = await prisma.user.upsert({
     where: { id: adminUserId },

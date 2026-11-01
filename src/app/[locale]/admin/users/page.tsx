@@ -4,6 +4,7 @@ import { ListTitle } from "@/components/ListTitle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getUsers } from "@/lib/users/getUsers"
 import { RemoveUser } from "./components/RemoveUser"
+import { ToggleAdmin } from "./components/ToggleAdmin"
 import { getInitials } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
@@ -16,6 +17,7 @@ export default async function AdminUsersPage() {
   if (!session) redirect("/login")
 
   const users = await getUsers()
+  const { isSuperAdmin } = session.user
   const t = await getTranslations("Admin")
 
   return (
@@ -23,7 +25,7 @@ export default async function AdminUsersPage() {
       <ListTitle>{t("users.title")}</ListTitle>
 
       {users.map(user => (
-        <Card key={user.id} className="flex gap-2 items-center">
+        <Card key={user.id} className="flex flex-wrap gap-2 items-center">
           <Avatar>
             {user?.image && (
               <AvatarImage
@@ -36,13 +38,25 @@ export default async function AdminUsersPage() {
 
           <span className="leading-none">
             {user.name} <small>({user.firstName})</small>
+            {(user.isSuperAdmin || user.isAdmin) && (
+              <small className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+                {user.isSuperAdmin ? t("users.superAdmin") : t("users.admin")}
+              </small>
+            )}
             <br />
             <small className="text-xs text-muted-foreground">
               {user.email}
             </small>
           </span>
 
-          <RemoveUser id={user.id} />
+          {!user.isSuperAdmin && (
+            <div className="ml-auto flex gap-2">
+              {isSuperAdmin && (
+                <ToggleAdmin id={user.id} isAdmin={user.isAdmin} />
+              )}
+              {(isSuperAdmin || !user.isAdmin) && <RemoveUser id={user.id} />}
+            </div>
+          )}
         </Card>
       ))}
     </List>

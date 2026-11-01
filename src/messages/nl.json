@@ -510,6 +510,10 @@
     },
     "users": {
       "title": "Gebruikers",
+      "admin": "Admin",
+      "superAdmin": "Superadmin",
+      "makeAdmin": "Maak admin",
+      "removeAdmin": "Geen admin meer",
       "remove": "Verwijder"
     }
   },

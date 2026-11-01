@@ -1357,3 +1357,109 @@ test("only the creator or an admin can restore a group", async ({ signIn }) => {
     (await prisma.group.findUniqueOrThrow({ where: { id: group.id } })).removed
   ).toBe(true)
 })
+
+test("only the super admin can make someone admin", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const admin = await createUser({ isAdmin: true })
+  const user = await createUser()
+  const target = await createUser()
+  const superAdminPage = await signIn(superAdmin)
+
+  const action = captureAction(superAdminPage, "/admin/users")
+  await superAdminPage.goto("/admin/users")
+  await superAdminPage
+    .locator("div.rounded-2xl")
+    .filter({ hasText: target.email! })
+    .getByRole("button", { name: "Maak admin" })
+    .click()
+
+  await replayAs(await signIn(admin), await action)
+  await replayAs(await signIn(user), await action)
+
+  expect(
+    (await prisma.user.findUniqueOrThrow({ where: { id: target.id } })).isAdmin
+  ).toBe(false)
+})
+
+test("only the super admin can take admin away", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const admin = await createUser({ isAdmin: true })
+  const user = await createUser()
+  const target = await createUser({ isAdmin: true })
+  const superAdminPage = await signIn(superAdmin)
+
+  const action = captureAction(superAdminPage, "/admin/users")
+  await superAdminPage.goto("/admin/users")
+  await superAdminPage
+    .locator("div.rounded-2xl")
+    .filter({ hasText: target.email! })
+    .getByRole("button", { name: "Geen admin meer" })
+    .click()
+
+  await replayAs(await signIn(admin), await action)
+  await replayAs(await signIn(user), await action)
+
+  expect(
+    (await prisma.user.findUniqueOrThrow({ where: { id: target.id } })).isAdmin
+  ).toBe(true)
+})
+
+test("admin can't be taken away from the super admin", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const admin = await createUser({ isAdmin: true })
+  const page = await signIn(superAdmin)
+
+  await forgeActions(page, "/admin/users", admin.id, superAdmin.id)
+  await page.goto("/admin/users")
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: admin.email! })
+    .getByRole("button", { name: "Geen admin meer" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+})
+
+test("only the super admin can remove admins", async ({ signIn }) => {
+  const admin = await createUser({ isAdmin: true })
+  const otherAdmin = await createUser({ isAdmin: true })
+  const victim = await createUser()
+  const page = await signIn(admin)
+
+  await forgeActions(page, "/admin/users", victim.id, otherAdmin.id)
+  await page.goto("/admin/users")
+  page.once("dialog", dialog => dialog.accept())
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  expect(await prisma.user.count({ where: { id: otherAdmin.id } })).toBe(1)
+})
+
+test("nobody can remove the super admin", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const admin = await createUser({ isAdmin: true })
+  const victim = await createUser()
+  const page = await signIn(admin)
+
+  await forgeActions(page, "/admin/users", victim.id, superAdmin.id)
+  await page.goto("/admin/users")
+  page.once("dialog", dialog => dialog.accept())
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  expect(await prisma.user.count({ where: { id: superAdmin.id } })).toBe(1)
+})
