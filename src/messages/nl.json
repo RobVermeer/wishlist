@@ -518,11 +518,14 @@
       "remove": "Verwijder"
     },
     "user": {
-      "text": "Wensen die al zijn afgestreept, kun je van een verlanglijstje halen. De rest blijft staan. Wie iets heeft gekocht, zie je hier niet.",
+      "text": "Haal weg wat niet volgens de huisregels is. Afgestreepte wensen kun je ook weghalen als een verlanglijstje niet wordt opgeruimd. Wie iets heeft gekocht, zie je hier niet.",
       "noWishlists": "Deze gebruiker heeft geen verlanglijstjes.",
       "noItems": "Er staan geen wensen op dit verlanglijstje.",
       "bought": "Afgestreept",
-      "removeItem": "‘{title}’ verdwijnt van het verlanglijstje. Wie de wens heeft gekocht, ziet hem nog bij Gekochte cadeaus."
+      "removeBoughtItem": "‘{title}’ verdwijnt van het verlanglijstje. Wie de wens heeft gekocht, ziet hem nog bij Gekochte cadeaus.",
+      "removeItem": "‘{title}’ verdwijnt van het verlanglijstje. Doe dit alleen als de wens niet volgens de huisregels is.",
+      "removeWishlist": "Verwijder verlanglijstje",
+      "removeWishlistText": "‘{name}’ verdwijnt voor iedereen, ook uit de groepen waar het in staat. Doe dit alleen als het verlanglijstje niet volgens de huisregels is."
     }
   },
   "Metadata": {

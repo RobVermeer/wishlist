@@ -284,7 +284,9 @@ test("admin can remove bought wishes from someone's wishlist", async ({
   await expect(page.getByText("Kleinzoon")).toHaveCount(0)
   await expect(card(page, "Breipennen")).toContainText("Afgestreept")
   await expect(card(page, "Puzzelboek")).not.toContainText("Afgestreept")
-  await expect(card(page, "Puzzelboek").getByRole("button")).toHaveCount(0)
+  await expect(
+    card(page, "Puzzelboek").getByRole("button", { name: "Verwijder" })
+  ).toBeVisible()
 
   await card(page, "Breipennen")
     .getByRole("button", { name: "Verwijder" })
@@ -307,4 +309,60 @@ test("admin can remove bought wishes from someone's wishlist", async ({
   await expect(card(buyerPage, "Breipennen")).toContainText(
     "Deze wens is verwijderd."
   )
+})
+
+test("admin can remove wishes and verlanglijstjes that break the huisregels", async ({
+  signIn,
+}) => {
+  const admin = await createUser({ isAdmin: true })
+  const owner = await createUser({ firstName: "Pieter" })
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, {
+    title: "Pieters lijstje",
+    groups: [group],
+  })
+  const spam = await createWishlist(owner, {
+    title: "Koop hier goedkoop",
+    groups: [group],
+  })
+  await createItem(wishlist, { title: "Iets wat niet kan" })
+  await createItem(wishlist, { title: "Fiets" })
+  const page = await signIn(admin)
+
+  await page.goto(`/admin/users/${owner.id}`)
+  await card(page, "Iets wat niet kan")
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  const dialog = page.getByRole("alertdialog")
+  await expect(dialog).toContainText("huisregels")
+  await dialog.getByRole("button", { name: "Verwijder" }).click()
+  await expect(card(page, "Iets wat niet kan")).toBeHidden()
+
+  await page
+    .getByRole("region", { name: "Koop hier goedkoop" })
+    .getByRole("button", { name: "Verwijder verlanglijstje" })
+    .click()
+  await expect(dialog).toContainText("huisregels")
+  await dialog.getByRole("button", { name: "Verwijder verlanglijstje" }).click()
+  await expect(
+    page.getByRole("heading", { name: "Koop hier goedkoop" })
+  ).toBeHidden()
+  await expect(
+    page.getByRole("heading", { name: "Pieters lijstje" })
+  ).toBeVisible()
+
+  const memberPage = await signIn(member)
+  await memberPage.goto(`/group/${group.id}`)
+  await expect(
+    memberPage.getByText("Pieters lijstje", { exact: true })
+  ).toBeVisible()
+  await expect(memberPage.getByText("Koop hier goedkoop")).toHaveCount(0)
+  await memberPage.goto(`/wishlist/${wishlist.id}`)
+  await expect(memberPage.getByText("Fiets")).toBeVisible()
+  await expect(memberPage.getByText("Iets wat niet kan")).toHaveCount(0)
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: spam.id } }))
+      .removed
+  ).toBe(true)
 })

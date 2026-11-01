@@ -1443,33 +1443,29 @@ test("only the super admin can remove admins", async ({ signIn }) => {
   expect(await prisma.user.count({ where: { id: otherAdmin.id } })).toBe(1)
 })
 
-async function removeBoughtWishAsAdmin(page: Page, wishlistOwnerId: string) {
-  await page.goto(`/admin/users/${wishlistOwnerId}`)
-  await page
-    .locator("div.rounded-2xl")
-    .filter({ hasText: "Afgestreept" })
-    .getByRole("button", { name: "Verwijder" })
-    .click()
-  await page
-    .getByRole("alertdialog")
-    .getByRole("button", { name: "Verwijder" })
-    .click()
+async function confirmRemoval(page: Page, name: string) {
+  await page.getByRole("alertdialog").getByRole("button", { name }).click()
 }
 
-test("only admins can remove bought wishes of someone else", async ({
-  signIn,
-}) => {
+test("only admins can remove wishes of someone else", async ({ signIn }) => {
   const admin = await createUser({ isAdmin: true })
   const owner = await createUser()
-  const buyer = await createUser()
-  const wishlist = await createWishlist(owner, { followers: [buyer] })
-  const item = await createItem(wishlist, { boughtBy: buyer })
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const item = await createItem(wishlist, { title: "Wens van een ander" })
   const adminPage = await signIn(admin)
 
   const action = captureAction(adminPage, `/admin/users/${owner.id}`)
-  await removeBoughtWishAsAdmin(adminPage, owner.id)
+  await adminPage.goto(`/admin/users/${owner.id}`)
+  await adminPage
+    .locator("div.rounded-2xl")
+    .filter({ hasText: "Wens van een ander" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await confirmRemoval(adminPage, "Verwijder")
 
-  await replayAs(await signIn(buyer), await action)
+  await replayAs(await signIn(member), await action)
 
   expect(
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
@@ -1477,27 +1473,32 @@ test("only admins can remove bought wishes of someone else", async ({
   ).toBe(false)
 })
 
-test("admins can't remove wishes that haven't been bought", async ({
+test("only admins can remove verlanglijstjes of someone else", async ({
   signIn,
 }) => {
   const admin = await createUser({ isAdmin: true })
   const owner = await createUser()
-  const buyer = await createUser()
-  const wishlist = await createWishlist(owner, { followers: [buyer] })
-  const bought = await createItem(wishlist, { boughtBy: buyer })
-  const unbought = await createItem(wishlist)
-  const page = await signIn(admin)
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, {
+    title: "Lijstje van een ander",
+    groups: [group],
+  })
+  const adminPage = await signIn(admin)
 
-  await forgeActions(page, `/admin/users/${owner.id}`, bought.id, unbought.id)
-  await removeBoughtWishAsAdmin(page, owner.id)
+  const action = captureAction(adminPage, `/admin/users/${owner.id}`)
+  await adminPage.goto(`/admin/users/${owner.id}`)
+  await adminPage
+    .getByRole("region", { name: "Lijstje van een ander" })
+    .getByRole("button", { name: "Verwijder verlanglijstje" })
+    .click()
+  await confirmRemoval(adminPage, "Verwijder verlanglijstje")
 
-  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  await replayAs(await signIn(member), await action)
+
   expect(
-    (
-      await prisma.wishlistItem.findUniqueOrThrow({
-        where: { id: unbought.id },
-      })
-    ).removed
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .removed
   ).toBe(false)
 })
 
