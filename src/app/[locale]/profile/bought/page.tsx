@@ -51,15 +51,17 @@ export default async function ProfileBoughtPage() {
 
   const renderItem = (item: (typeof boughtWishlistItems)[number]) => (
     <Card key={item.id}>
-      {item.title}{" "}
-      <small className="block text-muted-foreground">
-        {item.boughtAt
-          ? t("boughtForOn", {
-              name: getWishlistName(item.wishlist),
-              date: item.boughtAt,
-            })
-          : t("boughtFor", { name: getWishlistName(item.wishlist) })}
-      </small>
+      <div className="sm:flex sm:items-baseline sm:justify-between sm:gap-4">
+        {item.title}{" "}
+        <small className="block shrink-0 text-muted-foreground">
+          {item.boughtAt
+            ? t("boughtForOn", {
+                name: getWishlistName(item.wishlist),
+                date: item.boughtAt,
+              })
+            : t("boughtFor", { name: getWishlistName(item.wishlist) })}
+        </small>
+      </div>
       {(item.wishlist.removed || item.removed) && (
         <small className="block text-muted-foreground">
           {item.wishlist.removed ? t("removedWishlist") : t("removedItem")}
