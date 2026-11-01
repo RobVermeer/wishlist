@@ -318,3 +318,30 @@ test("the frequently asked questions explain sharing interests instead of wishes
     page.getByText(/^Ja\. Zet bij ‘Waar ik blij van word’ op je verlanglijstje/)
   ).toContainText("Wensen erbij mag, maar hoeft niet.")
 })
+
+test("the frequently asked questions say when bought wishes go", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  const buying = page.getByRole("region", { name: "Cadeaus kopen" })
+  await buying
+    .getByText("Blijven gekochte wensen op het verlanglijstje staan?")
+    .click()
+  await expect(
+    buying.getByText(
+      "Ja, tenzij je verlanglijstje in een groep staat waar lootjes zijn getrokken met een datum. Dan verdwijnen twee weken na die datum de wensen die al gekocht zijn."
+    )
+  ).toBeVisible()
+  await expect(
+    buying.getByText("Wie iets kocht, ziet het nog onder ‘Gekochte cadeaus’.")
+  ).toBeVisible()
+
+  const list = page.getByRole("region", { name: "Je verlanglijstje" })
+  await list.getByText("Wat is een onbeperkte wens?").click()
+  await expect(
+    list.getByText("Hij verdwijnt ook niet als we na een feest opruimen.")
+  ).toBeVisible()
+})
