@@ -4,6 +4,7 @@ import { cache } from "react"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
+import { notOver } from "./notOver"
 
 // The current user's lootjes in the active draws of all groups they're in,
 // the ones with a date first.
@@ -19,6 +20,7 @@ export const getLotsForUser = cache(async () => {
       receiverId: { not: null },
       draw: {
         cancelledAt: null,
+        ...notOver(),
         group: { removed: false, members: { some: { id: userId } } },
       },
     },
