@@ -739,6 +739,10 @@
             "answer": "Ja, dan open je het met één tik vanaf je beginscherm, net als een app. Op je profiel staat hoe dat werkt, en onderaan de pagina via Installeer de app."
           },
           {
+            "question": "Wat mag er niet op Niet Weer Sokken?",
+            "answer": "Niets wat verboden, kwetsend of reclame is. In de <houseRules>huisregels</houseRules> lees je wat niet kan en wat de beheerders doen als iemand zich er niet aan houdt."
+          },
+          {
             "question": "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
             "answer": "Kies onderaan deze pagina of op je profiel ‘Stuur ons een bericht’. We antwoorden per e-mail."
           }

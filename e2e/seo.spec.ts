@@ -264,6 +264,14 @@ test("the frequently asked questions are structured data", async ({ page }) => {
       ),
     },
   })
+  expect(faq.mainEntity).toContainEqual({
+    "@type": "Question",
+    name: "Wat mag er niet op Niet Weer Sokken?",
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: expect.stringContaining("In de huisregels lees je"),
+    },
+  })
   expect(faq.mainEntity).toHaveLength(
     await page.locator("details summary").count()
   )

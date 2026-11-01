@@ -82,6 +82,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Waarom heet het Niet Weer Sokken?",
     "Kost Niet Weer Sokken iets?",
     "Kan ik Niet Weer Sokken op mijn telefoon zetten?",
+    "Wat mag er niet op Niet Weer Sokken?",
     "Ik heb een fout gevonden of een vraag. Waar kan ik terecht?",
   ])
   await expect(
@@ -138,6 +139,21 @@ test("the frequently asked questions link to the privacy policy", async ({
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Privacy")
 })
 
+test("the frequently asked questions link to the huisregels", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Wat mag er niet op Niet Weer Sokken?").click()
+  await page
+    .getByRole("region", { name: "Algemeen" })
+    .getByRole("link", { name: "huisregels" })
+    .click()
+
+  await expect(page).toHaveURL("/huisregels")
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Huisregels")
+})
+
 test("jump to a subject in the frequently asked questions", async ({
   signIn,
 }) => {
@@ -148,7 +164,7 @@ test("jump to a subject in the frequently asked questions", async ({
 
   const subjects = page.getByRole("navigation", { name: "Onderwerpen" })
   await expect(subjects.getByRole("link")).toHaveText([
-    /Algemeen\s*4 vragen/,
+    /Algemeen\s*5 vragen/,
     /Je verlanglijstje\s*\d+ vragen/,
     /Delen en groepen\s*\d+ vragen/,
     /Lootjes trekken\s*7 vragen/,
