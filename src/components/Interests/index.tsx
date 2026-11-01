@@ -1,6 +1,12 @@
 "use client"
 
-import { FormEvent, startTransition, useId, useState } from "react"
+import {
+  FormEvent,
+  startTransition,
+  useId,
+  useState,
+  useTransition,
+} from "react"
 import { useTranslations } from "next-intl"
 import { Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -29,6 +35,7 @@ export const Interests = ({
   const t = useTranslations("Interests")
   const { toast } = useToast()
   const [value, setValue] = useState("")
+  const [adding, startAdding] = useTransition()
   const id = useId()
 
   function showErrors(errors: string[]) {
@@ -45,13 +52,15 @@ export const Interests = ({
       return
     }
 
-    setValue("")
+    // Keep what was typed in the meantime.
+    const added = data.get("title")
+    setValue(current => (current === added ? "" : current))
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    startTransition(() => handleSubmit(data))
+    startAdding(() => handleSubmit(data))
   }
 
   function onRemove(interestId: string) {
@@ -112,7 +121,7 @@ export const Interests = ({
             placeholder={t("placeholder")}
             className="bg-background"
           />
-          <Button type="submit" variant="outline">
+          <Button type="submit" variant="outline" disabled={adding}>
             <Plus size="16" className="mr-2" /> {t("add")}
           </Button>
         </form>
