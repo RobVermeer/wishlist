@@ -51,10 +51,9 @@ test("view a wishlist of a group member", async ({ signIn }) => {
     page.getByRole("button", { name: "Wijzig verlanglijstje" })
   ).toHaveCount(0)
   await expect(itemCard(page, "Sokken")).toBeVisible()
-  await expect(page.getByRole("link", { name: "Koptelefoon" })).toHaveAttribute(
-    "href",
-    "https://example.com/koptelefoon"
-  )
+  await expect(
+    itemCard(page, "Koptelefoon").getByRole("link", { name: "example.com" })
+  ).toHaveAttribute("href", "https://example.com/koptelefoon")
   await expect(
     page.getByRole("button", { name: "Voeg een wens toe" })
   ).toBeHidden()

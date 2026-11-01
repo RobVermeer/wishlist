@@ -6,33 +6,21 @@ interface Props {
   className?: string
 }
 
-const linkProps = {
-  target: "_blank",
-  rel: "ugc nofollow noopener noreferrer",
-}
-
 const shopName = (url: string) => new URL(url).hostname.replace(/^www\./, "")
 
-// One link makes the title a link, several are listed by shop so people can
-// tell them apart.
+// Links are listed by shop, so people can see where they go and tell several
+// apart.
 export const ItemTitle = ({ title, links, className }: Props) => (
   <span className="grid gap-1">
-    <span className={className}>
-      {links.length === 1 ? (
-        <a href={links[0].url} {...linkProps}>
-          <Link size="16" strokeWidth="2.5" className="inline mr-1" /> {title}
-        </a>
-      ) : (
-        title
-      )}
-    </span>
-    {links.length > 1 && (
+    <span className={className}>{title}</span>
+    {links.length > 0 && (
       <span className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-normal">
         {links.map(({ url }, index) => (
           <a
             key={index}
             href={url}
-            {...linkProps}
+            target="_blank"
+            rel="ugc nofollow noopener noreferrer"
             className="inline-flex items-center gap-1 text-muted-foreground underline underline-offset-2 hover:text-foreground"
           >
             <Link size="12" strokeWidth="2.5" aria-hidden /> {shopName(url)}
