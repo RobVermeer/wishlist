@@ -22,6 +22,9 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
       .getByRole("list", { name: "Waar Sanne blij van wordt" })
       .getByRole("listitem")
   ).toHaveText(["tekenen", "dino's", "zwemmen"])
+  await expect(example).toContainText(
+    "Naast de wensen hieronder kun je Sanne ook verrassen met iets wat hierbij past."
+  )
   const wishes = example
     .getByRole("list", { name: "Wensen van Sanne" })
     .getByRole("listitem")
@@ -48,6 +51,7 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     "Overzichtelijk",
     "Ook voor een ander",
     "Liever geen wensen?",
+    "Wensen en interesses samen",
     "Onbeperkte wensen",
     "Vraag om meer wensen",
   ]) {
@@ -62,7 +66,14 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Liever geen wensen?" }),
     })
-  ).toContainText("met of zonder wensen erbij")
+  ).toContainText(
+    "Dan kunnen de anderen je verrassen met iets wat daarbij past."
+  )
+  await expect(
+    page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Wensen en interesses samen" }),
+    })
+  ).toContainText("Dan kiezen de anderen een wens of verrassen ze je.")
   await expect(
     page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Stiekem afstrepen" }),

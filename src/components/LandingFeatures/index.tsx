@@ -4,6 +4,7 @@ import {
   Smartphone,
   Gift,
   Heart,
+  Sparkles,
   InfinityIcon,
   List,
   ShoppingBasket,
@@ -21,6 +22,7 @@ const features = [
   { key: "categories", Icon: List, color: "text-orange-500" },
   { key: "managed", Icon: Baby, color: "text-purple-500" },
   { key: "interests", Icon: Heart, color: "text-rose-500" },
+  { key: "combine", Icon: Sparkles, color: "text-indigo-500" },
   { key: "unlimited", Icon: InfinityIcon, color: "text-emerald-500" },
   { key: "remind", Icon: ShoppingBasket, color: "text-sky-500" },
 ] as const

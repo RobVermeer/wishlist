@@ -564,6 +564,7 @@
       "caption": "Iemand anders koopt het LEGO kasteel en jij het bordspel. Sanne ziet dat niet, dus de verrassing blijft 🤫",
       "buy": "Ik koop dit",
       "interests": "Waar Sanne blij van wordt",
+      "interestsHint": "Naast de wensen hieronder kun je Sanne ook verrassen met iets wat hierbij past.",
       "interestItems": {
         "drawing": "tekenen",
         "dinos": "dino's",
@@ -599,7 +600,11 @@
       },
       "interests": {
         "title": "Liever geen wensen?",
-        "text": "Zet op je verlanglijstje waar je blij van wordt, zoals lezen of wandelen. Dan bedenken de anderen zelf iets, met of zonder wensen erbij."
+        "text": "Zet op je verlanglijstje waar je blij van wordt, zoals lezen of wandelen. Dan kunnen de anderen je verrassen met iets wat daarbij past."
+      },
+      "combine": {
+        "title": "Wensen en interesses samen",
+        "text": "Weet je een paar dingen zeker? Zet ze als wens op je verlanglijstje, met erbij waar je blij van wordt. Dan kiezen de anderen een wens of verrassen ze je."
       },
       "unlimited": {
         "title": "Onbeperkte wensen",

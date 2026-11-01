@@ -28,6 +28,7 @@ export const LandingExample = () => {
           <p id="landing-interests" className="text-sm font-semibold">
             {t("interests")}
           </p>
+          <p className="text-sm text-muted-foreground">{t("interestsHint")}</p>
           <ul
             aria-labelledby="landing-interests"
             className="flex flex-wrap gap-2"
