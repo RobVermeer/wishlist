@@ -311,7 +311,8 @@
   },
   "Share": {
     "button": "Nodig iemand uit voor de groep",
-    "copied": "Link van groep gekopieerd"
+    "copied": "Link van groep gekopieerd",
+    "intro": "Ik nodig je uit voor de groep {group} op Niet Weer Sokken, zodat we elkaars verlanglijstjes kunnen zien."
   },
   "Toggle": {
     "buy": "Ik koop dit",

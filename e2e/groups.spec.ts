@@ -352,9 +352,11 @@ test("an empty group starts with one block on what to do first", async ({
   ).toHaveCount(0)
 })
 
-test("share button copies the group link", async ({ signIn }) => {
+test("share button copies an invitation with the group link", async ({
+  signIn,
+}) => {
   const user = await createUser()
-  const group = await createGroup(user)
+  const group = await createGroup(user, { title: "Familie" })
   const page = await signIn(user)
 
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"])
@@ -368,7 +370,7 @@ test("share button copies the group link", async ({ signIn }) => {
 
   await expect(toasts(page)).toContainText("Link van groep gekopieerd")
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    page.url()
+    `Ik nodig je uit voor de groep Familie op Niet Weer Sokken, zodat we elkaars verlanglijstjes kunnen zien.\n${page.url()}`
   )
 })
 
