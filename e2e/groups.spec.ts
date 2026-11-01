@@ -374,6 +374,42 @@ test("share button copies an invitation with the group link", async ({
   )
 })
 
+test("someone who isn't logged in sees the invitation and logs in to join", async ({
+  page,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const group = await createGroup(owner, { title: "Familie" })
+  await createWishlist(owner, { groups: [group] })
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(page).toHaveTitle("Familie - Niet Weer Sokken")
+  await expect(page.getByRole("heading", { name: "Familie" })).toBeVisible()
+  await expect(
+    page.getByText("Je bent uitgenodigd voor deze groep.")
+  ).toBeVisible()
+  expect(await page.content()).not.toContain("Olga")
+
+  await page.getByRole("link", { name: "Log in om mee te doen" }).click()
+  await expect(page).toHaveURL(
+    `/login?callbackUrl=${encodeURIComponent(`/group/${group.id}`)}`
+  )
+})
+
+test("an invitation to an unknown or removed group is not found", async ({
+  page,
+}) => {
+  const owner = await createUser()
+  const removed = await createGroup(owner, { removed: true })
+
+  for (const id of ["does-not-exist", removed.id]) {
+    await page.goto(`/group/${id}`)
+    await expect(
+      page.getByText("We kunnen deze pagina niet vinden")
+    ).toBeVisible()
+  }
+})
+
 test("unknown group shows not found", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)

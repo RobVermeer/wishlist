@@ -16,7 +16,6 @@ test.describe("unauthenticated visitor", () => {
   for (const path of [
     "/profile",
     "/profile/bought",
-    "/group/some-group",
     "/group/some-group/some-wishlist",
     "/wishlist/some-wishlist",
   ]) {
