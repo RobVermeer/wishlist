@@ -159,8 +159,11 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
 
   return (
     <EmailLayout preview={t("preview")} reason={t("reason")}>
+      <Heading as="h1" style={title}>
+        {t("title")}
+      </Heading>
+
       <Section style={section}>
-        <Text style={text}>{t("hello")}</Text>
         <Text style={text}>{t("text")}</Text>
 
         <Button style={button} href={url}>
@@ -168,7 +171,13 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
         </Button>
 
         <Text style={{ ...text, marginTop: "16px" }}>{t("expires")}</Text>
-        <Text style={text}>{t("ignore")}</Text>
+        <Text style={text}>{t("copy")}</Text>
+        <Text style={{ ...text, ...smallLink }}>
+          <Link style={link} href={url}>
+            {url}
+          </Link>
+        </Text>
+        <Text style={{ ...text, marginTop: "16px" }}>{t("ignore")}</Text>
       </Section>
     </EmailLayout>
   )
@@ -333,6 +342,12 @@ const button = {
   borderRadius: "0.5em",
   padding: "0.75em 1.5em",
   marginTop: "8px",
+}
+
+const smallLink = {
+  fontSize: "12px",
+  lineHeight: 1.5,
+  wordBreak: "break-all" as const,
 }
 
 const signature = {

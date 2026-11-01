@@ -395,10 +395,11 @@
   "EmailLogin": {
     "subject": "Inloggen bij Niet Weer Sokken",
     "preview": "Klik op de knop om in te loggen.",
-    "hello": "Hoi,",
-    "text": "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "title": "Inloggen bij Niet Weer Sokken",
+    "text": "Klik op de knop hieronder om in te loggen.",
     "button": "Inloggen",
     "expires": "De knop werkt één keer en 24 uur lang.",
+    "copy": "Werkt de knop niet? Kopieer dan deze link en plak hem in je browser.",
     "ignore": "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
     "reason": "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken."
   },
