@@ -80,7 +80,9 @@ test("add a wish with a link", async ({ signIn }) => {
 
   await expect(dialog).toBeHidden()
 
-  const link = page.getByRole("link", { name: "Lego kasteel" })
+  const card = itemCard(page, "Lego kasteel")
+  await expect(card.getByRole("link")).toHaveText(["example.com"])
+  const link = card.getByRole("link", { name: "example.com" })
   await expect(link).toHaveAttribute("href", "https://example.com/lego")
   await expect(link).toHaveAttribute("target", "_blank")
   await expect(link).toHaveAttribute("rel", "ugc nofollow noopener noreferrer")
@@ -111,7 +113,9 @@ test("group members see a link on a wish as a link from a user", async ({
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
 
-  const link = page.getByRole("link", { name: "Lego kasteel" })
+  const card = itemCard(page, "Lego kasteel")
+  await expect(card.getByRole("link")).toHaveText(["example.com"])
+  const link = card.getByRole("link", { name: "example.com" })
   await expect(link).toHaveAttribute("href", "https://example.com/lego")
   await expect(link).toHaveAttribute("rel", "ugc nofollow noopener noreferrer")
 })
@@ -395,8 +399,8 @@ test("edit a wish", async ({ signIn }) => {
   await expect(dialog).toBeHidden()
   await expect(itemCard(page, "Elektrische fiets")).toBeVisible()
   await expect(
-    page.getByRole("link", { name: "Elektrische fiets" })
-  ).toBeHidden()
+    itemCard(page, "Elektrische fiets").getByRole("link")
+  ).toHaveCount(0)
 
   const updated = await prisma.wishlistItem.findUniqueOrThrow({
     where: { id: item.id },
