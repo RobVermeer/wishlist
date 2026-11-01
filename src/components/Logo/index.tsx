@@ -13,7 +13,7 @@ export function Logo({ className, inverted = false, onClick }: Props) {
     <Link
       href="/"
       className={cn(
-        "flex items-center gap-2 font-display text-2xl font-semibold leading-none tracking-tight",
+        "group flex items-center gap-2 font-display text-2xl font-semibold leading-none tracking-tight",
         className
       )}
       scroll={false}
