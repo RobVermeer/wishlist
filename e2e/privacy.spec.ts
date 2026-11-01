@@ -59,3 +59,16 @@ test("logged in users can ask about their data from the privacy policy", async (
     page.getByRole("dialog", { name: "Stuur ons een bericht" })
   ).toBeVisible()
 })
+
+test("the privacy policy says who sees the name of a group", async ({
+  page,
+}) => {
+  await page.goto("/privacy")
+
+  await expect(page.getByText("Bijgewerkt op 1 november 2026.")).toBeVisible()
+  await expect(
+    page.getByRole("region", { name: "Wie wat ziet" }).getByRole("listitem")
+  ).toContainText([
+    "Wie de link van een groep heeft, ziet de naam van de groep, ook zonder in te loggen. De leden en hun verlanglijstjes zie je pas als je bent ingelogd en de groep volgt.",
+  ])
+})
