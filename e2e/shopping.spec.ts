@@ -338,6 +338,9 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
   const [reminder] = await emailsTo(owner.email!)
   expect(reminder.subject).toBe("Heb je nog wensen?")
   expect(reminder.html).toContain("Olga")
+  expect(reminder.html).toContain(
+    "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
+  )
 
   const reminders = await prisma.reminder.findMany({ where: { to: owner.id } })
   expect(reminders).toEqual([

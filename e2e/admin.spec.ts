@@ -145,6 +145,9 @@ test("admin can draw lots for a group", async ({ signIn }) => {
       )?.[1]
 
       expect(name).not.toBe(participant.firstName)
+      expect(email.html).toContain(
+        "Je krijgt deze e-mail omdat je in de groep Sinterklaas zit."
+      )
 
       return name
     })
