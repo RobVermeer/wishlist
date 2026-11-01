@@ -31,6 +31,10 @@ async function followFooterLinks(page: Page) {
   await expect(page).toHaveURL("/privacy")
   await expect(page).toHaveTitle("Privacy - Niet Weer Sokken")
 
+  await footerLink(page, "Huisregels").click()
+  await expect(page).toHaveURL("/huisregels")
+  await expect(page).toHaveTitle("Huisregels - Niet Weer Sokken")
+
   await footerLink(page, "Contact").click()
   await expect(page).toHaveURL("/vragen#stel-je-vraag")
   await expect(

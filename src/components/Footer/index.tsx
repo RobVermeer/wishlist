@@ -46,6 +46,11 @@ export function Footer({ loggedIn }: Props) {
                 {t("privacy")}
               </Link>
             </li>
+            <li>
+              <Link href="/huisregels" className={linkClassName}>
+                {t("houseRules")}
+              </Link>
+            </li>
             <InstallAppLink loggedIn={loggedIn} className={linkClassName} />
           </ul>
         </nav>

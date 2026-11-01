@@ -71,6 +71,7 @@ export const wishlistInterestSchema = z.object({
 export const contactTopics = [
   "bug",
   "question",
+  "report",
   "deleteAccount",
   "other",
 ] as const
@@ -78,6 +79,7 @@ export const contactTopics = [
 const contactMessageRequired = {
   bug: "Schrijf wat er misgaat",
   question: "Schrijf wat je ons wilt vragen",
+  report: "Schrijf wat je hebt gezien",
   other: "Schrijf je bericht",
 }
 
