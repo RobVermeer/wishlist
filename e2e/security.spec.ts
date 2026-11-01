@@ -1443,6 +1443,64 @@ test("only the super admin can remove admins", async ({ signIn }) => {
   expect(await prisma.user.count({ where: { id: otherAdmin.id } })).toBe(1)
 })
 
+async function removeBoughtWishAsAdmin(page: Page, wishlistOwnerId: string) {
+  await page.goto(`/admin/users/${wishlistOwnerId}`)
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: "Afgestreept" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+}
+
+test("only admins can remove bought wishes of someone else", async ({
+  signIn,
+}) => {
+  const admin = await createUser({ isAdmin: true })
+  const owner = await createUser()
+  const buyer = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [buyer] })
+  const item = await createItem(wishlist, { boughtBy: buyer })
+  const adminPage = await signIn(admin)
+
+  const action = captureAction(adminPage, `/admin/users/${owner.id}`)
+  await removeBoughtWishAsAdmin(adminPage, owner.id)
+
+  await replayAs(await signIn(buyer), await action)
+
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .removed
+  ).toBe(false)
+})
+
+test("admins can't remove wishes that haven't been bought", async ({
+  signIn,
+}) => {
+  const admin = await createUser({ isAdmin: true })
+  const owner = await createUser()
+  const buyer = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [buyer] })
+  const bought = await createItem(wishlist, { boughtBy: buyer })
+  const unbought = await createItem(wishlist)
+  const page = await signIn(admin)
+
+  await forgeActions(page, `/admin/users/${owner.id}`, bought.id, unbought.id)
+  await removeBoughtWishAsAdmin(page, owner.id)
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (
+      await prisma.wishlistItem.findUniqueOrThrow({
+        where: { id: unbought.id },
+      })
+    ).removed
+  ).toBe(false)
+})
+
 test("nobody can remove the super admin", async ({ signIn }) => {
   const superAdmin = await createAdmin()
   const admin = await createUser({ isAdmin: true })
