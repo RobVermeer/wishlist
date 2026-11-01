@@ -74,11 +74,13 @@ jobs:
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "grep -Eq '^DATABASE_URL=\"?file:/' $APP/.env.local" || (echo "DATABASE_URL in .env.local must be an absolute file path" && exit 1)
       # Every deploy gets its own folder, so the running app never sees its
       # files change. Files that didn't change are hard links to the current
-      # release. The database, .env.local and avatars stay outside releases.
+      # release: the build gives every file a new mtime, so rsync compares
+      # checksums (-c) and doesn't copy mtimes (-a without -t). The database,
+      # .env.local and avatars stay outside releases.
       - name: Name the release 🏷️
         run: echo "RELEASE=$APP/releases/$(date -u +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
       - name: Deploy with rsync 💨
-        run: rsync -avz --delete --link-dest=$APP/current/ .next/standalone/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$RELEASE/
+        run: rsync -rlpgoDcvz --delete --link-dest=$APP/current/ .next/standalone/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$RELEASE/
       - name: Link shared files 🔗
         run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "ln -s $APP/.env.local $RELEASE/.env.local && ln -s $APP/public/avatars $RELEASE/public/avatars"
       - name: Migrate database 🪤
