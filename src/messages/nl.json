@@ -255,10 +255,15 @@
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
-      "url": "Linkje <small>(optioneel)</small>",
       "category": "Categorie <small>(optioneel)</small>",
       "save": "Voeg wens toe"
     }
+  },
+  "LinkFields": {
+    "label": "{count, plural, one {Linkje} other {Linkjes}} <small>(optioneel)</small>",
+    "field": "Linkje {number}",
+    "add": "Nog een linkje",
+    "remove": "Verwijder linkje {number}"
   },
   "EditItem": {
     "button": "Wijzig",
@@ -269,7 +274,6 @@
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
-      "url": "Linkje <small>(optioneel)</small>",
       "category": "Categorie <small>(optioneel)</small>",
       "save": "Opslaan"
     }

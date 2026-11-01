@@ -14,9 +14,12 @@ import { Locator, Page } from "@playwright/test"
 const itemCard = (page: Page, title: string) =>
   page.locator("div.rounded-2xl").filter({ hasText: title })
 
+const linkField = (dialog: Locator, number: number) =>
+  dialog.getByRole("textbox", { name: `Linkje ${number}`, exact: true })
+
 async function expectAllFields(dialog: Locator) {
   await expect(dialog.getByLabel("Wens", { exact: true })).toBeVisible()
-  await expect(dialog.getByLabel("Linkje")).toBeVisible()
+  await expect(linkField(dialog, 1)).toBeVisible()
   await expect(dialog.getByLabel("Categorie")).toBeVisible()
   await expect(
     dialog.getByLabel("Deze wens mag onbeperkt vervuld worden")
@@ -72,7 +75,7 @@ test("add a wish with a link", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Lego kasteel")
-  await dialog.getByLabel("Linkje").fill("https://example.com/lego")
+  await linkField(dialog, 1).fill("https://example.com/lego")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
   await expect(dialog).toBeHidden()
@@ -111,6 +114,177 @@ test("group members see a link on a wish as a link from a user", async ({
   const link = page.getByRole("link", { name: "Lego kasteel" })
   await expect(link).toHaveAttribute("href", "https://example.com/lego")
   await expect(link).toHaveAttribute("rel", "ugc nofollow noopener noreferrer")
+})
+
+test("add a wish with several links", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Lego kasteel")
+  await expect(
+    dialog.getByRole("button", { name: /Verwijder linkje/ })
+  ).toHaveCount(0)
+  await linkField(dialog, 1).fill("https://www.bol.com/lego")
+  await dialog.getByRole("button", { name: "Nog een linkje" }).click()
+  await expect(linkField(dialog, 2)).toBeFocused()
+  await linkField(dialog, 2).fill("https://www.coolblue.nl/lego")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(dialog).toBeHidden()
+
+  const card = itemCard(page, "Lego kasteel")
+  await expect(card.getByRole("link")).toHaveText(["bol.com", "coolblue.nl"])
+  for (const [name, href] of [
+    ["bol.com", "https://www.bol.com/lego"],
+    ["coolblue.nl", "https://www.coolblue.nl/lego"],
+  ]) {
+    const link = card.getByRole("link", { name })
+    await expect(link).toHaveAttribute("href", href)
+    await expect(link).toHaveAttribute("target", "_blank")
+    await expect(link).toHaveAttribute(
+      "rel",
+      "ugc nofollow noopener noreferrer"
+    )
+  }
+
+  const item = await prisma.wishlistItem.findFirstOrThrow({
+    where: { wishlistId: wishlist.id },
+    include: { links: { orderBy: { position: "asc" } } },
+  })
+  expect(item.links).toMatchObject([
+    { url: "https://www.bol.com/lego", position: 0 },
+    { url: "https://www.coolblue.nl/lego", position: 1 },
+  ])
+})
+
+test("a wish has at most 5 links", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Fiets")
+  for (let number = 1; number <= 5; number++) {
+    if (number > 1) {
+      await dialog.getByRole("button", { name: "Nog een linkje" }).click()
+    }
+    await linkField(dialog, number).fill(`https://example.com/fiets-${number}`)
+  }
+  await expect(
+    dialog.getByRole("button", { name: "Nog een linkje" })
+  ).toBeHidden()
+
+  await dialog.locator("form").evaluate(form => {
+    const input = document.createElement("input")
+    input.name = "url"
+    input.value = "https://example.com/fiets-6"
+    form.append(input)
+  })
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Een wens kan maximaal 5 linkjes hebben"
+  )
+  expect(
+    await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
+  ).toBe(0)
+})
+
+test("a wrong extra link shows an error", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Xbox")
+  await linkField(dialog, 1).fill("https://example.com/xbox")
+  await dialog.getByRole("button", { name: "Nog een linkje" }).click()
+  await linkField(dialog, 2).fill("geen-url")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(toasts(page)).toContainText("Vul een geldige URL in")
+  await expect(linkField(dialog, 1)).toHaveValue("https://example.com/xbox")
+  await expect(linkField(dialog, 2)).toHaveValue("geen-url")
+  expect(
+    await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
+  ).toBe(0)
+})
+
+test("edit the links of a wish", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const item = await createItem(wishlist, {
+    title: "Lego kasteel",
+    links: ["https://www.bol.com/lego", "https://www.coolblue.nl/lego"],
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await itemCard(page, "Lego kasteel")
+    .getByRole("button", { name: "Wijzig" })
+    .click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await expect(linkField(dialog, 1)).toHaveValue("https://www.bol.com/lego")
+  await expect(linkField(dialog, 2)).toHaveValue("https://www.coolblue.nl/lego")
+
+  await dialog.getByRole("button", { name: "Verwijder linkje 1" }).click()
+  await expect(linkField(dialog, 1)).toHaveValue("https://www.coolblue.nl/lego")
+  await expect(linkField(dialog, 2)).toHaveCount(0)
+  await dialog.getByRole("button", { name: "Nog een linkje" }).click()
+  await linkField(dialog, 2).fill("https://www.amazon.nl/lego")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(itemCard(page, "Lego kasteel").getByRole("link")).toHaveText([
+    "coolblue.nl",
+    "amazon.nl",
+  ])
+
+  const updated = await prisma.wishlistItem.findUniqueOrThrow({
+    where: { id: item.id },
+    include: { links: { orderBy: { position: "asc" } } },
+  })
+  expect(updated.links).toMatchObject([
+    { url: "https://www.coolblue.nl/lego", position: 0 },
+    { url: "https://www.amazon.nl/lego", position: 1 },
+  ])
+})
+
+test("group members see every link on a wish", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  await createItem(wishlist, {
+    title: "Lego kasteel",
+    links: ["https://www.bol.com/lego", "https://www.coolblue.nl/lego"],
+  })
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  const card = itemCard(page, "Lego kasteel")
+  await expect(card.getByRole("link")).toHaveText(["bol.com", "coolblue.nl"])
+  await expect(card.getByRole("link", { name: "coolblue.nl" })).toHaveAttribute(
+    "href",
+    "https://www.coolblue.nl/lego"
+  )
+  await expect(card.getByRole("link", { name: "coolblue.nl" })).toHaveAttribute(
+    "rel",
+    "ugc nofollow noopener noreferrer"
+  )
 })
 
 test("wishes are listed in their order and new ones go last", async ({
@@ -185,12 +359,12 @@ test("wish validation errors are shown", async ({ signIn }) => {
   )
 
   await dialog.getByLabel("Wens", { exact: true }).fill("Xbox")
-  await dialog.getByLabel("Linkje").fill("geen-url")
+  await linkField(dialog, 1).fill("geen-url")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
   await expect(toasts(page)).toContainText("Vul een geldige URL in")
   await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue("Xbox")
-  await expect(dialog.getByLabel("Linkje")).toHaveValue("geen-url")
+  await expect(linkField(dialog, 1)).toHaveValue("geen-url")
   await expect(dialog).toBeVisible()
   expect(
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
@@ -211,12 +385,10 @@ test("edit a wish", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
   await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue("Fiets")
-  await expect(dialog.getByLabel("Linkje")).toHaveValue(
-    "https://example.com/fiets"
-  )
+  await expect(linkField(dialog, 1)).toHaveValue("https://example.com/fiets")
 
   await dialog.getByLabel("Wens", { exact: true }).fill("Elektrische fiets")
-  await dialog.getByLabel("Linkje").clear()
+  await linkField(dialog, 1).clear()
   await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 

@@ -45,7 +45,10 @@ export const updateWishlistItemById = async (
     const data = wishlistItemSchema.parse({
       title: formData.get("title")?.toString(),
       unlimited: formData.get("unlimited")?.toString() === "on",
-      url: formData.get("url")?.toString() || undefined,
+      links: formData
+        .getAll("url")
+        .map(url => url.toString().trim())
+        .filter(Boolean),
       category: formData.get("category")?.toString() || undefined,
     })
 
@@ -67,7 +70,7 @@ export const updateWishlistItemById = async (
           url: null,
           links: {
             deleteMany: {},
-            create: data.url ? [{ url: data.url, position: 0 }] : [],
+            create: data.links.map((url, position) => ({ url, position })),
           },
           categoryId,
           ...(categoryId !== wishlistItem.categoryId && {

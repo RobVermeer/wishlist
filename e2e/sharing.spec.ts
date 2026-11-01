@@ -165,6 +165,30 @@ test("log in from a shared wishlist, follow it and check off a wish", async ({
   ).toBe(guest.id)
 })
 
+test("followers of a shared wishlist see every link on a wish", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const visitor = await createUser()
+  const wishlist = await createWishlist(owner, {
+    shareToken: `token-${owner.id}`,
+  })
+  await createItem(wishlist, {
+    title: "Lego kasteel",
+    links: ["https://www.bol.com/lego", "https://www.coolblue.nl/lego"],
+  })
+  const page = await signIn(visitor)
+
+  await page.goto(`/lijstje/token-${owner.id}`)
+  await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
+
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+  await expect(itemCard(page, "Lego kasteel").getByRole("link")).toHaveText([
+    "bol.com",
+    "coolblue.nl",
+  ])
+})
+
 test("people who can already see a wishlist go straight to it", async ({
   signIn,
 }) => {
