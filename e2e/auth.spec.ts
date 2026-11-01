@@ -138,6 +138,38 @@ test("the login link only holds the page to come back to", async ({ page }) => {
   await expect(page).toHaveURL("/profile/bought")
 })
 
+test("the login e-mail uses the same red as the app", async ({ page }) => {
+  const email = `red-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  // The red of the logo, the icons and the primary button in the app.
+  const red = "rgb(219, 36, 60)"
+
+  const mail = await page.context().newPage()
+  await mail.setContent(loginEmail.html)
+  const button = mail.getByRole("link", { name: "Inloggen" })
+  await expect(button).toHaveCSS("background-color", red)
+  await expect(button).toHaveCSS("color", "rgb(255, 255, 255)")
+  await expect(button.locator("xpath=ancestor::table[1]")).toHaveCSS(
+    "border-color",
+    red
+  )
+  await expect(mail.getByRole("link", { name: "Niet Weer Sokken" })).toHaveCSS(
+    "color",
+    red
+  )
+  await mail.close()
+})
+
 test("an address gets at most three login e-mails in ten minutes", async ({
   page,
 }) => {

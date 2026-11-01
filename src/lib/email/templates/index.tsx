@@ -341,7 +341,7 @@ const title = {
 
 const section = {
   padding: "24px",
-  border: "solid 1px #e11d48",
+  border: "solid 1px #db243c",
   borderRadius: "8px",
   textAlign: "center" as const,
 }
@@ -353,7 +353,7 @@ const text = {
 
 const button = {
   fontSize: "14px",
-  backgroundColor: "#e11d48",
+  backgroundColor: "#db243c",
   color: "#fff",
   lineHeight: 1.5,
   borderRadius: "0.5em",
@@ -365,7 +365,7 @@ const links = {
 }
 
 const link = {
-  color: "#e11d48",
+  color: "#db243c",
   fontSize: "12px",
 }
 
