@@ -430,9 +430,7 @@ test("bought presents page keeps removed wishes and wishlists", async ({
 
   await page.goto("/profile/bought")
 
-  await expect(itemCard(page, "Sokken")).toHaveText(
-    /^Sokken\s*Voor Olga$/
-  )
+  await expect(itemCard(page, "Sokken")).toHaveText(/^Sokken\s*Voor Olga$/)
   await expect(itemCard(page, "Weggehaald")).toHaveText(
     /^Weggehaald\s*Voor Olga\s*Deze wens is verwijderd\.$/
   )
