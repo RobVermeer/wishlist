@@ -1,12 +1,15 @@
 import {
   Body,
   Button,
+  Column,
   Container,
   Head,
+  Heading,
   Html,
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
 } from "@react-email/components"
@@ -15,6 +18,41 @@ import type { ReactNode } from "react"
 import type { contactTopics } from "@/lib/schema"
 
 const baseUrl = process.env.BASE_URL!
+
+interface EmailLayoutProps {
+  preview: string
+  reason: string
+  children: ReactNode
+}
+
+const EmailLayout = ({ preview, reason, children }: EmailLayoutProps) => (
+  <Html lang="nl">
+    <Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>
+    <Preview>{preview}</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Row>
+          <Column style={logo}>
+            <Img src={`${baseUrl}/gift.png`} width="32" height="32" alt="" />
+          </Column>
+          <Column style={brand}>Niet Weer Sokken</Column>
+        </Row>
+
+        {children}
+
+        <Text style={footer}>
+          {reason}
+          <br />
+          <Link style={link} href={baseUrl}>
+            Niet Weer Sokken
+          </Link>
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+)
 
 interface DrawUserEmailProps {
   userName: string
@@ -32,64 +70,43 @@ export const DrawUserEmail = async ({
   const t = await getTranslations("EmailDraw")
 
   return (
-    <Html lang="nl">
-      <Head />
-      <Preview>{t("preview")}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={`${baseUrl}/gift.png`}
-            width="32"
-            height="32"
-            alt="Niet Weer Sokken"
-          />
+    <EmailLayout
+      preview={t("preview")}
+      reason={t("reason", { group: groupName })}
+    >
+      <Heading as="h1" style={title}>
+        {t.rich("title", {
+          strong: chunks => <strong>{chunks}</strong>,
+          name: userName,
+        })}
+      </Heading>
 
-          <Text style={title}>
-            {t.rich("title", {
-              strong: chunks => <strong>{chunks}</strong>,
-              name: userName,
-            })}
-          </Text>
+      <Section style={section}>
+        <Text style={text}>
+          {t.rich("text1", {
+            strong: chunks => <strong>{chunks}</strong>,
+            group: groupName,
+          })}
+        </Text>
+        <Text style={text}>{t("text2")}</Text>
+        <Text style={text}>
+          {t.rich("text3", {
+            strong: chunks => <strong>{chunks}</strong>,
+            name: forName,
+          })}
+        </Text>
 
-          <Section style={section}>
-            <Text style={text}>
-              {t.rich("hello", {
-                strong: chunks => <strong>{chunks}</strong>,
-                name: userName,
-              })}
-            </Text>
-            <Text style={text}>
-              {t.rich("text1", {
-                strong: chunks => <strong>{chunks}</strong>,
-                group: groupName,
-              })}
-            </Text>
-            <Text style={text}>{t("text2")}</Text>
-            <Text style={text}>
-              {t.rich("text3", {
-                strong: chunks => <strong>{chunks}</strong>,
-                name: forName,
-              })}
-            </Text>
+        <Button style={button} href={`${baseUrl}/group/${groupId}`}>
+          {t("button", { group: groupName })}
+        </Button>
+      </Section>
 
-            <Button style={button} href={`${baseUrl}/group/${groupId}`}>
-              {t("button", { group: groupName })}
-            </Button>
-          </Section>
-          <Text style={links}>
-            {t.rich("goodbye", {
-              strong: chunks => <strong>{chunks}</strong>,
-            })}
-          </Text>
-
-          <Text style={footer}>
-            <Link style={link} href={baseUrl}>
-              Niet Weer Sokken
-            </Link>
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+      <Text style={signature}>
+        {t.rich("goodbye", {
+          strong: chunks => <strong>{chunks}</strong>,
+        })}
+      </Text>
+    </EmailLayout>
   )
 }
 
@@ -101,47 +118,22 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
   const t = await getTranslations("EmailReminder")
 
   return (
-    <Html lang="nl">
-      <Head />
-      <Preview>{t("preview")}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={`${baseUrl}/gift.png`}
-            width="32"
-            height="32"
-            alt="Niet Weer Sokken"
-          />
+    <EmailLayout preview={t("preview")} reason={t("reason")}>
+      <Heading as="h1" style={title}>
+        {t.rich("title", {
+          strong: chunks => <strong>{chunks}</strong>,
+          name: userName,
+        })}
+      </Heading>
 
-          <Text style={title}>
-            {t.rich("title", {
-              strong: chunks => <strong>{chunks}</strong>,
-              name: userName,
-            })}
-          </Text>
+      <Section style={section}>
+        <Text style={text}>{t("text")}</Text>
 
-          <Section style={section}>
-            <Text style={text}>
-              {t.rich("hello", {
-                strong: chunks => <strong>{chunks}</strong>,
-                name: userName,
-              })}
-            </Text>
-            <Text style={text}>{t("text")}</Text>
-
-            <Button style={button} href={baseUrl}>
-              {t("button")}
-            </Button>
-          </Section>
-
-          <Text style={footer}>
-            <Link style={link} href={baseUrl}>
-              Niet Weer Sokken
-            </Link>
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+        <Button style={button} href={baseUrl}>
+          {t("button")}
+        </Button>
+      </Section>
+    </EmailLayout>
   )
 }
 
@@ -153,40 +145,28 @@ export const LoginWithEmail = async ({ url }: LoginWithEmailProps) => {
   const t = await getTranslations("EmailLogin")
 
   return (
-    <Html lang="nl">
-      <Head />
-      <Preview>{t("preview")}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={`${baseUrl}/gift.png`}
-            width="32"
-            height="32"
-            alt="Niet Weer Sokken"
-          />
+    <EmailLayout preview={t("preview")} reason={t("reason")}>
+      <Heading as="h1" style={title}>
+        {t("title")}
+      </Heading>
 
-          <Section style={section}>
-            <Text style={text}>{t("hello")}</Text>
-            <Text style={text}>{t("text")}</Text>
+      <Section style={section}>
+        <Text style={text}>{t("text")}</Text>
 
-            <Button style={button} href={url}>
-              {t("button")}
-            </Button>
+        <Button style={button} href={url}>
+          {t("button")}
+        </Button>
 
-            <Text style={{ ...text, marginTop: "16px" }}>{t("expires")}</Text>
-            <Text style={text}>{t("ignore")}</Text>
-          </Section>
-
-          <Text style={footer}>
-            {t("reason")}
-            <br />
-            <Link style={link} href={baseUrl}>
-              Niet Weer Sokken
-            </Link>
-          </Text>
-        </Container>
-      </Body>
-    </Html>
+        <Text style={{ ...text, marginTop: "16px" }}>{t("expires")}</Text>
+        <Text style={text}>{t("copy")}</Text>
+        <Text style={{ ...text, ...smallLink }}>
+          <Link style={link} href={url}>
+            {url}
+          </Link>
+        </Text>
+        <Text style={{ ...text, marginTop: "16px" }}>{t("ignore")}</Text>
+      </Section>
+    </EmailLayout>
   )
 }
 
@@ -204,32 +184,24 @@ export const ContactEmail = async ({
   const t = await getTranslations("EmailContact")
 
   return (
-    <Html lang="nl">
-      <Head />
-      <Preview>{t(`subject.${topic}`, { name: from.name })}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={`${baseUrl}/gift.png`}
-            width="32"
-            height="32"
-            alt="Niet Weer Sokken"
-          />
+    <EmailLayout
+      preview={t(`subject.${topic}`, { name: from.name })}
+      reason={t("reason")}
+    >
+      <Heading as="h1" style={title}>
+        {t(`topic.${topic}`)}
+      </Heading>
 
-          <Text style={title}>{t(`topic.${topic}`)}</Text>
-
-          <Section style={section}>
-            {message && (
-              <Text style={{ ...text, whiteSpace: "pre-wrap" }}>{message}</Text>
-            )}
-            <Text style={text}>
-              {t("from", { name: from.name, email: from.email, id: from.id })}
-            </Text>
-            <Text style={text}>{t("reply", { name: from.name })}</Text>
-          </Section>
-        </Container>
-      </Body>
-    </Html>
+      <Section style={section}>
+        {message && (
+          <Text style={{ ...text, whiteSpace: "pre-wrap" }}>{message}</Text>
+        )}
+        <Text style={text}>
+          {t("from", { name: from.name, email: from.email, id: from.id })}
+        </Text>
+        <Text style={text}>{t("reply", { name: from.name })}</Text>
+      </Section>
+    </EmailLayout>
   )
 }
 
@@ -259,65 +231,60 @@ export const DrawLotsEmail = async ({
   const strong = (chunks: ReactNode) => <strong>{chunks}</strong>
 
   return (
-    <Html lang="nl">
-      <Head />
-      <Preview>{t("preview", { receiver })}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          <Img
-            src={`${baseUrl}/gift.png`}
-            width="32"
-            height="32"
-            alt="Niet Weer Sokken"
-          />
+    <EmailLayout
+      preview={t("preview", { receiver })}
+      reason={t(member ? "reason.member" : "reason.invite", {
+        creator,
+        group: group.title,
+      })}
+    >
+      <Heading as="h1" style={title}>
+        {t.rich("title", { strong, name })}
+      </Heading>
 
-          <Text style={title}>{t.rich("title", { strong, name })}</Text>
+      <Section style={section}>
+        <Text style={text}>
+          {t.rich(redraw ? "redraw" : "draw", {
+            strong,
+            creator,
+            group: group.title,
+          })}
+        </Text>
+        <Text style={text}>{t.rich("lot", { strong, receiver })}</Text>
+        {budget !== null && (
+          <Text style={text}>
+            {t("budget", {
+              budget: format.number(budget, {
+                style: "currency",
+                currency: "EUR",
+                maximumFractionDigits: 0,
+              }),
+            })}
+          </Text>
+        )}
+        {date && (
+          <Text style={text}>
+            {t("date", {
+              date: format.dateTime(date, {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                timeZone: "UTC",
+              }),
+            })}
+          </Text>
+        )}
+        <Text style={text}>
+          {t(member ? "member" : "invite", { receiver })}
+        </Text>
 
-          <Section style={section}>
-            <Text style={text}>
-              {t.rich(redraw ? "redraw" : "draw", {
-                strong,
-                creator,
-                group: group.title,
-              })}
-            </Text>
-            <Text style={text}>{t.rich("lot", { strong, receiver })}</Text>
-            {budget !== null && (
-              <Text style={text}>
-                {t("budget", {
-                  budget: format.number(budget, {
-                    style: "currency",
-                    currency: "EUR",
-                    maximumFractionDigits: 0,
-                  }),
-                })}
-              </Text>
-            )}
-            {date && (
-              <Text style={text}>
-                {t("date", {
-                  date: format.dateTime(date, {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    timeZone: "UTC",
-                  }),
-                })}
-              </Text>
-            )}
-            <Text style={text}>
-              {t(member ? "member" : "invite", { receiver })}
-            </Text>
+        <Button style={button} href={`${baseUrl}/group/${group.id}`}>
+          {t(member ? "button" : "join", { group: group.title })}
+        </Button>
+      </Section>
 
-            <Button style={button} href={`${baseUrl}/group/${group.id}`}>
-              {t(member ? "button" : "join", { group: group.title })}
-            </Button>
-          </Section>
-
-          <Text style={text}>{t.rich("goodbye", { strong, creator })}</Text>
-        </Container>
-      </Body>
-    </Html>
+      <Text style={signature}>{t.rich("goodbye", { strong, creator })}</Text>
+    </EmailLayout>
   )
 }
 
@@ -328,44 +295,63 @@ const main = {
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"',
 }
 
+// At most 480 pixels wide, and the full width of a phone with a margin.
 const container = {
-  width: "480px",
+  maxWidth: "480px",
+  width: "100%",
   margin: "0 auto",
-  padding: "16px 0 32px",
+  padding: "16px 16px 32px",
+  boxSizing: "border-box" as const,
+}
+
+const logo = {
+  width: "40px",
+}
+
+const brand = {
+  fontSize: "16px",
+  fontWeight: 600,
 }
 
 const title = {
   fontSize: "24px",
+  fontWeight: 400,
   lineHeight: 1.25,
+  margin: "24px 0 16px",
 }
 
 const section = {
   padding: "24px",
-  border: "solid 1px #e11d48",
+  border: "solid 1px #db243c",
   borderRadius: "8px",
-  textAlign: "center" as const,
 }
 
 const text = {
   margin: "0 0 8px 0",
-  textAlign: "left" as const,
 }
 
 const button = {
   fontSize: "14px",
-  backgroundColor: "#e11d48",
+  backgroundColor: "#db243c",
   color: "#fff",
   lineHeight: 1.5,
   borderRadius: "0.5em",
   padding: "0.75em 1.5em",
+  marginTop: "8px",
 }
 
-const links = {
-  textAlign: "center" as const,
+const smallLink = {
+  fontSize: "12px",
+  lineHeight: 1.5,
+  wordBreak: "break-all" as const,
+}
+
+const signature = {
+  margin: "16px 0 0",
 }
 
 const link = {
-  color: "#e11d48",
+  color: "#db243c",
   fontSize: "12px",
 }
 

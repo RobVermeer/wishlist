@@ -46,6 +46,9 @@ test("send a message about a bug to the admin from the FAQ", async ({
   expect(email.replyTo).toEqual([user.email])
   expect(email.html).toContain(user.email)
   expect(email.html).toContain(user.id)
+  expect(email.html).toContain(
+    "Je krijgt deze e-mail omdat iemand het contactformulier van Niet Weer Sokken heeft ingevuld."
+  )
 })
 
 test("ask to delete your account from your profile", async ({ signIn }) => {

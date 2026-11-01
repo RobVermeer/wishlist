@@ -41,6 +41,10 @@
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
+  "BackLink": {
+    "back": "Terug naar",
+    "overview": "Overzicht"
+  },
   "Common": {
     "myList": "Mijn lijstje",
     "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
@@ -181,7 +185,6 @@
         "later": "Kijk later nog eens."
       }
     },
-    "inGroup": "in <link>{group}</link>",
     "hint": {
       "together": "Je beheert dit verlanglijstje samen met {names}.",
       "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
@@ -192,6 +195,10 @@
     "title": "Profiel",
     "metaTitle": "Profiel - Niet Weer Sokken",
     "admin": "Admin",
+    "account": {
+      "title": "Account",
+      "email": "Ingelogd als <strong>{email}</strong>."
+    },
     "logout": "Uitloggen"
   },
   "ProfileBoughtPresents": {
@@ -374,28 +381,29 @@
     "subject": "{name}, je hebt een lootje getrokken voor {group}",
     "preview": "Je hebt een lootje getrokken!",
     "title": "<strong>{name}</strong>, je hebt een lootje getrokken!",
-    "hello": "Hey <strong>{name}</strong>,",
     "text1": "De lootjes voor <strong>{group}</strong> zijn getrokken. Kijk snel wie je hebt!",
     "text2": "Voorkom dubbele cadeaus: streep de wensen af die je gaat geven. De eigenaar van het verlanglijstje ziet dat niet. Dit kan op alle verlanglijstjes van de groep.",
     "text3": "Je getrokken lootje: <strong>{name}</strong>",
     "button": "Ga naar {group}",
-    "goodbye": "Liefs, <strong>Sinterklaas</strong>"
+    "goodbye": "Liefs, <strong>Sinterklaas</strong>",
+    "reason": "Je krijgt deze e-mail omdat je in de groep {group} zit."
   },
   "EmailReminder": {
     "subject": "Heb je nog wensen?",
     "preview": "Er is iemand die vraagt of je jouw lijstje kan uitbreiden",
     "title": "<strong>{name}</strong>, heb je nog wensen?",
-    "hello": "Hey <strong>{name}</strong>,",
-    "text": "Er is iemand die vraagt of je nog wat extra wensen op je lijstje kunt zetten. Klik op de rode knop hieronder om dat meteen te doen.",
-    "button": "Naar Niet Weer Sokken"
+    "text": "Iemand vraagt of je nog wat extra wensen op je verlanglijstje kunt zetten. Met de knop hieronder doe je dat meteen.",
+    "button": "Naar Niet Weer Sokken",
+    "reason": "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
   },
   "EmailLogin": {
     "subject": "Inloggen bij Niet Weer Sokken",
     "preview": "Klik op de knop om in te loggen.",
-    "hello": "Hoi,",
-    "text": "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "title": "Inloggen bij Niet Weer Sokken",
+    "text": "Klik op de knop hieronder om in te loggen.",
     "button": "Inloggen",
     "expires": "De knop werkt één keer en 24 uur lang.",
+    "copy": "Werkt de knop niet? Kopieer dan deze link en plak hem in je browser.",
     "ignore": "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
     "reason": "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken."
   },
@@ -1027,7 +1035,8 @@
       "other": "Er is een bericht gestuurd"
     },
     "from": "Van {name} ({email}), gebruiker {id}.",
-    "reply": "Beantwoord deze e-mail om {name} te antwoorden."
+    "reply": "Beantwoord deze e-mail om {name} te antwoorden.",
+    "reason": "Je krijgt deze e-mail omdat iemand het contactformulier van Niet Weer Sokken heeft ingevuld."
   },
   "Draw": {
     "lot": {
@@ -1095,7 +1104,11 @@
     "invite": "Doe mee met de groep, dan zie je het verlanglijstje van {receiver} en kun je je eigen verlanglijstje maken.",
     "button": "Ga naar {group}",
     "join": "Doe mee met {group}",
-    "goodbye": "Groetjes, <strong>{creator}</strong>"
+    "goodbye": "Groetjes, <strong>{creator}</strong>",
+    "reason": {
+      "member": "Je krijgt deze e-mail omdat je meedoet aan de lootjes voor {group}.",
+      "invite": "Je krijgt deze e-mail omdat {creator} je e-mailadres heeft ingevuld bij de lootjes voor {group}."
+    }
   },
   "Footer": {
     "tagline": "Maak en deel je verlanglijstje, zonder dubbele cadeaus.",

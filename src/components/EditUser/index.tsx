@@ -13,7 +13,11 @@ const SubmitButton = ({ pending }: { pending: boolean }) => {
   const t = useTranslations()
 
   return (
-    <Button type="submit" className="mt-2" disabled={pending}>
+    <Button
+      type="submit"
+      className="mt-2 justify-self-start"
+      disabled={pending}
+    >
       {pending ? (
         <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
