@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl"
 import { ListTitle } from "@/components/ListTitle"
 
 const items = [
-  { key: "bike", link: true },
+  { key: "bike", shops: ["bol.com", "coolblue.nl"] },
   { key: "books", unlimited: true },
   { key: "lego", bought: true },
   { key: "game", bought: true, byMe: true },
@@ -28,16 +28,27 @@ export const LandingExample = () => {
               key={item.key}
               className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
             >
-              <span
-                className={clsx(
-                  "bought" in item &&
-                    "line-through decoration-primary decoration-2"
+              <span className="grid gap-1">
+                <span
+                  className={clsx(
+                    "bought" in item &&
+                      "line-through decoration-primary decoration-2"
+                  )}
+                >
+                  {t(`items.${item.key}`)}
+                </span>
+                {"shops" in item && (
+                  <span className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-normal">
+                    {item.shops.map(shop => (
+                      <span
+                        key={shop}
+                        className="inline-flex items-center gap-1 text-muted-foreground underline underline-offset-2"
+                      >
+                        <Link size="12" strokeWidth="2.5" aria-hidden /> {shop}
+                      </span>
+                    ))}
+                  </span>
                 )}
-              >
-                {"link" in item && (
-                  <Link size="16" strokeWidth="2.5" className="inline mr-1" />
-                )}
-                {t(`items.${item.key}`)}
               </span>
               {"unlimited" in item ? (
                 <span className="flex items-center gap-1 text-sm font-normal text-muted-foreground">

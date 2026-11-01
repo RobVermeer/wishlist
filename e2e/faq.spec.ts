@@ -27,6 +27,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
   ).toHaveText([
     "Hoe maak ik een verlanglijstje?",
     "Hoe zet ik een wens op mijn verlanglijstje?",
+    "Kan ik meer dan één linkje bij een wens zetten?",
     "Hoe verwijder ik een wens?",
     "Hoe werken categorieën?",
     "Hoe zet ik mijn wensen in een andere volgorde?",
@@ -102,6 +103,22 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
 
   await question.click()
   await expect(answer).toBeHidden()
+})
+
+test("the frequently asked questions explain links on a wish", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page
+    .getByText("Kan ik meer dan één linkje bij een wens zetten?")
+    .click()
+
+  await expect(
+    page.getByRole("region", { name: "Je verlanglijstje" })
+  ).toContainText(
+    "Ja, tot 5. Kies bij je wens ‘Nog een linkje’, bijvoorbeeld als hetzelfde cadeau in twee winkels te koop is."
+  )
 })
 
 test("the frequently asked questions link to the privacy policy", async ({
