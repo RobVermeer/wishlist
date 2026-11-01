@@ -1071,23 +1071,26 @@
   "Contact": {
     "button": "Stuur ons een bericht",
     "title": "Stuur ons een bericht",
-    "text": "Heb je een fout gevonden, een vraag, of wil je je account verwijderen? Laat het ons weten, we antwoorden per e-mail.",
+    "text": "Heb je een fout gevonden of een vraag, zie je iets wat niet kan, of wil je je account verwijderen? Laat het ons weten, we antwoorden per e-mail.",
     "form": {
       "topic": "Waar gaat je bericht over?",
       "topics": {
         "bug": "Ik heb een fout gevonden",
         "question": "Ik heb een vraag",
+        "report": "Ik zie iets wat niet kan",
         "deleteAccount": "Verwijder mijn account",
         "other": "Iets anders"
       },
       "message": {
         "bug": "Wat gaat er mis?",
         "question": "Wat wil je weten?",
+        "report": "Wat zie je, en waar?",
         "other": "Je bericht"
       },
       "placeholder": {
         "bug": "Vertel wat je deed en wat er gebeurde.",
         "question": "Stel je vraag.",
+        "report": "Bijvoorbeeld van wie het verlanglijstje is en om welke wens het gaat.",
         "other": "Waar kunnen we je mee helpen?"
       },
       "deleteAccount": "We verwijderen je account, samen met je verlanglijstjes en de groepen die je hebt gemaakt. Dat kunnen we niet ongedaan maken.",
@@ -1100,12 +1103,14 @@
     "subject": {
       "bug": "Fout gevonden door {name}",
       "question": "Vraag van {name}",
+      "report": "Melding van {name}",
       "deleteAccount": "Account verwijderen voor {name}",
       "other": "Bericht van {name}"
     },
     "topic": {
       "bug": "Er is een fout gevonden",
       "question": "Er is een vraag gesteld",
+      "report": "Er is iets gemeld wat niet volgens de huisregels is",
       "deleteAccount": "Iemand wil het account verwijderen",
       "other": "Er is een bericht gestuurd"
     },
@@ -1187,12 +1192,65 @@
       "invite": "Je krijgt deze e-mail omdat {creator} je e-mailadres heeft ingevuld bij de lootjes voor {group}."
     }
   },
+  "HouseRules": {
+    "title": "Huisregels",
+    "metaTitle": "Huisregels - Niet Weer Sokken",
+    "metaDescription": "Wat wel en niet kan op Niet Weer Sokken, en wat de beheerders doen als iemand zich er niet aan houdt.",
+    "intro": "Niet Weer Sokken is er voor verlanglijstjes die je deelt met familie en vrienden. Met een paar afspraken blijft dat voor iedereen fijn.",
+    "updated": "Bijgewerkt op 1 november 2026.",
+    "sections": [
+      {
+        "id": "waarvoor",
+        "title": "Waar Niet Weer Sokken voor is",
+        "text": [
+          "Je maakt verlanglijstjes met wensen, voor jezelf of voor iemand anders. Je deelt ze met een link of in een groep, en je streept stiekem af wat je koopt."
+        ]
+      },
+      {
+        "id": "wat-niet-kan",
+        "title": "Wat niet kan",
+        "text": [
+          "In namen, wensen, linkjes, groepen en profielfoto's hoort niet:"
+        ],
+        "items": [
+          "Iets wat verboden is, of een linkje naar iets wat verboden is.",
+          "Iets wat kwetsend, discriminerend of bedreigend is.",
+          "Reclame, spam of linkjes naar sites die mensen oplichten of hun computer besmetten.",
+          "Gegevens van een ander, zoals een adres of telefoonnummer, zonder dat die ander dat goed vindt.",
+          "Je voordoen als iemand anders."
+        ]
+      },
+      {
+        "id": "wat-de-beheerders-doen",
+        "title": "Wat de beheerders doen",
+        "text": [
+          "Zien de beheerders van Niet Weer Sokken iets wat niet kan, of meldt iemand het, dan kunnen ze:"
+        ],
+        "items": [
+          "Een wens weghalen.",
+          "Een verlanglijstje weghalen.",
+          "Een groep weghalen.",
+          "In het ergste geval een account verwijderen."
+        ],
+        "more": [
+          "Wie een weggehaalde wens al had gekocht, ziet hem nog bij Gekochte cadeaus. Wie iets heeft gekocht, zien de beheerders niet.",
+          "Denk je dat er iets is weggehaald wat wel kon? Stuur ons een bericht."
+        ]
+      }
+    ],
+    "contact": {
+      "title": "Zie je iets wat niet kan?",
+      "text": "Stuur ons een bericht en zeg waar je het zag, dan kijken we ernaar.",
+      "login": "Log in om ons een bericht te sturen"
+    }
+  },
   "Footer": {
     "tagline": "Maak en deel je verlanglijstje, zonder dubbele cadeaus.",
     "links": "Meer over Niet Weer Sokken",
     "faq": "Vragen",
     "contact": "Contact",
     "privacy": "Privacy",
+    "houseRules": "Huisregels",
     "install": "Installeer de app",
     "copyright": "© {year} Niet Weer Sokken"
   }

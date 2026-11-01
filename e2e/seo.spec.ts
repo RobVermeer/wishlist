@@ -94,7 +94,12 @@ test("the sitemap lists the public pages", async ({ request }) => {
     .map(([, location]) => location)
     .sort()
   expect(locations).toEqual(
-    [`${baseURL}`, `${baseURL}/vragen`, `${baseURL}/privacy`].sort()
+    [
+      `${baseURL}`,
+      `${baseURL}/vragen`,
+      `${baseURL}/privacy`,
+      `${baseURL}/huisregels`,
+    ].sort()
   )
 })
 
@@ -218,6 +223,21 @@ test("search engines can find the privacy policy", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     `${baseURL}/privacy`
+  )
+})
+
+test("search engines can find the huisregels", async ({ page }) => {
+  await page.goto("/huisregels")
+
+  await expect(page).toHaveTitle("Huisregels - Niet Weer Sokken")
+  await expect(meta(page, "description")).toHaveAttribute(
+    "content",
+    "Wat wel en niet kan op Niet Weer Sokken, en wat de beheerders doen als iemand zich er niet aan houdt."
+  )
+  await expect(meta(page, "robots")).toHaveAttribute("content", "index, follow")
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    `${baseURL}/huisregels`
   )
 })
 
