@@ -620,7 +620,7 @@
       },
       "unlimited": {
         "title": "Onbeperkte wensen",
-        "text": "Boeken of een cadeaubon? Zulke wensen blijven open, hoe vaak ze ook gekocht worden."
+        "text": "Boeken of een cadeaubon? Zulke wensen blijven open, hoe vaak ze ook gekocht worden. Ook als we na een feest met lootjes de gekochte wensen opruimen."
       },
       "remind": {
         "title": "Vraag om meer wensen",
@@ -771,7 +771,7 @@
           },
           {
             "question": "Wat is een onbeperkte wens?",
-            "answer": "Een wens die meer mensen kunnen kopen, zoals boeken of een cadeaubon. Vink bij de wens ‘Deze wens mag onbeperkt vervuld worden’ aan, dan blijft hij open, hoe vaak hij ook gekocht wordt."
+            "answer": "Een wens die meer mensen kunnen kopen, zoals boeken of een cadeaubon. Vink bij de wens ‘Deze wens mag onbeperkt vervuld worden’ aan, dan blijft hij open, hoe vaak hij ook gekocht wordt. Hij verdwijnt ook niet als we na een feest opruimen."
           },
           {
             "question": "Ik hou niet van verlanglijstjes, kan het ook anders?",
@@ -902,6 +902,10 @@
           {
             "question": "Waar zie ik wat ik heb gekocht?",
             "answer": "Op je profiel, onder ‘Gekochte cadeaus’. Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept, het nieuwste bovenaan. Je ziet eerst de 15 nieuwste cadeaus van het afgelopen jaar, de rest zie je met ‘Toon eerdere cadeaus’."
+          },
+          {
+            "question": "Blijven gekochte wensen op het verlanglijstje staan?",
+            "answer": "Ja, tenzij je verlanglijstje in een groep staat waar lootjes zijn getrokken met een datum. Dan verdwijnen twee weken na die datum de wensen die al gekocht zijn. Staat een verlanglijstje in meer groepen, dan telt het laatste feest. Onbeperkte wensen, wensen die nog niemand koopt en wat je na die dag afstreept, blijven staan. Wie iets kocht, ziet het nog onder ‘Gekochte cadeaus’."
           },
           {
             "question": "Wat gebeurt er met wat ik kocht als een wens wordt verwijderd?",

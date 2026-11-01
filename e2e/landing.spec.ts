@@ -87,6 +87,13 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
     })
   ).toContainText("Gekochte cadeaus")
   await expect(
+    page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Onbeperkte wensen" }),
+    })
+  ).toContainText(
+    "Ook als we na een feest met lootjes de gekochte wensen opruimen."
+  )
+  await expect(
     page.getByRole("heading", { name: "Deel met wie je wilt" })
   ).toHaveCount(0)
   await expect(
