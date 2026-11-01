@@ -211,7 +211,9 @@ test("logging out ends the session", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto("/profile")
-  await page.getByRole("button", { name: "Uitloggen" }).click()
+  const account = page.getByRole("region", { name: "Account" })
+  await expect(account).toContainText(`Ingelogd als ${user.email}.`)
+  await account.getByRole("button", { name: "Uitloggen" }).click()
 
   await expect(page).toHaveURL(/\/login/)
   await expect
