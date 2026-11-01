@@ -1,3 +1,4 @@
+import { BackLink } from "@/components/BackLink"
 import { EmptyState } from "@/components/EmptyState"
 import { FollowGroup } from "@/components/FollowGroup"
 import { List } from "@/components/List"
@@ -74,6 +75,7 @@ export default async function GroupPage({ params }: Props) {
 
   const group = await getGroupById(groupId)
   const t = await getTranslations("Group")
+  const tBackLink = await getTranslations("BackLink")
   const tCommon = await getTranslations("Common")
   const format = await getFormatter()
 
@@ -81,9 +83,12 @@ export default async function GroupPage({ params }: Props) {
     notFound()
   }
 
+  const backLink = <BackLink href="/" label={tBackLink("overview")} />
+
   if (!group.subscribed) {
     return (
       <>
+        {backLink}
         <EmptyState title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
@@ -134,6 +139,7 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <List>
+      {backLink}
       <div
         className="relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-cover bg-center p-5 text-white shadow-md"
         style={{

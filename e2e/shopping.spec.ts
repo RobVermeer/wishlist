@@ -42,7 +42,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(page).toHaveURL(`/group/${group.id}/${wishlist.id}`)
   await expect(page).toHaveTitle("Olga - Familie - Niet Weer Sokken")
   await expect(
-    page.getByRole("heading", { name: "Olga in Familie" })
+    page.getByRole("heading", { name: "Olga", exact: true })
   ).toBeVisible()
   await expect(
     page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
