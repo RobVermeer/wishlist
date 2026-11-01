@@ -58,6 +58,9 @@ test("the creator draws lots for the group", async ({ signIn }) => {
     )
     expect(email.html).toMatch(/€\s25/)
     expect(email.html).toContain("5 december 2026")
+    expect(email.html).toContain(
+      "Je krijgt deze e-mail omdat je meedoet aan de lootjes voor Sinterklaas."
+    )
     const name = drawnName(email.html)
     expect(name).not.toBe(participant.firstName)
     drawn.push(name)
@@ -183,6 +186,9 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   )
   expect(email.html).toContain("Doe mee met de groep")
   expect(email.html).toContain(`/group/${group.id}`)
+  expect(email.html).toContain(
+    "Je krijgt deze e-mail omdat Anna je e-mailadres heeft ingevuld bij de lootjes voor Sinterklaas."
+  )
   const drawn = drawnName(email.html)
 
   const opaPage = await signIn(opa)

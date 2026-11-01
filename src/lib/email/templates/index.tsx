@@ -21,7 +21,7 @@ const baseUrl = process.env.BASE_URL!
 
 interface EmailLayoutProps {
   preview: string
-  reason?: string
+  reason: string
   children: ReactNode
 }
 
@@ -43,12 +43,8 @@ const EmailLayout = ({ preview, reason, children }: EmailLayoutProps) => (
         {children}
 
         <Text style={footer}>
-          {reason && (
-            <>
-              {reason}
-              <br />
-            </>
-          )}
+          {reason}
+          <br />
           <Link style={link} href={baseUrl}>
             Niet Weer Sokken
           </Link>
@@ -74,7 +70,10 @@ export const DrawUserEmail = async ({
   const t = await getTranslations("EmailDraw")
 
   return (
-    <EmailLayout preview={t("preview")}>
+    <EmailLayout
+      preview={t("preview")}
+      reason={t("reason", { group: groupName })}
+    >
       <Heading as="h1" style={title}>
         {t.rich("title", {
           strong: chunks => <strong>{chunks}</strong>,
@@ -83,12 +82,6 @@ export const DrawUserEmail = async ({
       </Heading>
 
       <Section style={section}>
-        <Text style={text}>
-          {t.rich("hello", {
-            strong: chunks => <strong>{chunks}</strong>,
-            name: userName,
-          })}
-        </Text>
         <Text style={text}>
           {t.rich("text1", {
             strong: chunks => <strong>{chunks}</strong>,
@@ -125,7 +118,7 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
   const t = await getTranslations("EmailReminder")
 
   return (
-    <EmailLayout preview={t("preview")}>
+    <EmailLayout preview={t("preview")} reason={t("reason")}>
       <Heading as="h1" style={title}>
         {t.rich("title", {
           strong: chunks => <strong>{chunks}</strong>,
@@ -134,12 +127,6 @@ export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
       </Heading>
 
       <Section style={section}>
-        <Text style={text}>
-          {t.rich("hello", {
-            strong: chunks => <strong>{chunks}</strong>,
-            name: userName,
-          })}
-        </Text>
         <Text style={text}>{t("text")}</Text>
 
         <Button style={button} href={baseUrl}>
@@ -197,7 +184,10 @@ export const ContactEmail = async ({
   const t = await getTranslations("EmailContact")
 
   return (
-    <EmailLayout preview={t(`subject.${topic}`, { name: from.name })}>
+    <EmailLayout
+      preview={t(`subject.${topic}`, { name: from.name })}
+      reason={t("reason")}
+    >
       <Heading as="h1" style={title}>
         {t(`topic.${topic}`)}
       </Heading>
@@ -241,7 +231,13 @@ export const DrawLotsEmail = async ({
   const strong = (chunks: ReactNode) => <strong>{chunks}</strong>
 
   return (
-    <EmailLayout preview={t("preview", { receiver })}>
+    <EmailLayout
+      preview={t("preview", { receiver })}
+      reason={t(member ? "reason.member" : "reason.invite", {
+        creator,
+        group: group.title,
+      })}
+    >
       <Heading as="h1" style={title}>
         {t.rich("title", { strong, name })}
       </Heading>
