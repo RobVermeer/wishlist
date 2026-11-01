@@ -123,7 +123,8 @@ Finish every feature and fix with a pull request from its own branch, as soon as
   npm run test:e2e
   ```
 
-- **Merging:** `main` only accepts a pull request when "Checks 🔍" and "E2E tests 🎭" are green and the branch includes the latest `main`. Update the branch before merging ("Update branch", or merge `main` in), so it's tested against what's there now: pull requests that each pass on their own can still break `main` together.
+- **Rebasing:** bring a branch up to date by rebasing it on `main`, never by merging `main` in, so the history stays a straight line of atomic commits. Run `git fetch origin && git rebase origin/main`, fix each conflict in the commit that causes it, run the checks again and push with `git push --force-with-lease`.
+- **Merging:** `main` only accepts a pull request when "Checks 🔍" and "E2E tests 🎭" are green and the branch includes the latest `main`. Rebase the branch before merging ("Update with rebase" on GitHub, or rebase locally), so it's tested against what's there now: pull requests that each pass on their own can still break `main` together.
 - **With Claude Code:** turn on Auto-fix for the pull request, so CI failures, merge conflicts and review comments get picked up.
 
 ## Dependencies
