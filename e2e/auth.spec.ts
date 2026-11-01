@@ -77,10 +77,14 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   const mail = await page.context().newPage()
   await mail.setContent(loginEmail.html)
   await expect(mail.locator("html")).toHaveAttribute("lang", "nl")
+  await expect(
+    mail.getByRole("heading", { name: "Inloggen bij Niet Weer Sokken" })
+  ).toBeVisible()
   await expect(mail.getByRole("link", { name: "Inloggen" })).toBeVisible()
   for (const text of [
-    "Klik op de knop hieronder om in te loggen bij Niet Weer Sokken.",
+    "Klik op de knop hieronder om in te loggen.",
     "De knop werkt één keer en 24 uur lang.",
+    "Werkt de knop niet? Kopieer dan deze link en plak hem in je browser.",
     "Heb je niet geprobeerd in te loggen? Dan kun je deze e-mail negeren. Zonder de knop kan niemand met je e-mailadres inloggen.",
     "Je krijgt deze e-mail omdat iemand met dit e-mailadres wilde inloggen bij Niet Weer Sokken.",
   ]) {
@@ -167,6 +171,37 @@ test("the login e-mail uses the same red as the app", async ({ page }) => {
     red
   )
   await mail.close()
+})
+
+test("the login e-mail shows the link to copy when the button doesn't work", async ({
+  page,
+}) => {
+  const email = `copy-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  const mail = await page.context().newPage()
+  await mail.setContent(loginEmail.html)
+  const href = await mail
+    .getByRole("link", { name: "Inloggen" })
+    .getAttribute("href")
+  expect(href).toContain("/api/auth/callback/email")
+  const copy = mail.getByRole("link", { name: href!, exact: true })
+  await expect(copy).toBeVisible()
+  await expect(copy).toHaveAttribute("href", href!)
+  await mail.close()
+
+  await page.goto(href!)
+
+  await expect(page).toHaveURL("/")
 })
 
 test("the login e-mail fits on a phone", async ({ page, browser }) => {
