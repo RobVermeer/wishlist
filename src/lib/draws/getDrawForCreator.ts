@@ -4,6 +4,7 @@ import { cache } from "react"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
+import { notOver } from "./notOver"
 
 const day = 24 * 60 * 60 * 1000
 
@@ -18,6 +19,7 @@ export const getDrawForCreator = cache(async (groupId: string) => {
     where: {
       groupId,
       cancelledAt: null,
+      ...notOver(),
       group: { removed: false, userId: session.user.id },
     },
     select: {

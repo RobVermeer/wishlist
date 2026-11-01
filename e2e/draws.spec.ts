@@ -433,6 +433,58 @@ test("the overview shows your lootjes from all your groups", async ({
   await expect(page).toHaveURL(`/group/${friends.id}`)
 })
 
+test("a lootje no longer shows after the date of the party", async ({
+  signIn,
+}) => {
+  const anna = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const past = await createGroup(anna, {
+    title: `Voorbij ${bert.id}`,
+    members: [bert],
+  })
+  const current = await createGroup(anna, {
+    title: `Vandaag ${bert.id}`,
+    members: [bert],
+  })
+  const undated = await createGroup(anna, {
+    title: `Zonder datum ${bert.id}`,
+    members: [bert],
+  })
+  await createDraw(past, [bert, anna], {
+    date: new Date(dateInAmsterdam(-1)),
+  })
+  await createDraw(current, [bert, anna], {
+    date: new Date(dateInAmsterdam()),
+  })
+  await createDraw(undated, [bert, anna])
+  const page = await signIn(bert)
+
+  await page.goto("/")
+
+  await expect(
+    page.getByRole("list", { name: "Je lootjes" }).getByRole("listitem")
+  ).toHaveText([
+    new RegExp(`Vandaag ${bert.id}`),
+    new RegExp(`Zonder datum ${bert.id}`),
+  ])
+
+  await page.goto(`/group/${past.id}`)
+  await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+  await expect(lot(page)).toHaveCount(0)
+
+  for (const group of [current, undated]) {
+    await page.goto(`/group/${group.id}`)
+    await expect(lot(page)).toBeVisible()
+  }
+
+  const annaPage = await signIn(anna)
+  await annaPage.goto(`/group/${past.id}`)
+  await expect(
+    annaPage.getByRole("button", { name: "Lootjes trekken" })
+  ).toBeVisible()
+  await expect(lot(annaPage)).toHaveCount(0)
+})
+
 test("the overview has no lootjes without a draw", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)

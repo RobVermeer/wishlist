@@ -4,6 +4,7 @@ import { cache } from "react"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
+import { notOver } from "./notOver"
 
 // Who the current user drew in the active draw of a group they're in, with
 // their own wishlist in that group. Never anyone else's lootje.
@@ -19,6 +20,7 @@ export const getLotForUser = cache(async (groupId: string) => {
       draw: {
         groupId,
         cancelledAt: null,
+        ...notOver(),
         group: { removed: false, members: { some: { id: userId } } },
       },
     },
