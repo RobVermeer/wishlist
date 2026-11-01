@@ -19,7 +19,7 @@ export function Footer({ loggedIn }: Props) {
         <div className="grid gap-1.5">
           <Link
             href="/"
-            className="flex items-center gap-2 justify-self-start font-display text-lg font-semibold leading-none tracking-tight text-foreground"
+            className="group flex items-center gap-2 justify-self-start font-display text-lg font-semibold leading-none tracking-tight text-foreground"
           >
             <span className="flex size-7 -rotate-6 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
               <SockIcon size={20} />
