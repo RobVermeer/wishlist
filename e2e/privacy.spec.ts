@@ -31,6 +31,14 @@ test("visitors can read the privacy policy from the landing page", async ({
     /^Tijdens het inloggen twee cookies/,
     /^Een cookie dat een jaar lang onthoudt/,
   ])
+  await expect(
+    page
+      .getByRole("region", { name: "Wie wat ziet" })
+      .getByRole("listitem")
+      .last()
+  ).toHaveText(
+    /^De beheerders van Niet Weer Sokken zien .* de groepen en de verlanglijstjes, .* afgestreepte wensen .* zonder te zien wie ze heeft gekocht\.$/
+  )
 
   await expect(
     page.getByRole("button", { name: "Stuur ons een bericht" })
