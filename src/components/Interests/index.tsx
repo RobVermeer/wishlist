@@ -22,6 +22,7 @@ interface Props {
   title: string
   interests: { id: string; title: string }[]
   hint?: string
+  note?: string
   editable?: boolean
 }
 
@@ -30,6 +31,7 @@ export const Interests = ({
   title,
   interests,
   hint,
+  note,
   editable = false,
 }: Props) => {
   const t = useTranslations("Interests")
@@ -107,6 +109,7 @@ export const Interests = ({
           ))}
         </ul>
       )}
+      {note && <p className="text-sm italic text-muted-foreground">{note}</p>}
 
       {editable && (
         <form onSubmit={onSubmit} className="flex gap-2">
