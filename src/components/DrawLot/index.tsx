@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Gift } from "lucide-react"
 import { getTranslations } from "next-intl/server"
 import { DrawDetails } from "@/components/DrawDetails"
+import { LotReveal } from "@/components/LotReveal"
 import { Button } from "@/components/ui/button"
 import type { getLotForUser } from "@/lib/draws/getLotForUser"
 
@@ -25,24 +26,23 @@ export const DrawLot = async ({ groupId, lot }: Props) => {
       >
         <Gift aria-hidden size="16" className="text-primary" /> {t("title")}
       </h3>
-      <p className="font-display text-2xl font-semibold">
-        {t.rich("drawn", {
-          name: receiver,
-          strong: chunks => <strong className="text-primary">{chunks}</strong>,
-        })}
-      </p>
-      <DrawDetails budget={budget} date={date} />
-      {wishlistId ? (
-        <Button asChild className="justify-self-start">
-          <Link href={`/group/${groupId}/${wishlistId}`}>
-            {t("wishlist", { name: receiver })}
-          </Link>
-        </Button>
-      ) : (
-        <p className="text-sm text-muted-foreground">
-          {t("noWishlist", { name: receiver })}
-        </p>
-      )}
+      <LotReveal
+        name={receiver}
+        className="text-2xl"
+        details={<DrawDetails budget={budget} date={date} />}
+      >
+        {wishlistId ? (
+          <Button asChild className="justify-self-start">
+            <Link href={`/group/${groupId}/${wishlistId}`}>
+              {t("wishlist", { name: receiver })}
+            </Link>
+          </Button>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            {t("noWishlist", { name: receiver })}
+          </p>
+        )}
+      </LotReveal>
     </section>
   )
 }

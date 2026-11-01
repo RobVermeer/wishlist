@@ -25,8 +25,7 @@
       }
     },
     "lots": {
-      "title": "Je lootjes",
-      "drawn": "Je hebt <strong>{name}</strong> getrokken"
+      "title": "Je lootjes"
     }
   },
   "NotFound": {
@@ -1015,6 +1014,9 @@
     "lot": {
       "title": "Jouw lootje",
       "drawn": "Je hebt <strong>{name}</strong> getrokken",
+      "hidden": "Je hebt <secret>iemand</secret> getrokken",
+      "reveal": "Laat zien",
+      "hide": "Verberg",
       "budget": "Budget: {budget}",
       "date": "Datum: {date}",
       "wishlist": "Bekijk het verlanglijstje van {name}",
