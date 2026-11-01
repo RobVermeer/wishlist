@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
+import { isSuperAdmin } from "./isSuperAdmin"
 
 export const deleteUserById = async (id: string) => {
   try {
@@ -17,6 +18,23 @@ export const deleteUserById = async (id: string) => {
     }
 
     if (!session.user.isAdmin) {
+      throw new Error(t("noAccess"))
+    }
+
+    const userToDelete = await prisma.user.findUnique({
+      where: { id },
+      select: { isAdmin: true },
+    })
+
+    if (!userToDelete) {
+      throw new Error(t("user.notFound"))
+    }
+
+    // Only the super admin removes admins, and nobody removes the super admin.
+    if (
+      isSuperAdmin(id) ||
+      (userToDelete.isAdmin && !session.user.isSuperAdmin)
+    ) {
       throw new Error(t("noAccess"))
     }
 

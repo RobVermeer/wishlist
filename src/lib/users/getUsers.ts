@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { cache } from "react"
+import { isSuperAdmin } from "./isSuperAdmin"
 
 export const getUsers = cache(async () => {
   const session = await getServerSession(authOptions)
@@ -22,5 +23,5 @@ export const getUsers = cache(async () => {
     orderBy: { id: "desc" },
   })
 
-  return data
+  return data.map(user => ({ ...user, isSuperAdmin: isSuperAdmin(user.id) }))
 })

@@ -4,6 +4,7 @@ declare module "next-auth" {
   interface User {
     firstName: string | undefined
     lastSeenAt?: Date | null
+    isAdmin?: boolean
   }
 
   interface Profile {
@@ -20,6 +21,8 @@ declare module "next-auth" {
       firstName: string | undefined
       /** Is the user an admin. */
       isAdmin: boolean
+      /** Is the user the super admin from ADMIN_USER_ID, who manages admins. */
+      isSuperAdmin: boolean
     } & DefaultSession["user"]
   }
 }

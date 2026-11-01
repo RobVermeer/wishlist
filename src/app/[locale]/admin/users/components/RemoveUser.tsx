@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 import { useTranslations } from "next-intl"
 import { deleteUserById } from "@/lib/users/deleteUserById"
 
@@ -10,22 +11,22 @@ interface Props {
 
 export const RemoveUser = ({ id }: Props) => {
   const t = useTranslations("Admin")
+  const { toast } = useToast()
 
   const removeUser = async (id: string) => {
     const confirm = window.confirm(t("confirm"))
 
     if (!confirm) return
 
-    await deleteUserById(id)
+    const { type, errors } = await deleteUserById(id)
+
+    if (type === "error") {
+      errors.forEach(title => toast({ variant: "destructive", title }))
+    }
   }
 
   return (
-    <Button
-      className="absolute right-2"
-      size="sm"
-      variant="destructive"
-      onClick={() => removeUser(id)}
-    >
+    <Button size="sm" variant="destructive" onClick={() => removeUser(id)}>
       {t("users.remove")}
     </Button>
   )

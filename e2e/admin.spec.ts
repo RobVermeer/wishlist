@@ -64,6 +64,77 @@ test("admin can remove a user", async ({ signIn }) => {
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(0)
 })
 
+test("super admin can make someone admin and take it away", async ({
+  signIn,
+}) => {
+  const superAdmin = await createAdmin()
+  const user = await createUser({ name: "Nieuwe Admin" })
+  const page = await signIn(superAdmin)
+  const userPage = await signIn(user)
+
+  await page.goto("/admin/users")
+  const userCard = card(page, user.email!)
+  await expect(userCard.getByText("Admin", { exact: true })).toBeHidden()
+
+  await userCard.getByRole("button", { name: "Maak admin" }).click()
+
+  await expect(userCard.getByText("Admin", { exact: true })).toBeVisible()
+  await userPage.goto("/admin")
+  await expect(userPage).toHaveURL("/admin")
+  await expect(
+    userPage.getByRole("region", { name: "Gebruikers" })
+  ).toBeVisible()
+
+  await userCard.getByRole("button", { name: "Geen admin meer" }).click()
+
+  await expect(userCard.getByText("Admin", { exact: true })).toBeHidden()
+  await expect(
+    userCard.getByRole("button", { name: "Maak admin" })
+  ).toBeVisible()
+  await userPage.goto("/admin")
+  await expect(userPage).toHaveURL("/")
+})
+
+test("the super admin can't be taken away or removed", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const page = await signIn(superAdmin)
+
+  await page.goto("/admin/users")
+  const superAdminCard = card(page, superAdmin.email!)
+
+  await expect(superAdminCard.getByText("Superadmin")).toBeVisible()
+  await expect(superAdminCard.getByRole("button")).toHaveCount(0)
+})
+
+test("admins see who is admin but can't manage admins", async ({ signIn }) => {
+  const superAdmin = await createAdmin()
+  const admin = await createUser({ isAdmin: true })
+  const otherAdmin = await createUser({ isAdmin: true })
+  const user = await createUser()
+  const page = await signIn(admin)
+
+  await page.goto("/admin/users")
+
+  await expect(
+    card(page, superAdmin.email!).getByText("Superadmin")
+  ).toBeVisible()
+  const otherAdminCard = card(page, otherAdmin.email!)
+  await expect(otherAdminCard.getByText("Admin", { exact: true })).toBeVisible()
+  await expect(
+    otherAdminCard.getByRole("button", { name: "Geen admin meer" })
+  ).toHaveCount(0)
+  await expect(
+    otherAdminCard.getByRole("button", { name: "Verwijder" })
+  ).toHaveCount(0)
+  const userCard = card(page, user.email!)
+  await expect(
+    userCard.getByRole("button", { name: "Verwijder" })
+  ).toBeVisible()
+  await expect(
+    userCard.getByRole("button", { name: "Maak admin" })
+  ).toHaveCount(0)
+})
+
 test("admin can remove and restore a group", async ({ signIn }) => {
   const admin = await createAdmin()
   const owner = await createUser({ name: "Groep Eigenaar" })
