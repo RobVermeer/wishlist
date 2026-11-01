@@ -1,5 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["e2e/support/*.mjs", "scripts/*.mjs"],
+  "entry": ["e2e/support/*.mjs", "scripts/*.mjs", "ecosystem.config.cjs"],
   "ignore": ["src/components/ui/**"]
 }

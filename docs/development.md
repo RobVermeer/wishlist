@@ -91,6 +91,17 @@ Keep the tone warm but calm:
 - Dates are stored as unix epoch milliseconds (`timestampFormat: "unixepoch-ms"`), which keeps them compatible with data from before Prisma 7.
 - Production uses an absolute `DATABASE_URL`, the deploy stops when it isn't.
 
+## Deploys
+
+Every push to `main` deploys through `.github/workflows/main.yml` without downtime: the standalone build goes into a new folder in `releases/` in the app folder on the server, migrations run, the `current` symlink switches to the new release and `pm2 reload wishlist` restarts the app.
+
+- pm2 runs the app in cluster mode with one instance (`ecosystem.config.cjs`). A reload then starts the new process and stops the old one once the new one listens. In fork mode pm2 stops the app first, and nginx answers with a 502 until it's back.
+- The running app keeps its own release folder, so a deploy never changes files under it. Files that didn't change are hard links to the previous release, which keeps releases small.
+- What must survive a deploy lives outside the releases and is linked into each one: `.env.local`, `database/` (through the absolute `DATABASE_URL`) and `public/avatars/`, which nginx serves itself. Something new like that needs a link in the workflow too.
+- The last three releases are kept. To go back to one, run `ln -sfn releases/<release> current.new && mv -Tf current.new current && pm2 reload wishlist` in the app folder. Migrations aren't undone, so they have to work with the previous release too.
+- pm2 only reads `ecosystem.config.cjs` on `pm2 start`. After changing it, run `pm2 delete wishlist && pm2 start current/ecosystem.config.cjs && pm2 save` in the app folder, which takes the app down for a moment.
+- During a reload two processes use the database for a moment. Transactions start with `BEGIN IMMEDIATE` (`src/lib/prisma.ts`), so they wait for each other instead of failing.
+
 ## Pull requests
 
 Finish every feature and fix with a pull request from its own branch, as soon as the work and its checks are done.
