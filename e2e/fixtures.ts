@@ -246,11 +246,16 @@ export async function emailsTo(address: string): Promise<SentEmail[]> {
   return emails.filter(({ to }) => to.includes(address))
 }
 
-// A date in the time zone of the app, as the date input fills it in.
-export const dateInAmsterdam = (daysFromToday = 0) =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format(
-    new Date(Date.now() + daysFromToday * 24 * 60 * 60 * 1000)
+// A date in the time zone of the app, as the date input fills it in. Counts
+// calendar days, so a change to or from summer time doesn't shift it a day.
+export const dateInAmsterdam = (daysFromToday = 0) => {
+  const date = new Date(
+    new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format()
   )
+  date.setUTCDate(date.getUTCDate() + daysFromToday)
+
+  return date.toISOString().slice(0, 10)
+}
 
 export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
