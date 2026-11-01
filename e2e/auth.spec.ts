@@ -169,6 +169,31 @@ test("the login e-mail uses the same red as the app", async ({ page }) => {
   await mail.close()
 })
 
+test("the login e-mail fits on a phone", async ({ page, browser }) => {
+  const email = `phone-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+
+  const [loginEmail] = await emailsTo(email)
+  const phone = await browser.newPage({
+    viewport: { width: 375, height: 667 },
+    isMobile: true,
+  })
+  await phone.setContent(loginEmail.html)
+  await expect(phone.getByRole("link", { name: "Inloggen" })).toBeInViewport()
+  expect(
+    await phone.evaluate(() => document.documentElement.scrollWidth)
+  ).toBeLessThanOrEqual(375)
+  await phone.close()
+})
+
 test("an address gets at most three login e-mails in ten minutes", async ({
   page,
 }) => {
