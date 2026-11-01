@@ -475,7 +475,15 @@
       "superAdmin": "Superadmin",
       "makeAdmin": "Maak admin",
       "removeAdmin": "Geen admin meer",
+      "view": "Bekijk",
       "remove": "Verwijder"
+    },
+    "user": {
+      "text": "Wensen die al zijn afgestreept, kun je van een verlanglijstje halen. De rest blijft staan. Wie iets heeft gekocht, zie je hier niet.",
+      "noWishlists": "Deze gebruiker heeft geen verlanglijstjes.",
+      "noItems": "Er staan geen wensen op dit verlanglijstje.",
+      "bought": "Afgestreept",
+      "removeItem": "‘{title}’ verdwijnt van het verlanglijstje. Wie de wens heeft gekocht, ziet hem nog bij Gekochte cadeaus."
     }
   },
   "Metadata": {

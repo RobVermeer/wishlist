@@ -4,6 +4,8 @@ import {
   createAdmin,
   createUser,
   createGroup,
+  createWishlist,
+  createItem,
   emailsTo,
   prisma,
   toasts,
@@ -17,7 +19,12 @@ test("regular users cannot access the admin", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
-  for (const path of ["/admin", "/admin/users", "/admin/groups"]) {
+  for (const path of [
+    "/admin",
+    "/admin/users",
+    "/admin/groups",
+    `/admin/users/${user.id}`,
+  ]) {
     await page.goto(path)
     await expect(page).toHaveURL("/")
   }
@@ -242,4 +249,59 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
   )
   await expect(page).toHaveURL(`/admin/groups/${group.id}`)
   expect(await emailsTo(owner.email!)).toHaveLength(0)
+})
+
+test("admin can remove bought wishes from someone's wishlist", async ({
+  signIn,
+}) => {
+  const admin = await createUser({ isAdmin: true })
+  const owner = await createUser({ firstName: "Oma" })
+  const buyer = await createUser({ firstName: "Kleinzoon" })
+  const wishlist = await createWishlist(owner, {
+    title: "Oma's lijstje",
+    followers: [buyer],
+  })
+  await createItem(wishlist, {
+    title: "Breipennen",
+    boughtBy: buyer,
+    boughtAt: new Date(),
+  })
+  await createItem(wishlist, { title: "Puzzelboek" })
+  const page = await signIn(admin)
+
+  await page.goto("/admin/users")
+  await card(page, owner.email!).getByRole("link", { name: "Bekijk" }).click()
+
+  await expect(page).toHaveURL(`/admin/users/${owner.id}`)
+  await expect(page.getByRole("heading", { name: owner.name! })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: "Oma's lijstje" })
+  ).toBeVisible()
+  await expect(page.getByText(buyer.name!)).toHaveCount(0)
+  await expect(page.getByText("Kleinzoon")).toHaveCount(0)
+  await expect(card(page, "Breipennen")).toContainText("Afgestreept")
+  await expect(card(page, "Puzzelboek")).not.toContainText("Afgestreept")
+  await expect(card(page, "Puzzelboek").getByRole("button")).toHaveCount(0)
+
+  await card(page, "Breipennen")
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(card(page, "Breipennen")).toBeHidden()
+  await expect(card(page, "Puzzelboek")).toBeVisible()
+
+  const ownerPage = await signIn(owner)
+  await ownerPage.goto(`/wishlist/${wishlist.id}`)
+  await expect(ownerPage.getByText("Puzzelboek")).toBeVisible()
+  await expect(ownerPage.getByText("Breipennen")).toHaveCount(0)
+
+  const buyerPage = await signIn(buyer)
+  await buyerPage.goto("/profile/bought")
+  await expect(card(buyerPage, "Breipennen")).toContainText(
+    "Deze wens is verwijderd."
+  )
 })

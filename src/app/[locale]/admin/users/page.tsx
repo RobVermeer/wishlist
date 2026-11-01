@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getUsers } from "@/lib/users/getUsers"
 import { RemoveUser } from "./components/RemoveUser"
 import { ToggleAdmin } from "./components/ToggleAdmin"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 import { getInitials } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
@@ -49,14 +51,17 @@ export default async function AdminUsersPage() {
             </small>
           </span>
 
-          {!user.isSuperAdmin && (
-            <div className="ml-auto flex gap-2">
-              {isSuperAdmin && (
-                <ToggleAdmin id={user.id} isAdmin={user.isAdmin} />
-              )}
-              {(isSuperAdmin || !user.isAdmin) && <RemoveUser id={user.id} />}
-            </div>
-          )}
+          <div className="ml-auto flex gap-2">
+            <Button asChild variant="outline" size="sm">
+              <Link href={`/admin/users/${user.id}`}>{t("users.view")}</Link>
+            </Button>
+            {isSuperAdmin && !user.isSuperAdmin && (
+              <ToggleAdmin id={user.id} isAdmin={user.isAdmin} />
+            )}
+            {!user.isSuperAdmin && (isSuperAdmin || !user.isAdmin) && (
+              <RemoveUser id={user.id} />
+            )}
+          </div>
         </Card>
       ))}
     </List>
