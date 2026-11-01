@@ -54,6 +54,16 @@ export const wishlistItemSchema = z.object({
     .optional(),
 })
 
+export const maxInterests = 20
+
+export const wishlistInterestSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(2, { error: "Een interesse moet minimaal uit 2 tekens bestaan" })
+    .max(30, { error: "Een interesse mag maximaal uit 30 tekens bestaan" }),
+})
+
 export const contactTopics = [
   "bug",
   "question",

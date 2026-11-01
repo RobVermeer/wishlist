@@ -130,6 +130,12 @@ export async function createCategory(
   })
 }
 
+export async function createInterest(wishlist: { id: string }, title: string) {
+  return prisma.wishlistInterest.create({
+    data: { title, createdAt: new Date(), wishlistId: wishlist.id },
+  })
+}
+
 export async function createItem(
   wishlist: { id: string },
   {

@@ -229,7 +229,9 @@ test("managers change the wishlist but not who manages it", async ({
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("heading", { name: /Emma 🎂/ })).toBeVisible()
+  await expect(
+    page.getByRole("heading", { name: /Emma 🎂/, level: 2 })
+  ).toBeVisible()
 
   const updated = await findWishlist(wishlist)
   expect(ids(updated.groups)).toEqual(ids([family, work, fathersFamily]))
@@ -541,7 +543,7 @@ test("an empty wishlist you manage asks for the first wish", async ({
   await expect(page.getByText("Dit verlanglijstje is nog leeg")).toBeVisible()
   await expect(
     page.getByText(
-      "Voeg de eerste wens toe, dan zien de anderen wat Emma graag wil."
+      "Voeg de eerste wens toe, of vul hierboven in waar Emma blij van wordt."
     )
   ).toBeVisible()
 })

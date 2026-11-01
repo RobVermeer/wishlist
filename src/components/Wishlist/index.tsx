@@ -27,6 +27,7 @@ import { getFirstName } from "@/lib/users/getFirstName"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
+import { Interests } from "@/components/Interests"
 
 interface Props {
   id: string
@@ -39,6 +40,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const openCategories = await getOpenCategories()
   const t = await getTranslations("GroupWishlist")
   const tEdit = await getTranslations("EditWishlist")
+  const tInterests = await getTranslations("Interests")
   const format = await getFormatter()
 
   if (!wishlist) {
@@ -52,6 +54,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
       ? await getManagerOptionsForUser(wishlist.id)
       : []
   const categoryTitles = wishlist.categories.map(({ title }) => title)
+  const name = getWishlistName(wishlist)
+  const isOwnWishlist =
+    wishlist.isOwnList && !wishlist.isManager && !wishlist.title
+  const hasItems = wishlist.wishlistItem.length > 0
+  const onlyInterests = !hasItems && wishlist.interests.length > 0
+  const showRemind = canBeReminded && !wishlist.isOwnList && !onlyInterests
 
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
     if (wishlist.isOwnList) {
@@ -103,9 +111,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         )}
 
         <p className="mt-2 text-sm text-muted-foreground">
-          {wishlist.isOwnList
-            ? t("hint.own")
-            : t("hint.other", { name: getWishlistName(wishlist) })}
+          {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}
         </p>
 
         {wishlist.isOwnList && (
@@ -127,6 +133,26 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           />
         )}
       </div>
+
+      {(wishlist.isOwnList || wishlist.interests.length > 0) && (
+        <Interests
+          wishlistId={wishlist.id}
+          title={
+            isOwnWishlist
+              ? tInterests("title.own")
+              : tInterests("title.other", { name })
+          }
+          interests={wishlist.interests}
+          hint={
+            wishlist.isOwnList && wishlist.interests.length === 0
+              ? isOwnWishlist
+                ? tInterests("hint.own")
+                : tInterests("hint.managed", { name })
+              : undefined
+          }
+          editable={wishlist.isOwnList}
+        />
+      )}
 
       <ItemList
         id={`items-${wishlist.id}`}
@@ -156,21 +182,29 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         />
       )}
 
-      {wishlist.wishlistItem.length === 0 &&
+      {!hasItems &&
         (wishlist.isOwnList ? (
-          wishlist.title ? (
+          onlyInterests ? (
+            <EmptyState title={t("empty.interests.title")}>
+              {isOwnWishlist
+                ? t("empty.interests.own")
+                : t("empty.interests.managed", { name })}
+            </EmptyState>
+          ) : wishlist.title ? (
             <EmptyState title={t("empty.managed.title")}>
-              {t("empty.managed.text", { name: getWishlistName(wishlist) })}
+              {t("empty.managed.text", { name })}
             </EmptyState>
           ) : (
             <EmptyState title={t("empty.own.title")}>
               {t("empty.own.text")}
             </EmptyState>
           )
+        ) : onlyInterests ? (
+          <EmptyState title={t("empty.other.interests.title", { name })}>
+            {t("empty.other.interests.text", { name })}
+          </EmptyState>
         ) : (
-          <EmptyState
-            title={t("empty.other.title", { name: getWishlistName(wishlist) })}
-          >
+          <EmptyState title={t("empty.other.title", { name })}>
             {canBeReminded
               ? t("empty.other.remind", {
                   name: getFirstName(wishlist.user),
@@ -179,7 +213,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           </EmptyState>
         ))}
 
-      {(wishlist.isOwnList || canBeReminded || wishlist.isFollowing) && (
+      {(wishlist.isOwnList || showRemind || wishlist.isFollowing) && (
         <Separator className="my-3" />
       )}
 
@@ -188,7 +222,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           <NewItem id={wishlist.id} categories={categoryTitles} />
           <ShareWishlist
             wishlistId={wishlist.id}
-            name={getWishlistName(wishlist)}
+            name={name}
             forSomeoneElse={Boolean(wishlist.title)}
           />
         </>
@@ -196,9 +230,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
       {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
 
-      {canBeReminded && !wishlist.isOwnList && (
-        <RemindButton userId={wishlist.user.id} />
-      )}
+      {showRemind && <RemindButton userId={wishlist.user.id} />}
 
       {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
     </List>

@@ -10,6 +10,7 @@ import {
   createWishlist,
   createCategory,
   createItem,
+  createInterest,
   createDraw,
   dateInAmsterdam,
   emailsTo,
@@ -753,6 +754,56 @@ test("only managers can add wishes to a wishlist", async ({ signIn }) => {
   expect(
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
   ).toBe(0)
+})
+
+test("only managers can add interests to a wishlist", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const own = await createWishlist(member)
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByLabel("Nieuwe interesse").fill("Stiekem")
+  await page.getByRole("button", { name: "Voeg toe", exact: true }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    await prisma.wishlistInterest.count({ where: { wishlistId: wishlist.id } })
+  ).toBe(0)
+  expect(
+    await prisma.wishlistInterest.count({ where: { wishlistId: own.id } })
+  ).toBe(0)
+})
+
+test("only managers can remove interests from a wishlist", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const interest = await createInterest(wishlist, "lezen")
+  const own = await createWishlist(member)
+  const ownInterest = await createInterest(own, "sudoku")
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownInterest.id, interest.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Verwijder sudoku" }).click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Interesse niet gevonden")
+  for (const { id } of [interest, ownInterest]) {
+    expect(
+      await prisma.wishlistInterest.findUnique({ where: { id } })
+    ).not.toBeNull()
+  }
 })
 
 test("only the creator of a group can take wishlists out of it", async ({

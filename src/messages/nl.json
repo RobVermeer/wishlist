@@ -172,16 +172,25 @@
     "empty": {
       "own": {
         "title": "Je verlanglijstje is nog leeg",
-        "text": "Voeg je eerste wens toe, dan zien de anderen wat je graag wilt."
+        "text": "Voeg je eerste wens toe, of vul hierboven in waar je blij van wordt."
       },
       "managed": {
         "title": "Dit verlanglijstje is nog leeg",
-        "text": "Voeg de eerste wens toe, dan zien de anderen wat {name} graag wil."
+        "text": "Voeg de eerste wens toe, of vul hierboven in waar {name} blij van wordt."
       },
       "other": {
         "title": "{name} heeft nog geen wensen",
         "remind": "Vraag om meer wensen, dan krijgt {name} een e-mail.",
-        "later": "Kijk later nog eens."
+        "later": "Kijk later nog eens.",
+        "interests": {
+          "title": "Verras {name}",
+          "text": "Er staan geen wensen op, dus bedenk zelf iets bij waar {name} blij van wordt."
+        }
+      },
+      "interests": {
+        "title": "Alleen interesses is ook goed",
+        "own": "De anderen zien waar je blij van wordt en bedenken zelf iets. Wil je toch iets specifieks, voeg dan een wens toe.",
+        "managed": "De anderen zien waar {name} blij van wordt en bedenken zelf iets. Wil je toch iets specifieks, voeg dan een wens toe."
       }
     },
     "hint": {
@@ -189,6 +198,21 @@
       "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
       "other": "{name} ziet niet wat er wordt gekocht 🤫"
     }
+  },
+  "Interests": {
+    "title": {
+      "own": "Waar ik blij van word",
+      "other": "Waar {name} blij van wordt"
+    },
+    "hint": {
+      "own": "Hou je niet zo van wensen? Zet hier wat je graag doet of leuk vindt, dan bedenken de anderen zelf iets.",
+      "managed": "Zet hier wat {name} graag doet of leuk vindt, dan bedenken de anderen zelf iets."
+    },
+    "label": "Nieuwe interesse",
+    "placeholder": "Bijvoorbeeld wandelen.",
+    "add": "Voeg toe",
+    "removeLabel": "Verwijder {title}",
+    "remove": "{title} verdwijnt van dit verlanglijstje."
   },
   "Profile": {
     "title": "Profiel",
@@ -374,6 +398,11 @@
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
+    },
+    "interest": {
+      "notFound": "Interesse niet gevonden",
+      "duplicate": "{title} staat er al op",
+      "tooMany": "Je kunt maximaal {max} interesses toevoegen"
     }
   },
   "EmailDraw": {

@@ -84,6 +84,7 @@ model Wishlist {
   removed      Boolean            @default(false)
   wishlistItem WishlistItem[]
   categories   WishlistCategory[]
+  interests    WishlistInterest[]
   userId       String
   user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   groups       Group[]
@@ -101,6 +102,16 @@ model WishlistCategory {
   wishlistItem WishlistItem[]
 
   @@unique([wishlistId, title])
+}
+
+model WishlistInterest {
+  id         String   @id @default(cuid())
+  title      String
+  createdAt  DateTime
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+
+  @@index([wishlistId])
 }
 
 model WishlistItem {

@@ -8,6 +8,7 @@ import { authOptions } from "@/lib/nextAuth"
 import { getTranslations } from "next-intl/server"
 import { visibleToUser } from "./visibility"
 import { userProperties } from "@/lib/users/publicProperties"
+import { interestProperties } from "@/lib/wishlistInterests/publicProperties"
 
 export const getWishlistById = cache(async (id: string) => {
   try {
@@ -27,6 +28,10 @@ export const getWishlistById = cache(async (id: string) => {
           orderBy: { firstName: "asc" },
         },
         followers: { where: { id: userId }, select: { id: true } },
+        interests: {
+          select: interestProperties,
+          orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+        },
       },
       where: { id, removed: false, ...visibleToUser(userId) },
     })
