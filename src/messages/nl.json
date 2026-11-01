@@ -866,7 +866,7 @@
     "metaTitle": "Privacy - Niet Weer Sokken",
     "metaDescription": "Wat Niet Weer Sokken van je bewaart en waarom, wie het ziet, welke cookies we gebruiken en hoe je je account laat verwijderen.",
     "intro": "Niet Weer Sokken bewaart alleen wat nodig is om je verlanglijstje te maken en te delen. Hier lees je wat dat is, waarom we het bewaren en wat je ermee kunt.",
-    "updated": "Bijgewerkt op 30 oktober 2026.",
+    "updated": "Bijgewerkt op 1 november 2026.",
     "sections": [
       {
         "id": "wat-we-bewaren",
@@ -897,6 +897,7 @@
         "title": "Wie wat ziet",
         "items": [
           "Wie met je in een groep zit of je verlanglijstje volgt, ziet je naam, je profielfoto en je verlanglijstje.",
+          "Wie de link van een groep heeft, ziet de naam van de groep, ook zonder in te loggen. De leden en hun verlanglijstjes zie je pas als je bent ingelogd en de groep volgt.",
           "Je e-mailadres zien de anderen nooit.",
           "Wat je afstreept, ziet degene die het wenst niet. De anderen zien alleen dat een wens al wordt gekocht.",
           "Wie je bij het lootjes trekken hebt getrokken, zie alleen jij.",
