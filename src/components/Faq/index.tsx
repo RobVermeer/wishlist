@@ -111,6 +111,14 @@ export const Faq = ({ loggedIn }: Props) => {
                       {chunks}
                     </Link>
                   ),
+                  houseRules: chunks => (
+                    <Link
+                      href="/huisregels"
+                      className="text-primary underline underline-offset-2"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
                 })}
               </p>
             </details>
