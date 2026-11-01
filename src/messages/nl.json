@@ -689,6 +689,10 @@
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
           },
           {
+            "question": "Kan ik meer dan één linkje bij een wens zetten?",
+            "answer": "Ja, tot 5. Kies bij je wens ‘Nog een linkje’, bijvoorbeeld als hetzelfde cadeau in twee winkels te koop is. Anderen zien dan bij de wens van elke winkel een linkje met de naam van de winkel, zodat ze kunnen kiezen waar ze het kopen."
+          },
+          {
             "question": "Hoe verwijder ik een wens?",
             "answer": "Kies bij de wens ‘Wijzig’ en dan ‘Verwijder’, en bevestig dat. De wens is dan definitief weg. Wie het verlanglijstje mee beheert, kan ook wensen verwijderen."
           },
