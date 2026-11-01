@@ -41,7 +41,10 @@ export const createWishlistItemForUser = async (
     const data = wishlistItemSchema.parse({
       title: formData.get("title")?.toString(),
       unlimited: formData.get("unlimited")?.toString() === "on",
-      url: formData.get("url")?.toString() || undefined,
+      links: formData
+        .getAll("url")
+        .map(url => url.toString().trim())
+        .filter(Boolean),
       category: formData.get("category")?.toString() || undefined,
     })
 
@@ -57,7 +60,9 @@ export const createWishlistItemForUser = async (
         data: {
           title: data.title,
           unlimited: data.unlimited,
-          url: data.url || null,
+          links: {
+            create: data.links.map((url, position) => ({ url, position })),
+          },
           createdAt: new Date(),
           wishlistId,
           categoryId,

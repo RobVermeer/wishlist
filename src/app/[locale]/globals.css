@@ -127,3 +127,35 @@
 ::file-selector-button {
   color: var(--foreground);
 }
+
+/* The heart in the logo beats twice when you point at it, and keeps beating
+   while a page loads (NavigationStatus sets data-loading). Never otherwise. */
+@keyframes heartbeat {
+  0%,
+  40%,
+  100% {
+    transform: scale(1);
+  }
+  15%,
+  55% {
+    transform: scale(1.35);
+  }
+  25% {
+    transform: scale(1.05);
+  }
+}
+
+.sock-heart {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .group:hover .sock-heart,
+  .group:focus-visible .sock-heart {
+    animation: heartbeat 0.9s ease-in-out 2;
+  }
+  html[data-loading] .sock-heart {
+    animation: heartbeat 0.9s ease-in-out infinite;
+  }
+}

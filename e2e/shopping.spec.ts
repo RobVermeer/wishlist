@@ -32,7 +32,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await createItem(wishlist, { title: "Sokken" })
   await createItem(wishlist, {
     title: "Koptelefoon",
-    url: "https://example.com/koptelefoon",
+    links: ["https://example.com/koptelefoon"],
   })
   const page = await signIn(shopper)
 
@@ -42,7 +42,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(page).toHaveURL(`/group/${group.id}/${wishlist.id}`)
   await expect(page).toHaveTitle("Olga - Familie - Niet Weer Sokken")
   await expect(
-    page.getByRole("heading", { name: "Olga in Familie" })
+    page.getByRole("heading", { name: "Olga", exact: true })
   ).toBeVisible()
   await expect(
     page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
@@ -51,10 +51,9 @@ test("view a wishlist of a group member", async ({ signIn }) => {
     page.getByRole("button", { name: "Wijzig verlanglijstje" })
   ).toHaveCount(0)
   await expect(itemCard(page, "Sokken")).toBeVisible()
-  await expect(page.getByRole("link", { name: "Koptelefoon" })).toHaveAttribute(
-    "href",
-    "https://example.com/koptelefoon"
-  )
+  await expect(
+    itemCard(page, "Koptelefoon").getByRole("link", { name: "example.com" })
+  ).toHaveAttribute("href", "https://example.com/koptelefoon")
   await expect(
     page.getByRole("button", { name: "Voeg een wens toe" })
   ).toBeHidden()
@@ -139,7 +138,7 @@ test("buy a wish and change your mind", async ({ signIn }) => {
   }).format(new Date())
   await page.goto("/profile/bought")
   await expect(itemCard(page, "Sokken")).toHaveText(
-    `Sokken Gekocht voor Olga op ${today}`
+    `Sokken Voor Olga · ${today}`
   )
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
@@ -398,10 +397,10 @@ test("bought presents page lists what you bought for whom", async ({
     "Mijn gekochte cadeaus - Profiel - Niet Weer Sokken"
   )
   await expect(itemCard(page, "Sokken")).toHaveText(
-    /^Sokken\s*Gekocht voor Olga op 5 december 2025$/
+    /^Sokken\s*Voor Olga · 5 december 2025$/
   )
   await expect(itemCard(page, "Rammelaar")).toHaveText(
-    /^Rammelaar\s*Gekocht voor Baby Bo$/
+    /^Rammelaar\s*Voor Baby Bo$/
   )
   await expect(page.getByText("Knuffel")).toBeHidden()
 })
@@ -430,22 +429,24 @@ test("bought presents page keeps removed wishes and wishlists", async ({
 
   await page.goto("/profile/bought")
 
-  await expect(itemCard(page, "Sokken")).toHaveText(
-    /^Sokken\s*Gekocht voor Olga$/
-  )
+  await expect(itemCard(page, "Sokken")).toHaveText(/^Sokken\s*Voor Olga$/)
   await expect(itemCard(page, "Weggehaald")).toHaveText(
-    /^Weggehaald\s*Gekocht voor Olga\s*Deze wens is verwijderd\.$/
+    /^Weggehaald\s*Voor Olga\s*Deze wens is verwijderd\.$/
   )
   await expect(itemCard(page, "Van oud lijstje")).toHaveText(
-    /^Van oud lijstje\s*Gekocht voor Oud lijstje\s*Dit verlanglijstje is verwijderd\.$/
+    /^Van oud lijstje\s*Voor Oud lijstje\s*Dit verlanglijstje is verwijderd\.$/
   )
 })
 
-test("bought presents page shows the newest first and folds away older ones", async ({
+const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
+
+const visibleCards = (page: Page) =>
+  page.locator("div.rounded-2xl").filter({ visible: true })
+
+test("bought presents page shows the newest first and keeps older ones behind a button", async ({
   signIn,
 }) => {
   const { shopper, wishlist } = await setup()
-  const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000)
   await createItem(wishlist, {
     title: "Zonder datum",
     boughtBy: shopper,
@@ -469,20 +470,84 @@ test("bought presents page shows the newest first and folds away older ones", as
 
   await page.goto("/profile/bought")
 
-  const earlier = page.getByRole("group").filter({
-    has: page.getByText("Eerdere cadeaus"),
-  })
+  await expect(visibleCards(page)).toHaveText([
+    /^Gisteren/,
+    /^Vorige week/,
+    /^Zonder datum/,
+  ])
+  await expect(page.getByText("Vorig jaar")).toBeHidden()
+
+  await page.getByRole("button", { name: "Toon eerdere cadeaus (1)" }).click()
+
+  await expect(visibleCards(page)).toHaveText([
+    /^Gisteren/,
+    /^Vorige week/,
+    /^Zonder datum/,
+    /^Vorig jaar/,
+  ])
   await expect(
-    page.locator("div.rounded-2xl").filter({ visible: true })
-  ).toHaveText([/^Gisteren/, /^Vorige week/, /^Zonder datum/])
-  await expect(earlier.getByText("Vorig jaar")).toBeHidden()
+    page.getByRole("button", { name: /Toon eerdere cadeaus/ })
+  ).toBeHidden()
+})
 
-  await earlier.getByText("Eerdere cadeaus").click()
+test("bought presents page shows at most 15 gifts at first", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  for (let day = 1; day <= 17; day++) {
+    await createItem(wishlist, {
+      title: `Cadeau van dag ${day}.`,
+      boughtBy: shopper,
+      boughtAt: daysAgo(day),
+    })
+  }
+  await createItem(wishlist, {
+    title: "Vorig jaar",
+    boughtBy: shopper,
+    boughtAt: daysAgo(400),
+  })
+  const page = await signIn(shopper)
 
-  await expect(itemCard(page, "Vorig jaar")).toBeVisible()
-  await expect(earlier).toContainText(
-    "Wat je meer dan een jaar geleden hebt gekocht."
+  await page.goto("/profile/bought")
+
+  await expect(visibleCards(page)).toHaveText(
+    Array.from(
+      { length: 15 },
+      (_, i) => new RegExp(`^Cadeau van dag ${i + 1}\\.`)
+    )
   )
+  await expect(page.getByText("Vorig jaar")).toBeHidden()
+
+  await page.getByRole("button", { name: "Toon eerdere cadeaus (3)" }).click()
+
+  await expect(visibleCards(page)).toHaveText([
+    ...Array.from(
+      { length: 17 },
+      (_, i) => new RegExp(`^Cadeau van dag ${i + 1}\\.`)
+    ),
+    /^Vorig jaar/,
+  ])
+})
+
+test("bought presents page has no button when everything is shown", async ({
+  signIn,
+}) => {
+  const { shopper, wishlist } = await setup()
+  for (let day = 1; day <= 15; day++) {
+    await createItem(wishlist, {
+      title: `Cadeau van dag ${day}.`,
+      boughtBy: shopper,
+      boughtAt: daysAgo(day),
+    })
+  }
+  const page = await signIn(shopper)
+
+  await page.goto("/profile/bought")
+
+  await expect(visibleCards(page)).toHaveCount(15)
+  await expect(
+    page.getByRole("button", { name: /Toon eerdere cadeaus/ })
+  ).toHaveCount(0)
 })
 
 test("the buttons of a wish fit on a small phone", async ({ signIn }) => {

@@ -41,6 +41,10 @@
       "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
     }
   },
+  "BackLink": {
+    "back": "Terug naar",
+    "overview": "Overzicht"
+  },
   "Common": {
     "myList": "Mijn lijstje",
     "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
@@ -181,7 +185,6 @@
         "later": "Kijk later nog eens."
       }
     },
-    "inGroup": "in <link>{group}</link>",
     "hint": {
       "together": "Je beheert dit verlanglijstje samen met {names}.",
       "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
@@ -192,6 +195,10 @@
     "title": "Profiel",
     "metaTitle": "Profiel - Niet Weer Sokken",
     "admin": "Admin",
+    "account": {
+      "title": "Account",
+      "email": "Ingelogd als <strong>{email}</strong>."
+    },
     "logout": "Uitloggen"
   },
   "ProfileBoughtPresents": {
@@ -200,14 +207,11 @@
       "title": "Je hebt nog niets afgestreept",
       "text": "Druk bij een wens op ‘Ik koop dit’, dan zie je hier terug wat je voor wie koopt."
     },
-    "boughtFor": "Gekocht voor {name}",
-    "boughtForOn": "Gekocht voor {name} op {date, date, long}",
+    "boughtFor": "Voor {name}",
+    "boughtForOn": "Voor {name} · {date, date, long}",
     "removedItem": "Deze wens is verwijderd.",
     "removedWishlist": "Dit verlanglijstje is verwijderd.",
-    "earlier": {
-      "title": "Eerdere cadeaus ({count})",
-      "text": "Wat je meer dan een jaar geleden hebt gekocht."
-    }
+    "showMore": "Toon eerdere cadeaus ({count})"
   },
   "NewGroup": {
     "title": "Nieuwe groep",
@@ -255,10 +259,15 @@
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
-      "url": "Linkje <small>(optioneel)</small>",
       "category": "Categorie <small>(optioneel)</small>",
       "save": "Voeg wens toe"
     }
+  },
+  "LinkFields": {
+    "label": "{count, plural, one {Linkje} other {Linkjes}} <small>(optioneel)</small>",
+    "field": "Linkje {number}",
+    "add": "Nog een linkje",
+    "remove": "Verwijder linkje {number}"
   },
   "EditItem": {
     "button": "Wijzig",
@@ -269,7 +278,6 @@
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
-      "url": "Linkje <small>(optioneel)</small>",
       "category": "Categorie <small>(optioneel)</small>",
       "save": "Opslaan"
     }
@@ -311,7 +319,8 @@
   },
   "Share": {
     "button": "Nodig iemand uit voor de groep",
-    "copied": "Link van groep gekopieerd"
+    "copied": "Link van groep gekopieerd",
+    "intro": "Ik nodig je uit voor de groep {group} op Niet Weer Sokken, zodat we elkaars verlanglijstjes kunnen zien."
   },
   "Toggle": {
     "buy": "Ik koop dit",
@@ -589,6 +598,7 @@
     "text": "Iedereen met deze link kan je verlanglijstje bekijken nadat ze zijn ingelogd en het volgen. Wat er al gekocht is, zie je zelf nooit.",
     "link": "Link naar je verlanglijstje",
     "share": "Deel de link",
+    "intro": "{forSomeoneElse, select, true {Bekijk het verlanglijstje van {name}} other {Bekijk mijn verlanglijstje}} op Niet Weer Sokken.",
     "copied": "Link van verlanglijstje gekopieerd",
     "reset": "Maak een nieuwe link",
     "resetText": "Maak je een nieuwe link, dan werkt de oude niet meer. Wie je verlanglijstje al volgt, houdt toegang.",
@@ -610,6 +620,16 @@
       "text": "Volg het verlanglijstje om de wensen te zien en af te strepen. Je vindt het daarna terug op je overzicht.",
       "button": "Volg dit verlanglijstje"
     }
+  },
+  "GroupInvite": {
+    "intro": "Je bent uitgenodigd voor deze groep.",
+    "preview": {
+      "title": "Je bent uitgenodigd voor de groep {group}",
+      "text": "Doe mee op Niet Weer Sokken en bekijk elkaars verlanglijstjes, zodat niemand iets dubbel koopt."
+    },
+    "title": "Log in en volg de groep",
+    "text": "Dan zie je de verlanglijstjes van iedereen die meedoet en kun je je eigen verlanglijstje erbij zetten.",
+    "button": "Log in om mee te doen"
   },
   "UnfollowWishlist": {
     "button": "Stop met volgen",
@@ -686,6 +706,10 @@
           {
             "question": "Hoe zet ik een wens op mijn verlanglijstje?",
             "answer": "Open je verlanglijstje en kies ‘Voeg een wens toe’. Je kunt er een linkje bij zetten, zodat anderen precies weten wat je bedoelt, en een categorie kiezen."
+          },
+          {
+            "question": "Kan ik meer dan één linkje bij een wens zetten?",
+            "answer": "Ja, tot 5. Kies bij je wens ‘Nog een linkje’, bijvoorbeeld als hetzelfde cadeau in twee winkels te koop is. Anderen zien dan bij de wens van elke winkel een linkje met de naam van de winkel, zodat ze kunnen kiezen waar ze het kopen."
           },
           {
             "question": "Hoe verwijder ik een wens?",
@@ -823,7 +847,7 @@
           },
           {
             "question": "Waar zie ik wat ik heb gekocht?",
-            "answer": "Op je profiel, onder ‘Gekochte cadeaus’. Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept, het nieuwste bovenaan. Wat je meer dan een jaar geleden kocht, staat onder ‘Eerdere cadeaus’."
+            "answer": "Op je profiel, onder ‘Gekochte cadeaus’. Daar staat wat je voor wie koopt en op welke dag je het hebt afgestreept, het nieuwste bovenaan. Je ziet eerst de 15 nieuwste cadeaus van het afgelopen jaar, de rest zie je met ‘Toon eerdere cadeaus’."
           },
           {
             "question": "Wat gebeurt er met wat ik kocht als een wens wordt verwijderd?",
@@ -900,6 +924,7 @@
         "title": "Wie wat ziet",
         "items": [
           "Wie met je in een groep zit of je verlanglijstje volgt, ziet je naam, je profielfoto en je verlanglijstje.",
+          "Wie de link van een groep heeft, ziet de naam van de groep, ook zonder in te loggen. De leden en hun verlanglijstjes zie je pas als je bent ingelogd en de groep volgt.",
           "Je e-mailadres zien de anderen nooit.",
           "Wat je afstreept, ziet degene die het wenst niet. De anderen zien alleen dat een wens al wordt gekocht.",
           "Wie je bij het lootjes trekken hebt getrokken, zie alleen jij.",

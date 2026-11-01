@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
+import { LinkFields } from "@/components/LinkFields"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
@@ -71,12 +72,7 @@ export const NewItem = ({ id, categories }: Props) => {
             <Label htmlFor="unlimited">{t("NewItem.form.unlimited")}</Label>
           </div>
 
-          <Label htmlFor="url">
-            {t.rich("NewItem.form.url", {
-              small: chunks => <small>{chunks}</small>,
-            })}
-          </Label>
-          <Input id="url" name="url" />
+          <LinkFields />
           <Label htmlFor="category">
             {t.rich("NewItem.form.category", {
               small: chunks => <small>{chunks}</small>,

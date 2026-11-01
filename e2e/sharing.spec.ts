@@ -10,6 +10,7 @@ import {
   toasts,
 } from "./fixtures"
 import { Page } from "@playwright/test"
+import { baseURL } from "./support/env"
 
 const notFound = "We kunnen deze pagina niet vinden"
 
@@ -40,7 +41,7 @@ test("share your wishlist with a link", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Deel de link" }).click()
   await expect(toasts(page)).toContainText("Link van verlanglijstje gekopieerd")
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    `http://localhost:3100/lijstje/${shareToken}`
+    `Bekijk mijn verlanglijstje op Niet Weer Sokken.\nhttp://localhost:3100/lijstje/${shareToken}`
   )
 
   await page.reload()
@@ -76,7 +77,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
   const boughtWish = `Gekochte wens ${owner.id}`
   await createItem(wishlist, {
     title: secretWish,
-    url: `https://example.com/${owner.id}`,
+    links: [`https://example.com/${owner.id}`],
   })
   await createItem(wishlist, { title: boughtWish, boughtBy: buyer })
 
@@ -163,6 +164,30 @@ test("log in from a shared wishlist, follow it and check off a wish", async ({
     (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
       .userId
   ).toBe(guest.id)
+})
+
+test("followers of a shared wishlist see every link on a wish", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const visitor = await createUser()
+  const wishlist = await createWishlist(owner, {
+    shareToken: `token-${owner.id}`,
+  })
+  await createItem(wishlist, {
+    title: "Lego kasteel",
+    links: ["https://www.bol.com/lego", "https://www.coolblue.nl/lego"],
+  })
+  const page = await signIn(visitor)
+
+  await page.goto(`/lijstje/token-${owner.id}`)
+  await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
+
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+  await expect(itemCard(page, "Lego kasteel").getByRole("link")).toHaveText([
+    "bol.com",
+    "coolblue.nl",
+  ])
 })
 
 test("people who can already see a wishlist go straight to it", async ({
@@ -286,53 +311,85 @@ test("making a new link stops the old one, followers keep access", async ({
   ).toBeVisible()
 })
 
-for (const { name, open } of [
-  {
-    name: "wishlist",
-    open: async (page: Page, ids: { wishlist: string; group: string }) => {
-      await page.goto(`/wishlist/${ids.wishlist}`)
-      await page
-        .getByRole("button", { name: "Deel dit verlanglijstje" })
-        .click()
-      await page.getByLabel("Link naar je verlanglijstje").waitFor()
-      await expect(page.getByLabel("Link naar je verlanglijstje")).toHaveValue(
-        /lijstje/
-      )
-      await page.getByRole("button", { name: "Deel de link" }).click()
-    },
-  },
-  {
-    name: "group",
-    open: async (page: Page, ids: { wishlist: string; group: string }) => {
-      await page.goto(`/group/${ids.group}`)
-      await page
-        .getByRole("button", { name: "Nodig iemand uit voor de groep" })
-        .click()
-    },
-  },
-]) {
-  test(`sharing a ${name} only shares the link`, async ({ signIn }) => {
-    const owner = await createUser()
-    const group = await createGroup(owner)
-    const wishlist = await createWishlist(owner, { groups: [group] })
-    const page = await signIn(owner)
-
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "share", {
-        value: async (data: ShareData) => {
-          ;(window as unknown as { shared: ShareData }).shared = data
-        },
-      })
+// The link goes in the text, on its own line: some share targets, like copying
+// on macOS, glue a separate url to the text, which broke the link.
+async function stubShare(page: Page) {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "share", {
+      value: async (data: ShareData) => {
+        ;(window as unknown as { shared: ShareData }).shared = data
+      },
     })
-    await open(page, { wishlist: wishlist.id, group: group.id })
-
-    await page.waitForFunction(
-      () => (window as unknown as { shared?: ShareData }).shared
-    )
-    const shared = await page.evaluate(
-      () => (window as unknown as { shared: ShareData }).shared
-    )
-    expect(Object.keys(shared).sort()).toEqual(["title", "url"])
-    expect(shared.url).toMatch(/^http:\/\/localhost:3100\/(lijstje|group)\//)
   })
 }
+
+async function shared(page: Page) {
+  await page.waitForFunction(
+    () => (window as unknown as { shared?: ShareData }).shared
+  )
+  return page.evaluate(
+    () => (window as unknown as { shared: ShareData }).shared
+  )
+}
+
+async function shareWishlist(page: Page, wishlistId: string) {
+  await page.goto(`/wishlist/${wishlistId}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+  await expect(page.getByLabel("Link naar je verlanglijstje")).toHaveValue(
+    /lijstje/
+  )
+  await page.getByRole("button", { name: "Deel de link" }).click()
+}
+
+test("sharing your wishlist starts with a short intro", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner)
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await shareWishlist(page, wishlist.id)
+
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  expect(await shared(page)).toEqual({
+    title: "Olga",
+    text: `Bekijk mijn verlanglijstje op Niet Weer Sokken.\n${baseURL}/lijstje/${shareToken}`,
+  })
+})
+
+test("sharing a wishlist for someone else names them in the intro", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const wishlist = await createWishlist(owner, { title: "Sam" })
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await shareWishlist(page, wishlist.id)
+
+  const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+  })
+  expect(await shared(page)).toEqual({
+    title: "Sam",
+    text: `Bekijk het verlanglijstje van Sam op Niet Weer Sokken.\n${baseURL}/lijstje/${shareToken}`,
+  })
+})
+
+test("sharing a group invites with a short intro", async ({ signIn }) => {
+  const owner = await createUser()
+  const group = await createGroup(owner, { title: "Familie" })
+  const page = await signIn(owner)
+
+  await stubShare(page)
+  await page.goto(`/group/${group.id}`)
+  await page
+    .getByRole("button", { name: "Nodig iemand uit voor de groep" })
+    .click()
+
+  expect(await shared(page)).toEqual({
+    title: "Familie",
+    text: `Ik nodig je uit voor de groep Familie op Niet Weer Sokken, zodat we elkaars verlanglijstjes kunnen zien.\n${baseURL}/group/${group.id}`,
+  })
+})

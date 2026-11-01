@@ -1,3 +1,4 @@
+import { BackLink } from "@/components/BackLink"
 import { EmptyState } from "@/components/EmptyState"
 import { FollowGroup } from "@/components/FollowGroup"
 import { List } from "@/components/List"
@@ -17,10 +18,13 @@ import { getManagerOptionsForUser } from "@/lib/users/getManagerOptionsForUser"
 import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import { Separator } from "@/components/ui/separator"
 import { getGroupById } from "@/lib/groups/getGroupById"
+import { getGroupInvite } from "@/lib/groups/getGroupInvite"
+import { GroupInvite } from "@/components/GroupInvite"
+import { openGraphImage } from "@/lib/openGraph"
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
 import { getFormatter, getTranslations } from "next-intl/server"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 import { authOptions } from "@/lib/nextAuth"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { getFirstName } from "@/lib/users/getFirstName"
@@ -32,12 +36,24 @@ import { DrawLots } from "@/components/DrawLots"
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { groupId } = await params
-  const group = await getGroupById(groupId)
+  const group = await getGroupInvite(groupId)
 
   if (!group) return {}
 
+  const t = await getTranslations("GroupInvite.preview")
+
+  // The link of a group is the invitation: a preview in WhatsApp and the
+  // like, but no search results, the layout keeps this page out of the index.
   return {
     title: `${group.title} - Niet Weer Sokken`,
+    openGraph: {
+      type: "website",
+      siteName: "Niet Weer Sokken",
+      locale: "nl_NL",
+      title: t("title", { group: group.title }),
+      description: t("text"),
+      images: [openGraphImage],
+    },
   }
 }
 
@@ -50,11 +66,16 @@ export default async function GroupPage({ params }: Props) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
-    redirect(`/login?callbackUrl=${encodeURIComponent(`/group/${groupId}`)}`)
+    const invite = await getGroupInvite(groupId)
+
+    if (!invite) notFound()
+
+    return <GroupInvite group={invite} />
   }
 
   const group = await getGroupById(groupId)
   const t = await getTranslations("Group")
+  const tBackLink = await getTranslations("BackLink")
   const tCommon = await getTranslations("Common")
   const format = await getFormatter()
 
@@ -62,9 +83,12 @@ export default async function GroupPage({ params }: Props) {
     notFound()
   }
 
+  const backLink = <BackLink href="/" label={tBackLink("overview")} />
+
   if (!group.subscribed) {
     return (
       <>
+        {backLink}
         <EmptyState title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
@@ -115,6 +139,7 @@ export default async function GroupPage({ params }: Props) {
 
   return (
     <List>
+      {backLink}
       <div
         className="relative flex h-44 flex-col justify-between overflow-hidden rounded-3xl bg-cover bg-center p-5 text-white shadow-md"
         style={{
