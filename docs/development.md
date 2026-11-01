@@ -100,6 +100,7 @@ Every push to `main` deploys through `.github/workflows/main.yml` without downti
 - What must survive a deploy lives outside the releases and is linked into each one: `.env.local`, `database/` (through the absolute `DATABASE_URL`) and `public/avatars/`, which nginx serves itself. Something new like that needs a link in the workflow too.
 - The last three releases are kept. To go back to one, run `ln -sfn releases/<release> current.new && mv -Tf current.new current && pm2 reload wishlist` in the app folder. Migrations aren't undone, so they have to work with the previous release too.
 - pm2 only reads `ecosystem.config.cjs` on `pm2 start`. After changing it, run `pm2 delete wishlist && pm2 start current/ecosystem.config.cjs && pm2 save` in the app folder, which takes the app down for a moment.
+- pm2 starts at boot through its systemd unit (`pm2 startup`) and brings back the processes from the last `pm2 save`. Run `pm2 save` after every change to the list of processes, or a reboot brings back the old list.
 - During a reload two processes use the database for a moment. Transactions start with `BEGIN IMMEDIATE` (`src/lib/prisma.ts`), so they wait for each other instead of failing.
 
 ## Pull requests
