@@ -81,6 +81,7 @@ Keep the tone warm but calm:
 ## Screens
 
 - One red (primary) button per screen: the next step. Other actions use quiet `outline` buttons.
+- Red is `primary`, one per screen. `destructive` is only for error toasts: removing goes through `RemoveButton`, an `outline` button that confirms in a dialog.
 - Show a block only when it can be used. Drawing lots only shows once there's someone to draw with, for example.
 - Don't say the same thing twice on one screen, and keep things where they belong: a button to make a new group doesn't go between the groups you follow.
 
