@@ -91,7 +91,9 @@ test("make a wishlist for someone else and manage it together", async ({
 
   const fatherPage = await signIn(father)
   await fatherPage.goto("/")
-  await expect(ownWishlists(fatherPage).getByRole("link")).toHaveText(["Emma"])
+  await expect(ownWishlists(fatherPage).getByRole("link")).toHaveText([
+    /^Emma\s*Nog in geen groep$/,
+  ])
   await ownWishlists(fatherPage).getByRole("link", { name: "Emma" }).click()
   await expect(fatherPage).toHaveURL(`/wishlist/${wishlist.id}`)
   await expect(
