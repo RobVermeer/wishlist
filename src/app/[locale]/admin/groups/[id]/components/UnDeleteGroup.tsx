@@ -20,7 +20,7 @@ export const UnDeleteGroup = ({ id }: Props) => {
   }
 
   return (
-    <Button size="sm" variant="destructive" onClick={() => unDeleteGroup(id)}>
+    <Button size="sm" variant="outline" onClick={() => unDeleteGroup(id)}>
       {t("group.restore")}
     </Button>
   )
