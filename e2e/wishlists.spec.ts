@@ -295,9 +295,9 @@ test("your own wishlists on the dashboard say which groups they are in", async (
     page.getByRole("link").filter({ hasText: /^(Mijn lijstje|Opa|Oma)/ })
   ).toHaveText([
     /^Mijn lijstje\s*In groepen Familie en Vrienden$/,
-    /^Mijn lijstje\s*Nog in geen groep$/,
+    /^Mijn lijstje$/,
     /^Opa\s*In groep Familie$/,
-    /^Oma\s*Nog in geen groep$/,
+    /^Oma$/,
   ])
 })
 
