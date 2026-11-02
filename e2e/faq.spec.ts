@@ -331,8 +331,36 @@ test("the frequently asked questions explain sharing interests instead of wishes
     .getByText("Ik hou niet van verlanglijstjes, kan het ook anders?")
     .click()
   await expect(
-    page.getByText(/^Ja\. Zet bij ‘Waar ik blij van word’ op je verlanglijstje/)
+    page.getByText(
+      /^Ja\. Kies ‘Wijzig’ op je verlanglijstje en zet bij ‘Waar ik blij van word’/
+    )
   ).toContainText("Wensen erbij mag, maar hoeft niet.")
+})
+
+test("the frequently asked questions explain how to change the order of wishes", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Hoe zet ik mijn wensen in een andere volgorde?").click()
+  await expect(
+    page.getByText(
+      /^Kies ‘Volgorde aanpassen’ boven je wensen\. Sleep dan een wens aan de puntjes ernaast naar een andere plek en kies ‘Klaar’ als alles goed staat\./
+    )
+  ).toBeVisible()
+})
+
+test("the frequently asked questions name the Wijzig button of a wishlist", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Hoe verwijder ik mijn verlanglijstje?").click()
+  await expect(
+    page.getByText(
+      /^Open je verlanglijstje, kies ‘Wijzig’ en dan ‘Verwijder’\./
+    )
+  ).toBeVisible()
 })
 
 test("the frequently asked questions say when bought wishes go", async ({
