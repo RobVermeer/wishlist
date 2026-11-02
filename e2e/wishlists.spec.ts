@@ -158,7 +158,9 @@ test("edit a wishlist", async ({ signIn }) => {
   expect(updated.groups.map(({ id }) => id)).toEqual([friends.id])
 })
 
-test("your own wishlist shows the groups it is in", async ({ signIn }) => {
+test("your own wishlist shows the groups it is in under its title", async ({
+  signIn,
+}) => {
   const user = await createUser()
   const groups = [
     await createGroup(user, { title: "Een" }),
@@ -171,10 +173,15 @@ test("your own wishlist shows the groups it is in", async ({ signIn }) => {
   await page.goto(`/wishlist/${wishlist.id}`)
 
   await expect(
-    page.getByRole("heading", {
-      name: "Mijn lijstje in groepen Een, Twee & Drie",
-    })
+    page.getByRole("heading", { name: "Mijn lijstje", exact: true })
   ).toBeVisible()
+  await expect(page.getByText("In groepen Een, Twee en Drie")).toBeVisible()
+
+  await page.goto(`/group/${groups[0].id}/${wishlist.id}`)
+  await expect(
+    page.getByRole("heading", { name: "Mijn lijstje", exact: true })
+  ).toBeVisible()
+  await expect(page.getByText(/In groep/)).toHaveCount(0)
 })
 
 test("remove a wishlist", async ({ signIn }) => {
