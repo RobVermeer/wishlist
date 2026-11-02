@@ -40,7 +40,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const openCategories = await getOpenCategories()
   const t = await getTranslations("GroupWishlist")
   const tCommon = await getTranslations("Common")
-  const tEdit = await getTranslations("EditWishlist")
   const tInterests = await getTranslations("Interests")
   const format = await getFormatter()
 
@@ -106,7 +105,30 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
   return (
     <List>
-      {group && <BackLink href={`/group/${group.id}`} label={group.title} />}
+      {(group || wishlist.isOwnList) && (
+        <div className="flex items-center justify-between gap-2">
+          {group && (
+            <BackLink href={`/group/${group.id}`} label={group.title} />
+          )}
+          {wishlist.isOwnList && (
+            <EditWishlist
+              wishlist={{
+                id: wishlist.id,
+                title: wishlist.title,
+                theme: wishlist.theme,
+                groups: wishlist.groups
+                  .filter(({ id }) => ownGroups.some(group => group.id === id))
+                  .map(({ id }) => ({ id })),
+                managers: wishlist.managers.map(({ id }) => ({ id })),
+                isManager: wishlist.isManager,
+              }}
+              groups={ownGroups}
+              managers={managerOptions}
+              className="ml-auto shrink-0"
+            />
+          )}
+        </div>
+      )}
       <div className="text-center">
         {!wishlist.title && wishlist.user.image && (
           <Avatar className="inline-block w-14 h-14 border border-slate-500">
@@ -141,25 +163,6 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         <p className="mt-2 text-sm text-muted-foreground">
           {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}
         </p>
-
-        {wishlist.isOwnList && (
-          <EditWishlist
-            wishlist={{
-              id: wishlist.id,
-              title: wishlist.title,
-              theme: wishlist.theme,
-              groups: wishlist.groups
-                .filter(({ id }) => ownGroups.some(group => group.id === id))
-                .map(({ id }) => ({ id })),
-              managers: wishlist.managers.map(({ id }) => ({ id })),
-              isManager: wishlist.isManager,
-            }}
-            groups={ownGroups}
-            managers={managerOptions}
-            label={tEdit("pageButton")}
-            className="mt-3"
-          />
-        )}
       </div>
 
       {!hasItems &&

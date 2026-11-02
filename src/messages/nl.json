@@ -319,8 +319,7 @@
     "form": {
       "groups": "In welke groepen moet je verlanglijstje komen?",
       "save": "Opslaan"
-    },
-    "pageButton": "Wijzig verlanglijstje"
+    }
   },
   "EditUser": {
     "form": {
