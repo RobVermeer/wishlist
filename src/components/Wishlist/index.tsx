@@ -39,6 +39,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
   const t = await getTranslations("GroupWishlist")
+  const tCommon = await getTranslations("Common")
   const tEdit = await getTranslations("EditWishlist")
   const tInterests = await getTranslations("Interests")
   const format = await getFormatter()
@@ -117,11 +118,17 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           </Avatar>
         )}
         <ListTitle>
-          <WishlistTitle
-            wishlist={wishlist}
-            showGroups={wishlist.isOwnList && !group}
-          />
+          <WishlistTitle wishlist={wishlist} />
         </ListTitle>
+
+        {wishlist.isOwnList && !group && wishlist.groups.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {tCommon("inGroup", {
+              count: wishlist.groups.length,
+              groups: format.list(wishlist.groups.map(({ title }) => title)),
+            })}
+          </p>
+        )}
 
         {wishlist.managedWith.length > 0 && (
           <p className="mt-2 text-sm text-muted-foreground">

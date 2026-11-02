@@ -46,7 +46,7 @@
   },
   "Common": {
     "myList": "Mijn lijstje",
-    "inGroup": "in {count, plural, =1 {groep} other {groepen}} {groups}",
+    "inGroup": "In {count, plural, =1 {groep} other {groepen}} {groups}",
     "group": {
       "theme": {
         "label": "Thema",
