@@ -276,8 +276,29 @@ test("the frequently asked questions explain how to make a wishlist", async ({
 
   await expect(
     page.getByText(
-      "Kies op je overzicht ‘Nieuw verlanglijstje’. Kies of het voor jezelf is of voor iemand anders, kies eventueel een thema en vink de groepen aan waar het in moet. Daarna zet je er wensen op.",
+      "Kies op je overzicht bij ‘Je verlanglijstjes’ voor ‘Nieuw’. Kies of het voor jezelf is of voor iemand anders, kies eventueel een thema en vink de groepen aan waar het in moet. Daarna zet je er wensen op.",
       { exact: true }
+    )
+  ).toBeVisible()
+})
+
+test("the frequently asked questions explain how to make a wishlist for someone else", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  await page
+    .getByText(
+      "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?"
+    )
+    .click()
+
+  await expect(
+    page.getByText(
+      "Kies op je overzicht bij ‘Je verlanglijstjes’ voor ‘Nieuw’ en kies bij ‘Voor wie is dit verlanglijstje?’ voor ‘Voor iemand anders’.",
+      { exact: false }
     )
   ).toBeVisible()
 })
