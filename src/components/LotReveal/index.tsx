@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useState } from "react"
+import { ReactNode, useRef, useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
@@ -16,9 +16,17 @@ interface Props {
 // Shows who you drew only when you ask, so it doesn't show when you show the
 // app to someone. Until then the name isn't in the page, also not for screen
 // readers or searching in the page, and every visit starts hidden again.
+// The placeholder for the name shows it too, people tap that first.
 export const LotReveal = ({ name, className, details, children }: Props) => {
   const t = useTranslations("Draw.lot")
   const [revealed, setRevealed] = useState(false)
+  const toggle = useRef<HTMLButtonElement>(null)
+
+  const reveal = () => {
+    setRevealed(true)
+    // The placeholder disappears, so keep the focus on the toggle.
+    toggle.current?.focus()
+  }
 
   return (
     <>
@@ -35,15 +43,23 @@ export const LotReveal = ({ name, className, details, children }: Props) => {
                 secret: chunks => (
                   <>
                     <span className="sr-only">{chunks}</span>
-                    <span
-                      aria-hidden
-                      className="inline-block h-[0.75em] w-24 rounded-full bg-primary/20"
-                    />
+                    <button
+                      type="button"
+                      aria-label={t("revealName")}
+                      onClick={reveal}
+                      className="inline-block cursor-pointer outline-none focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&:hover>span]:bg-primary/30"
+                    >
+                      <span
+                        aria-hidden
+                        className="inline-block h-[0.75em] w-24 rounded-full bg-primary/20 transition-colors"
+                      />
+                    </button>
                   </>
                 ),
               })}
         </p>
         <Button
+          ref={toggle}
           type="button"
           variant="outline"
           size="sm"
