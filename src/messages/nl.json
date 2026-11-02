@@ -133,10 +133,6 @@
       "text": "Volg de groep om de verlanglijstjes van iedereen te zien."
     },
     "follow": "Volg de groep",
-    "missing": {
-      "title": "Welk verlanglijstje is voor deze groep?",
-      "text": "Kies een van je verlanglijstjes of maak een nieuwe, dan zien de anderen in {group} wat je graag wilt."
-    },
     "duplicates": {
       "title": "Je staat {count} keer in deze groep",
       "text": "Kies welk verlanglijstje de anderen hier zien. Je andere verlanglijstjes blijven gewoon bestaan."

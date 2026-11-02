@@ -561,17 +561,66 @@ test("choose your wishlist for a group from its page", async ({ signIn }) => {
   await expect(
     page.getByRole("link", { name: "Mijn lijstje", exact: true })
   ).toBeVisible()
-  await expect(
-    page.getByRole("heading", {
-      name: "Welk verlanglijstje is voor deze groep?",
-    })
-  ).toBeHidden()
 
   const groups = await prisma.wishlist.findUniqueOrThrow({
     where: { id: christmas.id },
     include: { groups: true },
   })
   expect(groups.groups.map(({ id }) => id)).toEqual([group.id])
+})
+
+test("a member without a wishlist in the group adds theirs from the button below the lists", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const other = await createUser({ firstName: "Pia" })
+  const member = await createUser()
+  const group = await createGroup(owner, {
+    title: "Familie",
+    members: [other, member],
+  })
+  await createWishlist(owner, { groups: [group] })
+  await createWishlist(other, { groups: [group] })
+  const christmas = await createWishlist(member)
+  const page = await signIn(member)
+
+  await page.goto(`/group/${group.id}`)
+  await expect(page.getByRole("link", { name: "Olga" })).toBeVisible()
+  await expect(
+    page.getByRole("heading", {
+      name: "Welk verlanglijstje is voor deze groep?",
+    })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Kies je verlanglijstje" })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Nieuw verlanglijstje" })
+  ).toHaveCount(0)
+  await page.getByRole("button", { name: "Verlanglijstje toevoegen" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Verlanglijstje toevoegen" })
+  await expect(dialog).toContainText(
+    "Kies welk verlanglijstje je aan Familie toevoegt."
+  )
+  await expect(dialog.getByLabel(/Mijn lijstje/)).toBeChecked()
+  await expect(
+    dialog.getByRole("button", { name: "Nieuw verlanglijstje" })
+  ).toBeVisible()
+  await dialog.getByRole("button", { name: "Voeg toe" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Het verlanglijstje staat nu in de groep"
+  )
+  await expect(
+    page.getByRole("link", { name: "Mijn lijstje", exact: true })
+  ).toBeVisible()
+
+  const added = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: christmas.id },
+    include: { groups: true },
+  })
+  expect(added.groups.map(({ id }) => id)).toEqual([group.id])
 })
 
 test("adding another wishlist of your own replaces yours in the group", async ({
@@ -919,7 +968,7 @@ test("owner can take a wishlist out of the group", async ({ signIn }) => {
   const memberPage = await signIn(member)
   await memberPage.goto(`/group/${group.id}`)
   await expect(
-    memberPage.getByText("Welk verlanglijstje is voor deze groep?")
+    memberPage.getByRole("button", { name: "Verlanglijstje toevoegen" })
   ).toBeVisible()
 })
 

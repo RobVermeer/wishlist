@@ -193,7 +193,7 @@ export default async function GroupPage({ params }: Props) {
 
       {lot && <DrawLot lot={lot} />}
 
-      {groupIsEmpty ? (
+      {groupIsEmpty && (
         <section
           aria-labelledby="group-start"
           className="grid gap-4 rounded-md border p-4"
@@ -247,35 +247,6 @@ export default async function GroupPage({ params }: Props) {
             </li>
           </ol>
         </section>
-      ) : (
-        ownInGroup.length === 0 && (
-          <section className="grid gap-3 rounded-md border p-4">
-            <EmptyState title={t("missing.title")}>
-              {t("missing.text", { group: group.title })}
-            </EmptyState>
-            <div className="flex flex-wrap gap-2">
-              {ownToChoose.length > 0 && (
-                <ChooseWishlistForGroup
-                  group={groupInfo}
-                  wishlists={wishlistNames(ownToChoose)}
-                  trigger={chooseButton}
-                />
-              )}
-              <NewWishlist
-                groups={groupOptions}
-                managers={managerOptions}
-                defaultGroupIds={[group.id]}
-                trigger={
-                  <Button
-                    variant={ownToChoose.length > 0 ? "outline" : "default"}
-                  >
-                    <Plus size="16" className="mr-2" /> {t("newWishlist")}
-                  </Button>
-                }
-              />
-            </div>
-          </section>
-        )
       )}
 
       {ownInGroup.length > 1 && (
@@ -340,6 +311,9 @@ export default async function GroupPage({ params }: Props) {
         forSomeoneElse={wishlistNames(forSomeoneElseToAdd)}
         groups={groupOptions}
         managers={managerOptions}
+        variant={
+          !groupIsEmpty && ownInGroup.length === 0 ? "default" : "outline"
+        }
       />
       {!groupIsEmpty && (
         <ShareButton

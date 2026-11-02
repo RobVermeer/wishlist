@@ -35,6 +35,7 @@ interface Props {
   forSomeoneElse: Option[]
   groups: GroupOption[]
   managers: ManagerOption[]
+  variant: "default" | "outline"
 }
 
 export const AddWishlistToGroup = ({
@@ -44,6 +45,7 @@ export const AddWishlistToGroup = ({
   forSomeoneElse,
   groups,
   managers,
+  variant,
 }: Props) => {
   const t = useTranslations("Group.addWishlist")
   const { toast } = useToast()
@@ -54,7 +56,7 @@ export const AddWishlistToGroup = ({
   )
 
   const button = (
-    <Button variant="outline">
+    <Button variant={variant}>
       <ListPlus size="16" className="mr-2" /> {t("button")}
     </Button>
   )
