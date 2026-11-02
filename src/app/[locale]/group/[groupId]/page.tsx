@@ -318,7 +318,11 @@ export default async function GroupPage({ params }: Props) {
       {!groupIsEmpty && (
         <ShareButton
           title={group.title}
-          variant={ownInGroup.length === 1 ? "default" : "outline"}
+          variant={
+            group.members.length === 1 && ownInGroup.length === 1
+              ? "default"
+              : "outline"
+          }
         />
       )}
     </List>
