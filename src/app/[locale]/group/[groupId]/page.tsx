@@ -30,7 +30,7 @@ import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { getLotForUser } from "@/lib/draws/getLotForUser"
 import { getDrawForCreator } from "@/lib/draws/getDrawForCreator"
-import { DrawStatus } from "@/components/DrawStatus"
+import { DrawSummary } from "@/components/DrawSummary"
 import { DrawLot } from "@/components/DrawLot"
 import { DrawLots } from "@/components/DrawLots"
 
@@ -130,6 +130,20 @@ export default async function GroupPage({ params }: Props) {
   const [onlyWishlist] = group.wishlist
   const showOnlyWishlist =
     group.wishlist.length === 1 && !onlyWishlist.isOwnList
+
+  const drawLots = (
+    <DrawLots
+      groupId={group.id}
+      members={group.members.map(member => ({
+        id: member.id,
+        name: getFirstName(member) || tDraw("anonymous"),
+      }))}
+      previous={(draw ?? [])
+        .filter(({ status }) => status === "invited")
+        .map(({ id, name }) => ({ id, name }))}
+      redraw={draw !== null}
+    />
+  )
 
   const chooseButton = (
     <Button>
@@ -287,36 +301,25 @@ export default async function GroupPage({ params }: Props) {
         ))
       )}
 
-      {isCreator && (draw || group.members.length > 1) && (
+      {isCreator && draw && (
+        <DrawSummary participants={draw}>{drawLots}</DrawSummary>
+      )}
+
+      {isCreator && !draw && group.members.length > 1 && (
         <section
           aria-labelledby="draw-title"
-          className={
-            draw
-              ? "grid gap-3 rounded-md border p-4"
-              : "flex flex-wrap items-center justify-between gap-3 rounded-md border p-4"
-          }
+          className="flex flex-wrap items-center justify-between gap-3 rounded-md border p-4"
         >
           <div className="grid gap-0.5">
             <h3 id="draw-title" className="flex items-center gap-2 font-medium">
               <Dices aria-hidden size="18" className="text-primary" />
-              {draw ? tDraw("manage.drawnTitle") : tDraw("manage.title")}
+              {tDraw("manage.title")}
             </h3>
             <p className="text-sm text-muted-foreground">
-              {draw ? tDraw("manage.drawnText") : tDraw("manage.text")}
+              {tDraw("manage.text")}
             </p>
           </div>
-          {draw && <DrawStatus participants={draw} />}
-          <DrawLots
-            groupId={group.id}
-            members={group.members.map(member => ({
-              id: member.id,
-              name: getFirstName(member) || tDraw("anonymous"),
-            }))}
-            previous={(draw ?? [])
-              .filter(({ status }) => status === "invited")
-              .map(({ id, name }) => ({ id, name }))}
-            redraw={draw !== null}
-          />
+          {drawLots}
         </section>
       )}
 
