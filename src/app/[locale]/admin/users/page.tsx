@@ -59,7 +59,7 @@ export default async function AdminUsersPage() {
               <ToggleAdmin id={user.id} isAdmin={user.isAdmin} />
             )}
             {!user.isSuperAdmin && (isSuperAdmin || !user.isAdmin) && (
-              <RemoveUser id={user.id} />
+              <RemoveUser id={user.id} name={user.name ?? user.email ?? ""} />
             )}
           </div>
         </Card>

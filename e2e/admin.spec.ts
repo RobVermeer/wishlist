@@ -59,13 +59,18 @@ test("admin can remove a user", async ({ signIn }) => {
   const userCard = card(page, user.email!)
   await expect(userCard).toContainText("Weg Gebruiker")
 
-  page.once("dialog", dialog => dialog.dismiss())
+  const dialog = page.getByRole("alertdialog")
   await userCard.getByRole("button", { name: "Verwijder" }).click()
+  await expect(dialog).toContainText(
+    "Weg Gebruiker verdwijnt, met alle verlanglijstjes en groepen"
+  )
+  await dialog.getByRole("button", { name: "Toch niet" }).click()
+  await expect(dialog).toBeHidden()
   await expect(userCard).toBeVisible()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(1)
 
-  page.once("dialog", dialog => dialog.accept())
   await userCard.getByRole("button", { name: "Verwijder" }).click()
+  await dialog.getByRole("button", { name: "Verwijder" }).click()
 
   await expect(userCard).toBeHidden()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(0)
@@ -152,8 +157,12 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   const groupCard = card(page, group.title)
   await expect(groupCard).toContainText("Groep Eigenaar")
 
-  page.once("dialog", dialog => dialog.accept())
   await groupCard.getByRole("button", { name: "Verwijder" }).click()
+  const dialog = page.getByRole("alertdialog")
+  await expect(dialog).toContainText(
+    `‘${group.title}’ verdwijnt voor alle leden`
+  )
+  await dialog.getByRole("button", { name: "Verwijder" }).click()
   await expect
     .poll(
       async () =>

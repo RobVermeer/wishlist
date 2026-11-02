@@ -37,7 +37,7 @@ export default async function AdminUsersPage() {
               <Link href={`/admin/groups/${group.id}`}>{t("groups.view")}</Link>
             </Button>
 
-            <RemoveGroup id={group.id} />
+            <RemoveGroup id={group.id} title={group.title} />
           </div>
         </Card>
       ))}
