@@ -84,7 +84,9 @@ test("an empty wishlist says to look later once more wishes were asked for", asy
   signIn,
 }) => {
   const { owner, shopper, group, wishlist } = await setup()
-  await prisma.reminder.create({ data: { to: owner.id, from: shopper.id } })
+  await prisma.reminder.create({
+    data: { to: owner.id, from: shopper.id, wishlistId: wishlist.id },
+  })
   const page = await signIn(shopper)
 
   await page.goto(`/group/${group.id}/${wishlist.id}`)
@@ -111,6 +113,27 @@ test("an empty wishlist for someone else says who gets the e-mail", async ({
   await expect(page.getByText("Baby Olga heeft nog geen wensen")).toBeVisible()
   await expect(
     page.getByText("Vraag om meer wensen, dan krijgt Olga een e-mail.")
+  ).toBeVisible()
+})
+
+test("an empty wishlist with managers says they get the e-mail too", async ({
+  signIn,
+}) => {
+  const { owner, shopper, group } = await setup()
+  const manager = await createUser({ firstName: "Mark" })
+  const wishlist = await createWishlist(owner, {
+    title: "Emma",
+    groups: [group],
+    managers: [manager],
+  })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+
+  await expect(
+    page.getByText(
+      "Vraag om meer wensen, dan krijgen Olga en wie het verlanglijstje mee beheert een e-mail."
+    )
   ).toBeVisible()
 })
 
@@ -339,18 +362,73 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
   expect(reminder.subject).toBe("Heb je nog wensen?")
   expect(reminder.html).toContain("Olga")
   expect(reminder.html).toContain(
+    "Iemand vraagt of je nog wat extra wensen op je verlanglijstje kunt zetten."
+  )
+  expect(reminder.html).toContain(
     "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
   )
+  expect(reminder.html).toContain(`/wishlist/${wishlist.id}"`)
 
   const reminders = await prisma.reminder.findMany({ where: { to: owner.id } })
   expect(reminders).toEqual([
-    expect.objectContaining({ from: shopper.id, to: owner.id }),
+    expect.objectContaining({
+      from: shopper.id,
+      to: owner.id,
+      wishlistId: wishlist.id,
+    }),
   ])
 
   await page.reload()
   await expect(
     page.getByRole("button", { name: "Vraag om meer wensen" })
   ).toBeHidden()
+})
+
+test("ask for more wishes on a verlanglijstje for someone else", async ({
+  signIn,
+}) => {
+  const { owner, shopper, group, wishlist } = await setup()
+  const manager = await createUser({ firstName: "Mark" })
+  const emma = await createWishlist(owner, {
+    title: "Emma",
+    groups: [group],
+    managers: [manager],
+  })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${emma.id}`)
+  await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
+
+  await expect(toasts(page)).toContainText("We hebben om meer wensen gevraagd!")
+
+  for (const [user, name] of [
+    [owner, "Olga"],
+    [manager, "Mark"],
+  ] as const) {
+    await expect.poll(async () => (await emailsTo(user.email!)).length).toBe(1)
+    const [reminder] = await emailsTo(user.email!)
+    expect(reminder.subject).toBe("Heeft Emma nog wensen?")
+    expect(reminder.html).toContain(name)
+    expect(reminder.html).toContain(
+      "Iemand vraagt of je nog wat extra wensen op het verlanglijstje voor Emma kunt zetten."
+    )
+    expect(reminder.html).toContain(
+      "Je krijgt deze e-mail omdat je het verlanglijstje voor Emma beheert en iemand met wie je het deelt om meer wensen vraagt."
+    )
+    expect(reminder.html).toContain(`/wishlist/${emma.id}"`)
+  }
+  expect(await emailsTo(shopper.email!)).toHaveLength(0)
+
+  await page.reload()
+  await expect(
+    page.getByRole("button", { name: "Vraag om meer wensen" })
+  ).toBeHidden()
+
+  // Olga's own verlanglijstje is a different one, so it can still be asked.
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await expect(
+    page.getByRole("button", { name: "Vraag om meer wensen" })
+  ).toBeVisible()
 })
 
 test("a reminder can only be sent once per 24 hours", async ({ signIn }) => {
@@ -361,6 +439,7 @@ test("a reminder can only be sent once per 24 hours", async ({ signIn }) => {
     data: {
       to: owner.id,
       from: shopper.id,
+      wishlistId: wishlist.id,
       createdAt: new Date(Date.now() - 23 * 60 * 60 * 1000),
     },
   })

@@ -143,10 +143,11 @@ model WishlistItemLink {
 }
 
 model Reminder {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  to        String
-  from      String
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  to         String
+  from       String
+  wishlistId String?
 }
 
 model Draw {

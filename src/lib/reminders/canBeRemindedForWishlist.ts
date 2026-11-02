@@ -2,7 +2,7 @@ import "server-only"
 
 import { prisma } from "@/lib/prisma"
 
-export const canBeRemindedForUser = async (to: string) => {
+export const canBeRemindedForWishlist = async (wishlistId: string) => {
   const remindTimeout = new Date()
 
   remindTimeout.setHours(remindTimeout.getHours() - 24)
@@ -12,7 +12,7 @@ export const canBeRemindedForUser = async (to: string) => {
       createdAt: {
         gte: remindTimeout,
       },
-      to,
+      wishlistId,
     },
   })
 

@@ -57,6 +57,7 @@ export const getWishlistById = cache(async (id: string) => {
       isOwnList,
       isManager,
       managers: isOwner ? managers : [],
+      hasManagers: managers.length > 0,
       managedWith: isOwnList
         ? [data.user, ...managers].filter(owner => owner.id !== userId)
         : [],
