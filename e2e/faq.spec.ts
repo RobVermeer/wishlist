@@ -361,3 +361,17 @@ test("the frequently asked questions say when bought wishes go", async ({
     list.getByText("Hij verdwijnt ook niet als we na een feest opruimen.")
   ).toBeVisible()
 })
+
+test("the frequently asked questions say who gets asked for more wishes", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  const buying = page.getByRole("region", { name: "Cadeaus kopen" })
+  await buying.getByText("Hoe vraag ik om meer wensen?").click()
+  await expect(
+    buying.getByText(
+      "Kies op het verlanglijstje van iemand anders ‘Vraag om meer wensen’. Wie het verlanglijstje beheert, krijgt dan een e-mail met een link ernaartoe. Dat kan één keer per dag per verlanglijstje."
+    )
+  ).toBeVisible()
+})
