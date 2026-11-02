@@ -301,7 +301,7 @@ test("your own wishlists on the dashboard say which groups they are in", async (
   ])
 })
 
-test("the dashboard shows your own wishlists first, then what you follow", async ({
+test("the dashboard shows what you follow first, then your own wishlists", async ({
   signIn,
 }) => {
   const user = await createUser()
@@ -314,8 +314,8 @@ test("the dashboard shows your own wishlists first, then what you follow", async
   await page.goto("/")
 
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
-    "Je verlanglijstjes",
     "Wat je volgt",
+    "Je verlanglijstjes",
   ])
 
   const own = page.getByRole("region", { name: "Je verlanglijstjes" })
@@ -341,7 +341,7 @@ test("the buttons to make a wishlist or group sit above their section", async ({
     ["Wat je volgt", "Nieuwe groep"],
   ]) {
     const region = page.getByRole("region", { name: section })
-    await expect(region.getByRole("button")).toHaveText([name])
+    await expect(region.getByRole("button")).toHaveCount(1)
     const button = await region.getByRole("button", { name }).boundingBox()
     const firstTile = await region.getByRole("link").first().boundingBox()
     expect(button!.y + button!.height).toBeLessThanOrEqual(firstTile!.y)
@@ -349,6 +349,32 @@ test("the buttons to make a wishlist or group sit above their section", async ({
 
   await page.getByRole("button", { name: "Nieuwe groep" }).click()
   await expect(page.getByRole("dialog", { name: /Nieuwe groep/ })).toBeVisible()
+})
+
+test("on a phone the buttons fit next to their section title", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  await createGroup(user, { title: "Familie" })
+  await createWishlist(user, { title: "Eigen lijst" })
+  const page = await signIn(user, { viewport: { width: 375, height: 812 } })
+
+  await page.goto("/")
+
+  for (const [section, name] of [
+    ["Wat je volgt", "Nieuwe groep"],
+    ["Je verlanglijstjes", "Nieuw verlanglijstje"],
+  ]) {
+    const region = page.getByRole("region", { name: section })
+    const title = await region
+      .getByRole("heading", { name: section })
+      .boundingBox()
+    const button = await region.getByRole("button", { name }).boundingBox()
+    const middle = button!.y + button!.height / 2
+    expect(middle).toBeGreaterThan(title!.y)
+    expect(middle).toBeLessThan(title!.y + title!.height)
+    expect(button!.x + button!.width).toBeLessThanOrEqual(375)
+  }
 })
 
 test("following only a wishlist doesn't show the empty state", async ({

@@ -128,12 +128,18 @@ export default async function Home() {
       groups={await getGroupOptionsForUser()}
       managers={await getManagerOptionsForUser()}
       trigger={
-        <Button
-          variant={hasWishlists ? "outline" : "default"}
-          size={hasWishlists ? "sm" : "default"}
-        >
-          <Plus size="16" className="mr-2" /> {t("wishlists.new")}
-        </Button>
+        hasWishlists ? (
+          // Short on phones, so it fits next to the section title.
+          <Button variant="outline" size="sm" aria-label={t("wishlists.new")}>
+            <Plus size="16" className="mr-2" />
+            <span className="sm:hidden">{t("wishlists.newShort")}</span>
+            <span className="max-sm:hidden">{t("wishlists.new")}</span>
+          </Button>
+        ) : (
+          <Button>
+            <Plus size="16" className="mr-2" /> {t("wishlists.new")}
+          </Button>
+        )
       }
     />
   )
@@ -193,30 +199,6 @@ export default async function Home() {
         </List>
       )}
 
-      <section aria-labelledby="wishlists-title" className="grid gap-2">
-        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-          <ListTitle>
-            <span id="wishlists-title">{t("wishlists.title")}</span>
-          </ListTitle>
-          {hasWishlists && newWishlist}
-        </div>
-
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {wishlists.map(wishlist =>
-            renderWishlist(wishlist, ownListGroups(wishlist))
-          )}
-        </div>
-
-        {!hasWishlists && (
-          <div className="grid justify-items-start gap-4">
-            <EmptyState title={t("wishlists.empty.title")}>
-              {t("wishlists.empty.text")}
-            </EmptyState>
-            {newWishlist}
-          </div>
-        )}
-      </section>
-
       <section aria-labelledby="following-title" className="grid gap-2">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
           <ListTitle>
@@ -251,6 +233,30 @@ export default async function Home() {
               {t("following.empty.text")}
             </EmptyState>
             {newGroup}
+          </div>
+        )}
+      </section>
+
+      <section aria-labelledby="wishlists-title" className="grid gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <ListTitle>
+            <span id="wishlists-title">{t("wishlists.title")}</span>
+          </ListTitle>
+          {hasWishlists && newWishlist}
+        </div>
+
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
+          {wishlists.map(wishlist =>
+            renderWishlist(wishlist, ownListGroups(wishlist))
+          )}
+        </div>
+
+        {!hasWishlists && (
+          <div className="grid justify-items-start gap-4">
+            <EmptyState title={t("wishlists.empty.title")}>
+              {t("wishlists.empty.text")}
+            </EmptyState>
+            {newWishlist}
           </div>
         )}
       </section>
