@@ -22,14 +22,10 @@ async function chooseManager(page: Page, dialog: Locator, name: string) {
 }
 
 const ownWishlists = (page: Page) =>
-  page.locator("div.grid").filter({
-    has: page.getByRole("button", { name: "Nieuw verlanglijstje" }),
-  })
+  page.getByRole("region", { name: "Je verlanglijstjes" })
 
 const following = (page: Page) =>
-  page.locator("div.grid").filter({
-    has: page.getByRole("button", { name: "Nieuwe groep" }),
-  })
+  page.getByRole("region", { name: "Wat je volgt" })
 
 const findWishlist = (wishlist: { id: string }) =>
   prisma.wishlist.findUniqueOrThrow({
