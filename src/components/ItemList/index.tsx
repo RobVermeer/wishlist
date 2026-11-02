@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react"
 import { SortableList } from "@/components/SortableList"
+import { useSortMode } from "@/components/SortMode"
 import { reorderWishlistItems } from "@/lib/wishlistItems/reorderWishlistItems"
 
 interface Props {
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export const ItemList = ({ id, wishlistId, items, sortable }: Props) => {
+  const showHandles = useSortMode() && items.length > 1
+
   if (!sortable) {
     return items.map(item => <div key={item.id}>{item.node}</div>)
   }
@@ -30,7 +33,7 @@ export const ItemList = ({ id, wishlistId, items, sortable }: Props) => {
           style={style}
           className="flex items-center gap-1"
         >
-          {handle}
+          {showHandles && handle}
           <div className="min-w-0 flex-1">{item.node}</div>
         </div>
       )}

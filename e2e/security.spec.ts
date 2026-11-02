@@ -405,6 +405,7 @@ test("only your own wishes in one part of the list can be reordered", async ({
     })
 
     await page.goto(`/wishlist/${wishlist.id}`)
+    await page.getByRole("button", { name: "Volgorde aanpassen" }).click()
     await page.getByRole("button", { name: "Verplaats wens Fiets" }).focus()
     await page.keyboard.press("Space")
     await expect(async () => {
@@ -1203,6 +1204,7 @@ test("only the owner and managers can reorder categories", async ({
 
   await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
   await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).click()
   const handle = page.getByRole("button", {
     name: "Verplaats categorie Boeken",
   })

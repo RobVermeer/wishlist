@@ -479,6 +479,13 @@ test("owner can reorder wishes by dragging", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await expect(
+    page.getByRole("button", { name: /Verplaats wens/ })
+  ).toHaveCount(0)
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).click()
+  await expect(
+    page.getByText("Sleep de wensen naar de goede plek.")
+  ).toBeVisible()
 
   const handle = page.getByRole("button", { name: "Verplaats wens Puzzel" })
   const target = itemCard(page, "Fiets")
@@ -495,6 +502,14 @@ test("owner can reorder wishes by dragging", async ({ signIn }) => {
     .poll(() => positionsOf(wishlist.id))
     .toEqual(["Puzzel", "Fiets", "Boek"])
 
+  await page.getByRole("button", { name: "Klaar" }).click()
+  await expect(
+    page.getByRole("button", { name: /Verplaats wens/ })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Volgorde aanpassen" })
+  ).toBeVisible()
+
   const shopperPage = await signIn(shopper)
   await shopperPage.goto(`/group/${group.id}/${wishlist.id}`)
   await expect(shopperPage.locator("main div.rounded-2xl")).toHaveText([
@@ -505,6 +520,32 @@ test("owner can reorder wishes by dragging", async ({ signIn }) => {
   await expect(
     shopperPage.getByRole("button", { name: /Verplaats wens/ })
   ).toHaveCount(0)
+  await expect(
+    shopperPage.getByRole("button", { name: "Volgorde aanpassen" })
+  ).toHaveCount(0)
+})
+
+test("the order can only be changed when there is something to move", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const books = await createCategory(wishlist, "Boeken", 0)
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Roman", category: books })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await expect(page.getByText("Fiets")).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Volgorde aanpassen" })
+  ).toHaveCount(0)
+
+  await createItem(wishlist, { title: "Strip", category: books })
+  await page.reload()
+  await expect(
+    page.getByRole("button", { name: "Volgorde aanpassen" })
+  ).toBeVisible()
 })
 
 test("owner can reorder wishes in a category with the keyboard", async ({
@@ -520,6 +561,9 @@ test("owner can reorder wishes in a category with the keyboard", async ({
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await page.getByRole("button", { name: /^Boeken \d+$/ }).click()
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).focus()
+  await page.keyboard.press("Enter")
+  await expect(page.getByRole("button", { name: "Klaar" })).toBeFocused()
 
   const handle = page.getByRole("button", { name: "Verplaats wens Roman" })
   const announcement = page
