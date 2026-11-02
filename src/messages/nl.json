@@ -981,7 +981,7 @@
           "De groepen die je hebt gemaakt of waar je lid van bent, en de verlanglijstjes die je volgt of samen beheert.",
           "Welke wensen je hebt afgestreept, en wanneer.",
           "Bij lootjes trekken: wie er meedoet, met naam en e-mailadres, en het budget en de datum. Ook van wie nog geen account heeft en door de maker van de groep is opgegeven.",
-          "Wanneer je iemand om meer wensen hebt gevraagd, zodat dat één keer per dag kan.",
+          "Wanneer je om meer wensen hebt gevraagd en voor welk verlanglijstje, zodat dat één keer per dag kan.",
           "Wanneer je Niet Weer Sokken voor het laatst hebt gebruikt.",
           "Je sessies, zodat je ingelogd blijft. Log je in met Google, dan ook de koppeling met je Google-account."
         ]
@@ -1025,7 +1025,7 @@
         "items": [
           "Een link om in te loggen, als je daarom vraagt.",
           "Je lootje, als de maker van een groep lootjes trekt.",
-          "Een vraag om meer wensen, als iemand je die stuurt."
+          "Een vraag om meer wensen, als iemand je die stuurt voor je verlanglijstje of een verlanglijstje dat je samen beheert."
         ],
         "more": [
           "Een bericht dat je ons stuurt, gaat ook via Resend naar de beheerder. Die antwoordt op je e-mailadres. Nieuwsbrieven of reclame sturen we niet."
