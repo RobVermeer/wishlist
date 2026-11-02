@@ -22,6 +22,11 @@ const interestsOf = async (wishlist: { id: string }) =>
     })
   ).map(({ title }) => title)
 
+const editWishlist = async (page: Page) => {
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  return page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+}
+
 async function addInterest(page: Page, title: string) {
   await page.getByLabel("Nieuwe interesse").fill(title)
   await page.getByRole("button", { name: "Voeg toe", exact: true }).click()
@@ -38,47 +43,50 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
   ).toBeVisible()
   await expect(
     page.getByText(
-      "Voeg je eerste wens toe, of vul hieronder in waar je blij van wordt."
+      "Voeg je eerste wens toe, of vul bij Wijzig in waar je blij van wordt."
     )
   ).toBeVisible()
-  const empty = await page
-    .getByRole("heading", { name: "Je verlanglijstje is nog leeg" })
-    .boundingBox()
-  const block = await page
-    .getByRole("region", { name: "Waar ik blij van word" })
-    .boundingBox()
-  expect(empty!.y).toBeLessThan(block!.y)
   await expect(
     page.getByRole("region", { name: "Waar ik blij van word" })
-  ).toContainText(
+  ).toHaveCount(0)
+
+  const dialog = await editWishlist(page)
+  const block = dialog.getByRole("region", { name: "Waar ik blij van word" })
+  await expect(block).toContainText(
     "Hou je niet zo van wensen? Zet hier wat je graag doet of leuk vindt, dan bedenken de anderen zelf iets."
   )
 
   await addInterest(page, "lezen")
-  await expect(interests(page, "Waar ik blij van word")).toHaveText(["lezen"])
+  await expect(block.getByRole("listitem")).toHaveText(["lezen"])
   await expect(page.getByLabel("Nieuwe interesse")).toHaveValue("")
   await addInterest(page, "  sudoku ")
   await addInterest(page, "wandelen")
 
-  await expect(interests(page, "Waar ik blij van word")).toHaveText([
+  await expect(block.getByRole("listitem")).toHaveText([
     "lezen",
     "sudoku",
     "wandelen",
   ])
   expect(await interestsOf(wishlist)).toEqual(["lezen", "sudoku", "wandelen"])
 
-  await page.getByRole("button", { name: "Verwijder sudoku" }).click()
+  await block.getByRole("button", { name: "Verwijder sudoku" }).click()
   const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
   await expect(confirm).toContainText(
     "sudoku verdwijnt van dit verlanglijstje."
   )
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
+  await expect(block.getByRole("listitem")).toHaveText(["lezen", "wandelen"])
+  expect(await interestsOf(wishlist)).toEqual(["lezen", "wandelen"])
+
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
   await expect(interests(page, "Waar ik blij van word")).toHaveText([
     "lezen",
     "wandelen",
   ])
-  expect(await interestsOf(wishlist)).toEqual(["lezen", "wandelen"])
+  await expect(page.getByLabel("Nieuwe interesse")).toHaveCount(0)
+  await expect(page.getByRole("button", { name: /^Verwijder/ })).toHaveCount(0)
 })
 
 test("a wishlist with only interests doesn't ask for wishes", async ({
@@ -124,11 +132,6 @@ test("interests stay next to the wishes", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(interests(page, "Waar ik blij van word")).toHaveText(["lezen"])
-  await expect(
-    page.getByRole("region", { name: "Waar ik blij van word" })
-  ).toContainText(
-    "Hiermee kunnen de anderen je ook verrassen, naast je wensen hieronder."
-  )
   await expect(page.getByText("Fiets")).toBeVisible()
   await expect(page.getByText("Er staan geen wensen op")).toHaveCount(0)
 })
@@ -140,6 +143,7 @@ test("interest validation errors are shown", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/wishlist/${wishlist.id}`)
+  await editWishlist(page)
 
   await addInterest(page, "a")
   await expect(toasts(page)).toContainText(
@@ -184,21 +188,21 @@ test("managers can add and remove interests", async ({ signIn }) => {
     "Er staan geen wensen op dit verlanglijstje, en dat is goed. De anderen bedenken hiermee zelf een cadeau voor Emma. Wil je toch iets specifieks, voeg dan een wens toe."
   )
 
+  const dialog = await editWishlist(page)
+  const block = dialog.getByRole("region", { name: "Waar Emma blij van wordt" })
+  await expect(block).toContainText(
+    "Zet hier wat Emma graag doet of leuk vindt, dan bedenken de anderen zelf iets."
+  )
   await addInterest(page, "tekenen")
-  await expect(interests(page, "Waar Emma blij van wordt")).toHaveText([
-    "dino's",
-    "tekenen",
-  ])
+  await expect(block.getByRole("listitem")).toHaveText(["dino's", "tekenen"])
 
-  await page.getByRole("button", { name: "Verwijder dino's" }).click()
+  await block.getByRole("button", { name: "Verwijder dino's" }).click()
   await page
     .getByRole("alertdialog", { name: "Weet je het zeker?" })
     .getByRole("button", { name: "Verwijder" })
     .click()
 
-  await expect(interests(page, "Waar Emma blij van wordt")).toHaveText([
-    "tekenen",
-  ])
+  await expect(block.getByRole("listitem")).toHaveText(["tekenen"])
   expect(await interestsOf(wishlist)).toEqual(["tekenen"])
 })
 
@@ -225,11 +229,6 @@ test("group members, followers and shared links see the interests", async ({
     "lezen",
     "sudoku",
   ])
-  await expect(
-    memberPage.getByRole("region", { name: "Waar Olga blij van wordt" })
-  ).toContainText(
-    "Naast de wensen hieronder kun je Olga ook verrassen met iets wat hierbij past."
-  )
 
   const followerPage = await signIn(follower)
   await followerPage.goto(`/wishlist/${wishlist.id}`)
@@ -245,11 +244,11 @@ test("group members, followers and shared links see the interests", async ({
     "sudoku",
   ])
   await expect(visitorPage.getByText("Fiets")).toHaveCount(0)
-  await expect(visitorPage.getByText("Naast de wensen hieronder")).toHaveCount(
-    0
-  )
 
   for (const page of [memberPage, followerPage, visitorPage]) {
+    await expect(
+      page.getByRole("button", { name: "Wijzig verlanglijstje" })
+    ).toHaveCount(0)
     await expect(page.getByLabel("Nieuwe interesse")).toHaveCount(0)
     await expect(page.getByRole("button", { name: /^Verwijder/ })).toHaveCount(
       0
@@ -262,16 +261,20 @@ test("group members, followers and shared links see the interests", async ({
   }
 })
 
-test("a wishlist without interests shows no block to others", async ({
-  signIn,
-}) => {
+test("a wishlist without interests shows no block", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Olga" })
   const follower = await createUser()
   const wishlist = await createWishlist(owner, { followers: [follower] })
   await createItem(wishlist, { title: "Fiets" })
-  const page = await signIn(follower)
 
+  const page = await signIn(follower)
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(page.getByText("Fiets")).toBeVisible()
   await expect(page.getByText("Waar Olga blij van wordt")).toHaveCount(0)
+
+  const ownerPage = await signIn(owner)
+  await ownerPage.goto(`/wishlist/${wishlist.id}`)
+  await expect(ownerPage.getByText("Fiets")).toBeVisible()
+  await expect(ownerPage.getByText("Waar ik blij van word")).toHaveCount(0)
+  await expect(ownerPage.getByLabel("Nieuwe interesse")).toHaveCount(0)
 })

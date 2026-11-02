@@ -614,13 +614,17 @@ test("managers can't change who manages a wishlist", async ({ signIn }) => {
   await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
-  await dialog.locator("form").evaluate((form, id) => {
-    const input = document.createElement("input")
-    input.type = "hidden"
-    input.name = "managers"
-    input.value = id
-    form.append(input)
-  }, member.id)
+  // The first form is the wishlist itself, the second adds an interest.
+  await dialog
+    .locator("form")
+    .first()
+    .evaluate((form, id) => {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = "managers"
+      input.value = id
+      form.append(input)
+    }, member.id)
   await dialog.getByLabel("Thema").click()
   await page.getByRole("option", { name: "Feestdagen" }).click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -766,6 +770,7 @@ test("only managers can add interests to a wishlist", async ({ signIn }) => {
 
   await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
   await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
   await page.getByLabel("Nieuwe interesse").fill("Stiekem")
   await page.getByRole("button", { name: "Voeg toe", exact: true }).click()
 
@@ -792,6 +797,7 @@ test("only managers can remove interests from a wishlist", async ({
 
   await forgeActions(page, `/wishlist/${own.id}`, ownInterest.id, interest.id)
   await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
   await page.getByRole("button", { name: "Verwijder sudoku" }).click()
   await page
     .getByRole("alertdialog", { name: "Weet je het zeker?" })

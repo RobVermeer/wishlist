@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { WishlistOwnerField } from "@/components/WishlistOwnerField"
 import { WishlistManagersField } from "@/components/WishlistManagersField"
+import { Interests } from "@/components/Interests"
 import type { ManagerOption } from "@/lib/users/getManagerOptionsForUser"
 import {
   Select,
@@ -42,6 +43,11 @@ interface Props {
     managers: { id: string }[]
     isManager: boolean
   }
+  interests: {
+    title: string
+    hint: string
+    items: { id: string; title: string }[]
+  }
   groups: GroupOption[]
   managers: ManagerOption[]
   className?: string
@@ -49,6 +55,7 @@ interface Props {
 
 export const EditWishlist = ({
   wishlist,
+  interests,
   groups,
   managers,
   className,
@@ -193,6 +200,13 @@ export const EditWishlist = ({
             wishlistId={id}
           />
         </form>
+        <Interests
+          wishlistId={id}
+          title={interests.title}
+          interests={interests.items}
+          hint={interests.hint}
+          editable
+        />
         <DialogFooter className="gap-2 md:gap-0">
           {!isManager && (
             <RemoveButton

@@ -61,18 +61,9 @@ export const Wishlist = async ({ id, groupId }: Props) => {
   const onlyInterests = !hasItems && wishlist.interests.length > 0
   const showRemind = canBeReminded && !wishlist.isOwnList && !onlyInterests
 
-  const interestsHint = () => {
-    if (wishlist.isOwnList && wishlist.interests.length === 0) {
-      return isOwnWishlist
-        ? tInterests("hint.own")
-        : tInterests("hint.managed", { name })
-    }
-    if (!hasItems) return undefined
-    if (isOwnWishlist) return tInterests("withWishes.own")
-    return wishlist.isOwnList
-      ? tInterests("withWishes.managed", { name })
-      : tInterests("withWishes.other", { name })
-  }
+  const interestsTitle = isOwnWishlist
+    ? tInterests("title.own")
+    : tInterests("title.other", { name })
 
   const interestsNote = () => {
     if (!onlyInterests) return undefined
@@ -121,6 +112,13 @@ export const Wishlist = async ({ id, groupId }: Props) => {
                   .map(({ id }) => ({ id })),
                 managers: wishlist.managers.map(({ id }) => ({ id })),
                 isManager: wishlist.isManager,
+              }}
+              interests={{
+                title: interestsTitle,
+                hint: isOwnWishlist
+                  ? tInterests("hint.own")
+                  : tInterests("hint.managed", { name }),
+                items: wishlist.interests,
               }}
               groups={ownGroups}
               managers={managerOptions}
@@ -190,18 +188,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
           </EmptyState>
         ))}
 
-      {(wishlist.isOwnList || wishlist.interests.length > 0) && (
+      {wishlist.interests.length > 0 && (
         <Interests
           wishlistId={wishlist.id}
-          title={
-            isOwnWishlist
-              ? tInterests("title.own")
-              : tInterests("title.other", { name })
-          }
+          title={interestsTitle}
           interests={wishlist.interests}
-          hint={interestsHint()}
           note={interestsNote()}
-          editable={wishlist.isOwnList}
         />
       )}
 

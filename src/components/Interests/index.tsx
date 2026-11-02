@@ -76,9 +76,9 @@ export const Interests = ({
   return (
     <section
       aria-labelledby={`${id}-title`}
-      className="grid gap-3 rounded-lg bg-secondary p-4"
+      className="grid gap-2 rounded-lg bg-secondary p-4"
     >
-      <h3 id={`${id}-title`} className="text-lg font-semibold">
+      <h3 id={`${id}-title`} className="font-semibold">
         {title}
       </h3>
       {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
