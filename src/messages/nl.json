@@ -181,6 +181,7 @@
       "other": {
         "title": "{name} heeft nog geen wensen",
         "remind": "Vraag om meer wensen, dan krijgt {name} een e-mail.",
+        "remindManaged": "Vraag om meer wensen, dan krijgen {name} en wie het verlanglijstje mee beheert een e-mail.",
         "later": "Kijk later nog eens."
       }
     },
@@ -418,12 +419,21 @@
     "reason": "Je krijgt deze e-mail omdat je in de groep {group} zit."
   },
   "EmailReminder": {
-    "subject": "Heb je nog wensen?",
-    "preview": "Er is iemand die vraagt of je jouw lijstje kan uitbreiden",
-    "title": "<strong>{name}</strong>, heb je nog wensen?",
-    "text": "Iemand vraagt of je nog wat extra wensen op je verlanglijstje kunt zetten. Met de knop hieronder doe je dat meteen.",
-    "button": "Naar Niet Weer Sokken",
-    "reason": "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
+    "own": {
+      "subject": "Heb je nog wensen?",
+      "preview": "Er is iemand die vraagt of je jouw verlanglijstje kunt uitbreiden.",
+      "title": "<strong>{name}</strong>, heb je nog wensen?",
+      "text": "Iemand vraagt of je nog wat extra wensen op je verlanglijstje kunt zetten. Met de knop hieronder doe je dat meteen.",
+      "reason": "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
+    },
+    "other": {
+      "subject": "Heeft {list} nog wensen?",
+      "preview": "Er is iemand die vraagt of je het verlanglijstje voor {list} kunt uitbreiden.",
+      "title": "<strong>{name}</strong>, heeft {list} nog wensen?",
+      "text": "Iemand vraagt of je nog wat extra wensen op het verlanglijstje voor {list} kunt zetten. Met de knop hieronder doe je dat meteen.",
+      "reason": "Je krijgt deze e-mail omdat je het verlanglijstje voor {list} beheert en iemand met wie je het deelt om meer wensen vraagt."
+    },
+    "button": "Naar het verlanglijstje"
   },
   "EmailLogin": {
     "subject": "Inloggen bij Niet Weer Sokken",

@@ -7,10 +7,11 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { sendReminder } from "@/lib/email"
-import { canBeRemindedForUser } from "./canBeRemindedForUser"
-import { sharedWithUser } from "@/lib/wishlists/visibility"
+import { canBeRemindedForWishlist } from "./canBeRemindedForWishlist"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
+import { managedByUser, sharedWithUser } from "@/lib/wishlists/visibility"
 
-export const sendReminderToUser = async (to: string) => {
+export const sendReminderForWishlist = async (wishlistId: string) => {
   try {
     const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
@@ -21,42 +22,53 @@ export const sendReminderToUser = async (to: string) => {
 
     const from = session.user.id
 
-    const sharedWishlist = await prisma.wishlist.findFirst({
+    const recipient = { id: true, firstName: true, name: true, email: true }
+    const wishlist = await prisma.wishlist.findFirst({
       where: {
-        userId: { equals: to, not: from },
+        id: wishlistId,
         removed: false,
-        ...sharedWithUser(from),
+        AND: [sharedWithUser(from), { NOT: managedByUser(from) }],
+      },
+      select: {
+        id: true,
+        title: true,
+        userId: true,
+        user: { select: recipient },
+        managers: { select: recipient },
       },
     })
 
-    if (!sharedWishlist) {
-      throw new Error(t("user.notFound"))
+    if (!wishlist) {
+      throw new Error(t("wishlist.notFound"))
     }
 
-    const canBeReminded = await canBeRemindedForUser(to)
+    const canBeReminded = await canBeRemindedForWishlist(wishlist.id)
 
     if (!canBeReminded) {
       throw new Error(t("reminder.alreadySent"))
     }
 
-    const toUser = await prisma.user.findUnique({
-      where: {
-        id: to,
-      },
-    })
-
-    if (!toUser) {
-      throw new Error(t("user.notFound"))
+    // The owner and everyone who manages the list with them can add wishes
+    for (const toUser of [wishlist.user, ...wishlist.managers]) {
+      await sendReminder({
+        toUser,
+        wishlist: {
+          id: wishlist.id,
+          // Someone's own list reads as "your list" to them, any other list
+          // is named after who it's for
+          name:
+            toUser.id === wishlist.userId && !wishlist.title
+              ? null
+              : getWishlistName(wishlist),
+        },
+      })
     }
-
-    const userName = (toUser.firstName ?? toUser.name)!
-
-    await sendReminder({ toUser, userName })
 
     await prisma.reminder.create({
       data: {
-        to,
+        to: wishlist.userId,
         from,
+        wishlistId: wishlist.id,
       },
     })
 

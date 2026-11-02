@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { sendReminderToUser } from "@/lib/reminders"
+import { sendReminderForWishlist } from "@/lib/reminders"
 import { LoaderCircle, ShoppingBasket } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useFormStatus } from "react-dom"
@@ -24,15 +24,15 @@ const FormButton = () => {
 }
 
 interface Props {
-  userId: string
+  wishlistId: string
 }
 
-export const RemindButton = ({ userId }: Props) => {
+export const RemindButton = ({ wishlistId }: Props) => {
   const { toast } = useToast()
   const t = useTranslations()
 
   async function sendReminder() {
-    const { type, errors } = await sendReminderToUser(userId)
+    const { type, errors } = await sendReminderForWishlist(wishlistId)
 
     if (type === "error") {
       errors.forEach(title => {

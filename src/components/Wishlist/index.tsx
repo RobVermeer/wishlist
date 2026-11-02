@@ -12,7 +12,7 @@ import { getFormatter, getTranslations } from "next-intl/server"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getInitials } from "@/lib/utils"
 import { getGroupById } from "@/lib/groups/getGroupById"
-import { canBeRemindedForUser } from "@/lib/reminders/canBeRemindedForUser"
+import { canBeRemindedForWishlist } from "@/lib/reminders/canBeRemindedForWishlist"
 import { RemindButton } from "../RemindButton"
 import { ItemCard } from "../ItemCard"
 import { CategoryList } from "../CategoryList"
@@ -47,7 +47,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
     notFound()
   }
 
-  const canBeReminded = await canBeRemindedForUser(wishlist.user.id)
+  const canBeReminded = await canBeRemindedForWishlist(wishlist.id)
   const ownGroups = wishlist.isOwnList ? await getGroupOptionsForUser() : []
   const managerOptions =
     wishlist.isOwnList && !wishlist.isManager
@@ -170,9 +170,12 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         ) : (
           <EmptyState title={t("empty.other.title", { name })}>
             {canBeReminded
-              ? t("empty.other.remind", {
-                  name: getFirstName(wishlist.user),
-                })
+              ? t(
+                  wishlist.hasManagers
+                    ? "empty.other.remindManaged"
+                    : "empty.other.remind",
+                  { name: getFirstName(wishlist.user) }
+                )
               : t("empty.other.later")}
           </EmptyState>
         ))}
@@ -237,7 +240,7 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
       {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
 
-      {showRemind && <RemindButton userId={wishlist.user.id} />}
+      {showRemind && <RemindButton wishlistId={wishlist.id} />}
 
       {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
     </List>

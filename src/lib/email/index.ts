@@ -9,6 +9,7 @@ import {
 } from "./templates"
 import type { contactTopics } from "@/lib/schema"
 import { resend } from "@/lib/resend"
+import { getFirstName } from "@/lib/users/getFirstName"
 
 interface SendGroupDraw {
   person1: {
@@ -59,20 +60,31 @@ export const sendGroupDraw = async ({
 
 interface SendReminder {
   toUser: {
+    firstName: string | null
+    name: string | null
     email: string | null
   }
-  userName: string
+  wishlist: {
+    id: string
+    // Who the list is for, or null when it's the recipient's own list
+    name: string | null
+  }
 }
 
-export const sendReminder = async ({ toUser, userName }: SendReminder) => {
+export const sendReminder = async ({ toUser, wishlist }: SendReminder) => {
   try {
     const t = await getTranslations("EmailReminder")
 
     const { error } = await resend.emails.send({
       from: "Niet Weer Sokken <no-reply@nietweersokken.nl>",
       to: [toUser.email!],
-      subject: t("subject"),
-      react: await RemindUserEmail({ userName }),
+      subject: wishlist.name
+        ? t("other.subject", { list: wishlist.name })
+        : t("own.subject"),
+      react: await RemindUserEmail({
+        userName: getFirstName(toUser),
+        wishlist,
+      }),
     })
 
     if (error) throw error

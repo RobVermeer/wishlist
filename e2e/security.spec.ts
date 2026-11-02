@@ -1240,21 +1240,21 @@ test("only the owner and managers can get the share link of a wishlist", async (
 test("more wishes can only be asked of someone who shares a list with you", async ({
   signIn,
 }) => {
-  const { owner, member, group, wishlist } = await shoppersSetup()
+  const { member, group, wishlist } = await shoppersSetup()
   const outsider = await createUser({ firstName: "Pia" })
-  await createWishlist(outsider)
+  const outsiderList = await createWishlist(outsider)
   const page = await signIn(member)
 
   await forgeActions(
     page,
     `/group/${group.id}/${wishlist.id}`,
-    owner.id,
-    outsider.id
+    wishlist.id,
+    outsiderList.id
   )
   await page.goto(`/group/${group.id}/${wishlist.id}`)
   await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
 
-  await expect(toasts(page)).toContainText("Gebruiker niet gevonden")
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
   expect(await emailsTo(outsider.email!)).toHaveLength(0)
   expect(await prisma.reminder.count({ where: { to: outsider.id } })).toBe(0)
 })

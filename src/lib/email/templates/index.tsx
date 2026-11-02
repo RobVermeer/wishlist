@@ -112,24 +112,34 @@ export const DrawUserEmail = async ({
 
 interface RemindUserEmailProps {
   userName: string
+  wishlist: { id: string; name: string | null }
 }
 
-export const RemindUserEmail = async ({ userName }: RemindUserEmailProps) => {
+export const RemindUserEmail = async ({
+  userName,
+  wishlist,
+}: RemindUserEmailProps) => {
   const t = await getTranslations("EmailReminder")
+  const key = wishlist.name ? "other" : "own"
+  const values = { list: wishlist.name ?? "" }
 
   return (
-    <EmailLayout preview={t("preview")} reason={t("reason")}>
+    <EmailLayout
+      preview={t(`${key}.preview`, values)}
+      reason={t(`${key}.reason`, values)}
+    >
       <Heading as="h1" style={title}>
-        {t.rich("title", {
+        {t.rich(`${key}.title`, {
           strong: chunks => <strong>{chunks}</strong>,
           name: userName,
+          ...values,
         })}
       </Heading>
 
       <Section style={section}>
-        <Text style={text}>{t("text")}</Text>
+        <Text style={text}>{t(`${key}.text`, values)}</Text>
 
-        <Button style={button} href={baseUrl}>
+        <Button style={button} href={`${baseUrl}/wishlist/${wishlist.id}`}>
           {t("button")}
         </Button>
       </Section>
