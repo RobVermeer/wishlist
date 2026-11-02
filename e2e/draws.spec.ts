@@ -319,6 +319,81 @@ test("the creator sees who joined, but not who drew whom", async ({
   await expect(status(bertPage)).toHaveCount(0)
 })
 
+const drawSummary = (page: Page) =>
+  page.getByRole("button", { name: /De lootjes zijn getrokken/ })
+
+test("the draw folds into one line once everyone joined", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: "Carla" })
+  const group = await createGroup(owner, { members: [bert, carla] })
+  await createDraw(group, [owner, bert, carla])
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(drawSummary(page)).toHaveText(
+    /De lootjes zijn getrokken\s*3 van 3 in de groep/
+  )
+  await expect(drawSummary(page)).toHaveAttribute("aria-expanded", "false")
+  await expect(status(page)).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Opnieuw lootjes trekken" })
+  ).toHaveCount(0)
+
+  await drawSummary(page).click()
+
+  await expect(drawSummary(page)).toHaveAttribute("aria-expanded", "true")
+  await expect(status(page).getByRole("listitem")).toHaveText([
+    /Anna\s*In de groep/,
+    /Bert\s*In de groep/,
+    /Carla\s*In de groep/,
+  ])
+  await expect(
+    page.getByRole("button", { name: "Opnieuw lootjes trekken" })
+  ).toBeVisible()
+})
+
+test("the draw stays open while someone hasn't joined or left", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: "Carla" })
+  const invited = await createGroup(owner, { members: [bert] })
+  await createDraw(invited, [
+    owner,
+    bert,
+    { name: "Opa", email: `opa-${bert.id}@e2e.test` },
+  ])
+  const left = await createGroup(owner, { members: [bert, carla] })
+  await createDraw(left, [owner, bert, carla])
+  await prisma.group.update({
+    where: { id: left.id },
+    data: { members: { disconnect: { id: carla.id } } },
+  })
+  const page = await signIn(owner)
+
+  for (const group of [invited, left]) {
+    await page.goto(`/group/${group.id}`)
+
+    await expect(drawSummary(page)).toHaveText(
+      /De lootjes zijn getrokken\s*2 van 3 in de groep/
+    )
+    await expect(drawSummary(page)).toHaveAttribute("aria-expanded", "true")
+    await expect(status(page).getByRole("listitem")).toHaveCount(3)
+    await expect(
+      page.getByRole("button", { name: "Opnieuw lootjes trekken" })
+    ).toBeVisible()
+
+    await drawSummary(page).click()
+
+    await expect(status(page)).toHaveCount(0)
+  }
+})
+
 test("send the lootje again to someone who hasn't joined yet", async ({
   signIn,
 }) => {

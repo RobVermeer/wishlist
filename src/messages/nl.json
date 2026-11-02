@@ -1140,7 +1140,8 @@
       "button": "Lootjes trekken",
       "drawnTitle": "De lootjes zijn getrokken",
       "drawnText": "Iedereen heeft een e-mail gekregen en ziet het eigen lootje in de groep.",
-      "redraw": "Opnieuw lootjes trekken"
+      "redraw": "Opnieuw lootjes trekken",
+      "summary": "{joined} van {count} in de groep"
     },
     "form": {
       "title": "Lootjes trekken",
