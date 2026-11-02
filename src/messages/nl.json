@@ -773,7 +773,7 @@
           },
           {
             "question": "Hoe zet ik mijn wensen in een andere volgorde?",
-            "answer": "Sleep een wens aan de puntjes ernaast naar een andere plek. Met het toetsenbord kan het ook: ga naar de puntjes, druk op spatie, verplaats de wens met de pijltjestoetsen en druk weer op spatie. Categorieën verplaats je op dezelfde manier. Wil je een wens in een andere categorie, wijzig de wens dan en kies een andere categorie. Hij komt dan onderaan die categorie te staan."
+            "answer": "Kies ‘Volgorde aanpassen’ boven je wensen. Sleep dan een wens aan de puntjes ernaast naar een andere plek en kies ‘Klaar’ als alles goed staat. Met het toetsenbord kan het ook: ga naar de puntjes, druk op spatie, verplaats de wens met de pijltjestoetsen en druk weer op spatie. Categorieën verplaats je op dezelfde manier. Wil je een wens in een andere categorie, wijzig de wens dan en kies een andere categorie. Hij komt dan onderaan die categorie te staan."
           },
           {
             "question": "Wat is een onbeperkte wens?",
@@ -781,7 +781,7 @@
           },
           {
             "question": "Ik hou niet van verlanglijstjes, kan het ook anders?",
-            "answer": "Ja. Zet bij ‘Waar ik blij van word’ op je verlanglijstje wat je graag doet of leuk vindt, zoals lezen, sudoku of wandelen. Wie je verlanglijstje kan zien, ziet dat ook en bedenkt zelf iets. Wensen erbij mag, maar hoeft niet. Je kunt er 20 kwijt per verlanglijstje, en met het kruisje haal je er een weg. Wie een verlanglijstje mee beheert, kan ze ook toevoegen en weghalen."
+            "answer": "Ja. Kies ‘Wijzig’ op je verlanglijstje en zet bij ‘Waar ik blij van word’ wat je graag doet of leuk vindt, zoals lezen, sudoku of wandelen. Wie je verlanglijstje kan zien, ziet dat ook en bedenkt zelf iets. Wensen erbij mag, maar hoeft niet. Je kunt er 20 kwijt per verlanglijstje, en met het kruisje haal je er een weg. Wie een verlanglijstje mee beheert, kan ze ook toevoegen en weghalen."
           },
           {
             "question": "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
@@ -797,7 +797,7 @@
           },
           {
             "question": "Hoe verwijder ik mijn verlanglijstje?",
-            "answer": "Open je verlanglijstje, kies ‘Wijzig verlanglijstje’ en dan ‘Verwijder’. Het verlanglijstje wordt dan met alle wensen verwijderd. Dat kan alleen wie het verlanglijstje heeft gemaakt, niet wie het mee beheert."
+            "answer": "Open je verlanglijstje, kies ‘Wijzig’ en dan ‘Verwijder’. Het verlanglijstje wordt dan met alle wensen verwijderd. Dat kan alleen wie het verlanglijstje heeft gemaakt, niet wie het mee beheert."
           }
         ]
       },
@@ -827,7 +827,7 @@
           },
           {
             "question": "Hoe zet ik mijn verlanglijstje in een groep, of haal ik het er weer uit?",
-            "answer": "Open de groep en kies ‘Verlanglijstje toevoegen’. Of open je verlanglijstje, kies ‘Wijzig verlanglijstje’ en vink de groepen aan waar het in moet. Vink je een groep uit, dan haal je je verlanglijstje uit die groep. Het verlanglijstje zelf blijft bestaan."
+            "answer": "Open de groep en kies ‘Verlanglijstje toevoegen’. Of open je verlanglijstje, kies ‘Wijzig’ en vink de groepen aan waar het in moet. Vink je een groep uit, dan haal je je verlanglijstje uit die groep. Het verlanglijstje zelf blijft bestaan."
           },
           {
             "question": "Kan mijn verlanglijstje in meerdere groepen staan?",
