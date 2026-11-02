@@ -1128,6 +1128,7 @@
       "drawn": "Je hebt <strong>{name}</strong> getrokken",
       "hidden": "Je hebt <secret>iemand</secret> getrokken",
       "reveal": "Laat zien",
+      "revealName": "Laat zien wie je hebt getrokken",
       "hide": "Verberg",
       "budget": "Budget: {budget}",
       "date": "Datum: {date}",

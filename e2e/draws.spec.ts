@@ -15,7 +15,7 @@ import { Page } from "@playwright/test"
 const lot = (page: Page) => page.getByRole("region", { name: "Jouw lootje" })
 
 const reveal = (scope: Page | ReturnType<Page["getByRole"]>) =>
-  scope.getByRole("button", { name: "Laat zien" }).click()
+  scope.getByRole("button", { name: "Laat zien", exact: true }).click()
 
 const drawnName = (html: string) =>
   html.match(/Je hebt <strong>([^<]+)<\/strong> getrokken/)?.[1]
@@ -538,6 +538,33 @@ test("a lootje stays hidden until you show it", async ({ signIn }) => {
     .click()
   await expect(page).toHaveURL(`/group/${group.id}`)
   await expect(lot(page)).toContainText("Je hebt iemand getrokken")
+})
+
+test("clicking the hidden name shows the lootje", async ({ signIn }) => {
+  const anna = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: `Carla ${bert.id}` })
+  const group = await createGroup(anna, { members: [bert, carla] })
+  await createDraw(group, [anna, bert, carla])
+  const page = await signIn(bert)
+  const drawn = `Je hebt Carla ${bert.id} getrokken`
+  const hiddenName = lot(page).getByRole("button", {
+    name: "Laat zien wie je hebt getrokken",
+  })
+
+  await page.goto(`/group/${group.id}`)
+
+  await hiddenName.click()
+  await expect(lot(page)).toContainText(drawn)
+  await expect(hiddenName).toHaveCount(0)
+  await expect(lot(page).getByRole("button", { name: "Verberg" })).toBeFocused()
+
+  await lot(page).getByRole("button", { name: "Verberg" }).click()
+  await expect(lot(page)).not.toContainText("Carla")
+
+  await hiddenName.focus()
+  await page.keyboard.press("Enter")
+  await expect(lot(page)).toContainText(drawn)
 })
 
 test("the overview has no lootjes without a draw", async ({ signIn }) => {
