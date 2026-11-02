@@ -261,16 +261,18 @@ test("your own wishlists on the dashboard say which groups they are in", async (
   await createWishlist(user, { groups: [family, friends] })
   await createWishlist(user)
   await createWishlist(user, { title: "Opa", groups: [family] })
+  await createWishlist(user, { title: "Oma" })
   const page = await signIn(user)
 
   await page.goto("/")
 
   await expect(
-    page.getByRole("link").filter({ hasText: /^(Mijn lijstje|Opa)/ })
+    page.getByRole("link").filter({ hasText: /^(Mijn lijstje|Opa|Oma)/ })
   ).toHaveText([
     /^Mijn lijstje\s*In groepen Familie en Vrienden$/,
     /^Mijn lijstje\s*Nog in geen groep$/,
-    /^Opa$/,
+    /^Opa\s*In groep Familie$/,
+    /^Oma\s*Nog in geen groep$/,
   ])
 })
 

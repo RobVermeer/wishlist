@@ -198,10 +198,7 @@ export default async function Home() {
 
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
           {wishlists.map(wishlist =>
-            renderWishlist(
-              wishlist,
-              wishlist.title ? undefined : ownListGroups(wishlist)
-            )
+            renderWishlist(wishlist, ownListGroups(wishlist))
           )}
           <NewWishlist
             groups={await getGroupOptionsForUser()}
