@@ -547,7 +547,7 @@ test("an empty wishlist you manage asks for the first wish", async ({
   await expect(page.getByText("Dit verlanglijstje is nog leeg")).toBeVisible()
   await expect(
     page.getByText(
-      "Voeg de eerste wens toe, of vul hieronder in waar Emma blij van wordt."
+      "Voeg de eerste wens toe, of vul bij Wijzig in waar Emma blij van wordt."
     )
   ).toBeVisible()
 })

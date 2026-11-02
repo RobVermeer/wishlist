@@ -172,11 +172,11 @@
     "empty": {
       "own": {
         "title": "Je verlanglijstje is nog leeg",
-        "text": "Voeg je eerste wens toe, of vul hieronder in waar je blij van wordt."
+        "text": "Voeg je eerste wens toe, of vul bij Wijzig in waar je blij van wordt."
       },
       "managed": {
         "title": "Dit verlanglijstje is nog leeg",
-        "text": "Voeg de eerste wens toe, of vul hieronder in waar {name} blij van wordt."
+        "text": "Voeg de eerste wens toe, of vul bij Wijzig in waar {name} blij van wordt."
       },
       "other": {
         "title": "{name} heeft nog geen wensen",
@@ -198,11 +198,6 @@
     "hint": {
       "own": "Hou je niet zo van wensen? Zet hier wat je graag doet of leuk vindt, dan bedenken de anderen zelf iets.",
       "managed": "Zet hier wat {name} graag doet of leuk vindt, dan bedenken de anderen zelf iets."
-    },
-    "withWishes": {
-      "own": "Hiermee kunnen de anderen je ook verrassen, naast je wensen hieronder.",
-      "managed": "Hiermee kunnen de anderen {name} ook verrassen, naast de wensen hieronder.",
-      "other": "Naast de wensen hieronder kun je {name} ook verrassen met iets wat hierbij past."
     },
     "withoutWishes": {
       "own": "Er staan geen wensen op je verlanglijstje, en dat is goed. De anderen bedenken hiermee zelf een cadeau. Wil je toch iets specifieks, voeg dan een wens toe.",
