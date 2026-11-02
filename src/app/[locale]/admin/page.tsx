@@ -74,7 +74,7 @@ export default async function AdminDashboardPage() {
       <StatTile
         title={t("draws.title")}
         icon={Gift}
-        iconClassName="text-red-500"
+        iconClassName="text-primary"
         figures={[
           { label: t("draws.active"), value: count(stats.draws.active) },
           {
