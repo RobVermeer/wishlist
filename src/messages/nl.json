@@ -18,6 +18,7 @@
     "wishlists": {
       "title": "Je verlanglijstjes",
       "new": "Nieuw verlanglijstje",
+      "newShort": "Nieuw",
       "groups": "{count, plural, one {In groep {names}} other {In groepen {names}}}",
       "empty": {
         "title": "Je hebt nog geen verlanglijstje",
