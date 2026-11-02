@@ -83,10 +83,12 @@ export default async function Home() {
   const format = await getFormatter()
 
   const ownListGroups = (wishlist: (typeof wishlists)[number]) =>
-    t("wishlists.groups", {
-      count: wishlist.groups.length,
-      names: format.list(wishlist.groups.map(({ title }) => title)),
-    })
+    wishlist.groups.length > 0
+      ? t("wishlists.groups", {
+          count: wishlist.groups.length,
+          names: format.list(wishlist.groups.map(({ title }) => title)),
+        })
+      : undefined
 
   const renderWishlist = (
     wishlist: (typeof wishlists)[number] | (typeof followedWishlists)[number],
