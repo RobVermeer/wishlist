@@ -88,11 +88,12 @@ export default async function Home() {
           count: wishlist.groups.length,
           names: format.list(wishlist.groups.map(({ title }) => title)),
         })
-      : undefined
+      : null
 
+  // null leaves the details line empty, so the title stays level with its neighbours
   const renderWishlist = (
     wishlist: (typeof wishlists)[number] | (typeof followedWishlists)[number],
-    details?: string
+    details?: string | null
   ) => (
     <Link
       key={wishlist.id}
@@ -110,8 +111,10 @@ export default async function Home() {
           className="font-display text-lg font-semibold leading-tight text-foreground"
           wishlist={wishlist}
         />
-        {details && (
-          <small className="text-xs text-muted-foreground">{details}</small>
+        {details !== undefined && (
+          <small className="min-h-4 text-xs text-muted-foreground">
+            {details}
+          </small>
         )}
       </span>
     </Link>
