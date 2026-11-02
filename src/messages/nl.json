@@ -509,7 +509,8 @@
     "groups": {
       "title": "Groepen",
       "view": "Bekijk",
-      "remove": "Verwijder"
+      "remove": "Verwijder",
+      "removeText": "‘{title}’ verdwijnt voor alle leden. Je kunt de groep daarna nog terugzetten."
     },
     "group": {
       "restoreText": "Is deze groep per ongeluk verwijderd?",
@@ -525,7 +526,8 @@
       "makeAdmin": "Maak admin",
       "removeAdmin": "Geen admin meer",
       "view": "Bekijk",
-      "remove": "Verwijder"
+      "remove": "Verwijder",
+      "removeText": "{name} verdwijnt, met alle verlanglijstjes en groepen van deze gebruiker. Dit kun je niet ongedaan maken."
     },
     "user": {
       "text": "Haal weg wat niet volgens de huisregels is. Afgestreepte wensen kun je ook weghalen als een verlanglijstje niet wordt opgeruimd. Wie iets heeft gekocht, zie je hier niet.",

@@ -1309,10 +1309,13 @@ test("only admins can remove users", async ({ signIn }) => {
 
   const action = captureAction(adminPage, "/admin/users")
   await adminPage.goto("/admin/users")
-  adminPage.once("dialog", dialog => dialog.accept())
   await adminPage
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await adminPage
+    .getByRole("alertdialog")
     .getByRole("button", { name: "Verwijder" })
     .click()
 
@@ -1430,10 +1433,13 @@ test("only the super admin can remove admins", async ({ signIn }) => {
 
   await forgeActions(page, "/admin/users", victim.id, otherAdmin.id)
   await page.goto("/admin/users")
-  page.once("dialog", dialog => dialog.accept())
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog")
     .getByRole("button", { name: "Verwijder" })
     .click()
 
@@ -1510,10 +1516,13 @@ test("nobody can remove the super admin", async ({ signIn }) => {
 
   await forgeActions(page, "/admin/users", victim.id, superAdmin.id)
   await page.goto("/admin/users")
-  page.once("dialog", dialog => dialog.accept())
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog")
     .getByRole("button", { name: "Verwijder" })
     .click()
 
