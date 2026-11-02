@@ -116,3 +116,19 @@ test("the privacy policy says bought wishes go after a party", async ({
     "Twee weken na de datum van een loting halen we de wensen die al gekocht zijn van de verlanglijstjes in die groep."
   )
 })
+
+test("the privacy policy says who gets asked for more wishes", async ({
+  page,
+}) => {
+  await page.goto("/privacy")
+
+  await expect(page.getByText("Bijgewerkt op 2 november 2026.")).toBeVisible()
+  await expect(
+    page.getByRole("region", { name: "Wat we bewaren" })
+  ).toContainText(
+    "Wanneer je om meer wensen hebt gevraagd en voor welk verlanglijstje, zodat dat één keer per dag kan."
+  )
+  await expect(page.getByRole("region", { name: "E-mail" })).toContainText(
+    "Een vraag om meer wensen, als iemand je die stuurt voor je verlanglijstje of een verlanglijstje dat je samen beheert."
+  )
+})
