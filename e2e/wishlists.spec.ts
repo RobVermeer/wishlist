@@ -13,8 +13,24 @@ test("new user sees empty states for wishlists", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto("/")
-  await expect(page.getByText("Je zit nog niet in een groep")).toBeVisible()
-  await expect(page.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
+
+  const own = page.getByRole("region", { name: "Je verlanglijstjes" })
+  await expect(own.getByText("Je hebt nog geen verlanglijstje")).toBeVisible()
+  await expect(
+    own.getByText("Maak je eerste verlanglijstje en zet er je wensen op.")
+  ).toBeVisible()
+  await own.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
+  await expect(
+    page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
+  ).toBeVisible()
+  await page.keyboard.press("Escape")
+
+  const following = page.getByRole("region", { name: "Wat je volgt" })
+  await expect(
+    following.getByText("Je zit nog niet in een groep")
+  ).toBeVisible()
+  await following.getByRole("button", { name: "Nieuwe groep" }).click()
+  await expect(page.getByRole("dialog", { name: /Nieuwe groep/ })).toBeVisible()
 })
 
 test("the dashboard explains the name", async ({ signIn }) => {
@@ -285,7 +301,7 @@ test("your own wishlists on the dashboard say which groups they are in", async (
   ])
 })
 
-test("the dashboard shows what you follow first, then your own wishlists", async ({
+test("the dashboard shows your own wishlists first, then what you follow", async ({
   signIn,
 }) => {
   const user = await createUser()
@@ -298,15 +314,41 @@ test("the dashboard shows what you follow first, then your own wishlists", async
   await page.goto("/")
 
   await expect(page.getByRole("heading", { level: 2 })).toHaveText([
-    "Wat je volgt",
     "Je verlanglijstjes",
+    "Wat je volgt",
   ])
 
-  const following = page.locator("div.grid").filter({
-    has: page.getByRole("button", { name: "Nieuwe groep" }),
-  })
+  const own = page.getByRole("region", { name: "Je verlanglijstjes" })
+  await expect(own.getByRole("link")).toHaveText([/^Eigen lijst/])
+
+  const following = page.getByRole("region", { name: "Wat je volgt" })
   await expect(following.getByRole("link")).toHaveText([/Familie/, /Fenna/])
   await expect(page.getByText("Je zit nog niet in een groep")).toBeHidden()
+})
+
+test("the buttons to make a wishlist or group sit above their section", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  await createGroup(user, { title: "Familie" })
+  await createWishlist(user, { title: "Eigen lijst" })
+  const page = await signIn(user)
+
+  await page.goto("/")
+
+  for (const [section, name] of [
+    ["Je verlanglijstjes", "Nieuw verlanglijstje"],
+    ["Wat je volgt", "Nieuwe groep"],
+  ]) {
+    const region = page.getByRole("region", { name: section })
+    await expect(region.getByRole("button")).toHaveText([name])
+    const button = await region.getByRole("button", { name }).boundingBox()
+    const firstTile = await region.getByRole("link").first().boundingBox()
+    expect(button!.y + button!.height).toBeLessThanOrEqual(firstTile!.y)
+  }
+
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+  await expect(page.getByRole("dialog", { name: /Nieuwe groep/ })).toBeVisible()
 })
 
 test("following only a wishlist doesn't show the empty state", async ({

@@ -11,11 +11,11 @@ import { getFollowedWishlistsForUser } from "@/lib/wishlists/getFollowedWishlist
 import Link from "next/link"
 import { getFormatter, getTranslations } from "next-intl/server"
 import { WishlistIcon, wishlistColors } from "@/components/WishlistIcon"
-import { ChevronRight, Gift } from "lucide-react"
+import { ChevronRight, Gift, Plus } from "lucide-react"
 import { DrawDetails } from "@/components/DrawDetails"
 import { getLotsForUser } from "@/lib/draws/getLotsForUser"
 import { cn } from "@/lib/utils"
-import { AddTile } from "@/components/AddTile"
+import { Button } from "@/components/ui/button"
 import { NewGroup } from "@/components/NewGroup"
 import { NewWishlist } from "@/components/NewWishlist"
 import { getServerSession } from "next-auth"
@@ -115,6 +115,35 @@ export default async function Home() {
     </Link>
   )
 
+  const hasWishlists = wishlists.length > 0
+  const isFollowing = groups.length > 0 || followedWishlists.length > 0
+
+  const newWishlist = (
+    <NewWishlist
+      groups={await getGroupOptionsForUser()}
+      managers={await getManagerOptionsForUser()}
+      trigger={
+        <Button
+          variant={hasWishlists ? "outline" : "default"}
+          size={hasWishlists ? "sm" : "default"}
+        >
+          <Plus size="16" className="mr-2" /> {t("wishlists.new")}
+        </Button>
+      }
+    />
+  )
+
+  const newGroup = (
+    <NewGroup
+      hasWishlist={hasWishlists}
+      trigger={
+        <Button variant="outline" size={isFollowing ? "sm" : "default"}>
+          <Plus size="16" className="mr-2" /> {t("following.newGroup")}
+        </Button>
+      }
+    />
+  )
+
   return (
     <>
       <div>
@@ -159,8 +188,37 @@ export default async function Home() {
         </List>
       )}
 
-      <List>
-        <ListTitle>{t("following.title")}</ListTitle>
+      <section aria-labelledby="wishlists-title" className="grid gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <ListTitle>
+            <span id="wishlists-title">{t("wishlists.title")}</span>
+          </ListTitle>
+          {hasWishlists && newWishlist}
+        </div>
+
+        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
+          {wishlists.map(wishlist =>
+            renderWishlist(wishlist, ownListGroups(wishlist))
+          )}
+        </div>
+
+        {!hasWishlists && (
+          <div className="grid justify-items-start gap-4">
+            <EmptyState title={t("wishlists.empty.title")}>
+              {t("wishlists.empty.text")}
+            </EmptyState>
+            {newWishlist}
+          </div>
+        )}
+      </section>
+
+      <section aria-labelledby="following-title" className="grid gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <ListTitle>
+            <span id="following-title">{t("following.title")}</span>
+          </ListTitle>
+          {isFollowing && newGroup}
+        </div>
 
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
           {groups.map(group => (
@@ -180,39 +238,17 @@ export default async function Home() {
             </Link>
           ))}
           {followedWishlists.map(wishlist => renderWishlist(wishlist))}
-          <NewGroup
-            hasWishlist={wishlists.length > 0}
-            trigger={<AddTile label={t("following.newGroup")} />}
-          />
         </div>
 
-        {groups.length === 0 && followedWishlists.length === 0 && (
-          <EmptyState title={t("following.empty.title")}>
-            {t("following.empty.text")}
-          </EmptyState>
+        {!isFollowing && (
+          <div className="grid justify-items-start gap-4">
+            <EmptyState title={t("following.empty.title")}>
+              {t("following.empty.text")}
+            </EmptyState>
+            {newGroup}
+          </div>
         )}
-      </List>
-
-      <List>
-        <ListTitle>{t("wishlists.title")}</ListTitle>
-
-        <div className="grid gap-3 grid-cols-2 sm:grid-cols-3">
-          {wishlists.map(wishlist =>
-            renderWishlist(wishlist, ownListGroups(wishlist))
-          )}
-          <NewWishlist
-            groups={await getGroupOptionsForUser()}
-            managers={await getManagerOptionsForUser()}
-            trigger={<AddTile label={t("wishlists.new")} />}
-          />
-        </div>
-
-        {wishlists.length === 0 && (
-          <EmptyState title={t("wishlists.empty.title")}>
-            {t("wishlists.empty.text")}
-          </EmptyState>
-        )}
-      </List>
+      </section>
     </>
   )
 }
