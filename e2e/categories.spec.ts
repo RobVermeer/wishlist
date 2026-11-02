@@ -317,9 +317,17 @@ test("owner can reorder categories with the keyboard", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
 
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).focus()
+  await page.keyboard.press("Enter")
+  await expect(page.getByRole("button", { name: "Klaar" })).toBeFocused()
+  await expect(
+    page.getByText("Sleep de wensen en categorieën naar de goede plek.")
+  ).toBeVisible()
+  await page.keyboard.press("Tab")
   const handle = page.getByRole("button", {
     name: "Verplaats categorie Boeken",
   })
+  await expect(handle).toBeFocused()
   const announcement = page
     .locator('[role="status"][id^="DndLiveRegion"]')
     .filter({ hasText: /./ })
@@ -370,6 +378,7 @@ test("owner can reorder categories by dragging", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
 
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).click()
   const handle = page.getByRole("button", {
     name: "Verplaats categorie Kleding",
   })
@@ -407,6 +416,9 @@ test("group members see categories but cannot reorder them", async ({
   await openCategory(page, "Kleding")
   await expect(
     page.getByRole("button", { name: /Verplaats categorie/ })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: "Volgorde aanpassen" })
   ).toHaveCount(0)
   expect(await itemOrder(page, ["Trui", "Fiets"])).toEqual(["Fiets", "Trui"])
 

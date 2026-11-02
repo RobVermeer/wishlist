@@ -28,6 +28,7 @@ import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
 import { Interests } from "@/components/Interests"
+import { SortMode } from "@/components/SortMode"
 
 interface Props {
   id: string
@@ -93,6 +94,11 @@ export const Wishlist = async ({ id, groupId }: Props) => {
     wishlist.wishlistItem,
     wishlist.categories
   )
+  const canSort =
+    wishlist.isOwnList &&
+    (uncategorized.length > 1 ||
+      categories.length > 1 ||
+      categories.some(({ items }) => items.length > 1))
 
   return (
     <List>
@@ -194,33 +200,35 @@ export const Wishlist = async ({ id, groupId }: Props) => {
         />
       )}
 
-      <ItemList
-        id={`items-${wishlist.id}`}
-        wishlistId={wishlist.id}
-        items={uncategorized.map(toSortable)}
-        sortable={wishlist.isOwnList}
-      />
-
-      {categories.length > 0 && (
-        <CategoryList
+      <SortMode enabled={canSort} withCategories={categories.length > 1}>
+        <ItemList
+          id={`items-${wishlist.id}`}
           wishlistId={wishlist.id}
-          categories={categories.map(({ id, title, items }) => ({
-            id,
-            title,
-            count: items.length,
-            items: (
-              <ItemList
-                id={`items-${id}`}
-                wishlistId={wishlist.id}
-                items={items.map(toSortable)}
-                sortable={wishlist.isOwnList}
-              />
-            ),
-          }))}
-          openCategories={openCategories}
+          items={uncategorized.map(toSortable)}
           sortable={wishlist.isOwnList}
         />
-      )}
+
+        {categories.length > 0 && (
+          <CategoryList
+            wishlistId={wishlist.id}
+            categories={categories.map(({ id, title, items }) => ({
+              id,
+              title,
+              count: items.length,
+              items: (
+                <ItemList
+                  id={`items-${id}`}
+                  wishlistId={wishlist.id}
+                  items={items.map(toSortable)}
+                  sortable={wishlist.isOwnList}
+                />
+              ),
+            }))}
+            openCategories={openCategories}
+            sortable={wishlist.isOwnList}
+          />
+        )}
+      </SortMode>
 
       {(wishlist.isOwnList || showRemind || wishlist.isFollowing) && (
         <Separator className="my-3" />

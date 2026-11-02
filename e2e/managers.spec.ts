@@ -149,6 +149,7 @@ test("managers change, order, remove and share the wishes", async ({
   const announcement = page
     .locator('[role="status"][id^="DndLiveRegion"]')
     .filter({ hasText: /./ })
+  await page.getByRole("button", { name: "Volgorde aanpassen" }).click()
   await page.getByRole("button", { name: "Verplaats wens Puzzel" }).focus()
   await page.keyboard.press("Space")
   await expect(async () => {

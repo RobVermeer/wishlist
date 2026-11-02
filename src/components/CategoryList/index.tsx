@@ -1,6 +1,7 @@
 "use client"
 
 import { SortableList } from "@/components/SortableList"
+import { useSortMode } from "@/components/SortMode"
 import { reorderCategoriesForWishlist } from "@/lib/wishlistCategories/reorderCategoriesForWishlist"
 import { Category, CategorySection } from "./CategorySection"
 
@@ -17,6 +18,8 @@ export const CategoryList = ({
   openCategories,
   sortable,
 }: Props) => {
+  const showHandles = useSortMode() && categories.length > 1
+
   if (!sortable) {
     return categories.map(category => (
       <CategorySection
@@ -44,7 +47,7 @@ export const CategoryList = ({
           style={style}
           category={category}
           openCategories={openCategories}
-          handle={handle}
+          handle={showHandles ? handle : undefined}
         />
       )}
     </SortableList>
