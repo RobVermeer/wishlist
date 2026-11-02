@@ -123,7 +123,9 @@ test("edit a wishlist", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  const edit = page.getByRole("button", { name: "Wijzig verlanglijstje" })
+  await expect(edit).toHaveText("Wijzig")
+  await edit.click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
   await expect(dialog.getByLabel("Familie")).toBeChecked()

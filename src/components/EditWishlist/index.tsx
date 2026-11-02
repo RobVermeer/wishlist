@@ -44,7 +44,6 @@ interface Props {
   }
   groups: GroupOption[]
   managers: ManagerOption[]
-  label?: string
   className?: string
 }
 
@@ -52,7 +51,6 @@ export const EditWishlist = ({
   wishlist,
   groups,
   managers,
-  label,
   className,
 }: Props) => {
   const { toast } = useToast()
@@ -101,9 +99,13 @@ export const EditWishlist = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className={className} size="sm" variant="outline">
-          <Pencil size="12" className="mr-2" />{" "}
-          {label ?? t("EditWishlist.button")}
+        <Button
+          className={className}
+          size="sm"
+          variant="outline"
+          aria-label={t("EditWishlist.title")}
+        >
+          <Pencil size="12" className="mr-2" /> {t("EditWishlist.button")}
         </Button>
       </DialogTrigger>
       <DialogContent
