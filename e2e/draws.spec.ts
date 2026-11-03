@@ -10,6 +10,7 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
+import { baseURL } from "./support/env"
 import { Page } from "@playwright/test"
 
 const lot = (page: Page) => page.getByRole("region", { name: "Jouw lootje" })
@@ -225,7 +226,7 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
     "Opa, je hebt een lootje getrokken voor Sinterklaas"
   )
   expect(email.html).toContain("Doe mee met de groep")
-  expect(email.html).toContain(`/group/${group.id}`)
+  expect(email.html).toContain(`href="${baseURL}/group/${group.id}"`)
   expect(email.html).toContain(
     "Je krijgt deze e-mail omdat Anna je e-mailadres heeft ingevuld bij de lootjes voor Sinterklaas."
   )
