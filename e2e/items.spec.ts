@@ -821,3 +821,16 @@ test("the button to change a wish says which wish", async ({ signIn }) => {
       .getByLabel("Wens", { exact: true })
   ).toHaveValue("Boek")
 })
+
+test("the owner hears which wishes are unlimited", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createItem(wishlist, { title: "Sokken", unlimited: true })
+  await createItem(wishlist, { title: "Fiets" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  await expect(itemCard(page, "Sokken")).toContainText("Onbeperkt")
+  await expect(itemCard(page, "Fiets")).not.toContainText("Onbeperkt")
+})
