@@ -437,3 +437,17 @@ test("the frequently asked questions say who gets asked for more wishes", async 
     )
   ).toBeVisible()
 })
+
+test("the frequently asked questions say what happens to your groups when you remove your account", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Hoe verwijder ik mijn account?").click()
+
+  await expect(
+    page.getByText(
+      "Groepen die je hebt gemaakt gaan naar een ander lid, of verdwijnen als er niemand anders in zit."
+    )
+  ).toBeVisible()
+})
