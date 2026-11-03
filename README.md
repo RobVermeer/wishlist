@@ -2,8 +2,6 @@
 
 Share wishlists with family and friends, check off what you're going to buy without the owner seeing it, and draw lots for groups.
 
-https://github.com/dakshshah96/local-cert-generator/
-
 ## Development
 
 ```sh
@@ -42,4 +40,4 @@ npm run mail
 node e2e/support/server.mjs               # add --skip-build to reuse the last build
 ```
 
-CI (`.github/workflows/ci.yml`) runs lint, formatting, typecheck, knip, a dependency audit and this suite on every pull request, and deploys on `main` only happen when it passes.
+CI (`.github/workflows/ci.yml`) runs lint, formatting, typecheck, a check that the migrations match the schema, knip, a dependency audit and this suite on every pull request, and deploys on `main` only happen when it passes.
