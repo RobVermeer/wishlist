@@ -132,3 +132,20 @@ test("the privacy policy says who gets asked for more wishes", async ({
     "Een vraag om meer wensen, als iemand je die stuurt voor je verlanglijstje of een verlanglijstje dat je samen beheert."
   )
 })
+
+test("the privacy policy says what stays when an account is removed", async ({
+  page,
+}) => {
+  await page.goto("/privacy")
+
+  await expect(page.getByText("Bijgewerkt op 3 november 2026.")).toBeVisible()
+  const section = page.getByRole("region", {
+    name: "Je gegevens inzien, wijzigen of verwijderen",
+  })
+  await expect(section).toContainText(
+    "Groepen die je hebt gemaakt gaan naar een ander lid, zodat hun verlanglijstjes en lootjes blijven. Zit er niemand anders in, dan verwijderen we ze."
+  )
+  await expect(section).toContainText(
+    "Wensen die je bij anderen hebt afgestreept, blijven afgestreept, zodat niemand ze dubbel koopt."
+  )
+})
