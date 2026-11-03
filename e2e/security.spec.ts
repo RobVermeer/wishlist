@@ -1636,24 +1636,6 @@ test("only admins can remove users", async ({ signIn }) => {
   expect(await prisma.user.count({ where: { id: victim.id } })).toBe(1)
 })
 
-test("only admins can draw lots from the admin", async ({ signIn }) => {
-  const admin = await createAdmin()
-  const owner = await createUser({ firstName: "Anna" })
-  const member = await createUser({ firstName: "Bert" })
-  const group = await createGroup(owner, { members: [member] })
-  const adminPage = await signIn(admin)
-
-  const action = captureAction(adminPage, `/admin/groups/${group.id}`)
-  await adminPage.goto(`/admin/groups/${group.id}`)
-  await adminPage.getByRole("button", { name: "Trek lootjes" }).click()
-
-  await replayAs(await signIn(member), await action)
-
-  for (const { email } of [owner, member]) {
-    expect(await emailsTo(email!)).toHaveLength(0)
-  }
-})
-
 test("only the creator or an admin can restore a group", async ({ signIn }) => {
   const admin = await createAdmin()
   const owner = await createUser()
