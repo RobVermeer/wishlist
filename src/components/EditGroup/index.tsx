@@ -1,5 +1,6 @@
 "use client"
 
+import { focusDialog } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -107,7 +108,7 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
       </DialogTrigger>
       <DialogContent
         className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]"
-        onOpenAutoFocus={event => event.preventDefault()}
+        onOpenAutoFocus={focusDialog}
       >
         <DialogHeader>
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>

@@ -5,6 +5,7 @@ import {
   createGroup,
   createWishlist,
   createItem,
+  createCategory,
 } from "./fixtures"
 
 // Screen readers read the description when a dialog opens, so it says what
@@ -55,4 +56,41 @@ test("dialogs to add and change things describe themselves", async ({
   await expect(
     page.getByRole("dialog", { name: "Uit de groep stappen?" })
   ).toHaveAccessibleDescription(/^Als je uit de groep stapt/)
+})
+
+// Focusing the first field would open the keyboard over a form that's already
+// filled in on phones, so the dialog itself gets focus.
+test("dialogs to change things move focus into the dialog", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const group = await createGroup(user, { title: "Familie" })
+  const wishlist = await createWishlist(user, { groups: [group] })
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  const page = await signIn(user)
+
+  for (const [path, button, name] of [
+    [
+      `/wishlist/${wishlist.id}`,
+      "Wijzig categorie Kleding",
+      "Wijzig categorie",
+    ],
+    [`/wishlist/${wishlist.id}`, "Wijzig wens Fiets", "Wijzig wens"],
+    [
+      `/wishlist/${wishlist.id}`,
+      "Wijzig verlanglijstje",
+      "Wijzig verlanglijstje",
+    ],
+    [`/group/${group.id}`, "Wijzig", "Wijzig groep"],
+  ]) {
+    await page.goto(path)
+    await page.getByRole("button", { name: button, exact: true }).click()
+
+    const dialog = page.getByRole("dialog", { name })
+    await expect(dialog).toBeFocused()
+    await page.keyboard.press("Tab")
+    await expect(dialog.locator(":focus")).toHaveCount(1)
+  }
 })

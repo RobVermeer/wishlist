@@ -1,5 +1,6 @@
 "use client"
 
+import { focusDialog } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -80,10 +81,7 @@ export const EditCategory = ({ id, title }: Props) => {
           <Pencil size="12" className="mr-2" /> {t("button")}
         </Button>
       </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        onOpenAutoFocus={event => event.preventDefault()}
-      >
+      <DialogContent className="sm:max-w-[425px]" onOpenAutoFocus={focusDialog}>
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
