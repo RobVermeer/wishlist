@@ -9,6 +9,7 @@ import {
   prisma,
   toasts,
 } from "./fixtures"
+import { baseURL } from "./support/env"
 import { Page } from "@playwright/test"
 
 const itemCard = (page: Page, title: string) =>
@@ -456,7 +457,7 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
   expect(reminder.html).toContain(
     "Je krijgt deze e-mail omdat iemand met wie je je verlanglijstje deelt om meer wensen vraagt."
   )
-  expect(reminder.html).toContain(`/wishlist/${wishlist.id}"`)
+  expect(reminder.html).toContain(`href="${baseURL}/wishlist/${wishlist.id}"`)
 
   const reminders = await prisma.reminder.findMany({ where: { to: owner.id } })
   expect(reminders).toEqual([
