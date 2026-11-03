@@ -388,7 +388,8 @@
       "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting.",
       "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig.",
       "participantNotFound": "Deelnemer niet gevonden.",
-      "alreadySent": "Je kunt de e-mail één keer per dag opnieuw sturen."
+      "alreadySent": "Je kunt de e-mail één keer per dag opnieuw sturen.",
+      "changed": "De lootjes zijn net al getrokken."
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."

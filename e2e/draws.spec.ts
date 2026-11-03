@@ -9,6 +9,8 @@ import {
   emailsTo,
   prisma,
   toasts,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -113,7 +115,8 @@ test("a lootje says when someone has no wishlist yet", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Anna" })
   const bert = await createUser({ firstName: "Bert" })
   const group = await createGroup(owner, { members: [bert] })
-  await createDraw(group, [owner, bert])
+  const opa = `opa-${bert.id}@e2e.test`
+  await createDraw(group, [owner, bert, { name: "Opa", email: opa }])
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
@@ -250,6 +253,32 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   await opaPage.getByRole("button", { name: "Volg de groep" }).click()
   await reveal(lot(opaPage))
   await expect(lot(opaPage)).toContainText(`Je hebt ${drawn} getrokken`)
+})
+
+test("a member added by e-mail address takes part as member", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const email = `Bert-${bert.id}@E2E.test`
+  await prisma.user.update({ where: { id: bert.id }, data: { email } })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await addPerson(dialog, "Bert", email.toLowerCase())
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+  const participants = await prisma.drawParticipant.findMany({
+    where: { draw: { groupId: group.id } },
+  })
+  expect(participants.map(({ userId }) => userId).sort()).toEqual(
+    [owner.id, bert.id].sort()
+  )
 })
 
 test("someone filled in but not added yet still takes part", async ({
@@ -520,6 +549,67 @@ test("send the lootje again to someone who hasn't joined yet", async ({
   ).toBeDisabled()
 })
 
+test("sending the lootje again twice at once sends one e-mail", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  const {
+    participants: [, , participant],
+  } = await createDraw(group, [owner, bert, { name: "Opa", email: opa }], {
+    lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+  })
+  const page = await signIn(owner)
+
+  // Stop the request of the button and send it a few times at once. The
+  // requests only overlap now and then, so it tries a number of times.
+  const resend = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await status(page).getByRole("button", { name: "Stuur opnieuw" }).click()
+  const action = await resend
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    await prisma.drawParticipant.update({
+      where: { id: participant.id },
+      data: { lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+    })
+    await Promise.all([1, 2, 3].map(() => replayAs(page, action)))
+
+    expect(await emailsTo(opa)).toHaveLength(attempt)
+  }
+})
+
+test("the lootje isn't sent again after the party", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  const { draw } = await createDraw(
+    group,
+    [owner, bert, { name: "Opa", email: opa }],
+    {
+      date: new Date(dateInAmsterdam(30)),
+      lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    }
+  )
+  const page = await signIn(owner)
+
+  // The button is gone after the party, so send its request from before.
+  const resend = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await status(page).getByRole("button", { name: "Stuur opnieuw" }).click()
+  const action = await resend
+  await prisma.draw.update({
+    where: { id: draw.id },
+    data: { date: new Date(dateInAmsterdam(-1)) },
+  })
+
+  expect(await replayAs(page, action)).toContain("Deelnemer niet gevonden")
+  expect(await emailsTo(opa)).toHaveLength(0)
+})
+
 test("drawing lots again replaces the previous draw", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Anna" })
   const bert = await createUser({ firstName: "Bert" })
@@ -563,6 +653,66 @@ test("drawing lots again replaces the previous draw", async ({ signIn }) => {
     )
   }
   await expect(lot(page)).toBeVisible()
+})
+
+test("drawing lots twice at once draws them once", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  // Stop the request of the dialog and send it twice at once, like a double
+  // click that gets through.
+  const draw = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+  const action = await draw
+
+  const responses = await Promise.all([1, 2].map(() => replayAs(page, action)))
+
+  expect(
+    responses.filter(response => response.includes('{"type":"success"}'))
+  ).toHaveLength(1)
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(1)
+  for (const user of [owner, bert]) {
+    expect(await emailsTo(user.email!)).toHaveLength(1)
+  }
+})
+
+test("drawing lots again twice at once replaces the draw once", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  await createDraw(group, [owner, bert, { name: "Opa", email: opa }])
+  const page = await signIn(owner)
+
+  const draw = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Opnieuw lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Opnieuw lootjes trekken" })
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+  const action = await draw
+
+  const responses = await Promise.all([1, 2].map(() => replayAs(page, action)))
+
+  expect(
+    responses.filter(response => response.includes('{"type":"success"}'))
+  ).toHaveLength(1)
+  expect(responses.join()).toContain("De lootjes zijn net al getrokken.")
+  expect(
+    await prisma.draw.count({ where: { groupId: group.id, cancelledAt: null } })
+  ).toBe(1)
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(2)
+  for (const user of [owner, bert]) {
+    expect(await emailsTo(user.email!)).toHaveLength(1)
+  }
 })
 
 test("the overview shows your lootjes from all your groups", async ({

@@ -25,15 +25,17 @@ interface Props {
   groupId: string
   members: { id: string; name: string }[]
   previous?: { id: string; name: string }[]
-  redraw?: boolean
+  // The draw this one replaces, if there is one
+  replaces?: string
 }
 
 export const DrawLots = ({
   groupId,
   members,
   previous = [],
-  redraw = false,
+  replaces,
 }: Props) => {
+  const redraw = replaces !== undefined
   const t = useTranslations("Draw.form")
   const tDraw = useTranslations("Draw")
   const { toast } = useToast()
@@ -109,6 +111,7 @@ export const DrawLots = ({
           id="draw"
           className="grid gap-4 py-4"
         >
+          {replaces && <input type="hidden" name="replaces" value={replaces} />}
           <fieldset className="grid gap-2">
             <legend className="mb-2 text-sm font-medium">
               {t("participants")}
