@@ -353,9 +353,22 @@ test("the frequently asked questions explain sharing interests instead of wishes
     .click()
   await expect(
     page.getByText(
-      /^Ja\. Kies ‘Wijzig’ op je verlanglijstje en zet bij ‘Waar ik blij van word’/
+      /^Ja\. Kies ‘Wijzig’ op je verlanglijstje, zet bij ‘Waar ik blij van word’/
     )
   ).toContainText("Wensen erbij mag, maar hoeft niet.")
+})
+
+test("the frequently asked questions explain how to rename or remove a category", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page.getByText("Hoe werken categorieën?").click()
+  await expect(
+    page.getByText(/^Kies bij het toevoegen of wijzigen van een wens/)
+  ).toContainText(
+    "Met het plusje naast een categorie zet je er meteen een wens in. Met ‘Wijzig’ naast een categorie geef je hem een andere naam of verwijder je hem. De wensen erin blijven dan staan, zonder categorie."
+  )
 })
 
 test("the frequently asked questions explain how to change the order of wishes", async ({

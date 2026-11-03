@@ -790,7 +790,7 @@
           },
           {
             "question": "Hoe werken categorieën?",
-            "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Niet Weer Sokken onthoudt dat voor de volgende keer. Een categorie zonder wensen verdwijnt vanzelf."
+            "answer": "Kies bij het toevoegen of wijzigen van een wens een categorie, of typ een nieuwe naam om er een te maken. Wensen zonder categorie staan bovenaan. Categorieën staan dichtgeklapt: klap er een open en Niet Weer Sokken onthoudt dat voor de volgende keer. Zet je een wens in een categorie, dan klapt die vanzelf open. Met het plusje naast een categorie zet je er meteen een wens in. Met ‘Wijzig’ naast een categorie geef je hem een andere naam of verwijder je hem. De wensen erin blijven dan staan, zonder categorie. Een categorie zonder wensen verdwijnt vanzelf."
           },
           {
             "question": "Hoe zet ik mijn wensen in een andere volgorde?",
@@ -802,7 +802,7 @@
           },
           {
             "question": "Ik hou niet van verlanglijstjes, kan het ook anders?",
-            "answer": "Ja. Kies ‘Wijzig’ op je verlanglijstje en zet bij ‘Waar ik blij van word’ wat je graag doet of leuk vindt, zoals lezen, sudoku of wandelen. Wie je verlanglijstje kan zien, ziet dat ook en bedenkt zelf iets. Wensen erbij mag, maar hoeft niet. Je kunt er 20 kwijt per verlanglijstje, en met het kruisje haal je er een weg. Wie een verlanglijstje mee beheert, kan ze ook toevoegen en weghalen."
+            "answer": "Ja. Kies ‘Wijzig’ op je verlanglijstje, zet bij ‘Waar ik blij van word’ wat je graag doet of leuk vindt, zoals lezen, sudoku of wandelen, en kies ‘Opslaan’. Wie je verlanglijstje kan zien, ziet dat ook en bedenkt zelf iets. Wensen erbij mag, maar hoeft niet. Je kunt er 20 kwijt per verlanglijstje, en met het kruisje haal je er een weg. Wie een verlanglijstje mee beheert, kan ze ook toevoegen en weghalen."
           },
           {
             "question": "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
