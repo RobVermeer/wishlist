@@ -56,7 +56,9 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await expect(dialog.getByLabel("Voor mezelf")).toBeChecked()
-  await expect(dialog.getByLabel("Naam", { exact: true })).toHaveCount(0)
+  await expect(
+    dialog.getByLabel("Naam van wie het verlanglijstje is")
+  ).toHaveCount(0)
   await expect(dialog.getByLabel("Familie")).not.toBeChecked()
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
@@ -94,7 +96,9 @@ test("create a wishlist for someone else", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam", { exact: true }).fill("Baby Bram")
+  await dialog
+    .getByLabel("Naam van wie het verlanglijstje is")
+    .fill("Baby Bram")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
@@ -121,14 +125,16 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam", { exact: true }).fill("B")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("B")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
     "Naam moet minimaal uit 2 tekens bestaan"
   )
   await expect(dialog.getByLabel("Voor iemand anders")).toBeChecked()
-  await expect(dialog.getByLabel("Naam", { exact: true })).toHaveValue("B")
+  await expect(
+    dialog.getByLabel("Naam van wie het verlanglijstje is")
+  ).toHaveValue("B")
   await expect(dialog).toBeVisible()
   expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
 })
@@ -150,7 +156,7 @@ test("edit a wishlist", async ({ signIn }) => {
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
 
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam", { exact: true }).fill("Opa Jan")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Opa Jan")
   await expect(dialog.getByLabel("Beschrijving")).toHaveCount(0)
   const leaves = dialog.getByText(
     "De leden van deze groep zien dit verlanglijstje dan niet meer."
@@ -448,7 +454,7 @@ test("closing a wishlist for someone else after changing the name asks first", a
   await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
-  await dialog.getByLabel("Naam", { exact: true }).fill("Oma Jo")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Oma Jo")
   await page.keyboard.press("Escape")
   await page
     .getByRole("alertdialog", { name: "Wijzigingen niet opslaan?" })

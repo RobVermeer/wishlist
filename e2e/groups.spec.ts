@@ -758,7 +758,7 @@ test("wishlists for someone else can be added next to your own", async ({
 
     const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
     await dialog.getByLabel("Voor iemand anders").click()
-    await dialog.getByLabel("Naam").fill(name)
+    await dialog.getByLabel("Naam van wie het verlanglijstje is").fill(name)
     await expect(
       dialog.getByText("Vervangt je andere verlanglijstje in deze groep")
     ).toBeHidden()
@@ -924,7 +924,7 @@ test("make a new wishlist from the add dialog of a group", async ({
   await expect(dialog.getByLabel("Familie")).toBeChecked()
   await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam").fill("Oma")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Oma")
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()

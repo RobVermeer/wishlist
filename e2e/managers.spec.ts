@@ -66,7 +66,7 @@ test("make a wishlist for someone else and manage it together", async ({
   await expect(managers).toBeHidden()
 
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam", { exact: true }).fill("Emma")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Emma")
   await expect(managers).toContainText(
     "Die kan ook wensen toevoegen en wijzigen."
   )
@@ -214,7 +214,9 @@ test("managers change the wishlist but not who manages it", async ({
   await edit.click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
-  await expect(dialog.getByLabel("Naam", { exact: true })).toHaveValue("Emma")
+  await expect(
+    dialog.getByLabel("Naam van wie het verlanglijstje is")
+  ).toHaveValue("Emma")
   await expect(dialog.getByLabel("Voor mezelf")).toHaveCount(0)
   await expect(dialog.getByRole("group", { name: managersLabel })).toHaveCount(
     0
@@ -224,7 +226,7 @@ test("managers change the wishlist but not who manages it", async ({
   await expect(dialog.getByLabel("Familie Vermeer")).not.toBeChecked()
   await expect(dialog.getByLabel("Werk")).toHaveCount(0)
 
-  await dialog.getByLabel("Naam", { exact: true }).fill("Emma 🎂")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Emma 🎂")
   await expect(dialog.getByLabel("Beschrijving")).toHaveCount(0)
   await dialog.getByLabel("Familie Vermeer").click()
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -509,7 +511,7 @@ test("find who manages a wishlist by name on a small phone", async ({
 
   const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
   await dialog.getByLabel("Voor iemand anders").click()
-  await dialog.getByLabel("Naam", { exact: true }).fill("Baby")
+  await dialog.getByLabel("Naam van wie het verlanglijstje is").fill("Baby")
   await dialog.getByRole("button", { name: "Kies iemand" }).click()
   const search = page.getByPlaceholder("Zoek op naam")
   await search.fill("xyz")
