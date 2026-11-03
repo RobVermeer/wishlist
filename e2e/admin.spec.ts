@@ -473,3 +473,21 @@ test("admin can remove wishes and verlanglijstjes that break the huisregels", as
       .removed
   ).toBe(true)
 })
+
+test("admin pages say in the tab which page they are", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const user = await createUser({ name: "Sanne de Vries" })
+  const group = await createGroup(user, { title: "Familie" })
+  const page = await signIn(admin)
+
+  for (const [path, title] of [
+    ["/admin", "Admin - Niet Weer Sokken"],
+    ["/admin/groups", "Groepen - Niet Weer Sokken"],
+    ["/admin/users", "Gebruikers - Niet Weer Sokken"],
+    [`/admin/groups/${group.id}`, "Familie - Niet Weer Sokken"],
+    [`/admin/users/${user.id}`, "Sanne de Vries - Niet Weer Sokken"],
+  ]) {
+    await page.goto(path)
+    await expect(page).toHaveTitle(title)
+  }
+})

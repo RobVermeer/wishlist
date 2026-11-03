@@ -1,3 +1,4 @@
+import { Metadata } from "next"
 import { Card } from "@/components/Card"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
@@ -9,7 +10,15 @@ import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 
-export default async function AdminUsersPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Admin")
+
+  return {
+    title: `${t("tabs.groups")} - Niet Weer Sokken`,
+  }
+}
+
+export default async function AdminGroupsPage() {
   const session = await getSession()
 
   if (!session) redirect("/login")

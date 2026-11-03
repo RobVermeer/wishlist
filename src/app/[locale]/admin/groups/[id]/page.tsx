@@ -1,3 +1,4 @@
+import { Metadata } from "next"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
@@ -9,6 +10,17 @@ import { UnDeleteGroup } from "./components/UnDeleteGroup"
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const group = await getGroupForAdmin(id)
+
+  if (!group) return {}
+
+  return {
+    title: `${group.title} - Niet Weer Sokken`,
+  }
 }
 
 export default async function AdminGroupsDrawPage({ params }: Props) {
