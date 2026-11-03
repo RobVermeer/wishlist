@@ -539,3 +539,22 @@ test("closing a new wishlist after choosing a group asks first", async ({
   await expect(dialog).toBeHidden()
   expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
 })
+
+test("the tab says whose verlanglijstje in a group it is", async ({
+  signIn,
+}) => {
+  const user = await createUser({ firstName: "Tom" })
+  const sanne = await createUser({ firstName: "Sanne" })
+  const group = await createGroup(user, { title: "Familie", members: [sanne] })
+  const own = await createWishlist(user, { groups: [group] })
+  const other = await createWishlist(sanne, { groups: [group] })
+  const page = await signIn(user)
+
+  await page.goto(`/group/${group.id}/${own.id}`)
+  await expect(page).toHaveTitle(
+    "Mijn verlanglijstje - Familie - Niet Weer Sokken"
+  )
+
+  await page.goto(`/group/${group.id}/${other.id}`)
+  await expect(page).toHaveTitle("Sanne - Familie - Niet Weer Sokken")
+})
