@@ -1,6 +1,5 @@
 import "./globals.css"
 import type { Metadata, Viewport } from "next"
-import { Figtree, Fraunces } from "next/font/google"
 import { getSession } from "@/lib/getSession"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
@@ -11,14 +10,8 @@ import { NavigationStatus } from "@/components/NavigationStatus"
 import { NextIntlClientProvider } from "next-intl"
 import { getTranslations } from "next-intl/server"
 import { siteUrl } from "@/lib/siteUrl"
+import { body, heading } from "@/lib/fonts"
 import { openGraphImage } from "@/lib/openGraph"
-
-const body = Figtree({ subsets: ["latin"], variable: "--font-body" })
-const heading = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-heading",
-  axes: ["SOFT", "opsz"],
-})
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata")
