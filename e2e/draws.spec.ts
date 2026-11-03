@@ -571,6 +571,35 @@ test("sending the lootje again twice at once sends one e-mail", async ({
   }
 })
 
+test("the lootje isn't sent again after the party", async ({ signIn }) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  const { draw } = await createDraw(
+    group,
+    [owner, bert, { name: "Opa", email: opa }],
+    {
+      date: new Date(dateInAmsterdam(30)),
+      lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    }
+  )
+  const page = await signIn(owner)
+
+  // The button is gone after the party, so send its request from before.
+  const resend = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await status(page).getByRole("button", { name: "Stuur opnieuw" }).click()
+  const action = await resend
+  await prisma.draw.update({
+    where: { id: draw.id },
+    data: { date: new Date(dateInAmsterdam(-1)) },
+  })
+
+  expect(await replayAs(page, action)).toContain("Deelnemer niet gevonden")
+  expect(await emailsTo(opa)).toHaveLength(0)
+})
+
 test("drawing lots again replaces the previous draw", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Anna" })
   const bert = await createUser({ firstName: "Bert" })
