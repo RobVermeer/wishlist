@@ -1,9 +1,8 @@
 "use client"
 
 import { useSelectedLayoutSegment } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { Group, Lock, Users } from "lucide-react"
+import { TabLink } from "@/components/TabLink"
 import { useTranslations } from "next-intl"
 
 export const AdminTabs = () => {
@@ -12,21 +11,15 @@ export const AdminTabs = () => {
 
   return (
     <div className="flex gap-2 overflow-x-scroll">
-      <Button variant={segment === null ? "default" : "outline"} asChild>
-        <Link href="/admin">
-          <Lock size="16" className="mr-2" /> {t("tabs.dashboard")}
-        </Link>
-      </Button>
-      <Button variant={segment === "groups" ? "default" : "outline"} asChild>
-        <Link href="/admin/groups">
-          <Group size="16" className="mr-2" /> {t("tabs.groups")}
-        </Link>
-      </Button>
-      <Button variant={segment === "users" ? "default" : "outline"} asChild>
-        <Link href="/admin/users">
-          <Users size="16" className="mr-2" /> {t("tabs.users")}
-        </Link>
-      </Button>
+      <TabLink href="/admin" active={segment === null}>
+        <Lock size="16" className="mr-2" /> {t("tabs.dashboard")}
+      </TabLink>
+      <TabLink href="/admin/groups" active={segment === "groups"}>
+        <Group size="16" className="mr-2" /> {t("tabs.groups")}
+      </TabLink>
+      <TabLink href="/admin/users" active={segment === "users"}>
+        <Users size="16" className="mr-2" /> {t("tabs.users")}
+      </TabLink>
     </div>
   )
 }

@@ -50,6 +50,32 @@ test("admin can open the admin from their profile", async ({ signIn }) => {
   }
 })
 
+test("admin tabs show which one is open", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const page = await signIn(admin)
+  const tabs = ["Overzicht", "Groepen", "Gebruikers"]
+
+  await page.goto("/admin")
+
+  for (const [name, path] of [
+    ["Groepen", "/admin/groups"],
+    ["Gebruikers", "/admin/users"],
+    ["Overzicht", "/admin"],
+  ]) {
+    await page.getByRole("link", { name, exact: true }).click()
+    await expect(page).toHaveURL(path)
+    for (const tab of tabs) {
+      const link = page.getByRole("link", { name: tab, exact: true })
+
+      if (tab === name) {
+        await expect(link).toHaveAttribute("aria-current", "page")
+      } else {
+        await expect(link).not.toHaveAttribute("aria-current")
+      }
+    }
+  }
+})
+
 test("admin can remove a user", async ({ signIn }) => {
   const admin = await createAdmin()
   const user = await createUser({ name: "Weg Gebruiker" })
