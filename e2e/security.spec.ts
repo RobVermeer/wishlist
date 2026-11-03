@@ -572,7 +572,7 @@ for (const flow of ["new", "edited"] as const) {
       await page.getByRole("dialog").getByLabel("Voor iemand anders").click()
       await page
         .getByRole("dialog")
-        .getByLabel("Naam", { exact: true })
+        .getByLabel("Naam van wie het verlanglijstje is")
         .fill("Baby")
     } else {
       await page.goto(`/wishlist/${wishlist.id}`)
@@ -652,7 +652,7 @@ test("managers can't make a wishlist their own", async ({ signIn }) => {
   await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
-  const name = dialog.getByLabel("Naam", { exact: true })
+  const name = dialog.getByLabel("Naam van wie het verlanglijstje is")
   await name.evaluate(input => input.removeAttribute("required"))
   await name.fill("")
   await dialog.getByRole("button", { name: "Opslaan" }).click()

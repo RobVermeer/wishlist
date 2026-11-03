@@ -78,7 +78,7 @@
         "label": "Voor wie is dit verlanglijstje?",
         "me": "Voor mezelf",
         "other": "Voor iemand anders",
-        "name": "Naam",
+        "name": "Naam van wie het verlanglijstje is",
         "placeholder": "Bijvoorbeeld de naam van je kind."
       },
       "groups": {
@@ -1176,7 +1176,7 @@
       "extra": {
         "title": "Iemand anders erbij?",
         "text": "Doet er iemand mee die nog niet in de groep zit? Die krijgt het lootje per e-mail, met een uitnodiging voor de groep.",
-        "name": "Naam",
+        "name": "Naam van de deelnemer",
         "namePlaceholder": "Opa",
         "email": "E-mailadres",
         "emailPlaceholder": "opa@voorbeeld.nl",

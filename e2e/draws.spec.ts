@@ -195,7 +195,7 @@ const addPerson = async (
   name: string,
   email: string
 ) => {
-  await dialog.getByLabel("Naam").fill(name)
+  await dialog.getByLabel("Naam van de deelnemer").fill(name)
   await dialog.getByLabel("E-mailadres").fill(email)
   await dialog.getByRole("button", { name: "Voeg toe" }).click()
 }
