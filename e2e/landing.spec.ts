@@ -160,8 +160,8 @@ test("visitors see that one wishlist works for all their groups", async ({
 
   for (const [title, text] of [
     [
-      "Eén lijstje om bij te houden",
-      "Deel je verlanglijstje met een link en zet hetzelfde lijstje in je groepen: voor je familie, je vrienden of dat ene feestje.",
+      "Overal hetzelfde verlanglijstje",
+      "Deel je verlanglijstje met een link en zet het ook in je groepen: voor je familie, je vrienden of dat ene feestje.",
     ],
     ["Eén link voor de hele groep", "de verlanglijstjes van iedereen"],
     ["Niets dubbel", "staat bij het volgende ook afgestreept"],

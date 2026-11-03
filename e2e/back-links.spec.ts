@@ -57,7 +57,7 @@ test("a verlanglijstje from the overview links back to the overview", async ({
   const page = await signIn(user)
 
   for (const [wishlist, title] of [
-    [own, "Mijn lijstje"],
+    [own, "Mijn verlanglijstje"],
     [followed, "Sanne"],
   ] as const) {
     await page.goto("/")

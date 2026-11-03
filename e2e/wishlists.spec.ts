@@ -67,7 +67,9 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole("link", { name: "Mijn lijstje" })).toBeVisible()
+  await expect(
+    page.getByRole("link", { name: "Mijn verlanglijstje" })
+  ).toBeVisible()
 
   const wishlist = await prisma.wishlist.findFirstOrThrow({
     where: { userId: user.id },
@@ -78,9 +80,9 @@ test("create your own wishlist in your groups", async ({ signIn }) => {
   expect(wishlist.groups.map(({ id }) => id)).toEqual([family.id])
 
   await page.goto("/")
-  await page.getByRole("link", { name: "Mijn lijstje" }).click()
+  await page.getByRole("link", { name: "Mijn verlanglijstje" }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
-  await expect(page).toHaveTitle("Mijn lijstje - Niet Weer Sokken")
+  await expect(page).toHaveTitle("Mijn verlanglijstje - Niet Weer Sokken")
 })
 
 test("create a wishlist for someone else", async ({ signIn }) => {
@@ -191,13 +193,13 @@ test("your own wishlist shows the groups it is in under its title", async ({
   await page.goto(`/wishlist/${wishlist.id}`)
 
   await expect(
-    page.getByRole("heading", { name: "Mijn lijstje", exact: true })
+    page.getByRole("heading", { name: "Mijn verlanglijstje", exact: true })
   ).toBeVisible()
   await expect(page.getByText("In groepen Een, Twee en Drie")).toBeVisible()
 
   await page.goto(`/group/${groups[0].id}/${wishlist.id}`)
   await expect(
-    page.getByRole("heading", { name: "Mijn lijstje", exact: true })
+    page.getByRole("heading", { name: "Mijn verlanglijstje", exact: true })
   ).toBeVisible()
   await expect(page.getByText(/In groep/)).toHaveCount(0)
 })
@@ -292,10 +294,10 @@ test("your own wishlists on the dashboard say which groups they are in", async (
   await page.goto("/")
 
   await expect(
-    page.getByRole("link").filter({ hasText: /^(Mijn lijstje|Opa|Oma)/ })
+    page.getByRole("link").filter({ hasText: /^(Mijn verlanglijstje|Opa|Oma)/ })
   ).toHaveText([
-    /^Mijn lijstje\s*In groepen Familie en Vrienden$/,
-    /^Mijn lijstje$/,
+    /^Mijn verlanglijstje\s*In groepen Familie en Vrienden$/,
+    /^Mijn verlanglijstje$/,
     /^Opa\s*In groep Familie$/,
     /^Oma$/,
   ])

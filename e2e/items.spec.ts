@@ -51,7 +51,7 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
   await page.goto(`/wishlist/${wishlist.id}`)
 
   await expect(
-    page.getByRole("heading", { name: "Mijn lijstje" })
+    page.getByRole("heading", { name: "Mijn verlanglijstje" })
   ).toBeVisible()
   await expect(
     page.getByText(
