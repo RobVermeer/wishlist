@@ -44,7 +44,7 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
       {group.removed && (
         <>
           <p>{t("group.restoreText")}</p>
-          <UnDeleteGroup id={group.id} />
+          <UnDeleteGroup id={group.id} title={group.title} />
         </>
       )}
 

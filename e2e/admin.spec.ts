@@ -282,8 +282,13 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   await page.goto(`/admin/groups/${group.id}`)
   await expect(page.getByRole("heading", { name: group.title })).toBeVisible()
 
-  page.once("dialog", dialog => dialog.accept())
   await page.getByRole("button", { name: "Zet groep terug" }).click()
+  const restore = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
+  await expect(restore).toContainText(
+    `‘${group.title}’ is daarna weer te zien voor alle leden.`
+  )
+  await restore.getByRole("button", { name: "Zet groep terug" }).click()
+  await expect(toasts(page)).toContainText("De groep is teruggezet.")
   await expect
     .poll(
       async () =>
@@ -291,6 +296,9 @@ test("admin can remove and restore a group", async ({ signIn }) => {
           .removed
     )
     .toBe(false)
+  await expect(
+    page.getByRole("button", { name: "Zet groep terug" })
+  ).toHaveCount(0)
 })
 
 test("admin can draw lots for a group", async ({ signIn }) => {
