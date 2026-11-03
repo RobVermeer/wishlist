@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { groupSchema } from "@/lib/schema"
 import { getErrorMessage } from "@/lib/utils"
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 import { getTranslations } from "next-intl/server"
 
 export const createGroupForUser = async (formData: FormData) => {
@@ -44,7 +45,7 @@ export const createGroupForUser = async (formData: FormData) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

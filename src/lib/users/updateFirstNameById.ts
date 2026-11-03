@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
 import { userSchema } from "@/lib/schema"
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 
 export const updateFirstNameById = async (id: string, firstName: string) => {
   try {
@@ -37,7 +38,7 @@ export const updateFirstNameById = async (id: string, firstName: string) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

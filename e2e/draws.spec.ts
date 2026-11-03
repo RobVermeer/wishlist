@@ -169,10 +169,19 @@ test("drawing lots needs the date of the party", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Kies een datum vanaf vandaag")
+
+  const budget = dialog.getByLabel("Budget")
+  await date.fill(dateInAmsterdam())
+  await budget.fill("10001")
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Het budget mag maximaal 10.000 euro zijn."
+  )
   expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
   expect(await emailsTo(bert.email!)).toHaveLength(0)
 
-  await date.fill(dateInAmsterdam())
+  await budget.fill("")
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")

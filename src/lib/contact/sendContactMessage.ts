@@ -1,6 +1,7 @@
 "use server"
 
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 import { getTranslations } from "next-intl/server"
 import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
@@ -55,7 +56,7 @@ export const sendContactMessage = async (data: FormData) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

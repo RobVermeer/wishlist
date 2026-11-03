@@ -61,7 +61,7 @@ test("first names can be at most 40 characters", async ({ signIn }) => {
   const user = await createUser({ firstName: "Kees" })
   const nameless = await createUser({ firstName: null })
   const tooLong = "K".repeat(41)
-  const error = "Voornaam mag maximaal uit 40 tekens bestaan"
+  const error = "Je voornaam mag maximaal uit 40 tekens bestaan."
 
   const page = await signIn(user)
   await page.goto("/profile")

@@ -2,14 +2,16 @@ import * as z from "zod"
 import { groupThemes } from "@/lib/groups/themes"
 import { today } from "@/lib/today"
 
+// The errors are keys in Validation in nl.json, translate them with
+// translateIssues.
 export const groupSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(2, { error: "Groep titel moet minimaal uit 2 tekens bestaan" })
-    .max(40, { error: "Groep titel mag maximaal uit 40 tekens bestaan" }),
+    .min(2, { error: "group.titleTooShort" })
+    .max(40, { error: "group.titleTooLong" }),
   theme: z
-    .enum(["default", ...groupThemes], { error: "Kies een thema uit de lijst" })
+    .enum(["default", ...groupThemes], { error: "group.theme" })
     .optional(),
 })
 
@@ -17,12 +19,12 @@ export const userSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(1, { error: "Vul je voornaam in" })
-    .max(40, { error: "Voornaam mag maximaal uit 40 tekens bestaan" }),
+    .min(1, { error: "user.firstNameRequired" })
+    .max(40, { error: "user.firstNameTooLong" }),
 })
 
 export const adminSchema = z.object({
-  isAdmin: z.boolean({ error: "Kies of iemand admin is" }),
+  isAdmin: z.boolean({ error: "admin.isAdmin" }),
 })
 
 export const maxInterests = 20
@@ -30,15 +32,15 @@ export const maxInterests = 20
 const interestTitle = z
   .string()
   .trim()
-  .min(2, { error: "Een interesse moet minimaal uit 2 tekens bestaan" })
-  .max(30, { error: "Een interesse mag maximaal uit 30 tekens bestaan" })
+  .min(2, { error: "interest.tooShort" })
+  .max(30, { error: "interest.tooLong" })
 
 export const wishlistSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, { error: "Naam moet minimaal uit 2 tekens bestaan" })
-    .max(40, { error: "Naam mag maximaal uit 40 tekens bestaan" })
+    .min(2, { error: "wishlist.nameTooShort" })
+    .max(40, { error: "wishlist.nameTooLong" })
     .optional(),
   theme: z.string().optional(),
   groups: z.array(z.string()).optional(),
@@ -52,27 +54,21 @@ export const wishlistItemSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(2, { error: "Je wens moet minimaal uit 2 tekens bestaan" })
-    .max(100, { error: "Je wens mag maximaal uit 100 tekens bestaan" }),
+    .min(2, { error: "item.titleTooShort" })
+    .max(100, { error: "item.titleTooLong" }),
   unlimited: z.boolean(),
   links: z
-    .array(z.url({ protocol: /^https?$/, error: "Vul een geldige URL in" }))
-    .max(maxWishlistItemLinks, {
-      error: `Een wens kan maximaal ${maxWishlistItemLinks} linkjes hebben`,
-    }),
-  category: z
-    .string()
-    .trim()
-    .max(40, { error: "Categorie mag maximaal uit 40 tekens bestaan" })
-    .optional(),
+    .array(z.url({ protocol: /^https?$/, error: "item.link" }))
+    .max(maxWishlistItemLinks, { error: "item.tooManyLinks" }),
+  category: z.string().trim().max(40, { error: "category.tooLong" }).optional(),
 })
 
 export const wishlistCategorySchema = z.object({
   title: z
     .string()
     .trim()
-    .min(1, { error: "Vul een naam voor de categorie in" })
-    .max(40, { error: "Categorie mag maximaal uit 40 tekens bestaan" }),
+    .min(1, { error: "category.required" })
+    .max(40, { error: "category.tooLong" }),
 })
 
 export const contactTopics = [
@@ -83,26 +79,16 @@ export const contactTopics = [
   "other",
 ] as const
 
-const contactMessageRequired = {
-  bug: "Schrijf wat er misgaat",
-  question: "Schrijf wat je ons wilt vragen",
-  report: "Schrijf wat je hebt gezien",
-  other: "Schrijf je bericht",
-}
-
 export const contactSchema = z
   .object({
-    topic: z.enum(contactTopics, { error: "Kies waar je bericht over gaat" }),
-    message: z
-      .string()
-      .trim()
-      .max(2000, { error: "Je bericht mag maximaal uit 2000 tekens bestaan" }),
+    topic: z.enum(contactTopics, { error: "contact.topic" }),
+    message: z.string().trim().max(2000, { error: "contact.messageTooLong" }),
   })
   .superRefine(({ topic, message }, context) => {
     if (topic !== "deleteAccount" && !message) {
       context.addIssue({
         code: "custom",
-        message: contactMessageRequired[topic],
+        message: `contact.messageRequired.${topic}`,
         path: ["message"],
       })
     }
@@ -115,27 +101,25 @@ export const drawSchema = z.object({
       name: z
         .string()
         .trim()
-        .min(1, { error: "Vul een naam in voor iedereen die je toevoegt" })
-        .max(40, { error: "Een naam mag maximaal uit 40 tekens bestaan" }),
+        .min(1, { error: "draw.nameRequired" })
+        .max(40, { error: "draw.nameTooLong" }),
       email: z
-        .email({ error: "Vul een geldig e-mailadres in" })
+        .email({ error: "draw.email" })
         .transform(email => email.toLowerCase()),
     })
   ),
   budget: z.coerce
-    .number({ error: "Vul het budget in hele euro's in" })
-    .int({ error: "Vul het budget in hele euro's in" })
-    .min(1, { error: "Het budget moet minimaal 1 euro zijn" })
-    .max(10000, { error: "Het budget mag maximaal 10.000 euro zijn" })
+    .number({ error: "draw.budget" })
+    .int({ error: "draw.budget" })
+    .min(1, { error: "draw.budgetTooLow" })
+    .max(10000, { error: "draw.budgetTooHigh" })
     .optional(),
   date: z.iso
     .date({
       error: issue =>
-        issue.input === undefined
-          ? "Kies de datum van het feest"
-          : "Kies een geldige datum",
+        issue.input === undefined ? "draw.dateRequired" : "draw.date",
     })
     .refine(date => date >= today(), {
-      error: "Kies een datum vanaf vandaag",
+      error: "draw.datePast",
     }),
 })

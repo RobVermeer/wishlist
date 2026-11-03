@@ -328,7 +328,7 @@ test("a category can't get the name of another one", async ({ signIn }) => {
   await dialog.getByLabel("Naam van de categorie").fill("K".repeat(41))
   await dialog.getByRole("button", { name: "Opslaan" }).click()
   await expect(toasts(page)).toContainText(
-    "Categorie mag maximaal uit 40 tekens bestaan"
+    "De naam van de categorie mag maximaal uit 40 tekens bestaan."
   )
 
   expect((await categoriesOf(wishlist.id)).map(({ title }) => title)).toEqual([
@@ -403,7 +403,7 @@ test("category names can be at most 40 characters", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
   await expect(toasts(page)).toContainText(
-    "Categorie mag maximaal uit 40 tekens bestaan"
+    "De naam van de categorie mag maximaal uit 40 tekens bestaan."
   )
   expect(
     await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })

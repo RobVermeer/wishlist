@@ -6,6 +6,7 @@ import { getSession } from "@/lib/getSession"
 import { revalidatePath } from "next/cache"
 import { wishlistSchema } from "@/lib/schema"
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { assertGroupsOfUser } from "./assertGroupsOfUser"
@@ -60,7 +61,7 @@ export const createWishlistForUser = async (formData: FormData) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

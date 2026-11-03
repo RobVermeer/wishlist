@@ -129,7 +129,7 @@ test("wishlist validation errors are shown", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
-    "Naam moet minimaal uit 2 tekens bestaan"
+    "De naam van wie het verlanglijstje is moet minimaal uit 2 tekens bestaan."
   )
   await expect(dialog.getByLabel("Voor iemand anders")).toBeChecked()
   await expect(
