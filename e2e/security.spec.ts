@@ -1061,9 +1061,9 @@ test("the creator of a group can't leave it", async ({ signIn }) => {
 
   await forgeActions(page, `/group/${otherGroup.id}`, otherGroup.id, group.id)
   await page.goto(`/group/${otherGroup.id}`)
-  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page.getByRole("button", { name: "Stap uit", exact: true }).click()
   await page
-    .getByRole("dialog", { name: "Verlaat groep" })
+    .getByRole("dialog", { name: "Uit de groep stappen?" })
     .getByRole("button", { name: "Stap uit de groep" })
     .click()
 
