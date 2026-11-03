@@ -1265,7 +1265,7 @@ test("only the owner and managers can change a wish", async ({ signIn }) => {
 
   await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, item.id)
   await page.goto(`/wishlist/${own.id}`)
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Boek" }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
   await dialog.getByLabel("Wens", { exact: true }).fill("Overgenomen")
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -1314,7 +1314,7 @@ test("wishes on a removed wishlist can't be changed", async ({ signIn }) => {
 
   await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, removedItem.id)
   await page.goto(`/wishlist/${own.id}`)
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Boek" }).click()
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
   await dialog.getByLabel("Wens", { exact: true }).fill("Overgenomen")
   await dialog.getByRole("button", { name: "Opslaan" }).click()
@@ -1335,7 +1335,7 @@ test("wishes on a removed wishlist can't be removed", async ({ signIn }) => {
 
   await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, removedItem.id)
   await page.goto(`/wishlist/${own.id}`)
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Boek" }).click()
   await page
     .getByRole("dialog", { name: "Wijzig wens" })
     .getByRole("button", { name: "Verwijder" })
@@ -1363,7 +1363,7 @@ test("only the owner and managers can remove a wish", async ({ signIn }) => {
 
   await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, item.id)
   await page.goto(`/wishlist/${own.id}`)
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Boek" }).click()
   await page
     .getByRole("dialog", { name: "Wijzig wens" })
     .getByRole("button", { name: "Verwijder" })

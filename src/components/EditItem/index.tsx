@@ -84,7 +84,12 @@ export const EditItem = ({ item, categories }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button className="absolute right-1" size="sm" variant="outline">
+        <Button
+          className="absolute right-1"
+          size="sm"
+          variant="outline"
+          aria-label={t("EditItem.label", { title })}
+        >
           <Pencil size="12" className="mr-2" /> {t("EditItem.button")}
         </Button>
       </DialogTrigger>

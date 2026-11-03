@@ -57,9 +57,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
   await expect(
     page.getByRole("button", { name: "Voeg een wens toe" })
   ).toBeHidden()
-  await expect(
-    page.getByRole("button", { name: "Wijzig", exact: true })
-  ).toBeHidden()
+  await expect(page.getByRole("button", { name: /^Wijzig/ })).toHaveCount(0)
 
   await page.getByRole("link", { name: "Familie" }).click()
   await expect(page).toHaveURL(`/group/${group.id}`)

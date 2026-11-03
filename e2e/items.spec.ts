@@ -742,7 +742,7 @@ test("closing an edited wish asks first", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await page.getByRole("button", { name: /^Kleding \d+$/ }).click()
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
   const confirm = unsavedChanges(page)
@@ -763,7 +763,7 @@ test("closing an edited wish asks first", async ({ signIn }) => {
   await confirm.getByRole("button", { name: "Niet opslaan" }).click()
   await expect(dialog).toBeHidden()
 
-  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
   await expect(dialog.getByLabel("Categorie")).toHaveText("Kleding")
   expect(
     await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } })
@@ -800,4 +800,24 @@ test("closing an edited wish without changes doesn't ask", async ({
   await expect(dialog).toBeHidden()
   await expect(unsavedChanges(page)).toHaveCount(0)
   await expect(itemCard(page, "Elektrische fiets")).toBeVisible()
+})
+
+test("the button to change a wish says which wish", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Boek" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  await expect(
+    itemCard(page, "Fiets").getByRole("button")
+  ).toHaveAccessibleName("Wijzig wens Fiets")
+  await page.getByRole("button", { name: "Wijzig wens Boek" }).click()
+  await expect(
+    page
+      .getByRole("dialog", { name: "Wijzig wens" })
+      .getByLabel("Wens", { exact: true })
+  ).toHaveValue("Boek")
 })
