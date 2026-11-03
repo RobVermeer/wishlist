@@ -332,6 +332,95 @@ test("buying a wish someone else just bought shows an error", async ({
   ).toBe(shopper.id)
 })
 
+test("only one of the people buying a wish at the same time gets it", async ({
+  signIn,
+}) => {
+  const { shopper, group, wishlist } = await setup()
+  const others = await Promise.all([1, 2, 3].map(() => createUser()))
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { members: { connect: others.map(({ id }) => ({ id })) } },
+  })
+  const item = await createItem(wishlist, { title: "Sokken" })
+  const shoppers = [shopper, ...others]
+  const pages = await Promise.all(shoppers.map(user => signIn(user)))
+  const path = `/group/${group.id}/${wishlist.id}`
+
+  // Stop the request of the button and send it for every shopper at once.
+  // The requests only overlap now and then, so it tries a number of times.
+  const buy = new Promise<{
+    url: string
+    headers: Record<string, string>
+    body: string
+  }>(resolve =>
+    pages[0].route(`**${path}`, async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        resolve({
+          url: request.url(),
+          headers: request.headers(),
+          body: request.postData()!,
+        })
+        return route.abort()
+      }
+      return route.continue()
+    })
+  )
+  await pages[0].goto(path)
+  await itemCard(pages[0], "Sokken")
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
+  const { url, headers, body } = await buy
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    await prisma.wishlistItem.update({
+      where: { id: item.id },
+      data: { userId: null, boughtAt: null },
+    })
+    const bought = await Promise.all(
+      pages.map(async page => {
+        const response = await page.request.post(url, {
+          headers: {
+            "next-action": headers["next-action"],
+            "next-router-state-tree": headers["next-router-state-tree"],
+            "content-type": headers["content-type"],
+            accept: headers["accept"],
+            origin: new URL(url).origin,
+          },
+          data: body,
+        })
+        return (await response.text()).includes('{"type":"success"}')
+      })
+    )
+
+    expect(bought.filter(Boolean)).toHaveLength(1)
+    expect(
+      (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+        .userId
+    ).toBe(shoppers[bought.indexOf(true)].id)
+  }
+})
+
+test("tapping twice on 'Ik koop dit' buys the wish once", async ({
+  signIn,
+}) => {
+  const { shopper, group, wishlist } = await setup()
+  const item = await createItem(wishlist, { title: "Sokken" })
+  const page = await signIn(shopper)
+
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  const card = itemCard(page, "Sokken")
+  await card.getByRole("button", { name: "Ik koop dit" }).dblclick()
+
+  await expect(card).toContainText("Jij koopt dit")
+  await expect(toasts(page)).toContainText("Leuk, jij koopt dit! 🎁")
+  await expect(toasts(page)).not.toContainText("Je koopt dit toch niet")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBe(shopper.id)
+})
+
 test("unlimited wishes can't be bought exclusively", async ({ signIn }) => {
   const { shopper, group, wishlist } = await setup()
   await createItem(wishlist, { title: "Boeken", unlimited: true })

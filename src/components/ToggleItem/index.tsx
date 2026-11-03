@@ -17,7 +17,7 @@ export const ToggleItem = ({ id, boughtByMe }: Props) => {
   const t = useTranslations("Toggle")
 
   async function toggle(bought: boolean, canRevert: boolean) {
-    const { type, errors } = await toggleWishlistItemById(id)
+    const { type, errors } = await toggleWishlistItemById(id, bought)
 
     if (type === "error") {
       errors.forEach(title => {
@@ -30,7 +30,7 @@ export const ToggleItem = ({ id, boughtByMe }: Props) => {
     }
 
     toast({
-      title: bought ? t("undo") : t("checked"),
+      title: bought ? t("checked") : t("undo"),
       action: canRevert ? (
         <ToastAction
           altText={t("revert")}
@@ -44,7 +44,7 @@ export const ToggleItem = ({ id, boughtByMe }: Props) => {
 
   return (
     <form
-      action={() => toggle(boughtByMe, true)}
+      action={() => toggle(!boughtByMe, true)}
       className="ml-auto flex shrink-0 items-center gap-2"
     >
       {boughtByMe && (
