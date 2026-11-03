@@ -6,6 +6,7 @@ import {
   createGroup,
   createWishlist,
   createItem,
+  holdActions,
   prisma,
   toasts,
 } from "./fixtures"
@@ -305,6 +306,16 @@ test("a manager can stop managing a wishlist", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await page.getByRole("button", { name: "Stop met beheren" }).click()
+  const dialog = page.getByRole("dialog", { name: "Stoppen met beheren?" })
+  await expect(dialog).toContainText(
+    "Je kunt de wensen dan niet meer veranderen. Alleen wie het verlanglijstje heeft gemaakt, kan je weer laten meedoen."
+  )
+  const release = await holdActions(page)
+  await dialog.getByRole("button", { name: "Stop met beheren" }).click()
+  await expect(
+    dialog.getByRole("button", { name: "Stop met beheren" })
+  ).toBeDisabled()
+  release()
 
   await expect(toasts(page)).toContainText(
     "Je beheert dit verlanglijstje niet meer"
@@ -315,6 +326,25 @@ test("a manager can stop managing a wishlist", async ({ signIn }) => {
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(page.getByText(notFound)).toBeVisible()
+})
+
+test("cancelling stop managing keeps you as a manager", async ({ signIn }) => {
+  const mother = await createUser({ firstName: "Sanne" })
+  const father = await createUser({ firstName: "Rob" })
+  const wishlist = await createWishlist(mother, {
+    title: "Emma",
+    managers: [father],
+  })
+  const page = await signIn(father)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Stop met beheren" }).click()
+  const dialog = page.getByRole("dialog", { name: "Stoppen met beheren?" })
+  await page.keyboard.press("Escape")
+
+  await expect(dialog).toBeHidden()
+  await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+  expect(ids((await findWishlist(wishlist)).managers)).toEqual([father.id])
 })
 
 test("turning the wishlist into your own stops managing it together", async ({
@@ -401,6 +431,10 @@ test("a wishlist you follow and manage shows up once", async ({ signIn }) => {
     page.getByRole("button", { name: "Stop met volgen" })
   ).toHaveCount(0)
   await page.getByRole("button", { name: "Stop met beheren" }).click()
+  await page
+    .getByRole("dialog", { name: "Stoppen met beheren?" })
+    .getByRole("button", { name: "Stop met beheren" })
+    .click()
 
   await expect(page).toHaveURL("/")
   await expect(

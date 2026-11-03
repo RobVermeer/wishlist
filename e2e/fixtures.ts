@@ -260,6 +260,20 @@ export const dateInAmsterdam = (daysFromToday = 0) => {
 export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
 
+// Holds back the server actions of a page until the returned function is
+// called, to check what the page shows while it waits for one.
+export async function holdActions(page: Page) {
+  let release = () => {}
+  const released = new Promise<void>(resolve => (release = resolve))
+
+  await page.route("**/*", async route => {
+    if (route.request().headers()["next-action"]) await released
+    await route.fallback()
+  })
+
+  return release
+}
+
 type Fixtures = {
   signIn: (user: TestUser, options?: BrowserContextOptions) => Promise<Page>
 }
