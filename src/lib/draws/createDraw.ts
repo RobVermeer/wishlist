@@ -62,8 +62,12 @@ export const createDraw = async (groupId: string, data: FormData) => {
       date: data.get("date")?.toString() || undefined,
     })
 
+    // E-mail addresses of people added to the draw are lowercase, those of
+    // members are stored as they signed up
+    const emailOf = (member: { email: string | null }) =>
+      member.email?.toLowerCase()
     const extraMemberIds = group.members
-      .filter(member => extra.some(({ email }) => email === member.email))
+      .filter(member => extra.some(({ email }) => email === emailOf(member)))
       .map(({ id }) => id)
     const participants: {
       name: string
@@ -84,7 +88,7 @@ export const createDraw = async (groupId: string, data: FormData) => {
         })),
       ...extra
         .filter(({ email }) =>
-          group.members.every(member => member.email !== email)
+          group.members.every(member => emailOf(member) !== email)
         )
         .map(({ name, email }) => ({ name, email, userId: null })),
     ]
