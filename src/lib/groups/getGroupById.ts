@@ -18,9 +18,27 @@ export const getGroupById = cache(async (id: string) => {
 
     const userId = session.user.id
 
+    const group = await prisma.group.findUnique({
+      select: {
+        id: true,
+        title: true,
+        members: { where: { id: userId }, select: { id: true } },
+      },
+      where: { id, removed: false },
+    })
+
+    if (!group) {
+      throw new Error(t("group.notFound"))
+    }
+
+    // Who isn't a member only gets what the invite shows.
+    if (group.members.length === 0) {
+      return { id: group.id, title: group.title, subscribed: false as const }
+    }
+
     const data = await prisma.group.findUnique({
       select: groupProperties,
-      where: { id, removed: false },
+      where: { id, removed: false, members: { some: { id: userId } } },
     })
 
     if (!data) {
@@ -34,11 +52,7 @@ export const getGroupById = cache(async (id: string) => {
         wishlist.managers.some(({ id }) => id === userId),
     }))
 
-    const subscribed = data.members.some(
-      ({ id }: { id: string }) => id === userId
-    )
-
-    return { ...data, wishlist, subscribed }
+    return { ...data, wishlist, subscribed: true as const }
   } catch {
     return null
   }
