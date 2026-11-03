@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -56,8 +57,8 @@ export const LeaveGroup = ({ group, className }: Props) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("LeaveGroup.title")}</DialogTitle>
+          <DialogDescription>{t("LeaveGroup.text")}</DialogDescription>
         </DialogHeader>
-        <p>{t("LeaveGroup.text")}</p>
         <DialogFooter>
           <form onSubmit={onSubmit}>
             <Button className="w-full" type="submit">

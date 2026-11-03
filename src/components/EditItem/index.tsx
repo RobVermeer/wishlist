@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -99,6 +100,7 @@ export const EditItem = ({ item, categories }: Props) => {
       >
         <DialogHeader>
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
+          <DialogDescription>{t("EditItem.description")}</DialogDescription>
         </DialogHeader>
         <form
           ref={setForm}

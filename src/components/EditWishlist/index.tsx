@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -127,6 +128,7 @@ export const EditWishlist = ({
       >
         <DialogHeader>
           <DialogTitle>{t("EditWishlist.title")}</DialogTitle>
+          <DialogDescription>{t("EditWishlist.description")}</DialogDescription>
         </DialogHeader>
         <form
           ref={setForm}
