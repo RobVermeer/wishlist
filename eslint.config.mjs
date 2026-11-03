@@ -10,6 +10,7 @@ const eslintConfig = defineConfig([
     rules: { "react-hooks/rules-of-hooks": "off" },
   },
   globalIgnores([
+    ".claude/**",
     ".next/**",
     "out/**",
     "build/**",
