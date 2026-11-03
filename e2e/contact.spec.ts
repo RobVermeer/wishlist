@@ -61,7 +61,7 @@ test("ask to delete your account from your profile", async ({ signIn }) => {
   await dialog.getByLabel("Verwijder mijn account").check()
   await expect(dialog.getByRole("textbox")).toHaveCount(0)
   await expect(dialog).toContainText(
-    "samen met je verlanglijstjes en de groepen die je hebt gemaakt"
+    "samen met je verlanglijstjes. Groepen die je hebt gemaakt gaan naar een ander lid, of verdwijnen als er niemand anders in zit."
   )
   await dialog.getByRole("button", { name: "Vraag om verwijdering" }).click()
 

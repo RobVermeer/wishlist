@@ -535,7 +535,7 @@
       "removeAdmin": "Geen admin meer",
       "view": "Bekijk",
       "remove": "Verwijder",
-      "removeText": "{name} verdwijnt, met alle verlanglijstjes en groepen van deze gebruiker. Dit kun je niet ongedaan maken."
+      "removeText": "{name} verdwijnt, met alle verlanglijstjes. Groepen met andere leden gaan naar een van hen, de rest verdwijnt ook. Dit kun je niet ongedaan maken."
     },
     "user": {
       "text": "Haal weg wat niet volgens de huisregels is. Afgestreepte wensen kun je ook weghalen als een verlanglijstje niet wordt opgeruimd. Wie iets heeft gekocht, zie je hier niet.",
@@ -1117,7 +1117,7 @@
         "report": "Bijvoorbeeld van wie het verlanglijstje is en om welke wens het gaat.",
         "other": "Waar kunnen we je mee helpen?"
       },
-      "deleteAccount": "We verwijderen je account, samen met je verlanglijstjes en de groepen die je hebt gemaakt. Dat kunnen we niet ongedaan maken.",
+      "deleteAccount": "We verwijderen je account, samen met je verlanglijstjes. Groepen die je hebt gemaakt gaan naar een ander lid, of verdwijnen als er niemand anders in zit. Dat kunnen we niet ongedaan maken.",
       "submit": "Verstuur",
       "submitDeleteAccount": "Vraag om verwijdering"
     },
