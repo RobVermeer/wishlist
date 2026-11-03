@@ -13,7 +13,7 @@ export const partyGroups = {
   },
 } satisfies Prisma.Wishlist$groupsArgs
 
-// Two weeks after the latest party in the groups of a wishlist, bought wishes
+// Two days after the latest party in the groups of a wishlist, bought wishes
 // go. Without a dated party, they stay.
 export function boughtItemsRemovalDate(
   groups: { draws: { date: Date | null }[] }[]
@@ -22,5 +22,5 @@ export function boughtItemsRemovalDate(
     draws.map(({ date }) => date!.getTime())
   )
 
-  return dates.length ? new Date(Math.max(...dates) + 14 * day) : null
+  return dates.length ? new Date(Math.max(...dates) + 2 * day) : null
 }

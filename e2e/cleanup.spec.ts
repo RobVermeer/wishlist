@@ -53,8 +53,8 @@ async function setup(parties: (number | null)[]) {
 const isRemoved = async (id: string) =>
   (await prisma.wishlistItem.findUniqueOrThrow({ where: { id } })).removed
 
-test("bought wishes go two weeks after the party", async ({ signIn }) => {
-  const { owner, shopper, groups, wishlist, items } = await setup([-14])
+test("bought wishes go two days after the party", async ({ signIn }) => {
+  const { owner, shopper, groups, wishlist, items } = await setup([-2])
   const page = await signIn(shopper)
 
   await page.goto(`/group/${groups[0].id}/${wishlist.id}`)
@@ -72,10 +72,10 @@ test("bought wishes go two weeks after the party", async ({ signIn }) => {
   await expect(itemCard(ownerPage, "Sokken")).toHaveCount(0)
 })
 
-test("bought wishes stay until two weeks after the party", async ({
+test("bought wishes stay until two days after the party", async ({
   signIn,
 }) => {
-  const { shopper, groups, wishlist, items } = await setup([-13])
+  const { shopper, groups, wishlist, items } = await setup([-1])
   const page = await signIn(shopper)
 
   await page.goto(`/group/${groups[0].id}/${wishlist.id}`)
@@ -87,7 +87,7 @@ test("bought wishes stay until two weeks after the party", async ({
 test("the latest party of the groups a wishlist is in counts", async ({
   signIn,
 }) => {
-  const { shopper, groups, wishlist, items } = await setup([-30, -5, null])
+  const { shopper, groups, wishlist, items } = await setup([-30, -1, null])
   const page = await signIn(shopper)
 
   await page.goto(`/group/${groups[0].id}/${wishlist.id}`)
@@ -129,7 +129,7 @@ test("wishes bought after the clean-up stay for the next party", async ({
 test("the buyer still sees a cleaned up gift under their bought presents", async ({
   signIn,
 }) => {
-  const { shopper, groups, wishlist } = await setup([-14])
+  const { shopper, groups, wishlist } = await setup([-2])
   const page = await signIn(shopper)
 
   await page.goto(`/group/${groups[0].id}/${wishlist.id}`)

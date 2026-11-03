@@ -5,7 +5,7 @@ import { today } from "@/lib/today"
 import { removeEmptyCategories } from "@/lib/wishlistCategories"
 import { boughtItemsRemovalDate, partyGroups } from "./boughtItemsRemovalDate"
 
-// Removes what was bought for a party once it's two weeks over, like the
+// Removes what was bought for a party once it's two days over, like the
 // owner removes a wish, so buyers keep it under their bought presents.
 // Unlimited wishes and wishes bought after that day stay. Runs before wishes
 // are shown or counted: it's one query when there's nothing to remove, and
