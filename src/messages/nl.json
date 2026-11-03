@@ -583,6 +583,8 @@
     "group": {
       "restoreText": "Is deze groep per ongeluk verwijderd?",
       "restore": "Zet groep terug",
+      "restoreConfirm": "‘{title}’ is daarna weer te zien voor alle leden.",
+      "restored": "De groep is teruggezet.",
       "drawText": "Kies wie er meedoet aan de loting.",
       "draw": "Trek lootjes",
       "drawn": "De lootjes zijn getrokken"

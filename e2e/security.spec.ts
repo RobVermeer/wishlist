@@ -1654,8 +1654,11 @@ test("only the creator or an admin can restore a group", async ({ signIn }) => {
 
   const action = captureAction(adminPage, `/admin/groups/${group.id}`)
   await adminPage.goto(`/admin/groups/${group.id}`)
-  adminPage.once("dialog", dialog => dialog.accept())
   await adminPage.getByRole("button", { name: "Zet groep terug" }).click()
+  await adminPage
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Zet groep terug" })
+    .click()
 
   await replayAs(await signIn(member), await action)
 
