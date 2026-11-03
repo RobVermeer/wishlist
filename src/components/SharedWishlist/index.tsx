@@ -34,7 +34,6 @@ export const SharedWishlist = async ({
 
       {loggedIn && wishlist.interests.length > 0 && (
         <Interests
-          wishlistId={wishlist.id}
           title={tInterests("title.other", { name })}
           interests={wishlist.interests}
         />

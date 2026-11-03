@@ -1,77 +1,67 @@
 "use client"
 
-import {
-  FormEvent,
-  startTransition,
-  useId,
-  useState,
-  useTransition,
-} from "react"
+import { KeyboardEvent, useId, useState } from "react"
 import { useTranslations } from "next-intl"
 import { Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { RemoveButton } from "@/components/RemoveButton"
-import { createWishlistInterest } from "@/lib/wishlistInterests/createWishlistInterest"
-import { deleteWishlistInterestById } from "@/lib/wishlistInterests/deleteWishlistInterestById"
+import { maxInterests } from "@/lib/schema"
 
 interface Props {
-  wishlistId: string
   title: string
   interests: { id: string; title: string }[]
   hint?: string
   note?: string
-  editable?: boolean
+  // The id of the form that saves the interests. Without it, they can't be
+  // changed.
+  form?: string
 }
 
-export const Interests = ({
-  wishlistId,
-  title,
-  interests,
-  hint,
-  note,
-  editable = false,
-}: Props) => {
+export const Interests = ({ title, interests, hint, note, form }: Props) => {
   const t = useTranslations("Interests")
+  const tErrors = useTranslations("Errors")
   const { toast } = useToast()
+  const [items, setItems] = useState(() =>
+    interests.map(interest => interest.title)
+  )
   const [value, setValue] = useState("")
-  const [adding, startAdding] = useTransition()
   const id = useId()
+  const editable = Boolean(form)
 
-  function showErrors(errors: string[]) {
-    errors.forEach(title => {
-      toast({ variant: "destructive", title })
-    })
-  }
+  function add() {
+    const added = value.trim()
 
-  async function handleSubmit(data: FormData) {
-    const result = await createWishlistInterest(wishlistId, data)
+    if (!added) return
 
-    if (result.type === "error") {
-      showErrors(result.errors)
+    const error = items.some(item => item.toLowerCase() === added.toLowerCase())
+      ? tErrors("interest.duplicate", { title: added })
+      : items.length >= maxInterests
+        ? tErrors("interest.tooMany", { max: maxInterests })
+        : null
+
+    if (error) {
+      toast({ variant: "destructive", title: error })
       return
     }
 
-    // Keep what was typed in the meantime.
-    const added = data.get("title")
-    setValue(current => (current === added ? "" : current))
+    setItems(items => [...items, added])
+    setValue("")
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  // Enter adds the interest instead of saving the whole form.
+  function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Enter") return
     event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    startAdding(() => handleSubmit(data))
+    add()
   }
 
-  function onRemove(interestId: string) {
-    startTransition(async () => {
-      const result = await deleteWishlistInterestById(interestId)
-
-      if (result.type === "error") showErrors(result.errors)
-    })
+  function remove(title: string) {
+    setItems(items => items.filter(item => item !== title))
   }
+
+  const shown = editable ? items : interests.map(interest => interest.title)
 
   return (
     <section
@@ -83,27 +73,31 @@ export const Interests = ({
       </h3>
       {hint && <p className="text-sm text-muted-foreground">{hint}</p>}
 
-      {interests.length > 0 && (
+      {shown.length > 0 && (
         <ul className="flex flex-wrap gap-2">
-          {interests.map(interest => (
+          {shown.map(interest => (
             <li
-              key={interest.id}
+              key={interest}
               className="flex items-center gap-1 rounded-full bg-background py-1 pl-3 pr-3 text-sm has-[button]:pr-1"
             >
-              {interest.title}
+              {interest}
               {editable && (
-                <RemoveButton
-                  description={t("remove", { title: interest.title })}
-                  onConfirm={() => onRemove(interest.id)}
-                >
+                <>
+                  <input
+                    type="hidden"
+                    name="interests"
+                    value={interest}
+                    form={form}
+                  />
                   <button
                     type="button"
-                    aria-label={t("removeLabel", { title: interest.title })}
+                    aria-label={t("removeLabel", { title: interest })}
                     className="rounded-full p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    onClick={() => remove(interest)}
                   >
                     <X size="14" />
                   </button>
-                </RemoveButton>
+                </>
               )}
             </li>
           ))}
@@ -112,22 +106,22 @@ export const Interests = ({
       {note && <p className="text-sm italic text-muted-foreground">{note}</p>}
 
       {editable && (
-        <form onSubmit={onSubmit} className="flex gap-2">
+        <div className="flex gap-2">
           <Label htmlFor={`${id}-input`} className="sr-only">
             {t("label")}
           </Label>
           <Input
             id={`${id}-input`}
-            name="title"
             value={value}
             onChange={event => setValue(event.target.value)}
+            onKeyDown={onKeyDown}
             placeholder={t("placeholder")}
             className="bg-background"
           />
-          <Button type="submit" variant="outline" disabled={adding}>
+          <Button type="button" variant="outline" onClick={add}>
             <Plus size="16" className="mr-2" /> {t("add")}
           </Button>
-        </form>
+        </div>
       )}
     </section>
   )
