@@ -420,7 +420,7 @@ test("closing an edited wishlist asks first", async ({ signIn }) => {
   await page.getByRole("option", { name: "Reizen" }).click()
   await expect(page.getByRole("listbox")).toHaveCount(0)
   await dialog.getByLabel("Vrienden").click()
-  await dialog.getByRole("button", { name: "Close" }).click()
+  await dialog.getByRole("button", { name: "Sluit" }).click()
 
   await confirm.getByRole("button", { name: "Verder bewerken" }).click()
   await expect(confirm).toBeHidden()
