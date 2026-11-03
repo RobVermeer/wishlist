@@ -48,7 +48,7 @@ export const createWishlistItemForUser = async (
       category: formData.get("category")?.toString() || undefined,
     })
 
-    await prisma.$transaction(async tx => {
+    const categoryId = await prisma.$transaction(async tx => {
       const categoryId = await findOrCreateCategory(
         tx,
         wishlistId,
@@ -69,12 +69,15 @@ export const createWishlistItemForUser = async (
           position: await nextWishlistItemPosition(tx, wishlistId),
         },
       })
+
+      return categoryId
     })
 
     revalidatePath("/")
 
     return {
       type: "success" as const,
+      categoryId,
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

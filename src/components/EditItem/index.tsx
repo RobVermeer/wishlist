@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
 import { LinkFields } from "@/components/LinkFields"
+import { openCategory } from "@/components/CategoryList/useCategoryOpen"
 import { RemoveButton } from "@/components/RemoveButton"
 import { deleteWishlistItemById } from "@/lib/wishlistItems/deleteWishlistItemById"
 import { updateWishlistItemById } from "@/lib/wishlistItems/updateWishlistItemById"
@@ -40,10 +41,10 @@ export const EditItem = ({ item, categories }: Props) => {
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
-    const { type, errors } = await updateWishlistItemById(id, data)
+    const result = await updateWishlistItemById(id, data)
 
-    if (type === "error") {
-      errors.forEach(title => {
+    if (result.type === "error") {
+      result.errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
@@ -52,6 +53,7 @@ export const EditItem = ({ item, categories }: Props) => {
       return
     }
 
+    if (result.categoryId) openCategory(result.categoryId)
     setOpen(false)
   }
 

@@ -28,6 +28,15 @@ function setOpenCategories(ids: string[]) {
   listeners.forEach(listener => listener())
 }
 
+// Opens a category from outside it, like after adding a wish to it, so the
+// wish doesn't disappear into a closed category.
+export function openCategory(id: string) {
+  setOpenCategories([
+    ...parseOpenCategories(getSnapshot()).filter(openedId => openedId !== id),
+    id,
+  ])
+}
+
 export function useCategoryOpen(id: string, openCategories: string) {
   const opened = parseOpenCategories(
     useSyncExternalStore(subscribe, getSnapshot, () => openCategories)
