@@ -52,7 +52,7 @@ export const updateWishlistItemById = async (
       category: formData.get("category")?.toString() || undefined,
     })
 
-    await prisma.$transaction(async tx => {
+    const categoryId = await prisma.$transaction(async tx => {
       const categoryId = await findOrCreateCategory(
         tx,
         wishlistItem.wishlistId,
@@ -80,12 +80,15 @@ export const updateWishlistItemById = async (
       })
 
       await removeEmptyCategories(tx, wishlistItem.wishlistId)
+
+      return categoryId
     })
 
     revalidatePath("/")
 
     return {
       type: "success" as const,
+      categoryId,
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -80,6 +80,11 @@ test("add a wish in a new category", async ({ signIn }) => {
 
   await expect(dialog).toBeHidden()
   await expect(categoryToggle(page, "Kleding")).toHaveText(/Kleding\s*1/)
+  await expect(categoryToggle(page, "Kleding")).toHaveAttribute(
+    "aria-expanded",
+    "true"
+  )
+  await expect(page.getByText("Trui")).toBeVisible()
 
   const [category] = await categoriesOf(wishlist.id)
   expect(category).toMatchObject({ title: "Kleding", position: 0 })
@@ -141,13 +146,16 @@ test("move a wish between categories", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Opslaan" }).click()
 
   await expect(dialog).toBeHidden()
-  await expect(categoryToggle(page, "Winter")).toBeVisible()
+  await expect(categoryToggle(page, "Winter")).toHaveAttribute(
+    "aria-expanded",
+    "true"
+  )
+  await expect(page.getByText("Trui")).toBeVisible()
   await expect(categoryToggle(page, "Kleding")).toHaveCount(0)
 
   const categories = await categoriesOf(wishlist.id)
   expect(categories.map(({ title }) => title)).toEqual(["Winter"])
 
-  await openCategory(page, "Winter")
   await page.getByRole("button", { name: "Wijzig", exact: true }).click()
   await dialog.getByLabel("Categorie").click()
   await page.getByRole("option", { name: "Geen categorie" }).click()

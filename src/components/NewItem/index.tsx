@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CategoryCombobox } from "@/components/CategoryCombobox"
 import { LinkFields } from "@/components/LinkFields"
+import { openCategory } from "@/components/CategoryList/useCategoryOpen"
 import { createWishlistItemForUser } from "@/lib/wishlistItems/createWishlistItemForUser"
 import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
@@ -31,10 +32,10 @@ export const NewItem = ({ id, categories }: Props) => {
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
-    const { type, errors } = await createWishlistItemForUser(id, data)
+    const result = await createWishlistItemForUser(id, data)
 
-    if (type === "error") {
-      errors.forEach(title => {
+    if (result.type === "error") {
+      result.errors.forEach(title => {
         toast({
           variant: "destructive",
           title,
@@ -43,6 +44,7 @@ export const NewItem = ({ id, categories }: Props) => {
       return
     }
 
+    if (result.categoryId) openCategory(result.categoryId)
     setOpen(false)
   }
 
