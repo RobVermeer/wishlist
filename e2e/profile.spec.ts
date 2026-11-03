@@ -6,7 +6,7 @@ const pixel = Buffer.from(
   "base64"
 )
 
-test("profile tabs navigate between profile pages", async ({ signIn }) => {
+test("profile tabs navigate and show which one is open", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(user)
 
@@ -20,6 +20,15 @@ test("profile tabs navigate between profile pages", async ({ signIn }) => {
   ]) {
     await page.getByRole("link", { name, exact: true }).click()
     await expect(page).toHaveURL(path)
+    for (const tab of ["Profiel", "Gekochte cadeaus"]) {
+      const link = page.getByRole("link", { name: tab, exact: true })
+
+      if (tab === name) {
+        await expect(link).toHaveAttribute("aria-current", "page")
+      } else {
+        await expect(link).not.toHaveAttribute("aria-current")
+      }
+    }
   }
 })
 
