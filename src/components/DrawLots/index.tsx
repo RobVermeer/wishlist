@@ -70,12 +70,21 @@ export const DrawLots = ({
 
     setOpen(false)
     setExtra([])
+    setName("")
+    setEmail("")
     toast({ title: tDraw("toast") })
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
+
+    // Someone filled in without pressing "Voeg toe" takes part too.
+    if (name.trim() || email.trim()) {
+      data.append("extraName", name.trim())
+      data.append("extraEmail", email.trim())
+    }
+
     startTransition(() => handleSubmit(data))
   }
 
