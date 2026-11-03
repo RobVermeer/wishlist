@@ -13,9 +13,9 @@ interface Props {
 }
 
 export const ItemCard = ({ item }: Props) => {
-  const { id, title, links, boughtBy, boughtByMe, unlimited } = item
+  const { id, title, links, boughtBy, boughtAt, boughtByMe, unlimited } = item
   const t = useTranslations("Toggle")
-  const bought = Boolean(boughtBy) && !unlimited
+  const bought = Boolean(boughtBy || boughtAt) && !unlimited
 
   return (
     <Card className="flex flex-wrap items-center gap-2">

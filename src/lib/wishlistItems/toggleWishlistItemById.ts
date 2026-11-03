@@ -41,8 +41,11 @@ export const toggleWishlistItemById = async (id: string, bought: boolean) => {
     }
 
     const boughtByMe = wishlistItem.boughtBy?.id === userId
+    const boughtByOther = wishlistItem.boughtBy
+      ? !boughtByMe
+      : wishlistItem.boughtAt !== null
 
-    if (wishlistItem.boughtBy && !boughtByMe) {
+    if (boughtByOther) {
       throw new Error(t("item.alreadyBought"))
     }
 
@@ -51,7 +54,7 @@ export const toggleWishlistItemById = async (id: string, bought: boolean) => {
     // only one gets the wish.
     if (buy !== boughtByMe) {
       const { count } = await prisma.wishlistItem.updateMany({
-        where: { id, OR: [{ userId: null }, { userId }] },
+        where: { id, OR: [{ userId: null, boughtAt: null }, { userId }] },
         data: buy
           ? { userId, boughtAt: new Date() }
           : { userId: null, boughtAt: null },

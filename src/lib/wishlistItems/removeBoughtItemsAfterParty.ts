@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { today } from "@/lib/today"
 import { removeEmptyCategories } from "@/lib/wishlistCategories"
 import { boughtItemsRemovalDate, partyGroups } from "./boughtItemsRemovalDate"
+import { bought } from "./bought"
 
 // Removes what was bought for a party once it's two days over, like the
 // owner removes a wish, so buyers keep it under their bought presents.
@@ -15,7 +16,7 @@ export async function removeBoughtItemsAfterParty() {
     where: {
       removed: false,
       unlimited: false,
-      userId: { not: null },
+      ...bought,
       wishlist: {
         groups: {
           some: {

@@ -62,7 +62,7 @@ test("admin can remove a user", async ({ signIn }) => {
   const dialog = page.getByRole("alertdialog")
   await userCard.getByRole("button", { name: "Verwijder" }).click()
   await expect(dialog).toContainText(
-    "Weg Gebruiker verdwijnt, met alle verlanglijstjes en groepen"
+    "Weg Gebruiker verdwijnt, met alle verlanglijstjes. Groepen met andere leden gaan naar een van hen, de rest verdwijnt ook."
   )
   await dialog.getByRole("button", { name: "Toch niet" }).click()
   await expect(dialog).toBeHidden()
@@ -74,6 +74,97 @@ test("admin can remove a user", async ({ signIn }) => {
 
   await expect(userCard).toBeHidden()
   expect(await prisma.user.count({ where: { id: user.id } })).toBe(0)
+})
+
+async function removeUser(page: Page, user: { email: string | null }) {
+  await page.goto("/admin/users")
+  await card(page, user.email!)
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog")
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await expect(card(page, user.email!)).toBeHidden()
+}
+
+test("removing a user hands their groups to another member", async ({
+  signIn,
+}) => {
+  const admin = await createAdmin()
+  const owner = await createUser()
+  const member = await createUser()
+  const title = `Familie ${member.id}`.slice(0, 40)
+  const shared = await createGroup(owner, { title, members: [member] })
+  const alone = await createGroup(owner)
+
+  await removeUser(await signIn(admin), owner)
+
+  const page = await signIn(member)
+  await page.goto(`/group/${shared.id}`)
+  await expect(page.getByRole("heading", { name: title })).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Wijzig", exact: true })
+  ).toBeVisible()
+  expect(
+    (await prisma.group.findUniqueOrThrow({ where: { id: shared.id } })).userId
+  ).toBe(member.id)
+  expect(await prisma.group.count({ where: { id: alone.id } })).toBe(0)
+})
+
+test("wishes bought by a removed user stay bought", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const owner = await createUser()
+  const buyer = await createUser()
+  const shopper = await createUser()
+  const group = await createGroup(owner, { members: [buyer, shopper] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  await createItem(wishlist, {
+    title: "Sokken",
+    boughtBy: buyer,
+    boughtAt: new Date(),
+  })
+  // Bought before the date of buying was kept.
+  await createItem(wishlist, { title: "Puzzel", boughtBy: buyer })
+  const late = await createItem(wishlist, { title: "Boek" })
+  const page = await signIn(shopper)
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await prisma.wishlistItem.update({
+    where: { id: late.id },
+    data: { userId: buyer.id, boughtAt: new Date() },
+  })
+
+  await removeUser(await signIn(admin), buyer)
+
+  await card(page, "Boek").getByRole("button", { name: "Ik koop dit" }).click()
+  await expect(toasts(page)).toContainText(
+    "Deze wens is al door iemand anders gekocht"
+  )
+  await page.reload()
+  for (const title of ["Sokken", "Puzzel", "Boek"]) {
+    await expect(card(page, title)).toContainText("Wordt al gekocht")
+    await expect(card(page, title).getByRole("button")).toHaveCount(0)
+  }
+})
+
+test("removing a user removes their reminders", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const user = await createUser()
+  const other = await createUser()
+  await prisma.reminder.createMany({
+    data: [
+      { to: user.id, from: other.id },
+      { to: other.id, from: user.id },
+    ],
+  })
+
+  await removeUser(await signIn(admin), user)
+
+  expect(
+    await prisma.reminder.count({
+      where: { OR: [{ to: user.id }, { from: user.id }] },
+    })
+  ).toBe(0)
 })
 
 test("super admin can make someone admin and take it away", async ({

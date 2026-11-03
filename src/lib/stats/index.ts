@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { getTranslations } from "next-intl/server"
 import { removeBoughtItemsAfterParty } from "@/lib/wishlistItems/removeBoughtItemsAfterParty"
+import { bought } from "@/lib/wishlistItems/bought"
 
 export const getStats = async () => {
   const session = await getServerSession(authOptions)
@@ -52,7 +53,7 @@ export const getStats = async () => {
     prisma.group.count({ where: { removed: true } }),
     prisma.wishlistItem.count({ where: activeItem }),
     prisma.wishlistItem.count({
-      where: { ...activeItem, userId: { not: null } },
+      where: { ...activeItem, ...bought },
     }),
     prisma.wishlistItem.count({
       where: { OR: [{ removed: true }, { wishlist: { removed: true } }] },
