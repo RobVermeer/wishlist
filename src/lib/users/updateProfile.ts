@@ -92,10 +92,8 @@ export async function updateProfile(data: FormData) {
 
       await image.cover({ w: 96, h: 96 }).write(imagePath)
 
-      uploadedImage = `${process.env.BASE_URL}/${imagePath.replace(
-        "public/",
-        ""
-      )}`
+      // Relative, so avatars keep working when the domain changes.
+      uploadedImage = `/${imagePath.replace("public/", "")}`
     }
 
     await prisma.user.update({

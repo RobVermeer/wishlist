@@ -1,6 +1,5 @@
 import { test, expect, createUser, prisma, toasts } from "./fixtures"
 import { rm } from "node:fs/promises"
-import { testEnv } from "./support/env"
 
 const pixel = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
@@ -103,7 +102,7 @@ test("upload a profile picture", async ({ signIn }) => {
       where: { id: user.id },
     })
     expect(image).toMatch(
-      new RegExp(`^${testEnv.BASE_URL}/avatars/${user.id}/[0-9a-f-]{36}\\.png$`)
+      new RegExp(`^/avatars/${user.id}/[0-9a-f-]{36}\\.png$`)
     )
   } finally {
     await rm(`.next/standalone/public/avatars/${user.id}`, {

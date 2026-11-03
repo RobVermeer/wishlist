@@ -150,3 +150,39 @@ test("dropping the old link column keeps links written during the deploy", () =>
       .map(({ name }) => name)
   ).not.toContain("url")
 })
+
+test("avatars keep only their path, so they work on another domain", () => {
+  const db = new DatabaseSync(":memory:")
+  const migrations = readdirSync("prisma/migrations")
+    .filter(name => name !== "migration_lock.toml")
+    .sort()
+  const migrate = (name: string) =>
+    db.exec(readFileSync(`prisma/migrations/${name}/migration.sql`, "utf8"))
+  const paths = migrations.findIndex(name =>
+    name.endsWith("_relative_avatar_paths")
+  )
+  expect(paths).toBeGreaterThan(0)
+
+  migrations.slice(0, paths).forEach(migrate)
+  db.exec(`
+    INSERT INTO "User" ("id", "image") VALUES
+      ('old', 'https://old.example.com/avatars/old/a.png'),
+      ('port', 'http://localhost:3000/avatars/port/b.png'),
+      ('new', '/avatars/new/c.png'),
+      ('google', 'https://lh3.googleusercontent.com/a/photo=s96-c'),
+      ('lookalike', 'https://example.com/photos/avatars/d.png'),
+      ('none', NULL);
+  `)
+  migrations.slice(paths).forEach(migrate)
+
+  expect(
+    db.prepare(`SELECT "id", "image" FROM "User" ORDER BY "id"`).all()
+  ).toEqual([
+    { id: "google", image: "https://lh3.googleusercontent.com/a/photo=s96-c" },
+    { id: "lookalike", image: "https://example.com/photos/avatars/d.png" },
+    { id: "new", image: "/avatars/new/c.png" },
+    { id: "none", image: null },
+    { id: "old", image: "/avatars/old/a.png" },
+    { id: "port", image: "/avatars/port/b.png" },
+  ])
+})
