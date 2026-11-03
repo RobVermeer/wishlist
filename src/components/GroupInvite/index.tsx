@@ -2,7 +2,8 @@ import Link from "next/link"
 import { LogIn } from "lucide-react"
 import { getTranslations } from "next-intl/server"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
+import { BackLink } from "@/components/BackLink"
+import { PageTitle } from "@/components/PageTitle"
 import { Button } from "@/components/ui/button"
 
 interface Props {
@@ -11,13 +12,14 @@ interface Props {
 
 export const GroupInvite = async ({ group }: Props) => {
   const t = await getTranslations("GroupInvite")
+  const tBackLink = await getTranslations("BackLink")
 
   return (
     <List>
-      <div className="text-center">
-        <ListTitle as="h1">{group.title}</ListTitle>
-        <p>{t("intro")}</p>
-      </div>
+      <BackLink href="/" label={tBackLink("home")} />
+      <PageTitle title={group.title}>
+        <p className="text-sm text-muted-foreground">{t("intro")}</p>
+      </PageTitle>
 
       <section className="grid gap-2 rounded-lg bg-secondary p-4 text-center">
         <h3 className="text-lg font-semibold">{t("title")}</h3>
