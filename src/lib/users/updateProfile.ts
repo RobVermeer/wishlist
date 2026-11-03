@@ -7,8 +7,7 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/lib/nextAuth"
-import { getServerSession } from "next-auth"
+import { getSession } from "@/lib/getSession"
 import { Jimp } from "jimp"
 import { userSchema } from "@/lib/schema"
 import * as z from "zod"
@@ -56,7 +55,7 @@ async function readAvatar(file: File) {
 
 export async function updateProfile(data: FormData) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

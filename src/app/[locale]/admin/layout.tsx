@@ -1,8 +1,7 @@
 import { AdminTabs } from "@/components/AdminTabs"
 import { ListTitle } from "@/components/ListTitle"
-import { getServerSession } from "next-auth"
 import { ReactNode } from "react"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 
@@ -11,7 +10,7 @@ interface Props {
 }
 
 export default async function ProfileLayout({ children }: Props) {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session?.user.isAdmin) {
     redirect("/")

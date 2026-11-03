@@ -4,8 +4,7 @@ import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { UnDeleteGroup } from "./components/UnDeleteGroup"
 
 interface Props {
@@ -14,7 +13,7 @@ interface Props {
 
 export default async function AdminGroupsDrawPage({ params }: Props) {
   const { id } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) redirect("/login")
 

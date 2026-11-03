@@ -1,9 +1,8 @@
 "use server"
 
 import * as z from "zod"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
 import { contactSchema } from "@/lib/schema"
 import { sendContactEmail } from "@/lib/email"
@@ -12,7 +11,7 @@ import { getFirstName } from "@/lib/users/getFirstName"
 
 export const sendContactMessage = async (data: FormData) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

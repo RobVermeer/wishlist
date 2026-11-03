@@ -2,8 +2,7 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import { getTranslations } from "next-intl/server"
 import { Wishlist } from "@/components/Wishlist"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { BackLink } from "@/components/BackLink"
 
@@ -31,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WishlistPage({ params }: Props) {
   const { id } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     redirect(`/login?callbackUrl=${encodeURIComponent(`/wishlist/${id}`)}`)

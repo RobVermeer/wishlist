@@ -18,8 +18,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { NewGroup } from "@/components/NewGroup"
 import { NewWishlist } from "@/components/NewWishlist"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { Metadata } from "next"
 import { JsonLd } from "@/components/JsonLd"
 import { Landing } from "@/components/Landing"
@@ -33,7 +32,7 @@ export const generateMetadata = async ({
   params,
 }: Props): Promise<Metadata> => {
   const { locale } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     return {
@@ -50,7 +49,7 @@ export const generateMetadata = async ({
 }
 
 export default async function Home() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     const t = await getTranslations("Metadata")

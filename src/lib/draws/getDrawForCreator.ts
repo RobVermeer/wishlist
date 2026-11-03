@@ -1,8 +1,7 @@
 import "server-only"
 
 import { cache } from "react"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
 import { notOver } from "./notOver"
 
@@ -11,7 +10,7 @@ const day = 24 * 60 * 60 * 1000
 // The active draw of a group for its creator: who takes part and whether
 // they're in the group, but never who drew whom or their e-mail addresses.
 export const getDrawForCreator = cache(async (groupId: string) => {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) return null
 

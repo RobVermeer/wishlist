@@ -2,13 +2,12 @@ import "server-only"
 
 import { prisma } from "@/lib/prisma"
 import { wishlistProperties } from "./publicProperties"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { cache } from "react"
 import { managedByUser } from "./visibility"
 
 export const getFollowedWishlistsForUser = cache(async () => {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) return []
 

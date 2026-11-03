@@ -1,8 +1,7 @@
 "use server"
 
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
@@ -10,7 +9,7 @@ import { getTranslations } from "next-intl/server"
 // For verlanglijstjes that break the huisregels.
 export const deleteWishlistForAdmin = async (id: string) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

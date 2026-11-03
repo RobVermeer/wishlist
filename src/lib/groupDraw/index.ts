@@ -5,12 +5,11 @@ import { getErrorMessage, shuffle } from "@/lib/utils"
 import { User } from "@/generated/prisma/client"
 import { sendGroupDraw } from "@/lib/email"
 import { getTranslations } from "next-intl/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 
 export const groupDraw = async (groupId: string, formData: FormData) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session?.user.isAdmin) {

@@ -7,8 +7,7 @@ import { RemoveItem } from "./components/RemoveItem"
 import { RemoveWishlist } from "./components/RemoveWishlist"
 import { notFound, redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 
 interface Props {
   params: Promise<{ id: string }>
@@ -16,7 +15,7 @@ interface Props {
 
 export default async function AdminUserPage({ params }: Props) {
   const { id } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) redirect("/login")
 

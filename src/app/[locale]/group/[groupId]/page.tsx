@@ -22,10 +22,9 @@ import { getGroupInvite } from "@/lib/groups/getGroupInvite"
 import { GroupInvite } from "@/components/GroupInvite"
 import { openGraphImage } from "@/lib/openGraph"
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { getFormatter, getTranslations } from "next-intl/server"
 import { notFound } from "next/navigation"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { getLotForUser } from "@/lib/draws/getLotForUser"
@@ -63,7 +62,7 @@ interface Props {
 
 export default async function GroupPage({ params }: Props) {
   const { groupId } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     const invite = await getGroupInvite(groupId)

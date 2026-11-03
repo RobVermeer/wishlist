@@ -2,9 +2,8 @@ import { Card } from "@/components/Card"
 import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { getBoughtWishlistItemsForUser } from "@/lib/wishlistItems/getBoughtWishlistItemsForUser"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 import { redirect } from "next/navigation"
 import { ShowMore } from "@/components/ShowMore"
@@ -29,7 +28,7 @@ export const generateMetadata = async ({ params }: Props) => {
 const maxShown = 15
 
 export default async function ProfileBoughtPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     redirect(`/login?callbackUrl=${encodeURIComponent("/profile/bought")}`)
