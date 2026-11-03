@@ -252,6 +252,61 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   await expect(lot(opaPage)).toContainText(`Je hebt ${drawn} getrokken`)
 })
 
+test("someone filled in but not added yet still takes part", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await dialog.getByLabel("Naam van de deelnemer").fill("Opa")
+  await dialog.getByLabel("E-mailadres").fill("opa-erbij@e2e.test")
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+  await expect
+    .poll(async () => (await emailsTo("opa-erbij@e2e.test")).length)
+    .toBe(1)
+  const participants = await prisma.drawParticipant.findMany({
+    where: { draw: { groupId: group.id } },
+    select: { name: true },
+  })
+  expect(participants.map(({ name }) => name).sort()).toEqual([
+    "Anna",
+    "Bert",
+    "Opa",
+  ])
+})
+
+test("someone filled in without a name can't be left out", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await dialog.getByLabel("E-mailadres").fill("zonder-naam@e2e.test")
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Vul een naam in voor iedereen die je toevoegt"
+  )
+  await expect(dialog.getByLabel("E-mailadres")).toHaveValue(
+    "zonder-naam@e2e.test"
+  )
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+})
+
 test("someone added to the draw must have a valid e-mail address", async ({
   signIn,
 }) => {
