@@ -7,6 +7,7 @@ import {
   createItem,
   createInterest,
   emailsTo,
+  holdActions,
   prisma,
   toasts,
 } from "./fixtures"
@@ -246,7 +247,12 @@ test("followed wishlists are on the dashboard and can be unfollowed", async ({
   await page.getByRole("link", { name: "Olga" }).click()
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
 
+  const release = await holdActions(page)
   await page.getByRole("button", { name: "Stop met volgen" }).click()
+  await expect(
+    page.getByRole("button", { name: "Stop met volgen" })
+  ).toBeDisabled()
+  release()
 
   await expect(toasts(page)).toContainText(
     "Je volgt dit verlanglijstje niet meer"
