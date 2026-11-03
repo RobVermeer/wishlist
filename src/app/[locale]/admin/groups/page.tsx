@@ -31,6 +31,11 @@ export default async function AdminGroupsPage() {
         <Card key={group.id} className="flex gap-2 items-center">
           <span className="leading-none">
             {group.title}
+            {group.removed && (
+              <small className="ml-2 rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+                {t("groups.removed")}
+              </small>
+            )}
             <br />
             <small className="text-xs text-muted-foreground">
               {group.createdBy.name}
@@ -42,7 +47,9 @@ export default async function AdminGroupsPage() {
               <Link href={`/admin/groups/${group.id}`}>{t("groups.view")}</Link>
             </Button>
 
-            <RemoveGroup id={group.id} title={group.title} />
+            {!group.removed && (
+              <RemoveGroup id={group.id} title={group.title} />
+            )}
           </div>
         </Card>
       ))}

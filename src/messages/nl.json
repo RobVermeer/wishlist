@@ -576,6 +576,7 @@
     "groups": {
       "view": "Bekijk",
       "remove": "Verwijder",
+      "removed": "Verwijderd",
       "removeText": "‘{title}’ verdwijnt voor alle leden. Je kunt de groep daarna nog terugzetten."
     },
     "group": {
