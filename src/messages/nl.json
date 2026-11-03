@@ -287,6 +287,7 @@
   },
   "EditItem": {
     "button": "Wijzig",
+    "label": "Wijzig wens {title}",
     "title": "Wijzig wens",
     "remove": {
       "description": "Je wens wordt definitief verwijderd."
