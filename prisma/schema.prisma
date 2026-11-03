@@ -26,6 +26,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -34,6 +35,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -75,6 +78,8 @@ model Group {
   userId    String
   members   User[]     @relation(name: "Subscribed")
   draws     Draw[]
+
+  @@index([userId])
 }
 
 model Wishlist {
@@ -92,6 +97,8 @@ model Wishlist {
   shareToken   String?            @unique
   followers    User[]             @relation(name: "FollowedWishlists")
   managers     User[]             @relation(name: "ManagedWishlists")
+
+  @@index([userId])
 }
 
 model WishlistCategory {
@@ -130,6 +137,9 @@ model WishlistItem {
   categoryId String?
   category   WishlistCategory?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   position   Int                @default(0)
+
+  @@index([wishlistId])
+  @@index([userId])
 }
 
 model WishlistItemLink {
@@ -148,6 +158,8 @@ model Reminder {
   to         String
   from       String
   wishlistId String?
+
+  @@index([wishlistId, createdAt])
 }
 
 model Draw {
@@ -159,6 +171,8 @@ model Draw {
   groupId      String
   group        Group             @relation(fields: [groupId], references: [id], onDelete: Cascade)
   participants DrawParticipant[]
+
+  @@index([groupId])
 }
 
 model DrawParticipant {
@@ -175,4 +189,5 @@ model DrawParticipant {
   giver      DrawParticipant? @relation("DrawnLot")
 
   @@unique([drawId, email])
+  @@index([userId])
 }
