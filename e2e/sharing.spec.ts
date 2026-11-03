@@ -314,6 +314,21 @@ test("only followers can unfollow a wishlist", async ({ signIn }) => {
   }
 })
 
+test("unfollowing a wishlist that no longer exists says so", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const follower = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [follower] })
+  const page = await signIn(follower)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await prisma.wishlist.delete({ where: { id: wishlist.id } })
+  await page.getByRole("button", { name: "Stop met volgen" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+})
+
 test("making a new link stops the old one, followers keep access", async ({
   signIn,
   browser,

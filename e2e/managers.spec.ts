@@ -347,6 +347,28 @@ test("cancelling stop managing keeps you as a manager", async ({ signIn }) => {
   expect(ids((await findWishlist(wishlist)).managers)).toEqual([father.id])
 })
 
+test("stop managing a wishlist that no longer exists says so", async ({
+  signIn,
+}) => {
+  const mother = await createUser({ firstName: "Sanne" })
+  const father = await createUser({ firstName: "Rob" })
+  const wishlist = await createWishlist(mother, {
+    title: "Emma",
+    managers: [father],
+  })
+  const page = await signIn(father)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await prisma.wishlist.delete({ where: { id: wishlist.id } })
+  await page.getByRole("button", { name: "Stop met beheren" }).click()
+  await page
+    .getByRole("dialog", { name: "Stoppen met beheren?" })
+    .getByRole("button", { name: "Stop met beheren" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+})
+
 test("turning the wishlist into your own stops managing it together", async ({
   signIn,
 }) => {
