@@ -84,6 +84,7 @@ Keep the tone warm but calm:
 - Red is `primary`, one per screen. `destructive` is only for error toasts: removing goes through `RemoveButton`, an `outline` button that confirms in a dialog.
 - Show a block only when it can be used. Drawing lots only shows once there's someone to draw with, for example.
 - Don't say the same thing twice on one screen, and keep things where they belong: a button to make a new group doesn't go between the groups you follow.
+- Keep the same styling throughout the app where it makes sense: screens that do the same job look and behave the same. Your own verlanglijstje and someone else's share one layout: a plain title like other pages, without the header block of a group or the colours of the cards on the overzicht. Every group and verlanglijstje starts with a `BackLink` to where you came from. When you change how one screen looks, check its siblings and change them too, or say in the pull request why they differ.
 
 ## Database changes
 
