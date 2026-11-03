@@ -149,7 +149,11 @@ export const InstallApp = ({ className, hideOnDesktop = false }: Props) => {
       ) : null}
 
       {shown === "prompt" && (
-        <Button className="justify-self-start" onClick={install}>
+        <Button
+          variant="outline"
+          className="justify-self-start"
+          onClick={install}
+        >
           {t("install")}
         </Button>
       )}
