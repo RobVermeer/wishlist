@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -82,6 +83,7 @@ export const NewItem = ({ id, categories, category }: Props) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewItem.title")}</DialogTitle>
+          <DialogDescription>{t("NewItem.description")}</DialogDescription>
         </DialogHeader>
         <form
           ref={setForm}

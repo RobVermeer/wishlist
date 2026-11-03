@@ -240,6 +240,7 @@
   "EditGroup": {
     "button": "Wijzig",
     "title": "Wijzig groep",
+    "description": "Pas de naam en het thema aan, of haal leden en verlanglijstjes uit de groep.",
     "remove": {
       "description": "De groep wordt voor alle leden verwijderd."
     },
@@ -272,6 +273,7 @@
     "button": "Voeg een wens toe",
     "toCategory": "Voeg een wens toe aan {category}",
     "title": "Voeg wens toe",
+    "description": "Zet er een linkje bij, dan weten anderen precies wat je bedoelt.",
     "form": {
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
@@ -289,6 +291,7 @@
     "button": "Wijzig",
     "label": "Wijzig wens {title}",
     "title": "Wijzig wens",
+    "description": "Pas de wens aan of verwijder hem.",
     "remove": {
       "description": "Je wens wordt definitief verwijderd."
     },
@@ -309,6 +312,7 @@
   "EditWishlist": {
     "button": "Wijzig",
     "title": "Wijzig verlanglijstje",
+    "description": "Pas aan voor wie het is, het thema en in welke groepen het staat.",
     "remove": {
       "description": "Je verlanglijstje wordt met alle wensen verwijderd. Je groepen en wie het volgt, zien het daarna niet meer. Wat anderen al hebben gekocht, blijft bij hen staan."
     },

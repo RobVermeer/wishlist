@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -110,6 +111,7 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
       >
         <DialogHeader>
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>
+          <DialogDescription>{t("EditGroup.description")}</DialogDescription>
         </DialogHeader>
         <form
           ref={setForm}
