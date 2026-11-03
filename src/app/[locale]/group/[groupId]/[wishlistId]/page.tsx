@@ -5,25 +5,28 @@ import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
 import { BackLink } from "@/components/BackLink"
+import { getTranslations } from "next-intl/server"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 
 interface Props {
-  params: Promise<{ wishlistId: string; groupId: string }>
+  params: Promise<{ wishlistId: string; groupId: string; locale: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { groupId, wishlistId } = await params
+  const { groupId, wishlistId, locale } = await params
+  const t = await getTranslations({ locale, namespace: "Common" })
 
   const wishlist = await getWishlistById(wishlistId)
   const group = await getGroupById(groupId)
 
   if (!wishlist || !group) return {}
 
+  const title =
+    wishlist.title ||
+    (wishlist.isOwnList ? t("myList") : getWishlistName(wishlist))
+
   return {
-    title: `${
-      wishlist.title ||
-      wishlist.user.firstName ||
-      wishlist.user.name?.split(" ")[0]
-    } - ${group.title} - Niet Weer Sokken`,
+    title: `${title} - ${group.title} - Niet Weer Sokken`,
   }
 }
 

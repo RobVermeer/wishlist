@@ -5,6 +5,7 @@ import { Wishlist } from "@/components/Wishlist"
 import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { BackLink } from "@/components/BackLink"
+import { getWishlistName } from "@/lib/wishlists/getWishlistName"
 
 interface Props {
   params: Promise<{ id: string; locale: string }>
@@ -19,9 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title =
     wishlist.title ||
-    (wishlist.isOwnList
-      ? t("myList")
-      : wishlist.user.firstName || wishlist.user.name?.split(" ")[0])
+    (wishlist.isOwnList ? t("myList") : getWishlistName(wishlist))
 
   return {
     title: `${title} - Niet Weer Sokken`,
