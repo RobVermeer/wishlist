@@ -153,9 +153,15 @@ test("add a wish with several links", async ({ signIn }) => {
   await expect(
     dialog.getByRole("button", { name: /Verwijder linkje/ })
   ).toHaveCount(0)
+  await expect(
+    dialog.getByRole("button", { name: "Nog een linkje" })
+  ).toHaveCount(0)
   await linkField(dialog, 1).fill("https://www.bol.com/lego")
   await dialog.getByRole("button", { name: "Nog een linkje" }).click()
   await expect(linkField(dialog, 2)).toBeFocused()
+  await expect(
+    dialog.getByRole("button", { name: "Nog een linkje" })
+  ).toHaveCount(0)
   await linkField(dialog, 2).fill("https://www.coolblue.nl/lego")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
