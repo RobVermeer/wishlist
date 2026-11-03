@@ -26,6 +26,26 @@ async function expectAllFields(dialog: Locator) {
   ).toBeVisible()
 }
 
+test("the button to add a wish comes before the wishes", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  for (const title of ["Fiets", "Boek", "Trui", "Sjaal", "Muts", "Lamp"]) {
+    await createItem(wishlist, { title })
+  }
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+
+  const button = await page
+    .getByRole("button", { name: "Voeg een wens toe" })
+    .boundingBox()
+  const firstWish = await itemCard(page, "Fiets").boundingBox()
+  expect(button!.y).toBeLessThan(firstWish!.y)
+  await expect(
+    page.getByRole("button", { name: "Voeg een wens toe" })
+  ).toBeInViewport()
+})
+
 test("empty wishlist invites you to add wishes", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)
