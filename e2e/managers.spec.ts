@@ -370,7 +370,7 @@ test("managers don't see what is bought", async ({ signIn }) => {
 
   await expect(
     page.getByText(
-      "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁"
+      "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing."
     )
   ).toBeVisible()
   await expect(page.getByText("Fiets")).toBeVisible()

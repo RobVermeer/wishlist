@@ -91,7 +91,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
     page.getByRole("heading", { name: "Olga", level: 2 })
   ).toBeVisible()
   await expect(
-    page.getByText("Olga heeft een verlanglijstje met je gedeeld 🎁")
+    page.getByText("Olga heeft een verlanglijstje met je gedeeld.")
   ).toBeVisible()
 
   const html = await page.content()

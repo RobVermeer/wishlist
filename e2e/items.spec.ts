@@ -55,7 +55,7 @@ test("empty wishlist invites you to add wishes", async ({ signIn }) => {
   ).toBeVisible()
   await expect(
     page.getByText(
-      "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁"
+      "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing."
     )
   ).toBeVisible()
   await expect(page.getByText("Je verlanglijstje is nog leeg")).toBeVisible()

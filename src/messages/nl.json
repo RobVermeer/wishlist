@@ -32,13 +32,13 @@
   "NotFound": {
     "empty": {
       "title": "We kunnen deze pagina niet vinden",
-      "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
+      "text": "Ga terug naar <dashboard>het overzicht</dashboard>."
     }
   },
   "Error": {
     "empty": {
       "title": "Er ging iets mis",
-      "text": "Ga terug naar <dashboard>het overzicht</dashboard>"
+      "text": "Ga terug naar <dashboard>het overzicht</dashboard>."
     }
   },
   "BackLink": {
@@ -79,7 +79,7 @@
         "me": "Voor mezelf",
         "other": "Voor iemand anders",
         "name": "Naam",
-        "placeholder": "Bijvoorbeeld de naam van je kind"
+        "placeholder": "Bijvoorbeeld de naam van je kind."
       },
       "groups": {
         "replaces": "Vervangt je andere verlanglijstje in deze groep",
@@ -184,8 +184,8 @@
     },
     "hint": {
       "together": "Je beheert dit verlanglijstje samen met {names}.",
-      "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing 🎁",
-      "other": "{name} ziet niet wat er wordt gekocht 🤫"
+      "own": "Je ziet niet wat anderen van dit verlanglijstje kopen, zo blijft het een verrassing.",
+      "other": "{name} ziet niet wat er wordt gekocht."
     }
   },
   "Interests": {
@@ -323,7 +323,7 @@
       "avatar": "Profielfoto <small>(optioneel)</small>",
       "save": "Opslaan"
     },
-    "toast": "Je gegevens zijn opgeslagen"
+    "toast": "Je gegevens zijn opgeslagen."
   },
   "ProfileTabs": {
     "me": "Profiel",
@@ -356,46 +356,46 @@
       "firstName": "Voornaam",
       "save": "Opslaan"
     },
-    "toast": "Je gegevens zijn opgeslagen"
+    "toast": "Je gegevens zijn opgeslagen."
   },
   "Errors": {
-    "notLoggedIn": "Je bent niet ingelogd",
-    "noAccess": "Je hebt niet de juiste rechten om dit te doen",
-    "nothingChanged": "Je hebt geen velden ingevuld",
+    "notLoggedIn": "Je bent niet ingelogd.",
+    "noAccess": "Je hebt niet de juiste rechten om dit te doen.",
+    "nothingChanged": "Je hebt geen velden ingevuld.",
     "group": {
-      "notFound": "Groep niet gevonden"
+      "notFound": "Groep niet gevonden."
     },
     "wishlist": {
-      "notFound": "Verlanglijstje niet gevonden"
+      "notFound": "Verlanglijstje niet gevonden."
     },
     "item": {
-      "notFound": "Wens niet gevonden",
-      "alreadyBought": "Deze wens is al door iemand anders gekocht"
+      "notFound": "Wens niet gevonden.",
+      "alreadyBought": "Deze wens is al door iemand anders gekocht."
     },
     "user": {
-      "notFound": "Gebruiker niet gevonden",
-      "avatar": "Kies een JPG- of PNG-foto van maximaal 25 megapixel"
+      "notFound": "Gebruiker niet gevonden.",
+      "avatar": "Kies een JPG- of PNG-foto van maximaal 25 megapixel."
     },
     "reminder": {
-      "alreadySent": "Er is vandaag al om meer wensen gevraagd"
+      "alreadySent": "Er is vandaag al om meer wensen gevraagd."
     },
     "category": {
-      "notFound": "Categorie niet gevonden",
-      "exists": "Er is al een categorie die zo heet"
+      "notFound": "Categorie niet gevonden.",
+      "exists": "Er is al een categorie die zo heet."
     },
     "draw": {
-      "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting",
-      "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting",
-      "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig",
-      "participantNotFound": "Deelnemer niet gevonden",
-      "alreadySent": "Je kunt de e-mail één keer per dag opnieuw sturen"
+      "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting.",
+      "tooManyParticipants": "Er kunnen maximaal {max} mensen meedoen aan de loting.",
+      "duplicateEmail": "Iedereen in de loting heeft een eigen e-mailadres nodig.",
+      "participantNotFound": "Deelnemer niet gevonden.",
+      "alreadySent": "Je kunt de e-mail één keer per dag opnieuw sturen."
     },
     "contact": {
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
     },
     "interest": {
-      "duplicate": "{title} staat er al op",
-      "tooMany": "Je kunt maximaal {max} interesses toevoegen"
+      "duplicate": "{title} staat er al op.",
+      "tooMany": "Je kunt maximaal {max} interesses toevoegen."
     }
   },
   "EmailDraw": {
@@ -663,7 +663,7 @@
       "group": "Deel de link of nodig je familie en vrienden uit in een groep"
     },
     "cta": {
-      "title": "Klaar om te beginnen? 🎁",
+      "title": "Klaar om te beginnen?",
       "button": "Maak je verlanglijstje"
     }
   },
@@ -677,10 +677,10 @@
     "copied": "Link van verlanglijstje gekopieerd",
     "reset": "Maak een nieuwe link",
     "resetText": "Maak je een nieuwe link, dan werkt de oude niet meer. Wie je verlanglijstje al volgt, houdt toegang.",
-    "resetToast": "Er is een nieuwe link gemaakt"
+    "resetToast": "Er is een nieuwe link gemaakt."
   },
   "SharedWishlist": {
-    "intro": "{name} heeft een verlanglijstje met je gedeeld 🎁",
+    "intro": "{name} heeft een verlanglijstje met je gedeeld.",
     "preview": {
       "title": "{name} heeft een verlanglijstje met je gedeeld",
       "text": "Bekijk wat {name} graag wil en streep stiekem af wat je gaat kopen."
@@ -708,11 +708,11 @@
   },
   "UnfollowWishlist": {
     "button": "Stop met volgen",
-    "toast": "Je volgt dit verlanglijstje niet meer"
+    "toast": "Je volgt dit verlanglijstje niet meer."
   },
   "StopManagingWishlist": {
     "button": "Stop met beheren",
-    "toast": "Je beheert dit verlanglijstje niet meer"
+    "toast": "Je beheert dit verlanglijstje niet meer."
   },
   "Item": {
     "move": "Verplaats wens {name}",
@@ -1190,7 +1190,7 @@
       "redrawText": "De vorige loting telt dan niet meer: iedereen krijgt een nieuw lootje, per e-mail en in de groep.",
       "notInGroup": "nog niet in de groep"
     },
-    "toast": "De lootjes zijn getrokken",
+    "toast": "De lootjes zijn getrokken.",
     "anonymous": "Iemand zonder naam",
     "status": {
       "title": "Wie doen er mee?",
@@ -1198,7 +1198,7 @@
       "invited": "Nog niet aangemeld",
       "left": "Niet meer in de groep",
       "resend": "Stuur opnieuw",
-      "resent": "De e-mail is opnieuw verstuurd",
+      "resent": "De e-mail is opnieuw verstuurd.",
       "leftWarning": "{names} {count, plural, one {zit} other {zitten}} niet meer in de groep. Trek de lootjes opnieuw als {count, plural, one {die} other {zij}} niet meer meedoen."
     }
   },
