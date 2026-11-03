@@ -33,9 +33,17 @@ interface Props {
   id: string
   groupId?: string
   backLink?: ReactNode
+  // Set when the page has its own next step, so asking for more wishes
+  // doesn't become a second red button.
+  quietRemind?: boolean
 }
 
-export const Wishlist = async ({ id, groupId, backLink }: Props) => {
+export const Wishlist = async ({
+  id,
+  groupId,
+  backLink,
+  quietRemind = false,
+}: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
@@ -249,7 +257,12 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
 
       {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
 
-      {showRemind && <RemindButton wishlistId={wishlist.id} />}
+      {showRemind && (
+        <RemindButton
+          wishlistId={wishlist.id}
+          variant={quietRemind ? "outline" : "default"}
+        />
+      )}
 
       {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
     </List>
