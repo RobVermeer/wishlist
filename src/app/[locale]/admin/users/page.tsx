@@ -37,12 +37,7 @@ export default async function AdminUsersPage() {
       {users.map(user => (
         <Card key={user.id} className="flex flex-wrap gap-2 items-center">
           <Avatar>
-            {user?.image && (
-              <AvatarImage
-                src={user.image}
-                alt={`Avatar of ${user.firstName || user?.name}`}
-              />
-            )}
+            {user?.image && <AvatarImage src={user.image} alt="" />}
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
 
