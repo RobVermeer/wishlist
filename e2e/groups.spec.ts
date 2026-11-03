@@ -5,6 +5,7 @@ import {
   createGroup,
   createWishlist,
   createItem,
+  holdActions,
   prisma,
   toasts,
 } from "./fixtures"
@@ -272,7 +273,12 @@ test("visiting a group you don't follow lets you follow it", async ({
   await expect(page.getByText("Je volgt deze groep nog niet")).toBeVisible()
   await expect(page.getByRole("link", { name: "Olga" })).toBeHidden()
 
+  const release = await holdActions(page)
   await page.getByRole("button", { name: "Volg de groep" }).click()
+  await expect(
+    page.getByRole("button", { name: "Volg de groep" })
+  ).toBeDisabled()
+  release()
 
   await expect(page.getByRole("heading", { name: "Uitnodiging" })).toBeVisible()
   await expect(
@@ -281,6 +287,25 @@ test("visiting a group you don't follow lets you follow it", async ({
 
   await page.goto("/")
   await expect(page.getByRole("link", { name: "Uitnodiging" })).toBeVisible()
+})
+
+test("following a group that fails shows the error", async ({ signIn }) => {
+  const owner = await createUser()
+  const visitor = await createUser()
+  const group = await createGroup(owner)
+  const page = await signIn(visitor)
+
+  await page.goto(`/group/${group.id}`)
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { removed: true },
+  })
+  await page.getByRole("button", { name: "Volg de groep" }).click()
+
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
+  await expect(
+    page.getByRole("button", { name: "Volg de groep" })
+  ).toBeEnabled()
 })
 
 test("group page lists the wishlists of its members", async ({ signIn }) => {
