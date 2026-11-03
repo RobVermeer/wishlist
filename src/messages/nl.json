@@ -380,7 +380,8 @@
       "alreadySent": "Er is vandaag al om meer wensen gevraagd"
     },
     "category": {
-      "notFound": "Categorie niet gevonden"
+      "notFound": "Categorie niet gevonden",
+      "exists": "Er is al een categorie die zo heet"
     },
     "draw": {
       "tooFewParticipants": "Kies minimaal twee deelnemers voor de loting",
@@ -441,6 +442,18 @@
     "start": "Volgorde aanpassen",
     "done": "Klaar",
     "hint": "Sleep de {withCategories, select, true {wensen en categorieën} other {wensen}} naar de goede plek."
+  },
+  "EditCategory": {
+    "button": "Wijzig",
+    "label": "Wijzig categorie {title}",
+    "title": "Wijzig categorie",
+    "remove": {
+      "description": "De categorie verdwijnt. De wensen erin blijven op je verlanglijstje staan, zonder categorie."
+    },
+    "form": {
+      "title": "Naam van de categorie",
+      "save": "Opslaan"
+    }
   },
   "Category": {
     "move": "Verplaats categorie {name}",

@@ -813,6 +813,69 @@ test("only managers can remove interests from a wishlist", async ({
   }
 })
 
+test("only managers can rename a category", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const category = await createCategory(wishlist, "Kleding", 0)
+  await createItem(wishlist, { title: "Trui", category })
+  const own = await createWishlist(member)
+  const ownCategory = await createCategory(own, "Boeken", 0)
+  await createItem(own, { title: "Roman", category: ownCategory })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownCategory.id, category.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Boeken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig categorie" })
+  await dialog.getByLabel("Naam van de categorie").fill("Stiekem")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Categorie niet gevonden")
+  for (const { id, title } of [category, ownCategory]) {
+    expect(
+      await prisma.wishlistCategory.findUniqueOrThrow({ where: { id } })
+    ).toMatchObject({ title })
+  }
+})
+
+test("only managers can remove a category", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, { members: [member] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const category = await createCategory(wishlist, "Kleding", 0)
+  const item = await createItem(wishlist, { title: "Trui", category })
+  const own = await createWishlist(member)
+  const ownCategory = await createCategory(own, "Boeken", 0)
+  await createItem(own, { title: "Roman", category: ownCategory })
+  const page = await signIn(member)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownCategory.id, category.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Boeken" }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig categorie" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Categorie niet gevonden")
+  for (const { id } of [category, ownCategory]) {
+    expect(
+      await prisma.wishlistCategory.findUnique({ where: { id } })
+    ).not.toBeNull()
+  }
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .categoryId
+  ).toBe(category.id)
+})
+
 test("only the creator of a group can take wishlists out of it", async ({
   signIn,
 }) => {

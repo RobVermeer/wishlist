@@ -58,6 +58,14 @@ export const wishlistItemSchema = z.object({
     .optional(),
 })
 
+export const wishlistCategorySchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, { error: "Vul een naam voor de categorie in" })
+    .max(40, { error: "Categorie mag maximaal uit 40 tekens bestaan" }),
+})
+
 export const maxInterests = 20
 
 export const wishlistInterestSchema = z.object({

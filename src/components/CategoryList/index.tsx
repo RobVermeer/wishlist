@@ -3,6 +3,7 @@
 import { SortableList } from "@/components/SortableList"
 import { useSortMode } from "@/components/SortMode"
 import { reorderCategoriesForWishlist } from "@/lib/wishlistCategories/reorderCategoriesForWishlist"
+import { EditCategory } from "@/components/EditCategory"
 import { Category, CategorySection } from "./CategorySection"
 
 interface Props {
@@ -48,6 +49,7 @@ export const CategoryList = ({
           category={category}
           openCategories={openCategories}
           handle={showHandles ? handle : undefined}
+          actions={<EditCategory id={category.id} title={category.title} />}
         />
       )}
     </SortableList>
