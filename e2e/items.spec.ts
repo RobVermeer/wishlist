@@ -645,7 +645,7 @@ test("closing a half-typed wish asks first", async ({ signIn }) => {
     "Lego kasteel"
   )
 
-  await dialog.getByRole("button", { name: "Close" }).click()
+  await dialog.getByRole("button", { name: "Sluit" }).click()
   await expect(confirm).toBeVisible()
   await confirm.getByRole("button", { name: "Verder bewerken" }).click()
   await expect(confirm).toBeHidden()
@@ -789,7 +789,7 @@ test("closing an edited wish without changes doesn't ask", async ({
   await dialog.getByLabel("Wens", { exact: true }).fill("Fiets")
   await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
   await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
-  await dialog.getByRole("button", { name: "Close" }).click()
+  await dialog.getByRole("button", { name: "Sluit" }).click()
 
   await expect(dialog).toBeHidden()
   await expect(unsavedChanges(page)).toHaveCount(0)
