@@ -3,7 +3,6 @@ import { List } from "@/components/List"
 import { BackLink } from "@/components/BackLink"
 import { ListTitle } from "@/components/ListTitle"
 import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
-import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { getSession } from "@/lib/getSession"
@@ -24,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function AdminGroupsDrawPage({ params }: Props) {
+export default async function AdminGroupPage({ params }: Props) {
   const { id } = await params
   const session = await getSession()
 
@@ -47,9 +46,6 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
           <UnDeleteGroup id={group.id} title={group.title} />
         </>
       )}
-
-      <p>{t("group.drawText")}</p>
-      <SendEmails group={group} />
     </List>
   )
 }

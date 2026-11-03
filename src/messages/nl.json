@@ -457,17 +457,6 @@
       "datePast": "Kies een datum vanaf vandaag."
     }
   },
-  "EmailDraw": {
-    "subject": "{name}, je hebt een lootje getrokken voor {group}",
-    "preview": "Je hebt een lootje getrokken!",
-    "title": "<strong>{name}</strong>, je hebt een lootje getrokken!",
-    "text1": "De lootjes voor <strong>{group}</strong> zijn getrokken. Kijk snel wie je hebt!",
-    "text2": "Voorkom dubbele cadeaus: streep de wensen af die je gaat geven. De eigenaar van het verlanglijstje ziet dat niet. Dit kan op alle verlanglijstjes van de groep.",
-    "text3": "Je getrokken lootje: <strong>{name}</strong>",
-    "button": "Ga naar {group}",
-    "goodbye": "Liefs, <strong>Sinterklaas</strong>",
-    "reason": "Je krijgt deze e-mail omdat je in de groep {group} zit."
-  },
   "EmailReminder": {
     "own": {
       "subject": "Heb je nog wensen?",
@@ -589,10 +578,7 @@
       "restoreText": "Is deze groep per ongeluk verwijderd?",
       "restore": "Zet groep terug",
       "restoreConfirm": "‘{title}’ is daarna weer te zien voor alle leden.",
-      "restored": "De groep is teruggezet.",
-      "drawText": "Kies wie er meedoet aan de loting.",
-      "draw": "Trek lootjes",
-      "drawn": "De lootjes zijn getrokken"
+      "restored": "De groep is teruggezet."
     },
     "users": {
       "admin": "Admin",
