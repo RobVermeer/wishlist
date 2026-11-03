@@ -329,6 +329,9 @@ test("user without a first name is asked for it", async ({ signIn }) => {
 
   const nameDialog = page.getByRole("dialog", { name: "Vul je naam in" })
   await expect(nameDialog).toBeVisible()
+  await expect(nameDialog.getByRole("button")).toHaveText(["Opslaan"])
+  await page.keyboard.press("Escape")
+  await expect(nameDialog).toBeVisible()
   await nameDialog.getByLabel("Voornaam").fill("Nina")
   await nameDialog.getByRole("button", { name: "Opslaan" }).click()
 
