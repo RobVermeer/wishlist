@@ -2,7 +2,7 @@
 
 import { useTransition } from "react"
 import { Send } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useFormatter, useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { resendDrawLot } from "@/lib/draws/resendDrawLot"
@@ -15,6 +15,7 @@ interface Props {
 
 export const DrawStatus = ({ participants }: Props) => {
   const t = useTranslations("Draw.status")
+  const format = useFormatter()
   const { toast } = useToast()
   const [pending, startTransition] = useTransition()
   const left = participants.filter(({ status }) => status === "left")
@@ -75,7 +76,7 @@ export const DrawStatus = ({ participants }: Props) => {
       {left.length > 0 && (
         <p className="text-sm text-muted-foreground">
           {t("leftWarning", {
-            names: left.map(({ name }) => name).join(", "),
+            names: format.list(left.map(({ name }) => name)),
             count: left.length,
           })}
         </p>

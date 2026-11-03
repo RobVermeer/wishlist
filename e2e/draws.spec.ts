@@ -324,6 +324,30 @@ test("the creator sees who joined, but not who drew whom", async ({
   await expect(status(bertPage)).toHaveCount(0)
 })
 
+test("the creator sees who left the group in one sentence", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const carla = await createUser({ firstName: "Carla" })
+  const dirk = await createUser({ firstName: "Dirk" })
+  const group = await createGroup(owner, { members: [bert, carla, dirk] })
+  await createDraw(group, [owner, bert, carla, dirk])
+  await prisma.group.update({
+    where: { id: group.id },
+    data: { members: { disconnect: [{ id: bert.id }, { id: carla.id }] } },
+  })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+
+  await expect(
+    page.getByText(
+      "Bert en Carla zitten niet meer in de groep. Trek de lootjes opnieuw als zij niet meer meedoen."
+    )
+  ).toBeVisible()
+})
+
 const drawSummary = (page: Page) =>
   page.getByRole("button", { name: /De lootjes zijn getrokken/ })
 
