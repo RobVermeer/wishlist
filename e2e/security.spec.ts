@@ -1485,6 +1485,42 @@ test("only the owner and managers can make a new share link", async ({
   ).toBe(shareToken)
 })
 
+for (const target of ["removed", "own"] as const) {
+  test(`you can't follow ${target === "removed" ? "a removed" : "your own"} wishlist`, async ({
+    signIn,
+  }) => {
+    const owner = await createUser()
+    const user = await createUser()
+    await createWishlist(owner, { shareToken: `shared-${owner.id}` })
+    const forged = await createWishlist(target === "removed" ? owner : user, {
+      shareToken: `forged-${owner.id}`,
+    })
+    if (target === "removed") {
+      await prisma.wishlist.update({
+        where: { id: forged.id },
+        data: { removed: true },
+      })
+    }
+    const page = await signIn(user)
+
+    await forgeActions(
+      page,
+      `/lijstje/shared-${owner.id}`,
+      `shared-${owner.id}`,
+      `forged-${owner.id}`
+    )
+    await page.goto(`/lijstje/shared-${owner.id}`)
+    await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
+
+    await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+    expect(
+      await prisma.wishlist.count({
+        where: { followers: { some: { id: user.id } } },
+      })
+    ).toBe(0)
+  })
+}
+
 test("more wishes can only be asked of someone who shares a list with you", async ({
   signIn,
 }) => {
