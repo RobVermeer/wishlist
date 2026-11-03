@@ -41,9 +41,25 @@ export const sendReminderForWishlist = async (wishlistId: string) => {
       throw new Error(t("wishlist.notFound"))
     }
 
-    const canBeReminded = await canBeRemindedForWishlist(wishlist.id)
+    // Saving the reminder before sending, together with the check, sends the
+    // e-mails once when someone asks twice at the same moment.
+    const saved = await prisma.$transaction(async tx => {
+      if (!(await canBeRemindedForWishlist(wishlist.id, tx))) {
+        return false
+      }
 
-    if (!canBeReminded) {
+      await tx.reminder.create({
+        data: {
+          to: wishlist.userId,
+          from,
+          wishlistId: wishlist.id,
+        },
+      })
+
+      return true
+    })
+
+    if (!saved) {
       throw new Error(t("reminder.alreadySent"))
     }
 
@@ -62,14 +78,6 @@ export const sendReminderForWishlist = async (wishlistId: string) => {
         },
       })
     }
-
-    await prisma.reminder.create({
-      data: {
-        to: wishlist.userId,
-        from,
-        wishlistId: wishlist.id,
-      },
-    })
 
     revalidatePath("/")
 
