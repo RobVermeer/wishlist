@@ -198,7 +198,7 @@ test("only the creator of a group sees the button to draw lots", async ({
 
   await page.goto(`/group/${group.id}`)
 
-  await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Lootjes trekken" })
   ).toHaveCount(0)
@@ -589,7 +589,7 @@ test("a lootje no longer shows after the date of the party", async ({
   ])
 
   await page.goto(`/group/${past.id}`)
-  await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
   await expect(lot(page)).toHaveCount(0)
 
   for (const group of [current, undated]) {

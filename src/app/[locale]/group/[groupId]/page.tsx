@@ -88,7 +88,7 @@ export default async function GroupPage({ params }: Props) {
     return (
       <>
         {backLink}
-        <EmptyState title={t("noFollow.title")}>
+        <EmptyState as="h1" title={t("noFollow.title")}>
           {t("noFollow.text")}
         </EmptyState>
         <FollowGroup groupId={group.id} text={t("follow")} />
@@ -181,9 +181,9 @@ export default async function GroupPage({ params }: Props) {
           )}
         </div>
         <div className="relative">
-          <h2 className="font-display text-3xl font-semibold tracking-tight">
+          <h1 className="font-display text-3xl font-semibold tracking-tight">
             {group.title}
-          </h2>
+          </h1>
           <p className="text-sm text-white/80">
             {t("members", { count: group.members.length })}
           </p>
@@ -264,7 +264,7 @@ export default async function GroupPage({ params }: Props) {
       )}
 
       {showOnlyWishlist ? (
-        <Wishlist id={onlyWishlist.id} />
+        <Wishlist id={onlyWishlist.id} as="h2" />
       ) : (
         group.wishlist.map(wishlist => (
           <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />

@@ -28,7 +28,7 @@ export const SharedWishlist = async ({
   return (
     <List>
       <div className="text-center">
-        <ListTitle>{name}</ListTitle>
+        <ListTitle as="h1">{name}</ListTitle>
         <p>{t("intro", { name })}</p>
       </div>
 

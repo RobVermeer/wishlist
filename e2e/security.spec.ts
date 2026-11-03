@@ -127,7 +127,7 @@ test("wishlists are only visible to their owner and the members of their groups"
   await expect(memberPage).toHaveTitle("Olga - Niet Weer Sokken")
   await memberPage.goto(`/group/${group.id}/${wishlist.id}`)
   await expect(
-    memberPage.getByRole("heading", { name: /Olga/, level: 2 })
+    memberPage.getByRole("heading", { name: /Olga/, level: 1 })
   ).toBeVisible()
 
   for (const [user, path] of [
@@ -306,7 +306,7 @@ test("followers of a wishlist can see it and check off its wishes", async ({
 
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(
-    page.getByRole("heading", { name: "Olga", level: 2 })
+    page.getByRole("heading", { name: "Olga", level: 1 })
   ).toBeVisible()
 
   await page
@@ -464,9 +464,7 @@ test("pages don't show who bought a wish", async ({ signIn }) => {
 
     for (const path of paths) {
       await page.goto(path)
-      await expect(
-        page.getByRole("heading", { level: 2 }).first()
-      ).toBeVisible()
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
       const html = await page.content()
 
       expect(html, path).not.toContain(buyer.id)
@@ -502,7 +500,7 @@ test("a wishlist page doesn't give away the groups it is in", async ({
   ] as const) {
     const page = await signIn(user)
     await page.goto(path)
-    await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     const html = await page.content()
 
     for (const id of hidden) {
@@ -1081,7 +1079,7 @@ test("members don't see the e-mail addresses of people added to a draw", async (
   for (const user of [owner, bert]) {
     const page = await signIn(user)
     await page.goto(`/group/${group.id}`)
-    await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     expect(await page.content()).not.toContain("opa-geheim@e2e.test")
   }
 })

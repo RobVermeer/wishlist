@@ -15,7 +15,7 @@ export const GroupInvite = async ({ group }: Props) => {
   return (
     <List>
       <div className="text-center">
-        <ListTitle>{group.title}</ListTitle>
+        <ListTitle as="h1">{group.title}</ListTitle>
         <p>{t("intro")}</p>
       </div>
 

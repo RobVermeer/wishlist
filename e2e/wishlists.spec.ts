@@ -112,7 +112,7 @@ test("create a wishlist for someone else", async ({ signIn }) => {
   await page.goto(`/wishlist/${wishlist.id}`)
   await expect(page).toHaveTitle("Baby Bram - Niet Weer Sokken")
   await expect(
-    page.getByRole("heading", { name: "Baby Bram", level: 2 })
+    page.getByRole("heading", { name: "Baby Bram", level: 1 })
   ).toBeVisible()
 })
 
@@ -173,7 +173,7 @@ test("edit a wishlist", async ({ signIn }) => {
 
   await expect(dialog).toBeHidden()
   await expect(
-    page.getByRole("heading", { name: "Opa Jan", level: 2 })
+    page.getByRole("heading", { name: "Opa Jan", level: 1 })
   ).toBeVisible()
 
   const updated = await prisma.wishlist.findUniqueOrThrow({

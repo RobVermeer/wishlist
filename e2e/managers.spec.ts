@@ -233,7 +233,7 @@ test("managers change the wishlist but not who manages it", async ({
 
   await expect(dialog).toBeHidden()
   await expect(
-    page.getByRole("heading", { name: /Emma 🎂/, level: 2 })
+    page.getByRole("heading", { name: /Emma 🎂/, level: 1 })
   ).toBeVisible()
 
   const updated = await findWishlist(wishlist)
