@@ -575,7 +575,6 @@
       }
     },
     "groups": {
-      "title": "Groepen",
       "view": "Bekijk",
       "remove": "Verwijder",
       "removeText": "‘{title}’ verdwijnt voor alle leden. Je kunt de groep daarna nog terugzetten."
@@ -588,7 +587,6 @@
       "drawn": "De lootjes zijn getrokken"
     },
     "users": {
-      "title": "Gebruikers",
       "admin": "Admin",
       "superAdmin": "Superadmin",
       "makeAdmin": "Maak admin",

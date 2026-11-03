@@ -491,3 +491,38 @@ test("admin pages say in the tab which page they are", async ({ signIn }) => {
     await expect(page).toHaveTitle(title)
   }
 })
+
+test("admin detail pages link back to their list", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const user = await createUser({ name: "Sanne de Vries" })
+  const group = await createGroup(user, { title: "Familie" })
+  const page = await signIn(admin)
+
+  for (const [path, list, title] of [
+    [`/admin/groups/${group.id}`, "Groepen", "Familie"],
+    [`/admin/users/${user.id}`, "Gebruikers", "Sanne de Vries"],
+  ]) {
+    await page.goto(path)
+    await expect(page.getByRole("heading", { level: 2 }).first()).toHaveText(
+      title
+    )
+    await page.getByRole("link", { name: `Terug naar ${list}` }).click()
+    await expect(page).toHaveURL(path.replace(/\/[^/]+$/, ""))
+    await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(0)
+  }
+})
+
+test("admin list pages don't repeat the name of their tab", async ({
+  signIn,
+}) => {
+  const page = await signIn(await createAdmin())
+
+  for (const [path, tab] of [
+    ["/admin/groups", "Groepen"],
+    ["/admin/users", "Gebruikers"],
+  ]) {
+    await page.goto(path)
+    await expect(page.getByRole("link", { name: tab })).toBeVisible()
+    await expect(page.getByRole("heading", { name: tab })).toHaveCount(0)
+  }
+})
