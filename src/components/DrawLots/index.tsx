@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { createDraw } from "@/lib/draws/createDraw"
 import { today } from "@/lib/today"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   groupId: string
@@ -41,6 +42,15 @@ export const DrawLots = ({
   const [extra, setExtra] = useState<{ name: string; email: string }[]>([])
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+    onDiscard: () => {
+      setExtra([])
+      setName("")
+      setEmail("")
+    },
+  })
 
   function addPerson() {
     setExtra([...extra, { name: name.trim(), email: email.trim() }])
@@ -70,7 +80,7 @@ export const DrawLots = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline">
           <Dices size="16" className="mr-2" />{" "}
@@ -84,7 +94,12 @@ export const DrawLots = ({
             {redraw ? t("redrawText") : t("text")}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} id="draw" className="grid gap-4 py-4">
+        <form
+          ref={setForm}
+          onSubmit={onSubmit}
+          id="draw"
+          className="grid gap-4 py-4"
+        >
           <fieldset className="grid gap-2">
             <legend className="mb-2 text-sm font-medium">
               {t("participants")}
@@ -232,6 +247,7 @@ export const DrawLots = ({
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

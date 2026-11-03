@@ -622,3 +622,185 @@ test("owner can reorder wishes in a category with the keyboard", async ({
     /Roman/,
   ])
 })
+
+const unsavedChanges = (page: Page) =>
+  page.getByRole("alertdialog", { name: "Wijzigingen niet opslaan?" })
+
+test("closing a half-typed wish asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Lego kasteel")
+  await page.keyboard.press("Escape")
+
+  const confirm = unsavedChanges(page)
+  await expect(confirm).toHaveAccessibleDescription(
+    "Je hebt iets veranderd dat nog niet is opgeslagen."
+  )
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue(
+    "Lego kasteel"
+  )
+
+  await dialog.getByRole("button", { name: "Close" }).click()
+  await expect(confirm).toBeVisible()
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+
+  await page.mouse.click(5, 5)
+  await expect(confirm).toBeVisible()
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue("")
+  expect(
+    await prisma.wishlistItem.count({ where: { wishlistId: wishlist.id } })
+  ).toBe(0)
+})
+
+test("a link, the category or unlimited count as changes to a new wish", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createCategory(wishlist, "Kleding", 0)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  const confirm = unsavedChanges(page)
+
+  async function expectToAsk(change: () => Promise<void>) {
+    await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+    await change()
+    await page.keyboard.press("Escape")
+    await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+    await expect(dialog).toBeHidden()
+  }
+
+  await expectToAsk(() => linkField(dialog, 1).fill("https://example.com"))
+  await expectToAsk(() =>
+    dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
+  )
+  await expectToAsk(async () => {
+    await dialog.getByLabel("Categorie").click()
+    await page.getByRole("option", { name: "Kleding" }).click()
+    await expect(page.getByRole("listbox")).toHaveCount(0)
+  })
+})
+
+test("closing a new wish without changes doesn't ask", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Lego")
+  await dialog.getByLabel("Wens", { exact: true }).clear()
+  await page.keyboard.press("Escape")
+
+  await expect(dialog).toBeHidden()
+  await expect(unsavedChanges(page)).toHaveCount(0)
+})
+
+test("saving a new wish doesn't ask", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Lego")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(unsavedChanges(page)).toHaveCount(0)
+  await expect(itemCard(page, "Lego")).toBeVisible()
+})
+
+test("closing an edited wish asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  await createCategory(wishlist, "Boeken", 1)
+  const item = await createItem(wishlist, {
+    title: "Trui",
+    links: ["https://example.com/trui"],
+    category: clothes,
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: /^Kleding \d+$/ }).click()
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  const confirm = unsavedChanges(page)
+  await dialog.getByLabel("Categorie").click()
+  await page.getByRole("option", { name: "Boeken" }).click()
+  await expect(page.getByRole("listbox")).toHaveCount(0)
+  await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
+  await page.keyboard.press("Escape")
+
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog.getByLabel("Categorie")).toHaveText("Boeken")
+  await expect(
+    dialog.getByLabel("Deze wens mag onbeperkt vervuld worden")
+  ).toBeChecked()
+
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await expect(dialog.getByLabel("Categorie")).toHaveText("Kleding")
+  expect(
+    await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } })
+  ).toMatchObject({ categoryId: clothes.id, unlimited: false })
+})
+
+test("closing an edited wish without changes doesn't ask", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createItem(wishlist, {
+    title: "Fiets",
+    links: ["https://example.com/fiets"],
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await itemCard(page, "Fiets").getByRole("button", { name: "Wijzig" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Fietsje")
+  await dialog.getByLabel("Wens", { exact: true }).fill("Fiets")
+  await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
+  await dialog.getByLabel("Deze wens mag onbeperkt vervuld worden").click()
+  await dialog.getByRole("button", { name: "Close" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(unsavedChanges(page)).toHaveCount(0)
+
+  await itemCard(page, "Fiets").getByRole("button", { name: "Wijzig" }).click()
+  await dialog.getByLabel("Wens", { exact: true }).fill("Elektrische fiets")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(dialog).toBeHidden()
+  await expect(unsavedChanges(page)).toHaveCount(0)
+  await expect(itemCard(page, "Elektrische fiets")).toBeVisible()
+})

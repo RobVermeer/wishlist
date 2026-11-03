@@ -469,6 +469,12 @@
     "none": "Geen categorie",
     "create": "Nieuwe categorie: {category}"
   },
+  "UnsavedChanges": {
+    "title": "Wijzigingen niet opslaan?",
+    "description": "Je hebt iets veranderd dat nog niet is opgeslagen.",
+    "keepEditing": "Verder bewerken",
+    "discard": "Niet opslaan"
+  },
   "Remove": {
     "button": "Verwijder",
     "title": "Weet je het zeker?",

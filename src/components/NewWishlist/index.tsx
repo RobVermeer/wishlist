@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   groups: GroupOption[]
@@ -54,6 +55,15 @@ export const NewWishlist = ({
   const open = controlledOpen ?? internalOpen
   const setOpen = onOpenChange ?? setInternalOpen
   const [ownList, setOwnList] = useState(defaultOwnList)
+  const {
+    setForm,
+    onOpenChange: handleOpenChange,
+    confirmation,
+  } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+    onDiscard: () => setOwnList(defaultOwnList),
+  })
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -79,13 +89,18 @@ export const NewWishlist = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-h-dvh overflow-y-auto sm:max-h-[calc(100dvh-4rem)] sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{t("NewWishlist.title")}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
+        <form
+          ref={setForm}
+          onSubmit={onSubmit}
+          id="add"
+          className="grid gap-4 py-4"
+        >
           <WishlistOwnerField ownList={ownList} onOwnListChange={setOwnList} />
           {!ownList && <WishlistManagersField managers={managers} />}
 
@@ -146,6 +161,7 @@ export const NewWishlist = ({
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

@@ -85,7 +85,9 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
   await expect(page.getByRole("button", { name: /^Verwijder/ })).toHaveCount(0)
 })
 
-test("interests are only saved with Opslaan", async ({ signIn }) => {
+test("interests are only saved with Opslaan, closing asks first", async ({
+  signIn,
+}) => {
   const owner = await createUser()
   const wishlist = await createWishlist(owner)
   await createInterest(wishlist, "lezen")
@@ -99,6 +101,14 @@ test("interests are only saved with Opslaan", async ({ signIn }) => {
   await addInterest(page, "wandelen")
   await expect(block.getByRole("listitem")).toHaveText(["sudoku", "wandelen"])
   await page.keyboard.press("Escape")
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(block.getByRole("listitem")).toHaveText(["sudoku", "wandelen"])
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
   await expect(dialog).toBeHidden()
 
   expect(await interestsOf(wishlist)).toEqual(["lezen", "sudoku"])

@@ -33,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   wishlist: {
@@ -65,6 +66,11 @@ export const EditWishlist = ({
   const [open, setOpen] = useState(false)
   const { id, title, isManager } = wishlist
   const [ownList, setOwnList] = useState(!title)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+    onDiscard: () => setOwnList(!title),
+  })
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -104,7 +110,7 @@ export const EditWishlist = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button
           className={className}
@@ -123,6 +129,7 @@ export const EditWishlist = ({
           <DialogTitle>{t("EditWishlist.title")}</DialogTitle>
         </DialogHeader>
         <form
+          ref={setForm}
           onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
@@ -218,6 +225,7 @@ export const EditWishlist = ({
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }
