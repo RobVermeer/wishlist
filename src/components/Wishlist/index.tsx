@@ -2,7 +2,6 @@ import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
-import { BackLink } from "@/components/BackLink"
 import { YourItemCard } from "@/components/YourItemCard"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { NewItem } from "@/components/NewItem"
@@ -29,13 +28,15 @@ import { groupByCategory } from "@/lib/wishlistCategories/groupByCategory"
 import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
 import { Interests } from "@/components/Interests"
 import { SortMode } from "@/components/SortMode"
+import { ReactNode } from "react"
 
 interface Props {
   id: string
   groupId?: string
+  backLink?: ReactNode
 }
 
-export const Wishlist = async ({ id, groupId }: Props) => {
+export const Wishlist = async ({ id, groupId, backLink }: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
@@ -102,11 +103,9 @@ export const Wishlist = async ({ id, groupId }: Props) => {
 
   return (
     <List>
-      {(group || wishlist.isOwnList) && (
+      {(backLink || wishlist.isOwnList) && (
         <div className="flex items-center justify-between gap-2">
-          {group && (
-            <BackLink href={`/group/${group.id}`} label={group.title} />
-          )}
+          {backLink}
           {wishlist.isOwnList && (
             <EditWishlist
               wishlist={{

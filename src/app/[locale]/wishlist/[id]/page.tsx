@@ -5,6 +5,7 @@ import { Wishlist } from "@/components/Wishlist"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { redirect } from "next/navigation"
+import { BackLink } from "@/components/BackLink"
 
 interface Props {
   params: Promise<{ id: string; locale: string }>
@@ -36,5 +37,9 @@ export default async function WishlistPage({ params }: Props) {
     redirect(`/login?callbackUrl=${encodeURIComponent(`/wishlist/${id}`)}`)
   }
 
-  return <Wishlist id={id} />
+  const t = await getTranslations("BackLink")
+
+  return (
+    <Wishlist id={id} backLink={<BackLink href="/" label={t("overview")} />} />
+  )
 }

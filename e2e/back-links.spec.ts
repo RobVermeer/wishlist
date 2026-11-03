@@ -47,14 +47,34 @@ test("a group page links back to the overview", async ({ signIn }) => {
   await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(0)
 })
 
-test("your own verlanglijstje and profile have no back link", async ({
+test("a verlanglijstje from the overview links back to the overview", async ({
   signIn,
 }) => {
   const user = await createUser()
+  const sanne = await createUser({ firstName: "Sanne" })
   const own = await createWishlist(user)
+  const followed = await createWishlist(sanne, { followers: [user] })
   const page = await signIn(user)
 
-  for (const path of [`/wishlist/${own.id}`, "/profile", "/profile/bought"]) {
+  for (const [wishlist, title] of [
+    [own, "Mijn lijstje"],
+    [followed, "Sanne"],
+  ] as const) {
+    await page.goto("/")
+    await page.getByRole("link", { name: title, exact: true }).click()
+    await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)
+    await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(1)
+
+    await page.getByRole("link", { name: "Terug naar Overzicht" }).click()
+    await expect(page).toHaveURL("/")
+  }
+})
+
+test("the profile has no back link", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  for (const path of ["/profile", "/profile/bought"]) {
     await page.goto(path)
     await expect(page.getByRole("heading").first()).toBeVisible()
     await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(0)

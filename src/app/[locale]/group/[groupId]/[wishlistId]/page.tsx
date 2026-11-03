@@ -4,7 +4,8 @@ import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
 import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
+import { BackLink } from "@/components/BackLink"
 
 interface Props {
   params: Promise<{ wishlistId: string; groupId: string }>
@@ -39,5 +40,17 @@ export default async function GroupWishlistPage({ params }: Props) {
     )
   }
 
-  return <Wishlist id={wishlistId} groupId={groupId} />
+  const group = await getGroupById(groupId)
+
+  if (!group) {
+    notFound()
+  }
+
+  return (
+    <Wishlist
+      id={wishlistId}
+      groupId={groupId}
+      backLink={<BackLink href={`/group/${group.id}`} label={group.title} />}
+    />
+  )
 }
