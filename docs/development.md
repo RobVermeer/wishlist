@@ -55,6 +55,7 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 - Forms live in client components and submit with `onSubmit` and `startTransition`, so input survives a validation error (React resets forms that use `action`).
 - Show errors from server actions as destructive toasts.
 - Removing something asks for confirmation with `RemoveButton`.
+- A dialog that edits something asks before it closes with changes that weren't saved: use `useUnsavedChanges` from `src/components/UnsavedChanges` and give its `onOpenChange` to the dialog, `setForm` to the `ref` of the form and render its `confirmation`.
 
 ## Texts
 
