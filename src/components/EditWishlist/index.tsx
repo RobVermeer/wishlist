@@ -201,11 +201,10 @@ export const EditWishlist = ({
           />
         </form>
         <Interests
-          wishlistId={id}
           title={interests.title}
           interests={interests.items}
           hint={interests.hint}
-          editable
+          form={`change-${id}`}
         />
         <DialogFooter className="gap-2 md:gap-0">
           {!isManager && (

@@ -59,7 +59,9 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
   await addInterest(page, "lezen")
   await expect(block.getByRole("listitem")).toHaveText(["lezen"])
   await expect(page.getByLabel("Nieuwe interesse")).toHaveValue("")
-  await addInterest(page, "  sudoku ")
+  await page.getByLabel("Nieuwe interesse").fill("  sudoku ")
+  await page.getByLabel("Nieuwe interesse").press("Enter")
+  await expect(dialog).toBeVisible()
   await addInterest(page, "wandelen")
 
   await expect(block.getByRole("listitem")).toHaveText([
@@ -67,26 +69,59 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
     "sudoku",
     "wandelen",
   ])
-  expect(await interestsOf(wishlist)).toEqual(["lezen", "sudoku", "wandelen"])
-
   await block.getByRole("button", { name: "Verwijder sudoku" }).click()
-  const confirm = page.getByRole("alertdialog", { name: "Weet je het zeker?" })
-  await expect(confirm).toContainText(
-    "sudoku verdwijnt van dit verlanglijstje."
-  )
-  await confirm.getByRole("button", { name: "Verwijder" }).click()
-
   await expect(block.getByRole("listitem")).toHaveText(["lezen", "wandelen"])
-  expect(await interestsOf(wishlist)).toEqual(["lezen", "wandelen"])
+  expect(await interestsOf(wishlist)).toEqual([])
 
-  await page.keyboard.press("Escape")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
   await expect(dialog).toBeHidden()
+  expect(await interestsOf(wishlist)).toEqual(["lezen", "wandelen"])
   await expect(interests(page, "Waar ik blij van word")).toHaveText([
     "lezen",
     "wandelen",
   ])
   await expect(page.getByLabel("Nieuwe interesse")).toHaveCount(0)
   await expect(page.getByRole("button", { name: /^Verwijder/ })).toHaveCount(0)
+})
+
+test("interests are only saved with Opslaan", async ({ signIn }) => {
+  const owner = await createUser()
+  const wishlist = await createWishlist(owner)
+  await createInterest(wishlist, "lezen")
+  await createInterest(wishlist, "sudoku")
+  const page = await signIn(owner)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  let dialog = await editWishlist(page)
+  let block = dialog.getByRole("region", { name: "Waar ik blij van word" })
+  await block.getByRole("button", { name: "Verwijder lezen" }).click()
+  await addInterest(page, "wandelen")
+  await expect(block.getByRole("listitem")).toHaveText(["sudoku", "wandelen"])
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+
+  expect(await interestsOf(wishlist)).toEqual(["lezen", "sudoku"])
+  await expect(interests(page, "Waar ik blij van word")).toHaveText([
+    "lezen",
+    "sudoku",
+  ])
+
+  dialog = await editWishlist(page)
+  block = dialog.getByRole("region", { name: "Waar ik blij van word" })
+  await expect(block.getByRole("listitem")).toHaveText(["lezen", "sudoku"])
+  await block.getByRole("button", { name: "Verwijder lezen" }).click()
+  await addInterest(page, "wandelen")
+  await addInterest(page, "koken")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  expect(await interestsOf(wishlist)).toEqual(["sudoku", "wandelen", "koken"])
+  await expect(interests(page, "Waar ik blij van word")).toHaveText([
+    "sudoku",
+    "wandelen",
+    "koken",
+  ])
 })
 
 test("a wishlist with only interests doesn't ask for wishes", async ({
@@ -143,30 +178,43 @@ test("interest validation errors are shown", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await editWishlist(page)
-
-  await addInterest(page, "a")
-  await expect(toasts(page)).toContainText(
-    "Een interesse moet minimaal uit 2 tekens bestaan"
-  )
-  await expect(page.getByLabel("Nieuwe interesse")).toHaveValue("a")
-
-  await addInterest(page, "a".repeat(31))
-  await expect(toasts(page)).toContainText(
-    "Een interesse mag maximaal uit 30 tekens bestaan"
-  )
+  const dialog = await editWishlist(page)
+  const block = dialog.getByRole("region", { name: "Waar ik blij van word" })
 
   await addInterest(page, "lezen")
   await expect(toasts(page)).toContainText("lezen staat er al op")
+  await expect(block.getByRole("listitem")).toHaveText(["Lezen"])
+  await expect(page.getByLabel("Nieuwe interesse")).toHaveValue("lezen")
+
+  await addInterest(page, "a")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(toasts(page)).toContainText(
+    "Een interesse moet minimaal uit 2 tekens bestaan"
+  )
+  await expect(dialog).toBeVisible()
+  await block.getByRole("button", { name: "Verwijder a" }).click()
+
+  await addInterest(page, "a".repeat(31))
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(toasts(page)).toContainText(
+    "Een interesse mag maximaal uit 30 tekens bestaan"
+  )
+  expect(await interestsOf(wishlist)).toEqual(["Lezen"])
+  await block
+    .getByRole("button", { name: `Verwijder ${"a".repeat(31)}` })
+    .click()
 
   for (let index = 2; index <= 20; index++) {
-    await createInterest(wishlist, `Interesse ${index}`)
+    await addInterest(page, `Interesse ${index}`)
   }
   await addInterest(page, "Sudoku")
   await expect(toasts(page)).toContainText(
     "Je kunt maximaal 20 interesses toevoegen"
   )
+  await expect(block.getByRole("listitem")).toHaveCount(20)
 
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(dialog).toBeHidden()
   expect(await interestsOf(wishlist)).toHaveLength(20)
   expect(await interestsOf(wishlist)).not.toContain("Sudoku")
 })
@@ -195,14 +243,11 @@ test("managers can add and remove interests", async ({ signIn }) => {
   )
   await addInterest(page, "tekenen")
   await expect(block.getByRole("listitem")).toHaveText(["dino's", "tekenen"])
-
   await block.getByRole("button", { name: "Verwijder dino's" }).click()
-  await page
-    .getByRole("alertdialog", { name: "Weet je het zeker?" })
-    .getByRole("button", { name: "Verwijder" })
-    .click()
-
   await expect(block.getByRole("listitem")).toHaveText(["tekenen"])
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
   expect(await interestsOf(wishlist)).toEqual(["tekenen"])
 })
 

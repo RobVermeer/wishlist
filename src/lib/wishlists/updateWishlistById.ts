@@ -5,7 +5,7 @@ import { wishlistProperties } from "./publicProperties"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/nextAuth"
 import { revalidatePath } from "next/cache"
-import { wishlistSchema } from "@/lib/schema"
+import { maxInterests, wishlistSchema } from "@/lib/schema"
 import * as z from "zod"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
@@ -37,6 +37,7 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       select: {
         userId: true,
         managers: { select: { id: true } },
+        interests: { select: { id: true, title: true } },
         groups: {
           select: { id: true },
           where: {
@@ -55,13 +56,31 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       theme: formData.get("theme")?.toString() || undefined,
       groups: formData.getAll("groups").map(group => group.toString()),
       managers: formData.getAll("managers").map(manager => manager.toString()),
+      interests: formData
+        .getAll("interests")
+        .map(interest => interest.toString()),
     })
+    const interests = data.interests ?? []
     const isOwner = wishlist.userId === userId
     const currentManagerIds = wishlist.managers.map(({ id }) => id)
     const managerIds = data.name ? (data.managers ?? []) : []
 
     if (!isOwner && !data.name) {
       throw new Error(t("noAccess"))
+    }
+
+    const duplicate = interests.find((title, index) =>
+      interests
+        .slice(0, index)
+        .some(other => other.toLowerCase() === title.toLowerCase())
+    )
+
+    if (duplicate) {
+      throw new Error(t("interest.duplicate", { title: duplicate }))
+    }
+
+    if (interests.length > maxInterests) {
+      throw new Error(t("interest.tooMany", { max: maxInterests }))
     }
 
     await assertGroupsOfUser(userId, data.groups, t("group.notFound"))
@@ -91,6 +110,29 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
           }),
         },
         select: wishlistProperties,
+      })
+
+      // Interests that stay keep their place, new ones go at the end.
+      await tx.wishlistInterest.deleteMany({
+        where: {
+          wishlistId: id,
+          id: {
+            in: wishlist.interests
+              .filter(({ title }) => !interests.includes(title))
+              .map(({ id }) => id),
+          },
+        },
+      })
+      const added = interests.filter(
+        title => !wishlist.interests.some(interest => interest.title === title)
+      )
+      const now = Date.now()
+      await tx.wishlistInterest.createMany({
+        data: added.map((title, index) => ({
+          title,
+          wishlistId: id,
+          createdAt: new Date(now + index),
+        })),
       })
 
       if (!data.name) {

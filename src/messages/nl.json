@@ -205,8 +205,7 @@
     "label": "Nieuwe interesse",
     "placeholder": "Zoals koken of jazz.",
     "add": "Voeg toe",
-    "removeLabel": "Verwijder {title}",
-    "remove": "{title} verdwijnt van dit verlanglijstje."
+    "removeLabel": "Verwijder {title}"
   },
   "Profile": {
     "title": "Profiel",
@@ -394,7 +393,6 @@
       "failed": "Je bericht kon niet worden verstuurd. Probeer het later nog eens."
     },
     "interest": {
-      "notFound": "Interesse niet gevonden",
       "duplicate": "{title} staat er al op",
       "tooMany": "Je kunt maximaal {max} interesses toevoegen"
     }

@@ -200,7 +200,6 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
 
       {wishlist.interests.length > 0 && (
         <Interests
-          wishlistId={wishlist.id}
           title={interestsTitle}
           interests={wishlist.interests}
           note={interestsNote()}
