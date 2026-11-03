@@ -231,6 +231,119 @@ test("removing the last wish of a category removes the category", async ({
   expect(await categoriesOf(wishlist.id)).toEqual([])
 })
 
+test("rename a category", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Muts", category: clothes })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Kleding" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig categorie" })
+  await expect(dialog.getByLabel("Naam van de categorie")).toHaveValue(
+    "Kleding"
+  )
+  await dialog.getByLabel("Naam van de categorie").fill("Winterkleding")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(categoryToggle(page, "Winterkleding")).toHaveText(
+    /Winterkleding\s*2/
+  )
+  await expect(categoryToggle(page, "Kleding")).toHaveCount(0)
+  expect(await categoriesOf(wishlist.id)).toMatchObject([
+    { id: clothes.id, title: "Winterkleding" },
+  ])
+})
+
+test("a category can't get the name of another one", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  const winter = await createCategory(wishlist, "Winter", 1)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Muts", category: winter })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Kleding" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig categorie" })
+  await dialog.getByLabel("Naam van de categorie").fill("winter")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Er is al een categorie die zo heet")
+  await expect(dialog.getByLabel("Naam van de categorie")).toHaveValue("winter")
+
+  await dialog.getByLabel("Naam van de categorie").fill("")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(dialog).toBeVisible()
+
+  await dialog.getByLabel("Naam van de categorie").fill("K".repeat(41))
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(toasts(page)).toContainText(
+    "Categorie mag maximaal uit 40 tekens bestaan"
+  )
+
+  expect((await categoriesOf(wishlist.id)).map(({ title }) => title)).toEqual([
+    "Kleding",
+    "Winter",
+  ])
+})
+
+test("removing a category keeps its wishes", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  const books = await createCategory(wishlist, "Boeken", 1)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Fiets" })
+  await createItem(wishlist, { title: "Muts", category: clothes })
+  await createItem(wishlist, { title: "Roman", category: books })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Kleding" }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig categorie" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  const confirm = page.getByRole("alertdialog")
+  await expect(confirm).toContainText(
+    "De categorie verdwijnt. De wensen erin blijven op je verlanglijstje staan, zonder categorie."
+  )
+  await confirm.getByRole("button", { name: "Verwijder" }).click()
+
+  await expect(categoryToggle(page, "Kleding")).toHaveCount(0)
+  await expect(categoryToggle(page, "Boeken")).toBeVisible()
+  expect(await itemOrder(page, ["Trui", "Fiets", "Muts", "Boeken"])).toEqual([
+    "Fiets",
+    "Trui",
+    "Muts",
+    "Boeken",
+  ])
+  await expect(page.getByText("Trui")).toBeVisible()
+  await expect(page.getByText("Muts")).toBeVisible()
+
+  expect((await categoriesOf(wishlist.id)).map(({ title }) => title)).toEqual([
+    "Boeken",
+  ])
+  const items = await prisma.wishlistItem.findMany({
+    where: { wishlistId: wishlist.id, title: { in: ["Trui", "Muts"] } },
+  })
+  expect(items).toHaveLength(2)
+  expect(items.map(({ categoryId, removed }) => [categoryId, removed])).toEqual(
+    [
+      [null, false],
+      [null, false],
+    ]
+  )
+})
+
 test("category names can be at most 40 characters", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)
@@ -424,6 +537,9 @@ test("group members see categories but cannot reorder them", async ({
   await openCategory(page, "Kleding")
   await expect(
     page.getByRole("button", { name: /Verplaats categorie/ })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: /Wijzig categorie/ })
   ).toHaveCount(0)
   await expect(
     page.getByRole("button", { name: "Volgorde aanpassen" })

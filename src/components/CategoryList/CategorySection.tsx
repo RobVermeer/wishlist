@@ -21,6 +21,7 @@ interface Props {
   category: Category
   openCategories: string
   handle?: ReactNode
+  actions?: ReactNode
   ref?: Ref<HTMLDivElement>
   style?: CSSProperties
 }
@@ -29,6 +30,7 @@ export const CategorySection = ({
   category,
   openCategories,
   handle,
+  actions,
   ref,
   style,
 }: Props) => {
@@ -58,6 +60,7 @@ export const CategorySection = ({
             {category.count}
           </span>
         </CollapsibleTrigger>
+        {actions}
       </div>
 
       <CollapsibleContent className="grid gap-2">
