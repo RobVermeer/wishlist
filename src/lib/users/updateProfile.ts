@@ -11,6 +11,7 @@ import { getSession } from "@/lib/getSession"
 import { Jimp } from "jimp"
 import { userSchema } from "@/lib/schema"
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 
 const maxMegapixels = 25
 const pngSignature = Buffer.from([
@@ -115,7 +116,7 @@ export async function updateProfile(data: FormData) {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

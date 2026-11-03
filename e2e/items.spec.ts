@@ -240,7 +240,7 @@ test("a wrong extra link shows an error", async ({ signIn }) => {
   await linkField(dialog, 2).fill("geen-url")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
-  await expect(toasts(page)).toContainText("Vul een geldige URL in")
+  await expect(toasts(page)).toContainText("Vul een geldig linkje in.")
   await expect(linkField(dialog, 1)).toHaveValue("https://example.com/xbox")
   await expect(linkField(dialog, 2)).toHaveValue("geen-url")
   expect(
@@ -389,7 +389,7 @@ test("wish validation errors are shown", async ({ signIn }) => {
   await linkField(dialog, 1).fill("geen-url")
   await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
 
-  await expect(toasts(page)).toContainText("Vul een geldige URL in")
+  await expect(toasts(page)).toContainText("Vul een geldig linkje in.")
   await expect(dialog.getByLabel("Wens", { exact: true })).toHaveValue("Xbox")
   await expect(linkField(dialog, 1)).toHaveValue("geen-url")
   await expect(dialog).toBeVisible()

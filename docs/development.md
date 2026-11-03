@@ -44,7 +44,7 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 - Mutations are server actions in their own `"use server"` file. Each one:
   1. gets the session with `getSession` from `src/lib/getSession.ts` and throws `Errors.notLoggedIn` without one,
   2. checks the user may touch the record (owner, manager, group member or admin) in the same query that loads it,
-  3. validates input with a zod schema,
+  3. validates input with a zod schema from `src/lib/schema.ts`, whose errors are keys in `Validation` in `nl.json` that `translateIssues` translates,
   4. calls `revalidatePath("/")` after writing,
   5. returns `{ type: "success" }` or `{ type: "error", errors }`.
 - Wishlists are visible to their owner, to members of a group they are in and to followers. A wishlist for someone else can have managers who may change it like its owner, except for removing it and choosing who manages it. Use `visibleToUser`, `sharedWithUser` and `managedByUser` from `src/lib/wishlists/visibility.ts` instead of writing those conditions again.

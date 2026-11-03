@@ -75,7 +75,7 @@ test("group title must be at least 2 characters", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Maak aan" }).click()
 
   await expect(toasts(page)).toContainText(
-    "Groep titel moet minimaal uit 2 tekens bestaan"
+    "De naam van de groep moet minimaal uit 2 tekens bestaan."
   )
   await expect(dialog).toBeVisible()
   await expect(dialog.getByLabel("Naam van de groep")).toHaveValue("A")

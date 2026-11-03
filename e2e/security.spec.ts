@@ -189,7 +189,7 @@ test("wish links must be http or https", async ({ signIn }) => {
   ]) {
     await dialog.getByLabel("Linkje").fill(url)
     await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
-    await expect(toasts(page)).toContainText("Vul een geldige URL in")
+    await expect(toasts(page)).toContainText("Vul een geldig linkje in.")
   }
 
   expect(

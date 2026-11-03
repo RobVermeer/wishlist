@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server"
 import { adminSchema } from "@/lib/schema"
 import { isSuperAdmin } from "./isSuperAdmin"
 import * as z from "zod"
+import { translateIssues } from "@/lib/translateIssues"
 
 export const updateAdminById = async (id: string, isAdmin: boolean) => {
   try {
@@ -47,7 +48,7 @@ export const updateAdminById = async (id: string, isAdmin: boolean) => {
     if (error instanceof z.ZodError) {
       return {
         type: "error" as const,
-        errors: error.issues.map(issue => issue.message),
+        errors: translateIssues(error, await getTranslations("Validation")),
       }
     }
 

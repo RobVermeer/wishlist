@@ -390,6 +390,60 @@
       "tooMany": "Je kunt maximaal {max} interesses toevoegen."
     }
   },
+  "Validation": {
+    "invalid": "Er klopt iets niet aan wat je hebt ingevuld.",
+    "group": {
+      "titleTooShort": "De naam van de groep moet minimaal uit {min} tekens bestaan.",
+      "titleTooLong": "De naam van de groep mag maximaal uit {max} tekens bestaan.",
+      "theme": "Kies een thema uit de lijst."
+    },
+    "user": {
+      "firstNameRequired": "Vul je voornaam in.",
+      "firstNameTooLong": "Je voornaam mag maximaal uit {max} tekens bestaan."
+    },
+    "admin": {
+      "isAdmin": "Kies of iemand admin is."
+    },
+    "interest": {
+      "tooShort": "Een interesse moet minimaal uit {min} tekens bestaan.",
+      "tooLong": "Een interesse mag maximaal uit {max} tekens bestaan."
+    },
+    "wishlist": {
+      "nameTooShort": "De naam van wie het verlanglijstje is moet minimaal uit {min} tekens bestaan.",
+      "nameTooLong": "De naam van wie het verlanglijstje is mag maximaal uit {max} tekens bestaan."
+    },
+    "item": {
+      "titleTooShort": "Je wens moet minimaal uit {min} tekens bestaan.",
+      "titleTooLong": "Je wens mag maximaal uit {max} tekens bestaan.",
+      "link": "Vul een geldig linkje in.",
+      "tooManyLinks": "Een wens kan maximaal {max} linkjes hebben."
+    },
+    "category": {
+      "required": "Vul een naam voor de categorie in.",
+      "tooLong": "De naam van de categorie mag maximaal uit {max} tekens bestaan."
+    },
+    "contact": {
+      "topic": "Kies waar je bericht over gaat.",
+      "messageTooLong": "Je bericht mag maximaal uit {max} tekens bestaan.",
+      "messageRequired": {
+        "bug": "Schrijf wat er misgaat.",
+        "question": "Schrijf wat je ons wilt vragen.",
+        "report": "Schrijf wat je hebt gezien.",
+        "other": "Schrijf je bericht."
+      }
+    },
+    "draw": {
+      "nameRequired": "Vul een naam in voor iedereen die je toevoegt.",
+      "nameTooLong": "Een naam mag maximaal uit {max} tekens bestaan.",
+      "email": "Vul een geldig e-mailadres in.",
+      "budget": "Vul het budget in hele euro's in.",
+      "budgetTooLow": "Het budget moet minimaal {min, number} euro zijn.",
+      "budgetTooHigh": "Het budget mag maximaal {max, number} euro zijn.",
+      "dateRequired": "Kies de datum van het feest.",
+      "date": "Kies een geldige datum.",
+      "datePast": "Kies een datum vanaf vandaag."
+    }
+  },
   "EmailDraw": {
     "subject": "{name}, je hebt een lootje getrokken voor {group}",
     "preview": "Je hebt een lootje getrokken!",
