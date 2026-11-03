@@ -1521,6 +1521,27 @@ for (const target of ["removed", "own"] as const) {
   })
 }
 
+test("you can only change your own first name", async ({ signIn }) => {
+  const user = await createUser({ firstName: null })
+  const other = await createUser({ firstName: null })
+  const page = await signIn(user)
+
+  await forgeActions(page, "/", user.id, other.id)
+  await page.goto("/")
+  const dialog = page.getByRole("dialog", { name: "Vul je naam in" })
+  await dialog.getByLabel("Voornaam").fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Je hebt niet de juiste rechten om dit te doen"
+  )
+  for (const { id } of [user, other]) {
+    expect(
+      (await prisma.user.findUniqueOrThrow({ where: { id } })).firstName
+    ).toBeNull()
+  }
+})
+
 test("more wishes can only be asked of someone who shares a list with you", async ({
   signIn,
 }) => {
