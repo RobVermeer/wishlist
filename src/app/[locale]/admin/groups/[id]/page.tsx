@@ -1,7 +1,6 @@
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
 import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
-import { SendEmails } from "./components/SendEmails"
 import { notFound, redirect } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { getSession } from "@/lib/getSession"
@@ -11,7 +10,7 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
-export default async function AdminGroupsDrawPage({ params }: Props) {
+export default async function AdminGroupPage({ params }: Props) {
   const { id } = await params
   const session = await getSession()
 
@@ -29,9 +28,6 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
       <ListTitle>{group.title}</ListTitle>
       <p>{t("group.restoreText")}</p>
       <UnDeleteGroup id={group.id} />
-
-      <p>{t("group.drawText")}</p>
-      <SendEmails group={group} />
     </List>
   )
 }

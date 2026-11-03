@@ -1,62 +1,10 @@
 import "server-only"
 
 import { getTranslations } from "next-intl/server"
-import {
-  ContactEmail,
-  DrawLotsEmail,
-  DrawUserEmail,
-  RemindUserEmail,
-} from "./templates"
+import { ContactEmail, DrawLotsEmail, RemindUserEmail } from "./templates"
 import type { contactTopics } from "@/lib/schema"
 import { resend } from "@/lib/resend"
 import { getFirstName } from "@/lib/users/getFirstName"
-
-interface SendGroupDraw {
-  person1: {
-    firstName: string | null
-    name: string | null
-    email: string | null
-  }
-  person2: {
-    firstName: string | null
-    name: string | null
-    email: string | null
-  }
-  groupId: string
-  groupName: string
-}
-
-export const sendGroupDraw = async ({
-  person1,
-  person2,
-  groupId,
-  groupName,
-}: SendGroupDraw) => {
-  try {
-    const userName = (person1.firstName ?? person1.name)!
-    const forName = (person2.firstName ?? person2.name)!
-    const t = await getTranslations("EmailDraw")
-
-    const { error } = await resend.emails.send({
-      from: "Niet Weer Sokken <no-reply@nietweersokken.nl>",
-      to: [person1.email!],
-      subject: t("subject", {
-        name: userName,
-        group: groupName,
-      }),
-      react: await DrawUserEmail({
-        userName,
-        forName,
-        groupId,
-        groupName,
-      }),
-    })
-
-    if (error) throw error
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 interface SendReminder {
   toUser: {
