@@ -74,7 +74,8 @@ export const UserInfoDialog = ({ session }: Props) => {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-[425px]">
+      {/* The first name is required, so there's no way to close it. */}
+      <DialogContent className="sm:max-w-[425px]" showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>{t("UserInfo.title")}</DialogTitle>
           <DialogDescription>{t("UserInfo.text")}</DialogDescription>
