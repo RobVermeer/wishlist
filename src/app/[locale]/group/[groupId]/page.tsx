@@ -264,7 +264,8 @@ export default async function GroupPage({ params }: Props) {
       )}
 
       {showOnlyWishlist ? (
-        <Wishlist id={onlyWishlist.id} as="h2" />
+        // Adding your own verlanglijstje is the next step here.
+        <Wishlist id={onlyWishlist.id} as="h2" quietRemind />
       ) : (
         group.wishlist.map(wishlist => (
           <WishlistCard key={wishlist.id} wishlist={wishlist} group={group} />

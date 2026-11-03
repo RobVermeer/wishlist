@@ -7,11 +7,27 @@ import { useToast } from "@/components/ui/use-toast"
 import { FormEvent, useTransition } from "react"
 import { useTranslations } from "next-intl"
 
-const FormButton = ({ pending }: { pending: boolean }) => {
+interface Props {
+  wishlistId: string
+  variant?: "default" | "outline"
+}
+
+const FormButton = ({
+  pending,
+  variant,
+}: {
+  pending: boolean
+  variant: Props["variant"]
+}) => {
   const t = useTranslations()
 
   return (
-    <Button className="w-full" type="submit" disabled={pending}>
+    <Button
+      className="w-full"
+      variant={variant}
+      type="submit"
+      disabled={pending}
+    >
       {pending ? (
         <LoaderCircle className="animate-spin mr-2" size="16" />
       ) : (
@@ -22,11 +38,7 @@ const FormButton = ({ pending }: { pending: boolean }) => {
   )
 }
 
-interface Props {
-  wishlistId: string
-}
-
-export const RemindButton = ({ wishlistId }: Props) => {
+export const RemindButton = ({ wishlistId, variant }: Props) => {
   const { toast } = useToast()
   const t = useTranslations()
   const [pending, startTransition] = useTransition()
@@ -54,7 +66,7 @@ export const RemindButton = ({ wishlistId }: Props) => {
 
   return (
     <form onSubmit={onSubmit}>
-      <FormButton pending={pending} />
+      <FormButton pending={pending} variant={variant} />
     </form>
   )
 }

@@ -36,9 +36,18 @@ interface Props {
   backLink?: ReactNode
   // h2 when the verlanglijstje is shown on the page of its group.
   as?: "h1" | "h2"
+  // Set when the page has its own next step, so asking for more wishes
+  // doesn't become a second red button.
+  quietRemind?: boolean
 }
 
-export const Wishlist = async ({ id, groupId, backLink, as }: Props) => {
+export const Wishlist = async ({
+  id,
+  groupId,
+  backLink,
+  as,
+  quietRemind = false,
+}: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
@@ -270,7 +279,12 @@ export const Wishlist = async ({ id, groupId, backLink, as }: Props) => {
 
       {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
 
-      {showRemind && <RemindButton wishlistId={wishlist.id} />}
+      {showRemind && (
+        <RemindButton
+          wishlistId={wishlist.id}
+          variant={quietRemind ? "outline" : "default"}
+        />
+      )}
 
       {wishlist.isFollowing && <UnfollowWishlist wishlistId={wishlist.id} />}
     </List>
