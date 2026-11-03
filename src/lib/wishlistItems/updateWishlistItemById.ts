@@ -33,7 +33,7 @@ export const updateWishlistItemById = async (
     const wishlistItem = await prisma.wishlistItem.findUnique({
       where: {
         id,
-        wishlist: managedByUser(userId),
+        wishlist: { removed: false, ...managedByUser(userId) },
         removed: false,
       },
     })
