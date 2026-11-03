@@ -30,7 +30,7 @@ export async function Landing({ callbackUrl }: Props) {
 
       <section className="grid gap-4 rounded-lg bg-secondary p-6 text-center">
         <h2 className="text-2xl text-primary">{t("cta.title")}</h2>
-        <Button asChild>
+        <Button variant="outline" asChild>
           <a href="#inloggen">
             <Gift size="18" className="mr-2" /> {t("cta.button")}
           </a>

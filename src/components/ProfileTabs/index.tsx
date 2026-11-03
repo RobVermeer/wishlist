@@ -1,10 +1,9 @@
 "use client"
 
 import { useSelectedLayoutSegment } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { BookUser, User } from "lucide-react"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { TabLink } from "@/components/TabLink"
 import { useTranslations } from "next-intl"
 
 export const ProfileTabs = () => {
@@ -14,25 +13,17 @@ export const ProfileTabs = () => {
   return (
     <ScrollArea className="whitespace-nowrap pb-3 -mb-3">
       <div className="flex gap-2">
-        <Button
+        <TabLink className="shrink-0" href="/profile" active={segment === null}>
+          <User size="16" className="mr-2" /> {t("ProfileTabs.me")}
+        </TabLink>
+        <TabLink
           className="shrink-0"
-          variant={segment === null ? "default" : "outline"}
-          asChild
+          href="/profile/bought"
+          active={segment === "bought"}
         >
-          <Link href="/profile">
-            <User size="16" className="mr-2" /> {t("ProfileTabs.me")}
-          </Link>
-        </Button>
-        <Button
-          className="shrink-0"
-          variant={segment === "bought" ? "default" : "outline"}
-          asChild
-        >
-          <Link href="/profile/bought">
-            <BookUser size="16" className="mr-2" />
-            {t("ProfileTabs.boughtPresents")}
-          </Link>
-        </Button>
+          <BookUser size="16" className="mr-2" />
+          {t("ProfileTabs.boughtPresents")}
+        </TabLink>
       </div>
       <ScrollBar orientation="horizontal" />
     </ScrollArea>
