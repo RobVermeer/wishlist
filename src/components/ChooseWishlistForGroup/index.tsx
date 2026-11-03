@@ -30,6 +30,7 @@ export const ChooseWishlistForGroup = ({
   trigger,
 }: Props) => {
   const t = useTranslations("Group.chooseWishlist")
+  const tGroup = useTranslations("Group")
   const formId = `choose-${group.id}`
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
@@ -51,7 +52,7 @@ export const ChooseWishlistForGroup = ({
       }
 
       setOpen(false)
-      toast({ title: t("toast") })
+      toast({ title: tGroup("wishlistAdded") })
     })
   }
 

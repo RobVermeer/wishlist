@@ -48,6 +48,7 @@ export const AddWishlistToGroup = ({
   variant,
 }: Props) => {
   const t = useTranslations("Group.addWishlist")
+  const tGroup = useTranslations("Group")
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [newOpen, setNewOpen] = useState(false)
@@ -88,7 +89,7 @@ export const AddWishlistToGroup = ({
       }
 
       setOpen(false)
-      toast({ title: t("toast") })
+      toast({ title: tGroup("wishlistAdded") })
     })
   }
 

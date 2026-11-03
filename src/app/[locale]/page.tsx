@@ -79,13 +79,15 @@ export default async function Home() {
   const followedWishlists = await getFollowedWishlistsForUser()
   const lots = await getLotsForUser()
   const t = await getTranslations("Home")
+  const tGroup = await getTranslations("Group")
+  const tCommon = await getTranslations("Common")
   const format = await getFormatter()
 
   const ownListGroups = (wishlist: (typeof wishlists)[number]) =>
     wishlist.groups.length > 0
-      ? t("wishlists.groups", {
+      ? tCommon("inGroup", {
           count: wishlist.groups.length,
-          names: format.list(wishlist.groups.map(({ title }) => title)),
+          groups: format.list(wishlist.groups.map(({ title }) => title)),
         })
       : null
 
@@ -219,7 +221,7 @@ export default async function Home() {
                 {group.title}
               </span>
               <span className="relative text-xs text-white/80">
-                {t("following.members", { count: group._count.members })}
+                {tGroup("members", { count: group._count.members })}
               </span>
             </Link>
           ))}

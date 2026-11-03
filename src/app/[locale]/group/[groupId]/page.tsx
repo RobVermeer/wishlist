@@ -301,7 +301,7 @@ export default async function GroupPage({ params }: Props) {
           ...option,
           replaces:
             ownInGroup.length === 1
-              ? t("addWishlist.replaces")
+              ? tCommon("wishlist.groups.replaces")
               : ownInGroup.length > 1
                 ? t("addWishlist.replacesMany")
                 : undefined,

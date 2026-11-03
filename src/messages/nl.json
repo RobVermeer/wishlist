@@ -12,14 +12,12 @@
       "empty": {
         "title": "Je zit nog niet in een groep",
         "text": "Maak een groep voor je familie of vrienden, of open de uitnodiging die je hebt gekregen."
-      },
-      "members": "{count, plural, one {# lid} other {# leden}}"
+      }
     },
     "wishlists": {
       "title": "Je verlanglijstjes",
       "new": "Nieuw verlanglijstje",
       "newShort": "Nieuw",
-      "groups": "{count, plural, one {In groep {names}} other {In groepen {names}}}",
       "empty": {
         "title": "Je hebt nog geen verlanglijstje",
         "text": "Maak je eerste verlanglijstje en zet er je wensen op."
@@ -143,7 +141,6 @@
       "title": "Kies je verlanglijstje",
       "text": "De anderen in {group} zien alleen het verlanglijstje dat je kiest.",
       "submit": "Kies dit verlanglijstje",
-      "toast": "Dit verlanglijstje staat nu in de groep 🎉",
       "details": "{wishes, plural, =0 {Nog geen wensen} one {# wens} other {# wensen}} · {groups, plural, =0 {nog in geen groep} one {in groep {names}} other {in groepen {names}}}"
     },
     "addWishlist": {
@@ -156,12 +153,11 @@
       },
       "own": "Van jou",
       "forSomeoneElse": "Voor iemand anders",
-      "replaces": "Vervangt je andere verlanglijstje in deze groep",
       "replacesMany": "Vervangt je andere verlanglijstjes in deze groep",
       "new": "Nieuw verlanglijstje",
-      "submit": "Voeg toe",
-      "toast": "Het verlanglijstje staat nu in de groep 🎉"
+      "submit": "Voeg toe"
     },
+    "wishlistAdded": "Het verlanglijstje staat nu in de groep.",
     "newWishlist": "Nieuw verlanglijstje",
     "members": "{count, plural, one {# lid} other {# leden}}"
   },
@@ -351,12 +347,7 @@
   },
   "UserInfo": {
     "title": "Vul je naam in",
-    "text": "Vul je voornaam in, dan weten anderen van wie het verlanglijstje is.",
-    "form": {
-      "firstName": "Voornaam",
-      "save": "Opslaan"
-    },
-    "toast": "Je gegevens zijn opgeslagen."
+    "text": "Vul je voornaam in, dan weten anderen van wie het verlanglijstje is."
   },
   "Errors": {
     "notLoggedIn": "Je bent niet ingelogd.",
