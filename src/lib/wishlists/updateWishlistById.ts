@@ -37,7 +37,6 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
       select: {
         userId: true,
         managers: { select: { id: true } },
-        interests: { select: { id: true, title: true } },
         groups: {
           select: { id: true },
           where: {
@@ -112,19 +111,24 @@ export const updateWishlistById = async (id: string, formData: FormData) => {
         select: wishlistProperties,
       })
 
-      // Interests that stay keep their place, new ones go at the end.
+      // Interests that stay keep their place, new ones go at the end. They're
+      // read in the transaction, so saving twice at once adds them once.
+      const current = await tx.wishlistInterest.findMany({
+        where: { wishlistId: id },
+        select: { id: true, title: true },
+      })
       await tx.wishlistInterest.deleteMany({
         where: {
           wishlistId: id,
           id: {
-            in: wishlist.interests
+            in: current
               .filter(({ title }) => !interests.includes(title))
               .map(({ id }) => id),
           },
         },
       })
       const added = interests.filter(
-        title => !wishlist.interests.some(interest => interest.title === title)
+        title => !current.some(interest => interest.title === title)
       )
       const now = Date.now()
       await tx.wishlistInterest.createMany({
