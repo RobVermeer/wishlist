@@ -4,7 +4,8 @@ import { getTranslations } from "next-intl/server"
 import { FollowWishlist } from "@/components/FollowWishlist"
 import { Interests } from "@/components/Interests"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
+import { BackLink } from "@/components/BackLink"
+import { PageTitle } from "@/components/PageTitle"
 import { Button } from "@/components/ui/button"
 import type { getWishlistByShareToken } from "@/lib/wishlists/getWishlistByShareToken"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
@@ -22,15 +23,19 @@ export const SharedWishlist = async ({
 }: Props) => {
   const t = await getTranslations("SharedWishlist")
   const tInterests = await getTranslations("Interests")
+  const tBackLink = await getTranslations("BackLink")
   const name = getWishlistName(wishlist)
   const action = loggedIn ? "follow" : "loggedOut"
 
   return (
     <List>
-      <div className="text-center">
-        <ListTitle as="h1">{name}</ListTitle>
-        <p>{t("intro", { name })}</p>
-      </div>
+      <BackLink
+        href="/"
+        label={loggedIn ? tBackLink("overview") : tBackLink("home")}
+      />
+      <PageTitle title={name}>
+        <p className="text-sm text-muted-foreground">{t("intro", { name })}</p>
+      </PageTitle>
 
       {loggedIn && wishlist.interests.length > 0 && (
         <Interests

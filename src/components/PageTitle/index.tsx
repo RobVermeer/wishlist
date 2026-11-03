@@ -10,7 +10,8 @@ interface Props {
   children?: ReactNode
 }
 
-// The title at the top of a verlanglijstje, with the lines below it as children.
+// The title at the top of a verlanglijstje or a shared link, with the lines
+// below it as children.
 export const PageTitle = ({
   title,
   avatar,

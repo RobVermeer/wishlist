@@ -80,3 +80,40 @@ test("the profile has no back link", async ({ signIn }) => {
     await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(0)
   }
 })
+
+test("a shared link links back to the overview", async ({ signIn }) => {
+  const sanne = await createUser({ firstName: "Sanne" })
+  const wishlist = await createWishlist(sanne, {
+    shareToken: `back-${sanne.id}`,
+  })
+  const page = await signIn(await createUser())
+
+  await page.goto(`/lijstje/${wishlist.shareToken}`)
+  await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(1)
+
+  await page.getByRole("link", { name: "Terug naar Overzicht" }).click()
+  await expect(page).toHaveURL("/")
+})
+
+test("invitations link back to the home page before logging in", async ({
+  page,
+}) => {
+  const sanne = await createUser({ firstName: "Sanne" })
+  const group = await createGroup(sanne, { title: "Familie" })
+  const wishlist = await createWishlist(sanne, {
+    shareToken: `back-${sanne.id}`,
+  })
+
+  for (const path of [
+    `/group/${group.id}`,
+    `/lijstje/${wishlist.shareToken}`,
+  ]) {
+    await page.goto(path)
+    await expect(page.getByRole("link", { name: /^Terug naar/ })).toHaveCount(1)
+
+    await page
+      .getByRole("link", { name: "Terug naar Niet Weer Sokken" })
+      .click()
+    await expect(page).toHaveURL("/")
+  }
+})
