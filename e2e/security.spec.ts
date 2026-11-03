@@ -736,6 +736,71 @@ test("managers can't buy wishes of a wishlist they manage", async ({
   ).toBeNull()
 })
 
+test("you can't undo a wish someone else bought", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const buyer = await createUser()
+  const group = await createGroup(owner, { members: [member, buyer] })
+  const wishlist = await createWishlist(owner, { groups: [group] })
+  const ownBuy = await createItem(wishlist, { title: "Boek", boughtBy: member })
+  const othersBuy = await createItem(wishlist, {
+    title: "Fiets",
+    boughtBy: buyer,
+  })
+  const page = await signIn(member)
+
+  await forgeActions(
+    page,
+    `/group/${group.id}/${wishlist.id}`,
+    ownBuy.id,
+    othersBuy.id
+  )
+  await page.goto(`/group/${group.id}/${wishlist.id}`)
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: "Boek" })
+    .getByRole("button", { name: "Toch niet" })
+    .click()
+
+  await expect(toasts(page)).toContainText(
+    "Deze wens is al door iemand anders gekocht"
+  )
+  expect(
+    (
+      await prisma.wishlistItem.findUniqueOrThrow({
+        where: { id: othersBuy.id },
+      })
+    ).userId
+  ).toBe(buyer.id)
+})
+
+test("you can only buy wishes of a wishlist that is shared with you", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const outsider = await createUser()
+  const friend = await createUser()
+  const wishlist = await createWishlist(owner)
+  const item = await createItem(wishlist, { title: "Fiets" })
+  const followed = await createWishlist(friend, { followers: [outsider] })
+  const followedItem = await createItem(followed, { title: "Boek" })
+  const page = await signIn(outsider)
+
+  await forgeActions(page, `/wishlist/${followed.id}`, followedItem.id, item.id)
+  await page.goto(`/wishlist/${followed.id}`)
+  await page
+    .locator("div.rounded-2xl")
+    .filter({ hasText: "Boek" })
+    .getByRole("button", { name: "Ik koop dit" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .userId
+  ).toBeNull()
+})
+
 test("only managers can add wishes to a wishlist", async ({ signIn }) => {
   const owner = await createUser()
   const member = await createUser()
