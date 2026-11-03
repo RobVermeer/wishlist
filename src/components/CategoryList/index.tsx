@@ -4,6 +4,7 @@ import { SortableList } from "@/components/SortableList"
 import { useSortMode } from "@/components/SortMode"
 import { reorderCategoriesForWishlist } from "@/lib/wishlistCategories/reorderCategoriesForWishlist"
 import { EditCategory } from "@/components/EditCategory"
+import { NewItem } from "@/components/NewItem"
 import { Category, CategorySection } from "./CategorySection"
 
 interface Props {
@@ -49,7 +50,16 @@ export const CategoryList = ({
           category={category}
           openCategories={openCategories}
           handle={showHandles ? handle : undefined}
-          actions={<EditCategory id={category.id} title={category.title} />}
+          actions={
+            <>
+              <NewItem
+                id={wishlistId}
+                categories={categories.map(({ title }) => title)}
+                category={category.title}
+              />
+              <EditCategory id={category.id} title={category.title} />
+            </>
+          }
         />
       )}
     </SortableList>

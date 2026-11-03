@@ -271,6 +271,7 @@
   },
   "NewItem": {
     "button": "Voeg een wens toe",
+    "toCategory": "Voeg een wens toe aan {category}",
     "title": "Voeg wens toe",
     "form": {
       "title": "Wens",
