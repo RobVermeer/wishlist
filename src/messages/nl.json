@@ -759,6 +759,8 @@
   },
   "StopManagingWishlist": {
     "button": "Stop met beheren",
+    "title": "Stoppen met beheren?",
+    "text": "Je kunt de wensen dan niet meer veranderen. Alleen wie het verlanglijstje heeft gemaakt, kan je weer laten meedoen.",
     "toast": "Je beheert dit verlanglijstje niet meer."
   },
   "Item": {
