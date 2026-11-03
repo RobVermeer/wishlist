@@ -250,6 +250,53 @@ test("an address gets at most three login e-mails in ten minutes", async ({
   expect(await emailsTo(email)).toHaveLength(3)
 })
 
+test("closing the login dialog lets you fix a typo in your e-mail address", async ({
+  page,
+}) => {
+  const email = `typo-${Date.now()}@e2e.test`
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+  const dialog = page.getByRole("dialog")
+  await dialog
+    .getByLabel("E-mail")
+    .fill(email.replace("@e2e.test", "@e2e.tset"))
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+  await expect(dialog.getByText("Check je inbox")).toBeVisible()
+
+  await page.keyboard.press("Escape")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+  await expect(dialog.getByLabel("E-mail")).toHaveValue("")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect(dialog.getByText(email)).toBeVisible()
+  await expect.poll(async () => (await emailsTo(email)).length).toBe(1)
+})
+
+test("a login e-mail that can't be sent shows an error", async ({ page }) => {
+  const email = `failed-${Date.now()}@e2e.test`
+  await page.route("**/api/auth/signin/email", route =>
+    route.fulfill({
+      json: {
+        url: `${testEnv.NEXTAUTH_URL}/api/auth/error?error=EmailSignin`,
+      },
+    })
+  )
+
+  await page.goto("/login")
+  await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
+  const dialog = page.getByRole("dialog")
+  await dialog.getByLabel("E-mail").fill(email)
+  await dialog.getByRole("button", { name: "Inloggen" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "De e-mail kon niet worden verstuurd. Probeer het later nog eens."
+  )
+  await expect(dialog.getByText("Check je inbox")).toHaveCount(0)
+  await expect(dialog.getByLabel("E-mail")).toHaveValue(email)
+})
+
 test("login with Google redirects to the Google consent screen", async ({
   page,
 }) => {
