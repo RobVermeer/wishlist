@@ -31,7 +31,6 @@ export const resendDrawLot = async (participantId: string) => {
       select: {
         name: true,
         email: true,
-        lastSentAt: true,
         receiver: { select: { name: true } },
         draw: {
           select: {
@@ -47,10 +46,21 @@ export const resendDrawLot = async (participantId: string) => {
       throw new Error(t("draw.participantNotFound"))
     }
 
-    if (
-      participant.lastSentAt &&
-      Date.now() - participant.lastSentAt.getTime() < day
-    ) {
+    // Marking the lootje as sent before sending it, only when it wasn't sent
+    // in the last day, sends it once when the button is pressed twice at the
+    // same moment.
+    const { count } = await prisma.drawParticipant.updateMany({
+      where: {
+        id: participantId,
+        OR: [
+          { lastSentAt: null },
+          { lastSentAt: { lte: new Date(Date.now() - day) } },
+        ],
+      },
+      data: { lastSentAt: new Date() },
+    })
+
+    if (count === 0) {
       throw new Error(t("draw.alreadySent"))
     }
 
@@ -67,11 +77,6 @@ export const resendDrawLot = async (participantId: string) => {
       date: participant.draw.date,
       redraw: false,
       member: false,
-    })
-
-    await prisma.drawParticipant.update({
-      where: { id: participantId },
-      data: { lastSentAt: new Date() },
     })
 
     revalidatePath("/")

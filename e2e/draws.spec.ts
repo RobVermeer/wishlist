@@ -9,6 +9,8 @@ import {
   emailsTo,
   prisma,
   toasts,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -113,7 +115,8 @@ test("a lootje says when someone has no wishlist yet", async ({ signIn }) => {
   const owner = await createUser({ firstName: "Anna" })
   const bert = await createUser({ firstName: "Bert" })
   const group = await createGroup(owner, { members: [bert] })
-  await createDraw(group, [owner, bert])
+  const opa = `opa-${bert.id}@e2e.test`
+  await createDraw(group, [owner, bert, { name: "Opa", email: opa }])
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
@@ -518,6 +521,38 @@ test("send the lootje again to someone who hasn't joined yet", async ({
   await expect(
     row.getByRole("button", { name: "Stuur opnieuw" })
   ).toBeDisabled()
+})
+
+test("sending the lootje again twice at once sends one e-mail", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
+  const {
+    participants: [, , participant],
+  } = await createDraw(group, [owner, bert, { name: "Opa", email: opa }], {
+    lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+  })
+  const page = await signIn(owner)
+
+  // Stop the request of the button and send it a few times at once. The
+  // requests only overlap now and then, so it tries a number of times.
+  const resend = captureAction(page, `/group/${group.id}`)
+  await page.goto(`/group/${group.id}`)
+  await status(page).getByRole("button", { name: "Stuur opnieuw" }).click()
+  const action = await resend
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    await prisma.drawParticipant.update({
+      where: { id: participant.id },
+      data: { lastSentAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+    })
+    await Promise.all([1, 2, 3].map(() => replayAs(page, action)))
+
+    expect(await emailsTo(opa)).toHaveLength(attempt)
+  }
 })
 
 test("drawing lots again replaces the previous draw", async ({ signIn }) => {
