@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma"
 import { sendDrawLotsEmail } from "@/lib/email"
 import { getErrorMessage } from "@/lib/utils"
 import { getFirstName } from "@/lib/users/getFirstName"
+import { notOver } from "./notOver"
 
 const day = 24 * 60 * 60 * 1000
 
@@ -25,6 +26,7 @@ export const resendDrawLot = async (participantId: string) => {
         userId: null,
         draw: {
           cancelledAt: null,
+          ...notOver(),
           group: { removed: false, userId: session.user.id },
         },
       },
