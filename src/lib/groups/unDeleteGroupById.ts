@@ -4,7 +4,6 @@ import { authOptions } from "@/lib/nextAuth"
 import { prisma } from "@/lib/prisma"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
-import { groupProperties } from "./publicProperties"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 
@@ -17,19 +16,14 @@ export const unDeleteGroupById = async (id: string) => {
       throw new Error(t("notLoggedIn"))
     }
 
-    const groupToUpdate = await prisma.group.findUnique({
-      select: groupProperties,
-      where: { id },
-    })
-
     const userId = session.user.id
+    const groupToUpdate = await prisma.group.findUnique({
+      select: { id: true },
+      where: { id, ...(session.user.isAdmin ? {} : { userId }) },
+    })
 
     if (!groupToUpdate) {
       throw new Error(t("group.notFound"))
-    }
-
-    if (groupToUpdate?.createdBy.id !== userId && !session.user.isAdmin) {
-      throw new Error(t("noAccess"))
     }
 
     await prisma.group.update({

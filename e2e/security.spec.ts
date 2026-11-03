@@ -1127,9 +1127,7 @@ test("only the creator of a group can remove it", async ({ signIn }) => {
     .getByRole("button", { name: "Verwijder" })
     .click()
 
-  await expect(toasts(page)).toContainText(
-    "Je hebt niet de juiste rechten om dit te doen"
-  )
+  await expect(toasts(page)).toContainText("Groep niet gevonden")
   for (const { id } of [group, ownGroup]) {
     expect(
       (await prisma.group.findUniqueOrThrow({ where: { id } })).removed
