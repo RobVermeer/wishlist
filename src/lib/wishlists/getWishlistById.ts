@@ -19,7 +19,7 @@ export const getWishlistById = cache(async (id: string) => {
       throw new Error(t("notLoggedIn"))
     }
 
-    await removeBoughtItemsAfterParty()
+    await removeBoughtItemsAfterParty(id)
 
     const userId = session.user.id
     const result = await prisma.wishlist.findUnique({
