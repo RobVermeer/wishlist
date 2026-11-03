@@ -18,6 +18,7 @@ import { FormEvent, startTransition, useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   id: string
@@ -27,6 +28,10 @@ interface Props {
 export const EditCategory = ({ id, title }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+  })
   const t = useTranslations("EditCategory")
 
   function showErrors(errors: string[]) {
@@ -64,7 +69,7 @@ export const EditCategory = ({ id, title }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button
           size="sm"
@@ -83,6 +88,7 @@ export const EditCategory = ({ id, title }: Props) => {
           <DialogTitle>{t("title")}</DialogTitle>
         </DialogHeader>
         <form
+          ref={setForm}
           onSubmit={onSubmit}
           id={`change-category-${id}`}
           className="grid gap-4 py-4"
@@ -107,6 +113,7 @@ export const EditCategory = ({ id, title }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }
