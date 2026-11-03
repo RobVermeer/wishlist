@@ -219,7 +219,7 @@ export default async function Home() {
                 {group.title}
               </span>
               <span className="relative text-xs text-white/80">
-                {t("following.members", { count: group.members.length })}
+                {t("following.members", { count: group._count.members })}
               </span>
             </Link>
           ))}

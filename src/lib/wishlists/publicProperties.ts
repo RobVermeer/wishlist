@@ -26,3 +26,17 @@ export const wishlistProperties = {
     orderBy: { position: "asc" as const },
   },
 }
+
+// What a card of a verlanglijstje shows, without its wishes.
+export const wishlistCardProperties = {
+  id: true,
+  title: true,
+  theme: true,
+  user: {
+    select: userProperties,
+  },
+  groups: wishlistProperties.groups,
+  _count: {
+    select: { wishlistItem: { where: { removed: false } } },
+  },
+}
