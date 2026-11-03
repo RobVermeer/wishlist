@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button"
 import { sendReminderForWishlist } from "@/lib/reminders"
 import { LoaderCircle, ShoppingBasket } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import { useFormStatus } from "react-dom"
+import { FormEvent, useTransition } from "react"
 import { useTranslations } from "next-intl"
 
-const FormButton = () => {
-  const { pending } = useFormStatus()
+const FormButton = ({ pending }: { pending: boolean }) => {
   const t = useTranslations()
 
   return (
@@ -30,6 +29,7 @@ interface Props {
 export const RemindButton = ({ wishlistId }: Props) => {
   const { toast } = useToast()
   const t = useTranslations()
+  const [pending, startTransition] = useTransition()
 
   async function sendReminder() {
     const { type, errors } = await sendReminderForWishlist(wishlistId)
@@ -47,9 +47,14 @@ export const RemindButton = ({ wishlistId }: Props) => {
     toast({ title: t("Remind.toast") })
   }
 
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    startTransition(sendReminder)
+  }
+
   return (
-    <form action={sendReminder}>
-      <FormButton />
+    <form onSubmit={onSubmit}>
+      <FormButton pending={pending} />
     </form>
   )
 }
