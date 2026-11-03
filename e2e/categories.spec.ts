@@ -361,14 +361,13 @@ test("removing a category keeps its wishes", async ({ signIn }) => {
   )
   await confirm.getByRole("button", { name: "Verwijder" }).click()
 
+  // The open dialog hides the page from the accessibility tree, so wait for
+  // the new order before checking the category is gone.
+  await expect
+    .poll(() => itemOrder(page, ["Trui", "Fiets", "Muts", "Boeken"]))
+    .toEqual(["Fiets", "Trui", "Muts", "Boeken"])
   await expect(categoryToggle(page, "Kleding")).toHaveCount(0)
   await expect(categoryToggle(page, "Boeken")).toBeVisible()
-  expect(await itemOrder(page, ["Trui", "Fiets", "Muts", "Boeken"])).toEqual([
-    "Fiets",
-    "Trui",
-    "Muts",
-    "Boeken",
-  ])
   await expect(page.getByText("Trui")).toBeVisible()
   await expect(page.getByText("Muts")).toBeVisible()
 
