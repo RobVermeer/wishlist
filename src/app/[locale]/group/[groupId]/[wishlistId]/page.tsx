@@ -1,9 +1,8 @@
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { Wishlist } from "@/components/Wishlist"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { notFound, redirect } from "next/navigation"
 import { BackLink } from "@/components/BackLink"
 
@@ -30,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function GroupWishlistPage({ params }: Props) {
   const { wishlistId, groupId } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) {
     redirect(

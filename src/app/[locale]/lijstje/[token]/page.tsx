@@ -1,10 +1,9 @@
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { openGraphImage } from "@/lib/openGraph"
 import { notFound, redirect } from "next/navigation"
 import { SharedWishlist } from "@/components/SharedWishlist"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
 import { getWishlistByShareToken } from "@/lib/wishlists/getWishlistByShareToken"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
@@ -45,7 +44,7 @@ export default async function SharedWishlistPage({ params }: Props) {
     notFound()
   }
 
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (session && (await getWishlistById(wishlist.id))) {
     redirect(`/wishlist/${wishlist.id}`)

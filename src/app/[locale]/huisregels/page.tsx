@@ -1,8 +1,7 @@
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { HouseRules } from "@/components/HouseRules"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 
 interface Props {
   params: Promise<{ locale: string }>
@@ -24,7 +23,7 @@ export const generateMetadata = async ({
 }
 
 export default async function HouseRulesPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   return <HouseRules loggedIn={!!session} />
 }

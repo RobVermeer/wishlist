@@ -1,10 +1,9 @@
 "use server"
 
 import * as z from "zod"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
 import { drawSchema } from "@/lib/schema"
 import { sendDrawLotsEmail } from "@/lib/email"
@@ -14,7 +13,7 @@ import { drawLots, maxParticipants } from "./drawLots"
 
 export const createDraw = async (groupId: string, data: FormData) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

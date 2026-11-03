@@ -1,8 +1,7 @@
 "use server"
 
-import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
@@ -13,7 +12,7 @@ import { managedByUser, sharedWithUser } from "@/lib/wishlists/visibility"
 
 export const sendReminderForWishlist = async (wishlistId: string) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

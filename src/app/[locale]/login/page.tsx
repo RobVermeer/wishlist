@@ -1,8 +1,7 @@
 import { Metadata } from "next"
 import { redirect } from "next/navigation"
-import { getServerSession } from "next-auth"
 import { Landing } from "@/components/Landing"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { getLocalPath } from "@/lib/utils"
 
 interface Props {
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Login({ searchParams }: Props) {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
   const { callbackUrl = "/" } = await searchParams
 
   if (session) {

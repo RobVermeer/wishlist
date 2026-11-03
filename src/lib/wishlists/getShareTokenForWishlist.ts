@@ -1,16 +1,15 @@
 "use server"
 
 import { randomBytes } from "crypto"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { managedByUser } from "./visibility"
 
 export const getShareTokenForWishlist = async (id: string) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

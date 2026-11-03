@@ -1,9 +1,8 @@
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { Faq } from "@/components/Faq"
 import { JsonLd } from "@/components/JsonLd"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 
 interface Props {
   params: Promise<{ locale: string }>
@@ -25,7 +24,7 @@ export const generateMetadata = async ({
 }
 
 export default async function FaqPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
   const t = await getTranslations("Faq")
   const sections = t.raw("sections") as {
     questions: { question: string; answer: string }[]

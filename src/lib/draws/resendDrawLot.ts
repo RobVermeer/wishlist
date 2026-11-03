@@ -1,9 +1,8 @@
 "use server"
 
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
 import { sendDrawLotsEmail } from "@/lib/email"
 import { getErrorMessage } from "@/lib/utils"
@@ -13,7 +12,7 @@ const day = 24 * 60 * 60 * 1000
 
 export const resendDrawLot = async (participantId: string) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

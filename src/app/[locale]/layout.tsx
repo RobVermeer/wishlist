@@ -1,8 +1,7 @@
 import "./globals.css"
 import type { Metadata, Viewport } from "next"
-import { getServerSession } from "next-auth"
 import { Figtree, Fraunces } from "next/font/google"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { Toaster } from "@/components/ui/toaster"
@@ -63,7 +62,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   return (
     <html lang={locale}>

@@ -7,9 +7,8 @@ import { Separator } from "@/components/ui/separator"
 import { Lock } from "lucide-react"
 import Link from "next/link"
 import { List } from "@/components/List"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 
 interface Props {
@@ -27,7 +26,7 @@ export const generateMetadata = async ({ params }: Props) => {
 }
 
 export default async function ProfilePage() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) redirect(`/login?callbackUrl=${encodeURIComponent("/profile")}`)
   const firstName = session?.user.firstName ?? ""

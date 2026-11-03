@@ -1,12 +1,11 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { cache } from "react"
 
 export const getGroupForAdmin = cache(async (id: string) => {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session?.user.isAdmin) return null
 

@@ -2,8 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { wishlistProperties } from "./publicProperties"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { revalidatePath } from "next/cache"
 import { wishlistSchema } from "@/lib/schema"
 import * as z from "zod"
@@ -15,7 +14,7 @@ import { assertManagersOfUser } from "./assertManagersOfUser"
 
 export const createWishlistForUser = async (formData: FormData) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

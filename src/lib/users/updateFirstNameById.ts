@@ -1,9 +1,8 @@
 "use server"
 
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
 import { getErrorMessage } from "@/lib/utils"
-import { getServerSession } from "next-auth"
 import { getTranslations } from "next-intl/server"
 import { revalidatePath } from "next/cache"
 import { userSchema } from "@/lib/schema"
@@ -11,7 +10,7 @@ import * as z from "zod"
 
 export const updateFirstNameById = async (id: string, firstName: string) => {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getSession()
     const t = await getTranslations("Errors")
 
     if (!session) {

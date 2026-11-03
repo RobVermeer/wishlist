@@ -1,13 +1,12 @@
 import { StatTile } from "@/components/StatTile"
 import { getStats } from "@/lib/stats"
 import { BookUser, Gift, Group, List, Users } from "lucide-react"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/nextAuth"
+import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { getFormatter, getTranslations } from "next-intl/server"
 
 export default async function AdminDashboardPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getSession()
 
   if (!session) redirect("/login")
 

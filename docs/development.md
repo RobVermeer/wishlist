@@ -42,7 +42,7 @@ Defaults for local development live in `.env.development`, put overrides in `.en
 
 - Functions that read data start with `import "server-only"`. Never put them in a `"use server"` file, every export of such a file becomes a public endpoint.
 - Mutations are server actions in their own `"use server"` file. Each one:
-  1. gets the session and throws `Errors.notLoggedIn` without one,
+  1. gets the session with `getSession` from `src/lib/getSession.ts` and throws `Errors.notLoggedIn` without one,
   2. checks the user may touch the record (owner, manager, group member or admin) in the same query that loads it,
   3. validates input with a zod schema,
   4. calls `revalidatePath("/")` after writing,
