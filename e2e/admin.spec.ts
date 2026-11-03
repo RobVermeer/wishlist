@@ -7,6 +7,7 @@ import {
   createWishlist,
   createItem,
   emailsTo,
+  holdActions,
   prisma,
   toasts,
 } from "./fixtures"
@@ -298,7 +299,12 @@ test("admin can draw lots for a group", async ({ signIn }) => {
 
   await page.goto(`/admin/groups/${group.id}`)
   await page.getByLabel(new RegExp(skipped.email!)).click()
+  const release = await holdActions(page)
   await page.getByRole("button", { name: "Trek lootjes" }).click()
+  await expect(
+    page.getByRole("button", { name: "Trek lootjes" })
+  ).toBeDisabled()
+  release()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
   await expect(page).toHaveURL("/admin/groups")
@@ -351,6 +357,7 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
     "Kies minimaal twee deelnemers voor de loting"
   )
   await expect(page).toHaveURL(`/admin/groups/${group.id}`)
+  await expect(page.getByLabel(new RegExp(member.email!))).not.toBeChecked()
   expect(await emailsTo(owner.email!)).toHaveLength(0)
 })
 
