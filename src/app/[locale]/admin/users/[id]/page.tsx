@@ -1,3 +1,4 @@
+import { Metadata } from "next"
 import { Card } from "@/components/Card"
 import { List } from "@/components/List"
 import { ListTitle } from "@/components/ListTitle"
@@ -11,6 +12,17 @@ import { getSession } from "@/lib/getSession"
 
 interface Props {
   params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const user = await getUserForAdmin(id)
+
+  if (!user) return {}
+
+  return {
+    title: `${user.name || user.firstName} - Niet Weer Sokken`,
+  }
 }
 
 export default async function AdminUserPage({ params }: Props) {

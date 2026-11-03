@@ -1,9 +1,18 @@
+import { Metadata } from "next"
 import { StatTile } from "@/components/StatTile"
 import { getStats } from "@/lib/stats"
 import { BookUser, Gift, Group, List, Users } from "lucide-react"
 import { getSession } from "@/lib/getSession"
 import { redirect } from "next/navigation"
 import { getFormatter, getTranslations } from "next-intl/server"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Admin")
+
+  return {
+    title: `${t("title")} - Niet Weer Sokken`,
+  }
+}
 
 export default async function AdminDashboardPage() {
   const session = await getSession()
