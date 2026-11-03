@@ -107,10 +107,7 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
         <div className="flex min-w-0 items-center gap-3">
           {!wishlist.title && wishlist.user.image && (
             <Avatar className="size-12 shrink-0 ring-2 ring-white/70 shadow-sm">
-              <AvatarImage
-                src={wishlist.user.image}
-                alt={`@${wishlist.user.name}`}
-              />
+              <AvatarImage src={wishlist.user.image} alt="" />
               <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
             </Avatar>
           )}
