@@ -62,7 +62,10 @@ test("login with e-mail sends a magic link that signs a new user in", async ({
   await page.getByRole("button", { name: "Inloggen met e-mail" }).click()
 
   const dialog = page.getByRole("dialog")
-  await dialog.getByLabel("E-mail").fill(email)
+  await expect(
+    dialog.getByText("Je e-mailadres", { exact: true })
+  ).toBeVisible()
+  await dialog.getByLabel("Je e-mailadres").fill(email)
   await dialog.getByRole("button", { name: "Inloggen" }).click()
 
   await expect(dialog.getByText("Check je inbox")).toBeVisible()

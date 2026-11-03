@@ -110,7 +110,7 @@
       "title": "Inloggen met e-mail",
       "text": "Als je wilt inloggen of registreren met e-mail, vul dan je e-mailadres in en druk op de knop.",
       "form": {
-        "email": "E-mail",
+        "email": "Je e-mailadres",
         "placeholder": "jij@voorbeeld.nl",
         "submit": "Inloggen"
       },

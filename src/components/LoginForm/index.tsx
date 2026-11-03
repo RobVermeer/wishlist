@@ -13,6 +13,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useFormStatus } from "react-dom"
 import { useTranslations } from "next-intl"
@@ -76,8 +77,10 @@ export function LoginForm({ callbackUrl = "/" }: Props) {
                 </DialogDescription>
               </DialogHeader>
               <form action={handleLogin} className="grid gap-4">
+                <Label htmlFor="email">
+                  {t("Login.emailDialog.form.email")}
+                </Label>
                 <Input
-                  aria-label={t("Login.emailDialog.form.email")}
                   id="email"
                   name="email"
                   type="email"
