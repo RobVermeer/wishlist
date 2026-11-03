@@ -46,3 +46,12 @@ export function getLocalPath(url: string, fallback = "/") {
 
   return isLocal ? path : fallback
 }
+
+// For onOpenAutoFocus of a dialog with a form that's already filled in: focus
+// the dialog instead of its first field, so phones don't open the keyboard
+// over it, while focus still moves into the dialog for keyboard and screen
+// reader users.
+export function focusDialog(event: Event) {
+  event.preventDefault()
+  ;(event.currentTarget as HTMLElement).focus()
+}
