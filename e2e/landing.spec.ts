@@ -128,6 +128,9 @@ test("the call to action at the bottom goes back to logging in", async ({
   const login = page.getByRole("button", { name: "Inloggen met e-mail" })
   const cta = page.getByRole("link", { name: "Maak je verlanglijstje" })
 
+  await expect(
+    page.getByRole("heading", { name: "Klaar om te beginnen?", exact: true })
+  ).toBeVisible()
   await cta.scrollIntoViewIfNeeded()
   await expect(login).not.toBeInViewport()
 

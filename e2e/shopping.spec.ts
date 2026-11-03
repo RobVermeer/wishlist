@@ -45,7 +45,7 @@ test("view a wishlist of a group member", async ({ signIn }) => {
     page.getByRole("heading", { name: "Olga", exact: true })
   ).toBeVisible()
   await expect(
-    page.getByText("Olga ziet niet wat er wordt gekocht 🤫")
+    page.getByText("Olga ziet niet wat er wordt gekocht.")
   ).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Wijzig verlanglijstje" })
