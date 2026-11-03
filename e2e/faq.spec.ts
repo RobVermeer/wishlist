@@ -397,7 +397,7 @@ test("the frequently asked questions say when bought wishes go", async ({
     .click()
   await expect(
     buying.getByText(
-      "Ja, tenzij je verlanglijstje in een groep staat waar lootjes zijn getrokken met een datum. Dan verdwijnen twee weken na die datum de wensen die al gekocht zijn."
+      "Ja, tenzij je verlanglijstje in een groep staat waar lootjes zijn getrokken met een datum. Dan verdwijnen twee dagen na die datum de wensen die al gekocht zijn."
     )
   ).toBeVisible()
   await expect(
