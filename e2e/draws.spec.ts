@@ -255,6 +255,32 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   await expect(lot(opaPage)).toContainText(`Je hebt ${drawn} getrokken`)
 })
 
+test("a member added by e-mail address takes part as member", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const email = `Bert-${bert.id}@E2E.test`
+  await prisma.user.update({ where: { id: bert.id }, data: { email } })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await addPerson(dialog, "Bert", email.toLowerCase())
+  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await dialog.getByRole("button", { name: "Trek lootjes" }).click()
+
+  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
+  const participants = await prisma.drawParticipant.findMany({
+    where: { draw: { groupId: group.id } },
+  })
+  expect(participants.map(({ userId }) => userId).sort()).toEqual(
+    [owner.id, bert.id].sort()
+  )
+})
+
 test("someone filled in but not added yet still takes part", async ({
   signIn,
 }) => {
