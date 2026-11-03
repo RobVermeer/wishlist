@@ -1190,6 +1190,84 @@ test("only the owner and managers can change a wish", async ({ signIn }) => {
   ).toBe("Fiets")
 })
 
+async function removedWishlistSetup() {
+  const user = await createUser()
+  const own = await createWishlist(user)
+  const ownItem = await createItem(own, { title: "Boek" })
+  const removed = await createWishlist(user, { title: "Weg" })
+  const removedItem = await createItem(removed, { title: "Fiets" })
+  await prisma.wishlist.update({
+    where: { id: removed.id },
+    data: { removed: true },
+  })
+
+  return { user, own, ownItem, removed, removedItem }
+}
+
+test("wishes can't be added to a removed wishlist", async ({ signIn }) => {
+  const { user, own, removed } = await removedWishlistSetup()
+  const page = await signIn(user)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, removed.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Stiekem")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    await prisma.wishlistItem.count({ where: { wishlistId: removed.id } })
+  ).toBe(1)
+})
+
+test("wishes on a removed wishlist can't be changed", async ({ signIn }) => {
+  const { user, own, ownItem, removedItem } = await removedWishlistSetup()
+  const page = await signIn(user)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, removedItem.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel("Wens", { exact: true }).fill("Overgenomen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (
+      await prisma.wishlistItem.findUniqueOrThrow({
+        where: { id: removedItem.id },
+      })
+    ).title
+  ).toBe("Fiets")
+})
+
+test("wishes on a removed wishlist can't be removed", async ({ signIn }) => {
+  const { user, own, ownItem, removedItem } = await removedWishlistSetup()
+  const page = await signIn(user)
+
+  await forgeActions(page, `/wishlist/${own.id}`, ownItem.id, removedItem.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig wens" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Wens niet gevonden")
+  expect(
+    (
+      await prisma.wishlistItem.findUniqueOrThrow({
+        where: { id: removedItem.id },
+      })
+    ).removed
+  ).toBe(false)
+})
+
 test("only the owner and managers can remove a wish", async ({ signIn }) => {
   const { member, wishlist, own } = await shoppersSetup()
   const item = await createItem(wishlist, { title: "Fiets" })

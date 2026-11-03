@@ -23,7 +23,7 @@ export const deleteWishlistItemById = async (id: string) => {
     const wishlistItemToDelete = await prisma.wishlistItem.findUnique({
       where: {
         id,
-        wishlist: managedByUser(userId),
+        wishlist: { removed: false, ...managedByUser(userId) },
         removed: false,
       },
     })
