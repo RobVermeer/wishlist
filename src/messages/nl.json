@@ -116,7 +116,8 @@
       "success": {
         "title": "Check je inbox",
         "text": "Druk op de link in de e-mail die we hebben gestuurd naar <strong>{email}</strong> om in te loggen."
-      }
+      },
+      "error": "De e-mail kon niet worden verstuurd. Probeer het later nog eens."
     }
   },
   "Group": {

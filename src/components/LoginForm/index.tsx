@@ -14,12 +14,11 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { useFormStatus } from "react-dom"
+import { useToast } from "@/components/ui/use-toast"
+import { FormEvent, useState, useTransition } from "react"
 import { useTranslations } from "next-intl"
 
-const EmailButton = () => {
-  const { pending } = useFormStatus()
+const EmailButton = ({ pending }: { pending: boolean }) => {
   const t = useTranslations()
 
   return (
@@ -40,16 +39,37 @@ interface Props {
 
 export function LoginForm({ callbackUrl = "/" }: Props) {
   const [emailSent, setEmailSent] = useState<string | null>(null)
+  const [pending, startTransition] = useTransition()
+  const { toast } = useToast()
   const t = useTranslations()
 
-  async function handleLogin(formData: FormData) {
-    const email = formData.get("email")?.toString()
+  async function handleLogin(email: string) {
+    const result = await signIn("email", {
+      email,
+      callbackUrl,
+      redirect: false,
+    }).catch(() => undefined)
+
+    if (!result?.ok || result.error) {
+      toast({ variant: "destructive", title: t("Login.emailDialog.error") })
+      return
+    }
+
+    setEmailSent(email)
+  }
+
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const email = new FormData(event.currentTarget).get("email")?.toString()
 
     if (!email) return
 
-    await signIn("email", { email, callbackUrl, redirect: false })
+    startTransition(() => handleLogin(email))
+  }
 
-    setEmailSent(email)
+  // Starts over when the dialog closes, so a typo can be fixed.
+  function onOpenChange(open: boolean) {
+    if (!open) setEmailSent(null)
   }
 
   return (
@@ -61,7 +81,7 @@ export function LoginForm({ callbackUrl = "/" }: Props) {
         <LogIn size="18" className="mr-2" /> {t("Login.google")}
       </Button>
 
-      <Dialog>
+      <Dialog onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
           <Button>
             <Mail size="18" className="mr-2" /> {t("Login.email")}
@@ -76,7 +96,7 @@ export function LoginForm({ callbackUrl = "/" }: Props) {
                   {t("Login.emailDialog.text")}
                 </DialogDescription>
               </DialogHeader>
-              <form action={handleLogin} className="grid gap-4">
+              <form onSubmit={onSubmit} className="grid gap-4">
                 <Label htmlFor="email">
                   {t("Login.emailDialog.form.email")}
                 </Label>
@@ -88,7 +108,7 @@ export function LoginForm({ callbackUrl = "/" }: Props) {
                   placeholder={t("Login.emailDialog.form.placeholder")}
                 />
                 <DialogFooter>
-                  <EmailButton />
+                  <EmailButton pending={pending} />
                 </DialogFooter>
               </form>
             </>
