@@ -36,8 +36,9 @@
   "Error": {
     "empty": {
       "title": "Er ging iets mis",
-      "text": "Ga terug naar <dashboard>het overzicht</dashboard>."
-    }
+      "text": "Probeer het nog een keer, of ga terug naar <dashboard>het overzicht</dashboard>."
+    },
+    "retry": "Probeer opnieuw"
   },
   "BackLink": {
     "back": "Terug naar",
