@@ -565,7 +565,7 @@ test("bought presents page lists what you bought for whom", async ({
   await page.goto("/profile/bought")
 
   await expect(page).toHaveTitle(
-    "Mijn gekochte cadeaus - Profiel - Niet Weer Sokken"
+    "Gekochte cadeaus - Profiel - Niet Weer Sokken"
   )
   await expect(itemCard(page, "Sokken")).toHaveText(
     /^Sokken\s*Voor Olga · 5 december 2025$/
