@@ -1,4 +1,3 @@
-import { setTimeout } from "node:timers/promises"
 import { readdirSync, readFileSync } from "node:fs"
 import { DatabaseSync } from "node:sqlite"
 import { test, expect, createUser, createGroup, prisma } from "./fixtures"
@@ -37,14 +36,19 @@ test("changes wait for another connection that is writing", async ({
 
   // Hold a write lock, like the fixtures of a test running in parallel, while
   // the server leaves the group. It waits for the lock and answers once the
-  // lock is released, or fails right away when it can't wait.
+  // lock is released, or fails right away when it can't wait. SQLite waits
+  // synchronously, so the server answers nothing else while it waits.
   await prisma.$transaction(async tx => {
     await tx.user.update({ where: { id: owner.id }, data: { firstName: "O" } })
     await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
-    await Promise.race([
-      page.waitForResponse(response => response.request().method() === "POST"),
-      setTimeout(1000),
-    ])
+    await expect
+      .poll(() =>
+        page.request.get("/robots.txt", { timeout: 250 }).then(
+          () => "answers",
+          () => "waits"
+        )
+      )
+      .toBe("waits")
   })
 
   await expect(page).toHaveURL("/")
