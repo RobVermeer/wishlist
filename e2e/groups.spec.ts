@@ -558,7 +558,7 @@ test("choose your wishlist for a group from its page", async ({ signIn }) => {
   await dialog.getByRole("button", { name: "Kies dit verlanglijstje" }).click()
 
   await expect(toasts(page)).toContainText(
-    "Dit verlanglijstje staat nu in de groep"
+    "Het verlanglijstje staat nu in de groep"
   )
   await expect(
     page.getByRole("link", { name: "Mijn verlanglijstje", exact: true })

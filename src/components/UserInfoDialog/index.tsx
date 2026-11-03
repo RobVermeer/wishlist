@@ -28,7 +28,7 @@ const AddInfoButton = ({ pending }: { pending: boolean }) => {
       ) : (
         <UserRoundPlus className="mr-2" size="16" />
       )}{" "}
-      {t("UserInfo.form.save")}
+      {t("EditUser.form.save")}
     </Button>
   )
 }
@@ -58,7 +58,7 @@ export const UserInfoDialog = ({ session }: Props) => {
     }
 
     setSent(true)
-    toast({ title: t("UserInfo.toast") })
+    toast({ title: t("EditUser.toast") })
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -80,7 +80,7 @@ export const UserInfoDialog = ({ session }: Props) => {
           <DialogDescription>{t("UserInfo.text")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="grid gap-4">
-          <Label htmlFor="firstName">{t("UserInfo.form.firstName")}</Label>
+          <Label htmlFor="firstName">{t("EditUser.form.firstName")}</Label>
           <Input id="firstName" name="firstName" required />
 
           <DialogFooter>
