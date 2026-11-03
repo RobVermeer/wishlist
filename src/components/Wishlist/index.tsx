@@ -169,10 +169,6 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
         {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}
       </p>
 
-      {wishlist.isOwnList && (
-        <NewItem id={wishlist.id} categories={categoryTitles} />
-      )}
-
       {!hasItems &&
         !onlyInterests &&
         (wishlist.isOwnList ? (
@@ -241,11 +237,14 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
       )}
 
       {wishlist.isOwnList && (
-        <ShareWishlist
-          wishlistId={wishlist.id}
-          name={name}
-          forSomeoneElse={Boolean(wishlist.title)}
-        />
+        <>
+          <NewItem id={wishlist.id} categories={categoryTitles} />
+          <ShareWishlist
+            wishlistId={wishlist.id}
+            name={name}
+            forSomeoneElse={Boolean(wishlist.title)}
+          />
+        </>
       )}
 
       {wishlist.isManager && <StopManagingWishlist wishlistId={wishlist.id} />}
