@@ -6,7 +6,6 @@ import {
   createGroup,
   createWishlist,
   createItem,
-  emailsTo,
   prisma,
   toasts,
 } from "./fixtures"
@@ -268,6 +267,10 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   )
   await page.goto(`/admin/groups/${group.id}`)
   await expect(page.getByRole("heading", { name: group.title })).toBeVisible()
+  // Drawing lots is up to whoever made the group, from the group itself.
+  await expect(page.getByRole("button", { name: "Trek lootjes" })).toHaveCount(
+    0
+  )
 
   page.once("dialog", dialog => dialog.accept())
   await page.getByRole("button", { name: "Zet groep terug" }).click()
@@ -278,80 +281,6 @@ test("admin can remove and restore a group", async ({ signIn }) => {
           .removed
     )
     .toBe(false)
-})
-
-test("admin can draw lots for a group", async ({ signIn }) => {
-  const admin = await createAdmin()
-  const owner = await createUser({ firstName: "Anna" })
-  const members = [
-    await createUser({ firstName: "Bert" }),
-    await createUser({ firstName: "Carla" }),
-    await createUser({ firstName: "Dirk" }),
-  ]
-  const skipped = await createUser({ firstName: "Eva" })
-  const group = await createGroup(owner, {
-    title: "Sinterklaas",
-    members: [...members, skipped],
-  })
-  const participants = [owner, ...members]
-  const page = await signIn(admin)
-
-  await page.goto(`/admin/groups/${group.id}`)
-  await page.getByLabel(new RegExp(skipped.email!)).click()
-  await page.getByRole("button", { name: "Trek lootjes" }).click()
-
-  await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
-  await expect(page).toHaveURL("/admin/groups")
-
-  for (const participant of participants) {
-    await expect
-      .poll(async () => (await emailsTo(participant.email!)).length)
-      .toBe(1)
-  }
-  expect(await emailsTo(skipped.email!)).toHaveLength(0)
-
-  const drawn = await Promise.all(
-    participants.map(async participant => {
-      const [email] = await emailsTo(participant.email!)
-
-      expect(email.subject).toBe(
-        `${participant.firstName}, je hebt een lootje getrokken voor Sinterklaas`
-      )
-
-      const name = email.html.match(
-        /Je getrokken lootje: <strong>([^<]+)<\/strong>/
-      )?.[1]
-
-      expect(name).not.toBe(participant.firstName)
-      expect(email.html).toContain(
-        "Je krijgt deze e-mail omdat je in de groep Sinterklaas zit."
-      )
-
-      return name
-    })
-  )
-
-  expect(drawn.sort()).toEqual(
-    participants.map(({ firstName }) => firstName).sort()
-  )
-})
-
-test("drawing lots needs at least two participants", async ({ signIn }) => {
-  const admin = await createAdmin()
-  const owner = await createUser({ firstName: "Anna" })
-  const member = await createUser({ firstName: "Bert" })
-  const group = await createGroup(owner, { members: [member] })
-  const page = await signIn(admin)
-
-  await page.goto(`/admin/groups/${group.id}`)
-  await page.getByLabel(new RegExp(member.email!)).click()
-  await page.getByRole("button", { name: "Trek lootjes" }).click()
-
-  await expect(toasts(page)).toContainText(
-    "Kies minimaal twee deelnemers voor de loting"
-  )
-  await expect(page).toHaveURL(`/admin/groups/${group.id}`)
-  expect(await emailsTo(owner.email!)).toHaveLength(0)
 })
 
 test("admin can remove bought wishes from someone's wishlist", async ({

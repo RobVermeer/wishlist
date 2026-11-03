@@ -54,62 +54,6 @@ const EmailLayout = ({ preview, reason, children }: EmailLayoutProps) => (
   </Html>
 )
 
-interface DrawUserEmailProps {
-  userName: string
-  forName: string
-  groupId: string
-  groupName: string
-}
-
-export const DrawUserEmail = async ({
-  userName,
-  forName,
-  groupId,
-  groupName,
-}: DrawUserEmailProps) => {
-  const t = await getTranslations("EmailDraw")
-
-  return (
-    <EmailLayout
-      preview={t("preview")}
-      reason={t("reason", { group: groupName })}
-    >
-      <Heading as="h1" style={title}>
-        {t.rich("title", {
-          strong: chunks => <strong>{chunks}</strong>,
-          name: userName,
-        })}
-      </Heading>
-
-      <Section style={section}>
-        <Text style={text}>
-          {t.rich("text1", {
-            strong: chunks => <strong>{chunks}</strong>,
-            group: groupName,
-          })}
-        </Text>
-        <Text style={text}>{t("text2")}</Text>
-        <Text style={text}>
-          {t.rich("text3", {
-            strong: chunks => <strong>{chunks}</strong>,
-            name: forName,
-          })}
-        </Text>
-
-        <Button style={button} href={`${baseUrl}/group/${groupId}`}>
-          {t("button", { group: groupName })}
-        </Button>
-      </Section>
-
-      <Text style={signature}>
-        {t.rich("goodbye", {
-          strong: chunks => <strong>{chunks}</strong>,
-        })}
-      </Text>
-    </EmailLayout>
-  )
-}
-
 interface RemindUserEmailProps {
   userName: string
   wishlist: { id: string; name: string | null }
