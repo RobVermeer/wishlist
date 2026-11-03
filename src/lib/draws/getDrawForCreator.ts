@@ -22,6 +22,7 @@ export const getDrawForCreator = cache(async (groupId: string) => {
       group: { removed: false, userId: session.user.id },
     },
     select: {
+      id: true,
       group: { select: { members: { select: { id: true } } } },
       participants: {
         select: { id: true, name: true, userId: true, lastSentAt: true },
@@ -35,20 +36,24 @@ export const getDrawForCreator = cache(async (groupId: string) => {
   const memberIds = draw.group.members.map(({ id }) => id)
   const now = Date.now()
 
-  return draw.participants.map(({ id, name, userId, lastSentAt }) => {
-    const status = !userId
-      ? ("invited" as const)
-      : memberIds.includes(userId)
-        ? ("member" as const)
-        : ("left" as const)
+  const participants = draw.participants.map(
+    ({ id, name, userId, lastSentAt }) => {
+      const status = !userId
+        ? ("invited" as const)
+        : memberIds.includes(userId)
+          ? ("member" as const)
+          : ("left" as const)
 
-    return {
-      id,
-      name,
-      status,
-      canResend:
-        status === "invited" &&
-        (!lastSentAt || now - lastSentAt.getTime() >= day),
+      return {
+        id,
+        name,
+        status,
+        canResend:
+          status === "invited" &&
+          (!lastSentAt || now - lastSentAt.getTime() >= day),
+      }
     }
-  })
+  )
+
+  return { id: draw.id, participants }
 })

@@ -11,6 +11,7 @@ import { sendDrawLotsEmail } from "@/lib/email"
 import { getErrorMessage } from "@/lib/utils"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { drawLots, maxParticipants } from "./drawLots"
+import { notOver } from "./notOver"
 
 export const createDraw = async (groupId: string, data: FormData) => {
   try {
@@ -106,8 +107,21 @@ export const createDraw = async (groupId: string, data: FormData) => {
 
     const receivers = drawLots(participants.length)
     const now = new Date()
+    const replaces = data.get("replaces")?.toString() || null
 
     const { redraw } = await prisma.$transaction(async tx => {
+      // The form says which draw it replaces. When that changed, the lootjes
+      // were just drawn, by a second click or in another tab, and drawing
+      // them again would send everyone a second lootje.
+      const current = await tx.draw.findFirst({
+        where: { groupId, cancelledAt: null, ...notOver() },
+        select: { id: true },
+      })
+
+      if ((current?.id ?? null) !== replaces) {
+        throw new Error(t("draw.changed"))
+      }
+
       const { count } = await tx.draw.updateMany({
         where: { groupId, cancelledAt: null },
         data: { cancelledAt: now },
