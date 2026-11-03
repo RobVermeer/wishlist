@@ -32,6 +32,12 @@ export const LinkFields = ({ defaultValues = [] }: Props) => {
     ])
   }
 
+  function change(key: number, value: string) {
+    setFields(fields =>
+      fields.map(field => (field.key === key ? { ...field, value } : field))
+    )
+  }
+
   function remove(key: number) {
     setFields(fields => fields.filter(field => field.key !== key))
   }
@@ -50,6 +56,7 @@ export const LinkFields = ({ defaultValues = [] }: Props) => {
             name="url"
             inputMode="url"
             defaultValue={value}
+            onChange={event => change(key, event.target.value)}
             autoFocus={added}
             aria-label={t("field", { number: index + 1 })}
           />
@@ -67,17 +74,19 @@ export const LinkFields = ({ defaultValues = [] }: Props) => {
           )}
         </div>
       ))}
-      {fields.length < maxWishlistItemLinks && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="justify-self-start"
-          onClick={add}
-        >
-          <Plus size="16" className="mr-2" /> {t("add")}
-        </Button>
-      )}
+      {/* Another link only makes sense once this one is filled in. */}
+      {fields.length < maxWishlistItemLinks &&
+        fields.every(({ value }) => value.trim()) && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="justify-self-start"
+            onClick={add}
+          >
+            <Plus size="16" className="mr-2" /> {t("add")}
+          </Button>
+        )}
     </fieldset>
   )
 }
