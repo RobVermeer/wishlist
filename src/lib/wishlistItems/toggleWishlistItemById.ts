@@ -8,8 +8,9 @@ import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { managedByUser, sharedWithUser } from "@/lib/wishlists/visibility"
+import * as z from "zod"
 
-export const toggleWishlistItemById = async (id: string) => {
+export const toggleWishlistItemById = async (id: string, bought: boolean) => {
   try {
     const session = await getServerSession(authOptions)
     const t = await getTranslations("Errors")
@@ -19,6 +20,7 @@ export const toggleWishlistItemById = async (id: string) => {
     }
 
     const userId = session.user.id
+    const buy = z.boolean().parse(bought)
 
     const wishlistItem = await prisma.wishlistItem.findUnique({
       where: {
@@ -38,22 +40,27 @@ export const toggleWishlistItemById = async (id: string) => {
       throw new Error(t("item.notFound"))
     }
 
-    if (wishlistItem.boughtBy && wishlistItem.boughtBy.id !== userId) {
+    const boughtByMe = wishlistItem.boughtBy?.id === userId
+
+    if (wishlistItem.boughtBy && !boughtByMe) {
       throw new Error(t("item.alreadyBought"))
     }
 
-    const boughtBy = wishlistItem.boughtBy
-      ? { disconnect: { id: userId } }
-      : { connect: { id: userId } }
+    // Buying or undoing it twice, with a double tap, changes nothing. The
+    // write checks the buyer again, so of people buying at the same moment
+    // only one gets the wish.
+    if (buy !== boughtByMe) {
+      const { count } = await prisma.wishlistItem.updateMany({
+        where: { id, OR: [{ userId: null }, { userId }] },
+        data: buy
+          ? { userId, boughtAt: new Date() }
+          : { userId: null, boughtAt: null },
+      })
 
-    await prisma.wishlistItem.update({
-      where: { id },
-      data: {
-        boughtBy,
-        boughtAt: wishlistItem.boughtBy ? null : new Date(),
-      },
-      select: wishlistItemProperties,
-    })
+      if (count === 0) {
+        throw new Error(t("item.alreadyBought"))
+      }
+    }
 
     revalidatePath("/")
 
