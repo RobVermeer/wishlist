@@ -24,9 +24,11 @@ import { Checkbox } from "@/components/ui/checkbox"
 interface Props {
   id: string
   categories: string[]
+  // Adds the wish to this category, from a small button next to it.
+  category?: string
 }
 
-export const NewItem = ({ id, categories }: Props) => {
+export const NewItem = ({ id, categories, category }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const t = useTranslations()
@@ -57,9 +59,20 @@ export const NewItem = ({ id, categories }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus size="16" className="mr-2" /> {t("NewItem.button")}
-        </Button>
+        {category ? (
+          <Button
+            size="sm"
+            variant="outline"
+            className="shrink-0 px-2.5"
+            aria-label={t("NewItem.toCategory", { category })}
+          >
+            <Plus size="16" />
+          </Button>
+        ) : (
+          <Button>
+            <Plus size="16" className="mr-2" /> {t("NewItem.button")}
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -84,6 +97,7 @@ export const NewItem = ({ id, categories }: Props) => {
             id="category"
             name="category"
             categories={categories}
+            defaultValue={category}
           />
         </form>
         <DialogFooter>

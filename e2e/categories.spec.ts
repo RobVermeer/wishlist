@@ -71,7 +71,9 @@ test("add a wish in a new category", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  await page
+    .getByRole("button", { name: "Voeg een wens toe", exact: true })
+    .click()
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Trui")
@@ -106,7 +108,9 @@ test("existing categories can be picked when adding a wish", async ({
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  await page
+    .getByRole("button", { name: "Voeg een wens toe", exact: true })
+    .click()
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await expect(dialog.getByLabel("Categorie")).toHaveText("Kies een categorie")
@@ -231,6 +235,45 @@ test("removing the last wish of a category removes the category", async ({
   expect(await categoriesOf(wishlist.id)).toEqual([])
 })
 
+test("add a wish straight to a category", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  const books = await createCategory(wishlist, "Boeken", 1)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  await createItem(wishlist, { title: "Roman", category: books })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page
+    .getByRole("button", { name: "Voeg een wens toe aan Boeken" })
+    .click()
+
+  const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
+  await expect(dialog.getByLabel("Categorie")).toHaveText("Boeken")
+  await dialog.getByLabel("Wens", { exact: true }).fill("Strip")
+  await dialog.getByRole("button", { name: "Voeg wens toe" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(categoryToggle(page, "Boeken")).toHaveText(/Boeken\s*2/)
+  await expect(categoryToggle(page, "Boeken")).toHaveAttribute(
+    "aria-expanded",
+    "true"
+  )
+  await expect(page.getByText("Strip")).toBeVisible()
+  await expect(categoryToggle(page, "Kleding")).toHaveText(/Kleding\s*1/)
+
+  const item = await prisma.wishlistItem.findFirstOrThrow({
+    where: { wishlistId: wishlist.id, title: "Strip" },
+  })
+  expect(item.categoryId).toBe(books.id)
+
+  await page
+    .getByRole("button", { name: "Voeg een wens toe", exact: true })
+    .click()
+  await expect(dialog.getByLabel("Categorie")).toHaveText("Kies een categorie")
+})
+
 test("rename a category", async ({ signIn }) => {
   const user = await createUser()
   const wishlist = await createWishlist(user)
@@ -350,7 +393,9 @@ test("category names can be at most 40 characters", async ({ signIn }) => {
   const page = await signIn(user)
 
   await page.goto(`/wishlist/${wishlist.id}`)
-  await page.getByRole("button", { name: "Voeg een wens toe" }).click()
+  await page
+    .getByRole("button", { name: "Voeg een wens toe", exact: true })
+    .click()
 
   const dialog = page.getByRole("dialog", { name: /Voeg wens toe/ })
   await dialog.getByLabel("Wens", { exact: true }).fill("Trui")
@@ -540,6 +585,9 @@ test("group members see categories but cannot reorder them", async ({
   ).toHaveCount(0)
   await expect(
     page.getByRole("button", { name: /Wijzig categorie/ })
+  ).toHaveCount(0)
+  await expect(
+    page.getByRole("button", { name: /Voeg een wens toe aan/ })
   ).toHaveCount(0)
   await expect(
     page.getByRole("button", { name: "Volgorde aanpassen" })
