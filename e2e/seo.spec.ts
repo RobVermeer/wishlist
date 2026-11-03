@@ -47,16 +47,12 @@ test("visitors see the landing page on the home page", async ({ page }) => {
   )
 })
 
-test("the login page points search engines to the home page", async ({
-  page,
-}) => {
+test("the login page stays out of search results", async ({ page }) => {
   await page.goto("/login")
 
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-    "href",
-    baseURL
-  )
   await expect(meta(page, "robots")).toHaveAttribute("content", /noindex/)
+  // A canonical on a page that isn't indexed contradicts the noindex.
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
 })
 
 test("logged in users still see their dashboard on the home page", async ({
