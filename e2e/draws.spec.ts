@@ -35,6 +35,11 @@ test("the creator draws lots for the group", async ({ signIn }) => {
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
+  await expect(
+    page
+      .getByRole("region", { name: "Wie koopt voor wie?" })
+      .getByText("Lootjes trekken")
+  ).toHaveCount(1)
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
 
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })

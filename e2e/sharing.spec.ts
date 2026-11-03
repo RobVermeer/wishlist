@@ -94,6 +94,10 @@ test("a shared wishlist asks to log in before showing anything", async ({
     page.getByText("Olga heeft een verlanglijstje met je gedeeld.")
   ).toBeVisible()
 
+  await expect(
+    page.getByRole("heading", { name: "Bekijk de wensen en streep af" })
+  ).toBeVisible()
+
   const html = await page.content()
   for (const hidden of [
     secretWish,
@@ -150,6 +154,10 @@ test("log in from a shared wishlist, follow it and check off a wish", async ({
     .click()
 
   await expect(page.getByText("Fiets")).toHaveCount(0)
+  await expect(
+    page.getByRole("heading", { name: "Bekijk de wensen en streep af" })
+  ).toBeVisible()
+  await expect(page.getByText("Volg dit verlanglijstje")).toHaveCount(1)
   await page.getByRole("button", { name: "Volg dit verlanglijstje" }).click()
 
   await expect(page).toHaveURL(`/wishlist/${wishlist.id}`)

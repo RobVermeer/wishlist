@@ -686,13 +686,13 @@
       "text": "Bekijk wat {name} graag wil en streep stiekem af wat je gaat kopen."
     },
     "loggedOut": {
-      "title": "Log in om het te bekijken",
+      "title": "Bekijk de wensen en streep af",
       "text": "Na het inloggen zie je de wensen en wat er al gekocht is, zodat niemand iets dubbel geeft.",
       "button": "Log in om te bekijken"
     },
     "follow": {
-      "title": "Volg dit verlanglijstje",
-      "text": "Volg het verlanglijstje om de wensen te zien en af te strepen. Je vindt het daarna terug op je overzicht.",
+      "title": "Bekijk de wensen en streep af",
+      "text": "Volg het verlanglijstje, dan zie je wat er al gekocht is en vind je het terug op je overzicht.",
       "button": "Volg dit verlanglijstje"
     }
   },
@@ -1161,7 +1161,7 @@
       "noWishlist": "{name} heeft nog geen verlanglijstje in deze groep."
     },
     "manage": {
-      "title": "Lootjes trekken",
+      "title": "Wie koopt voor wie?",
       "text": "Iedereen krijgt één persoon om een cadeau voor te kopen.",
       "button": "Lootjes trekken",
       "drawnTitle": "De lootjes zijn getrokken",
