@@ -1,4 +1,3 @@
-import { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { Landing } from "@/components/Landing"
 import { getSession } from "@/lib/getSession"
@@ -6,11 +5,6 @@ import { getLocalPath } from "@/lib/utils"
 
 interface Props {
   searchParams: Promise<{ callbackUrl?: string }>
-}
-
-// The same landing page as the home page, which search engines should show.
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
 }
 
 export default async function Login({ searchParams }: Props) {
