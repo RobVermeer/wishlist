@@ -446,6 +446,31 @@ test("ask the owner to add more wishes", async ({ signIn }) => {
   ).toBeHidden()
 })
 
+test("asking for more wishes twice at once sends one e-mail", async ({
+  signIn,
+}) => {
+  const { owner, shopper, group, wishlist } = await setup()
+  const page = await signIn(shopper)
+  const path = `/group/${group.id}/${wishlist.id}`
+
+  // Stop the request of the button and send it a few times at once. The
+  // requests only overlap now and then, so it tries a number of times.
+  const remind = captureAction(page, path)
+  await page.goto(path)
+  await page.getByRole("button", { name: "Vraag om meer wensen" }).click()
+  const action = await remind
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    await prisma.reminder.deleteMany({ where: { wishlistId: wishlist.id } })
+    await Promise.all([1, 2, 3].map(() => replayAs(page, action)))
+
+    expect(
+      await prisma.reminder.count({ where: { wishlistId: wishlist.id } })
+    ).toBe(1)
+    expect(await emailsTo(owner.email!)).toHaveLength(attempt)
+  }
+})
+
 test("ask for more wishes on a verlanglijstje for someone else", async ({
   signIn,
 }) => {
