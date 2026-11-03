@@ -1458,6 +1458,33 @@ test("only the owner and managers can get the share link of a wishlist", async (
   ).toBeNull()
 })
 
+test("only the owner and managers can make a new share link", async ({
+  signIn,
+}) => {
+  const { member, wishlist, own } = await shoppersSetup()
+  const shareToken = `token-${wishlist.id}`
+  await prisma.wishlist.update({
+    where: { id: wishlist.id },
+    data: { shareToken },
+  })
+  const page = await signIn(member)
+
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+  const dialog = page.getByRole("dialog", { name: "Deel je verlanglijstje" })
+  await expect(dialog.getByLabel("Link naar je verlanglijstje")).toHaveValue(
+    /lijstje/
+  )
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await dialog.getByRole("button", { name: "Maak een nieuwe link" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .shareToken
+  ).toBe(shareToken)
+})
+
 test("more wishes can only be asked of someone who shares a list with you", async ({
   signIn,
 }) => {
