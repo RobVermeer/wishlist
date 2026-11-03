@@ -340,7 +340,7 @@ test("turning the wishlist into your own stops managing it together", async ({
 
   await expect(dialog).toBeHidden()
   await expect(
-    page.getByRole("heading", { name: "Mijn lijstje" })
+    page.getByRole("heading", { name: "Mijn verlanglijstje" })
   ).toBeVisible()
 
   const updated = await findWishlist(wishlist)
