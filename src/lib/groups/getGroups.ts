@@ -20,7 +20,7 @@ export const getGroups = cache(async () => {
 
   const data = await prisma.group.findMany({
     orderBy: { createdAt: "desc" },
-    select: groupProperties,
+    select: { ...groupProperties, removed: true },
   })
 
   return data

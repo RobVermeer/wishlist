@@ -248,6 +248,15 @@ test("admin can remove and restore a group", async ({ signIn }) => {
   await page.goto("/admin/groups")
   const groupCard = card(page, group.title)
   await expect(groupCard).toContainText("Groep Eigenaar")
+  await expect(groupCard).not.toContainText("Verwijderd")
+
+  await page.goto(`/admin/groups/${group.id}`)
+  await expect(page.getByRole("heading", { name: group.title })).toBeVisible()
+  await expect(
+    page.getByRole("button", { name: "Zet groep terug" })
+  ).toHaveCount(0)
+
+  await page.goto("/admin/groups")
 
   await groupCard.getByRole("button", { name: "Verwijder" }).click()
   const dialog = page.getByRole("alertdialog")
@@ -262,6 +271,10 @@ test("admin can remove and restore a group", async ({ signIn }) => {
           .removed
     )
     .toBe(true)
+  await expect(groupCard).toContainText("Verwijderd")
+  await expect(
+    groupCard.getByRole("button", { name: "Verwijder" })
+  ).toHaveCount(0)
 
   await expect(groupCard.getByRole("link", { name: "Bekijk" })).toHaveAttribute(
     "href",

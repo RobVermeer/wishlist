@@ -14,6 +14,7 @@ export const getGroupForAdmin = cache(async (id: string) => {
     select: {
       id: true,
       title: true,
+      removed: true,
       members: {
         select: { id: true, name: true, email: true },
       },

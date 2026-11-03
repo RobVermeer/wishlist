@@ -41,8 +41,12 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
     <List>
       <BackLink href="/admin/groups" label={t("tabs.groups")} />
       <ListTitle>{group.title}</ListTitle>
-      <p>{t("group.restoreText")}</p>
-      <UnDeleteGroup id={group.id} />
+      {group.removed && (
+        <>
+          <p>{t("group.restoreText")}</p>
+          <UnDeleteGroup id={group.id} />
+        </>
+      )}
 
       <p>{t("group.drawText")}</p>
       <SendEmails group={group} />
