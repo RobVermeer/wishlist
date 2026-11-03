@@ -1,6 +1,7 @@
 import { Metadata } from "next"
 import { Card } from "@/components/Card"
 import { List } from "@/components/List"
+import { BackLink } from "@/components/BackLink"
 import { ListTitle } from "@/components/ListTitle"
 import { getUserForAdmin } from "@/lib/users/getUserForAdmin"
 import { getWishlistName } from "@/lib/wishlists/getWishlistName"
@@ -40,6 +41,7 @@ export default async function AdminUserPage({ params }: Props) {
 
   return (
     <List>
+      <BackLink href="/admin/users" label={t("tabs.users")} />
       <ListTitle>{user.name}</ListTitle>
       <p>{t("user.text")}</p>
 

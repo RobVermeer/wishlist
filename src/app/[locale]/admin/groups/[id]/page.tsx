@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import { List } from "@/components/List"
+import { BackLink } from "@/components/BackLink"
 import { ListTitle } from "@/components/ListTitle"
 import { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
 import { SendEmails } from "./components/SendEmails"
@@ -38,6 +39,7 @@ export default async function AdminGroupsDrawPage({ params }: Props) {
 
   return (
     <List>
+      <BackLink href="/admin/groups" label={t("tabs.groups")} />
       <ListTitle>{group.title}</ListTitle>
       <p>{t("group.restoreText")}</p>
       <UnDeleteGroup id={group.id} />

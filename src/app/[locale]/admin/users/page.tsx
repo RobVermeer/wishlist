@@ -1,7 +1,6 @@
 import { Metadata } from "next"
 import { Card } from "@/components/Card"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { getUsers } from "@/lib/users/getUsers"
 import { RemoveUser } from "./components/RemoveUser"
@@ -32,8 +31,6 @@ export default async function AdminUsersPage() {
 
   return (
     <List>
-      <ListTitle>{t("users.title")}</ListTitle>
-
       {users.map(user => (
         <Card key={user.id} className="flex flex-wrap gap-2 items-center">
           <Avatar>

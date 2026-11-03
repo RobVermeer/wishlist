@@ -1,7 +1,6 @@
 import { Metadata } from "next"
 import { Card } from "@/components/Card"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
 import { getGroups } from "@/lib/groups/getGroups"
 import { RemoveGroup } from "./components/RemoveGroup"
 import { Button } from "@/components/ui/button"
@@ -28,8 +27,6 @@ export default async function AdminGroupsPage() {
 
   return (
     <List>
-      <ListTitle>{t("groups.title")}</ListTitle>
-
       {groups.map(group => (
         <Card key={group.id} className="flex gap-2 items-center">
           <span className="leading-none">
