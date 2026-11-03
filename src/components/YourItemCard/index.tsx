@@ -16,7 +16,7 @@ export const YourItemCard = ({ item, categories }: Props) => {
 
   return (
     <Card className="flex items-center pr-24">
-      {unlimited && <InfinityIcon className="mr-1" />}
+      {unlimited && <InfinityIcon className="mr-1 shrink-0 self-start" />}
       <ItemTitle title={title} links={links} />
 
       <EditItem
