@@ -1836,3 +1836,36 @@ test("nobody can remove the super admin", async ({ signIn }) => {
   )
   expect(await prisma.user.count({ where: { id: superAdmin.id } })).toBe(1)
 })
+
+test("regular users get no data from the admin", async ({ signIn }) => {
+  const owner = await createUser()
+  const member = await createUser()
+  const group = await createGroup(owner, {
+    title: `Groep van ${owner.id}`,
+    members: [member],
+  })
+  await createWishlist(owner, {
+    title: `Lijstje van ${owner.id}`,
+    groups: [group],
+  })
+  const page = await signIn(member)
+
+  // The admin layout redirects, but the redirect still carries what the page
+  // rendered. Every page holds all texts, a statistic only shows up as the
+  // children of a rendered tile.
+  for (const path of [
+    "/admin",
+    "/admin/users",
+    `/admin/users/${owner.id}`,
+    `/admin/groups/${group.id}`,
+  ]) {
+    const response = await page.request.get(path, { maxRedirects: 0 })
+    const body = await response.text()
+
+    expect.soft(body, path).not.toContain(owner.email!)
+    expect.soft(body, path).not.toContain(`van ${owner.id}`)
+    expect
+      .soft(body, path)
+      .not.toMatch(/children\\*":\\*"Actief in het afgelopen jaar/)
+  }
+})
