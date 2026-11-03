@@ -83,7 +83,7 @@ export function LoginForm({ callbackUrl = "/" }: Props) {
 
       <Dialog onOpenChange={onOpenChange}>
         <DialogTrigger asChild>
-          <Button>
+          <Button variant="outline">
             <Mail size="18" className="mr-2" /> {t("Login.email")}
           </Button>
         </DialogTrigger>
