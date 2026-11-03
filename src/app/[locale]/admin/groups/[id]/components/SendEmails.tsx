@@ -5,9 +5,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useToast } from "@/components/ui/use-toast"
 import { groupDraw } from "@/lib/groupDraw"
 import type { getGroupForAdmin } from "@/lib/groups/getGroupForAdmin"
-import { Send } from "lucide-react"
+import { LoaderCircle, Send } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { RedirectType, redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { FormEvent, useTransition } from "react"
 
 interface Props {
   group: NonNullable<Awaited<ReturnType<typeof getGroupForAdmin>>>
@@ -16,6 +17,8 @@ interface Props {
 export const SendEmails = ({ group }: Props) => {
   const { toast } = useToast()
   const t = useTranslations("Admin")
+  const router = useRouter()
+  const [pending, startTransition] = useTransition()
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await groupDraw(group.id, data)
@@ -31,11 +34,17 @@ export const SendEmails = ({ group }: Props) => {
     }
 
     toast({ title: t("group.drawn") })
-    redirect("/admin/groups", RedirectType.push)
+    router.push("/admin/groups")
+  }
+
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => handleSubmit(data))
   }
 
   return (
-    <form action={handleSubmit} className="grid gap-2">
+    <form onSubmit={onSubmit} className="grid gap-2">
       {group.members.map(({ id, name, email }) => (
         <div key={id} className="flex items-center space-x-2">
           <Checkbox id={id} name="users[]" value={id} defaultChecked />
@@ -45,8 +54,13 @@ export const SendEmails = ({ group }: Props) => {
         </div>
       ))}
 
-      <Button type="submit">
-        <Send size="16" className="mr-2" /> {t("group.draw")}
+      <Button type="submit" disabled={pending}>
+        {pending ? (
+          <LoaderCircle size="16" className="mr-2 animate-spin" />
+        ) : (
+          <Send size="16" className="mr-2" />
+        )}{" "}
+        {t("group.draw")}
       </Button>
     </form>
   )
