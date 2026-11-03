@@ -29,9 +29,14 @@ export const getShareTokenForWishlist = async (id: string) => {
       return { type: "success" as const, shareToken: wishlist.shareToken }
     }
 
-    const { shareToken } = await prisma.wishlist.update({
-      where: { id },
+    // Only the first of two requests at once makes the link, so a link that
+    // was already shared keeps working.
+    await prisma.wishlist.updateMany({
+      where: { id, shareToken: null },
       data: { shareToken: randomBytes(16).toString("base64url") },
+    })
+    const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+      where: { id },
       select: { shareToken: true },
     })
 
