@@ -696,6 +696,32 @@ test("managers can't remove a wishlist", async ({ signIn }) => {
   }
 })
 
+test("outsiders can't remove a wishlist", async ({ signIn }) => {
+  const owner = await createUser()
+  const outsider = await createUser()
+  const wishlist = await createWishlist(owner)
+  const own = await createWishlist(outsider)
+  const page = await signIn(outsider)
+
+  await forgeActions(page, `/wishlist/${own.id}`, own.id, wishlist.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  await page
+    .getByRole("dialog", { name: "Wijzig verlanglijstje" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+  await page
+    .getByRole("alertdialog", { name: "Weet je het zeker?" })
+    .getByRole("button", { name: "Verwijder" })
+    .click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .removed
+  ).toBe(false)
+})
+
 test("managers can't buy wishes of a wishlist they manage", async ({
   signIn,
 }) => {
