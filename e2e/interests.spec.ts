@@ -9,6 +9,8 @@ import {
   createItem,
   prisma,
   toasts,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 
 const interests = (page: Page, title: string) =>
@@ -83,6 +85,30 @@ test("share what makes you happy on your wishlist", async ({ signIn }) => {
   ])
   await expect(page.getByLabel("Nieuwe interesse")).toHaveCount(0)
   await expect(page.getByRole("button", { name: /^Verwijder/ })).toHaveCount(0)
+})
+
+test("saving interests twice at once adds them once", async ({ signIn }) => {
+  const owner = await createUser()
+  const wishlist = await createWishlist(owner)
+  const page = await signIn(owner)
+
+  // Stop the request of Opslaan and send it a few times at once. The
+  // requests only overlap now and then, so it tries a number of times.
+  const save = captureAction(page, `/wishlist/${wishlist.id}`)
+  await page.goto(`/wishlist/${wishlist.id}`)
+  const dialog = await editWishlist(page)
+  await addInterest(page, "lezen")
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  const action = await save
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    await prisma.wishlistInterest.deleteMany({
+      where: { wishlistId: wishlist.id },
+    })
+    await Promise.all([1, 2, 3].map(() => replayAs(page, action)))
+
+    expect(await interestsOf(wishlist)).toEqual(["lezen"])
+  }
 })
 
 test("interests are only saved with Opslaan, closing asks first", async ({
