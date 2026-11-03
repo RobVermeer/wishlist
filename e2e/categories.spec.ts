@@ -602,3 +602,39 @@ test("group members see categories but cannot reorder them", async ({
   await categoryToggle(page, "Kleding").click()
   await expect(page.getByText("Trui")).toBeHidden()
 })
+
+test("closing a renamed category asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  const clothes = await createCategory(wishlist, "Kleding", 0)
+  await createItem(wishlist, { title: "Trui", category: clothes })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig categorie Kleding" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig categorie" })
+  const field = dialog.getByLabel("Naam van de categorie")
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await field.fill("Kleren")
+  await field.fill("Kleding")
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+  await expect(confirm).toHaveCount(0)
+
+  await page.getByRole("button", { name: "Wijzig categorie Kleding" }).click()
+  await field.fill("Winterkleding")
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(field).toHaveValue("Winterkleding")
+
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+  expect(await categoriesOf(wishlist.id)).toMatchObject([
+    { id: clothes.id, title: "Kleding" },
+  ])
+})
