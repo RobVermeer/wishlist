@@ -1,6 +1,5 @@
 import { EmptyState } from "@/components/EmptyState"
 import { List } from "@/components/List"
-import { ListTitle } from "@/components/ListTitle"
 import { WishlistTitle } from "@/components/WishlistTitle"
 import { YourItemCard } from "@/components/YourItemCard"
 import { getWishlistById } from "@/lib/wishlists/getWishlistById"
@@ -103,70 +102,72 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
 
   return (
     <List>
-      {(backLink || wishlist.isOwnList) && (
-        <div className="flex items-center justify-between gap-2">
-          {backLink}
-          {wishlist.isOwnList && (
-            <EditWishlist
-              wishlist={{
-                id: wishlist.id,
-                title: wishlist.title,
-                theme: wishlist.theme,
-                groups: wishlist.groups
-                  .filter(({ id }) => ownGroups.some(group => group.id === id))
-                  .map(({ id }) => ({ id })),
-                managers: wishlist.managers.map(({ id }) => ({ id })),
-                isManager: wishlist.isManager,
-              }}
-              interests={{
-                title: interestsTitle,
-                hint: isOwnWishlist
-                  ? tInterests("hint.own")
-                  : tInterests("hint.managed", { name }),
-                items: wishlist.interests,
-              }}
-              groups={ownGroups}
-              managers={managerOptions}
-              className="ml-auto shrink-0"
-            />
+      {backLink}
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          {!wishlist.title && wishlist.user.image && (
+            <Avatar className="size-12 shrink-0 ring-2 ring-white/70 shadow-sm">
+              <AvatarImage
+                src={wishlist.user.image}
+                alt={`@${wishlist.user.name}`}
+              />
+              <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
+            </Avatar>
           )}
+          <div className="grid min-w-0 gap-0.5">
+            <h2 className="font-display text-3xl font-semibold tracking-tight">
+              <WishlistTitle wishlist={wishlist} />
+            </h2>
+
+            {wishlist.isOwnList && !group && wishlist.groups.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {tCommon("inGroup", {
+                  count: wishlist.groups.length,
+                  groups: format.list(
+                    wishlist.groups.map(({ title }) => title)
+                  ),
+                })}
+              </p>
+            )}
+
+            {wishlist.managedWith.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {t("hint.together", {
+                  names: format.list(wishlist.managedWith.map(getFirstName)),
+                })}
+              </p>
+            )}
+          </div>
         </div>
-      )}
-      <div className="text-center">
-        {!wishlist.title && wishlist.user.image && (
-          <Avatar className="inline-block w-14 h-14 border border-slate-500">
-            <AvatarImage
-              src={wishlist.user.image}
-              alt={`@${wishlist.user.name}`}
-            />
-            <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
-          </Avatar>
+        {wishlist.isOwnList && (
+          <EditWishlist
+            wishlist={{
+              id: wishlist.id,
+              title: wishlist.title,
+              theme: wishlist.theme,
+              groups: wishlist.groups
+                .filter(({ id }) => ownGroups.some(group => group.id === id))
+                .map(({ id }) => ({ id })),
+              managers: wishlist.managers.map(({ id }) => ({ id })),
+              isManager: wishlist.isManager,
+            }}
+            interests={{
+              title: interestsTitle,
+              hint: isOwnWishlist
+                ? tInterests("hint.own")
+                : tInterests("hint.managed", { name }),
+              items: wishlist.interests,
+            }}
+            groups={ownGroups}
+            managers={managerOptions}
+            className="shrink-0"
+          />
         )}
-        <ListTitle>
-          <WishlistTitle wishlist={wishlist} />
-        </ListTitle>
-
-        {wishlist.isOwnList && !group && wishlist.groups.length > 0 && (
-          <p className="text-sm text-muted-foreground">
-            {tCommon("inGroup", {
-              count: wishlist.groups.length,
-              groups: format.list(wishlist.groups.map(({ title }) => title)),
-            })}
-          </p>
-        )}
-
-        {wishlist.managedWith.length > 0 && (
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t("hint.together", {
-              names: format.list(wishlist.managedWith.map(getFirstName)),
-            })}
-          </p>
-        )}
-
-        <p className="mt-2 text-sm text-muted-foreground">
-          {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}
-        </p>
       </div>
+
+      <p className="text-sm text-muted-foreground">
+        {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}
+      </p>
 
       {!hasItems &&
         !onlyInterests &&
