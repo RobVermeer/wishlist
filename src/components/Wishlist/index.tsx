@@ -7,8 +7,6 @@ import { NewItem } from "@/components/NewItem"
 import { notFound } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
 import { getFormatter, getTranslations } from "next-intl/server"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { getInitials } from "@/lib/utils"
 import { getGroupById } from "@/lib/groups/getGroupById"
 import { canBeRemindedForWishlist } from "@/lib/reminders/canBeRemindedForWishlist"
 import { RemindButton } from "../RemindButton"
@@ -28,14 +26,17 @@ import { getOpenCategories } from "@/lib/wishlistCategories/getOpenCategories"
 import { Interests } from "@/components/Interests"
 import { SortMode } from "@/components/SortMode"
 import { ReactNode } from "react"
+import { PageTitle } from "@/components/PageTitle"
 
 interface Props {
   id: string
   groupId?: string
   backLink?: ReactNode
+  // h2 when the verlanglijstje is shown on the page of its group.
+  as?: "h1" | "h2"
 }
 
-export const Wishlist = async ({ id, groupId, backLink }: Props) => {
+export const Wishlist = async ({ id, groupId, backLink, as }: Props) => {
   const wishlist = await getWishlistById(id)
   const group = groupId ? await getGroupById(groupId) : null
   const openCategories = await getOpenCategories()
@@ -103,64 +104,58 @@ export const Wishlist = async ({ id, groupId, backLink }: Props) => {
   return (
     <List>
       {backLink}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          {!wishlist.title && wishlist.user.image && (
-            <Avatar className="size-12 shrink-0 ring-2 ring-white/70 shadow-sm">
-              <AvatarImage src={wishlist.user.image} alt="" />
-              <AvatarFallback>{getInitials(wishlist.user.name)}</AvatarFallback>
-            </Avatar>
-          )}
-          <div className="grid min-w-0 gap-0.5">
-            <h2 className="font-display text-3xl font-semibold tracking-tight">
-              <WishlistTitle wishlist={wishlist} />
-            </h2>
-
-            {wishlist.isOwnList && !group && wishlist.groups.length > 0 && (
-              <p className="text-sm text-muted-foreground">
-                {tCommon("inGroup", {
-                  count: wishlist.groups.length,
-                  groups: format.list(
-                    wishlist.groups.map(({ title }) => title)
-                  ),
-                })}
-              </p>
-            )}
-
-            {wishlist.managedWith.length > 0 && (
-              <p className="text-sm text-muted-foreground">
-                {t("hint.together", {
-                  names: format.list(wishlist.managedWith.map(getFirstName)),
-                })}
-              </p>
-            )}
-          </div>
-        </div>
-        {wishlist.isOwnList && (
-          <EditWishlist
-            wishlist={{
-              id: wishlist.id,
-              title: wishlist.title,
-              theme: wishlist.theme,
-              groups: wishlist.groups
-                .filter(({ id }) => ownGroups.some(group => group.id === id))
-                .map(({ id }) => ({ id })),
-              managers: wishlist.managers.map(({ id }) => ({ id })),
-              isManager: wishlist.isManager,
-            }}
-            interests={{
-              title: interestsTitle,
-              hint: isOwnWishlist
-                ? tInterests("hint.own")
-                : tInterests("hint.managed", { name }),
-              items: wishlist.interests,
-            }}
-            groups={ownGroups}
-            managers={managerOptions}
-            className="shrink-0"
-          />
+      <PageTitle
+        as={as}
+        title={<WishlistTitle wishlist={wishlist} />}
+        avatar={
+          !wishlist.title && wishlist.user.image
+            ? { image: wishlist.user.image, name: wishlist.user.name }
+            : null
+        }
+        action={
+          wishlist.isOwnList && (
+            <EditWishlist
+              wishlist={{
+                id: wishlist.id,
+                title: wishlist.title,
+                theme: wishlist.theme,
+                groups: wishlist.groups
+                  .filter(({ id }) => ownGroups.some(group => group.id === id))
+                  .map(({ id }) => ({ id })),
+                managers: wishlist.managers.map(({ id }) => ({ id })),
+                isManager: wishlist.isManager,
+              }}
+              interests={{
+                title: interestsTitle,
+                hint: isOwnWishlist
+                  ? tInterests("hint.own")
+                  : tInterests("hint.managed", { name }),
+                items: wishlist.interests,
+              }}
+              groups={ownGroups}
+              managers={managerOptions}
+              className="shrink-0"
+            />
+          )
+        }
+      >
+        {wishlist.isOwnList && !group && wishlist.groups.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {tCommon("inGroup", {
+              count: wishlist.groups.length,
+              groups: format.list(wishlist.groups.map(({ title }) => title)),
+            })}
+          </p>
         )}
-      </div>
+
+        {wishlist.managedWith.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {t("hint.together", {
+              names: format.list(wishlist.managedWith.map(getFirstName)),
+            })}
+          </p>
+        )}
+      </PageTitle>
 
       <p className="text-sm text-muted-foreground">
         {wishlist.isOwnList ? t("hint.own") : t("hint.other", { name })}

@@ -12,7 +12,7 @@ export default function ProfileLayout({ children }: Props) {
 
   return (
     <>
-      <ListTitle>{t("title")}</ListTitle>
+      <ListTitle as="h1">{t("title")}</ListTitle>
 
       <ProfileTabs />
 

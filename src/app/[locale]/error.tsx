@@ -8,7 +8,7 @@ export default function Error() {
   const t = useTranslations("Error")
 
   return (
-    <EmptyState title={t("empty.title")}>
+    <EmptyState as="h1" title={t("empty.title")}>
       {t.rich("empty.text", {
         dashboard: chunks => (
           <Link href="/" className="text-primary">

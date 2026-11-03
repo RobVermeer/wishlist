@@ -89,7 +89,7 @@ test("a shared wishlist asks to log in before showing anything", async ({
 
   await expect(page).toHaveTitle("Olga - Niet Weer Sokken")
   await expect(
-    page.getByRole("heading", { name: "Olga", level: 2 })
+    page.getByRole("heading", { name: "Olga", level: 1 })
   ).toBeVisible()
   await expect(
     page.getByText("Olga heeft een verlanglijstje met je gedeeld.")
@@ -273,7 +273,7 @@ test("only followers can unfollow a wishlist", async ({ signIn }) => {
   for (const user of [owner, member]) {
     const page = await signIn(user)
     await page.goto(`/wishlist/${wishlist.id}`)
-    await expect(page.getByRole("heading", { level: 2 })).toBeVisible()
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible()
     await expect(
       page.getByRole("button", { name: "Stop met volgen" })
     ).toHaveCount(0)
@@ -318,14 +318,14 @@ test("making a new link stops the old one, followers keep access", async ({
   await expect(visitor.getByText(notFound)).toBeVisible()
   await visitor.goto(`/lijstje/${shareToken}`)
   await expect(
-    visitor.getByRole("heading", { name: "Olga", level: 2 })
+    visitor.getByRole("heading", { name: "Olga", level: 1 })
   ).toBeVisible()
   await visitor.close()
 
   const followerPage = await signIn(follower)
   await followerPage.goto(`/wishlist/${wishlist.id}`)
   await expect(
-    followerPage.getByRole("heading", { name: "Olga", level: 2 })
+    followerPage.getByRole("heading", { name: "Olga", level: 1 })
   ).toBeVisible()
 })
 

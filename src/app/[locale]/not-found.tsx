@@ -6,7 +6,7 @@ export default function NotFound() {
   const t = useTranslations("NotFound")
 
   return (
-    <EmptyState title={t("empty.title")}>
+    <EmptyState as="h1" title={t("empty.title")}>
       {t.rich("empty.text", {
         dashboard: chunks => (
           <Link href="/" className="text-primary">
