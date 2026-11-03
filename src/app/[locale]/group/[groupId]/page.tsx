@@ -137,10 +137,10 @@ export default async function GroupPage({ params }: Props) {
         id: member.id,
         name: getFirstName(member) || tDraw("anonymous"),
       }))}
-      previous={(draw ?? [])
+      previous={(draw?.participants ?? [])
         .filter(({ status }) => status === "invited")
         .map(({ id, name }) => ({ id, name }))}
-      redraw={draw !== null}
+      replaces={draw?.id}
     />
   )
 
@@ -272,7 +272,7 @@ export default async function GroupPage({ params }: Props) {
       )}
 
       {isCreator && draw && (
-        <DrawSummary participants={draw}>{drawLots}</DrawSummary>
+        <DrawSummary participants={draw.participants}>{drawLots}</DrawSummary>
       )}
 
       {isCreator && !draw && group.members.length > 1 && (
