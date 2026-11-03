@@ -178,9 +178,9 @@ test("member can leave a group but cannot edit it", async ({ signIn }) => {
   await expect(
     page.getByRole("button", { name: "Wijzig", exact: true })
   ).toHaveCount(0)
-  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page.getByRole("button", { name: "Stap uit", exact: true }).click()
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
+  const dialog = page.getByRole("dialog", { name: "Uit de groep stappen?" })
   await expect(dialog).toContainText("heb je een nieuwe uitnodiging nodig")
   await expect(dialog.getByLabel("Naam van de groep")).toBeHidden()
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
@@ -208,9 +208,9 @@ test("leaving a group takes your wishlists out of it", async ({ signIn }) => {
   const page = await signIn(member)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page.getByRole("button", { name: "Stap uit", exact: true }).click()
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
+  const dialog = page.getByRole("dialog", { name: "Uit de groep stappen?" })
   await expect(dialog).toContainText(
     "zien de anderen je verlanglijstjes niet meer"
   )
@@ -245,13 +245,13 @@ test("leaving a group that fails shows the error", async ({ signIn }) => {
   const page = await signIn(member)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Verlaat" }).click()
+  await page.getByRole("button", { name: "Stap uit", exact: true }).click()
   await prisma.group.update({
     where: { id: group.id },
     data: { removed: true },
   })
 
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
+  const dialog = page.getByRole("dialog", { name: "Uit de groep stappen?" })
   await dialog.getByRole("button", { name: "Stap uit de groep" }).click()
 
   await expect(toasts(page)).toContainText("Groep niet gevonden")
@@ -308,7 +308,9 @@ test("group page lists the wishlists of its members", async ({ signIn }) => {
     "href",
     `/group/${group.id}/${managedList.id}`
   )
-  await expect(page.getByRole("link", { name: "Mijn verlanglijstje" })).toBeHidden()
+  await expect(
+    page.getByRole("link", { name: "Mijn verlanglijstje" })
+  ).toBeHidden()
   await expect(page.getByRole("link", { name: "Geheim lijstje" })).toBeHidden()
   await expect(page.getByRole("link", { name: "Xander" })).toBeHidden()
 })

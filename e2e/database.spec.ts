@@ -32,8 +32,8 @@ test("changes wait for another connection that is writing", async ({
   const page = await signIn(member)
 
   await page.goto(`/group/${group.id}`)
-  await page.getByRole("button", { name: "Verlaat" }).click()
-  const dialog = page.getByRole("dialog", { name: "Verlaat groep" })
+  await page.getByRole("button", { name: "Stap uit", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "Uit de groep stappen?" })
 
   // Hold a write lock, like the fixtures of a test running in parallel, while
   // the server leaves the group. It waits for the lock and answers once the
