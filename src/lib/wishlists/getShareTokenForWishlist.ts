@@ -3,6 +3,7 @@
 import { randomBytes } from "crypto"
 import { getSession } from "@/lib/getSession"
 import { prisma } from "@/lib/prisma"
+import { revalidatePath } from "next/cache"
 import { getErrorMessage } from "@/lib/utils"
 import { getTranslations } from "next-intl/server"
 import { managedByUser } from "./visibility"
@@ -39,6 +40,8 @@ export const getShareTokenForWishlist = async (id: string) => {
       where: { id },
       select: { shareToken: true },
     })
+
+    revalidatePath("/")
 
     return { type: "success" as const, shareToken: shareToken! }
   } catch (error) {
