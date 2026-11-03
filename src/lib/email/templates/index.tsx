@@ -16,8 +16,9 @@ import {
 import { getFormatter, getTranslations } from "next-intl/server"
 import type { ReactNode } from "react"
 import type { contactTopics } from "@/lib/schema"
+import { siteUrl } from "@/lib/siteUrl"
 
-const baseUrl = process.env.BASE_URL!
+const url = (path: string) => new URL(path, siteUrl).href
 
 interface EmailLayoutProps {
   preview: string
@@ -35,7 +36,7 @@ const EmailLayout = ({ preview, reason, children }: EmailLayoutProps) => (
       <Container style={container}>
         <Row>
           <Column style={logo}>
-            <Img src={`${baseUrl}/gift.png`} width="32" height="32" alt="" />
+            <Img src={url("/gift.png")} width="32" height="32" alt="" />
           </Column>
           <Column style={brand}>Niet Weer Sokken</Column>
         </Row>
@@ -45,7 +46,7 @@ const EmailLayout = ({ preview, reason, children }: EmailLayoutProps) => (
         <Text style={footer}>
           {reason}
           <br />
-          <Link style={link} href={baseUrl}>
+          <Link style={link} href={url("/")}>
             Niet Weer Sokken
           </Link>
         </Text>
@@ -96,7 +97,7 @@ export const DrawUserEmail = async ({
           })}
         </Text>
 
-        <Button style={button} href={`${baseUrl}/group/${groupId}`}>
+        <Button style={button} href={url(`/group/${groupId}`)}>
           {t("button", { group: groupName })}
         </Button>
       </Section>
@@ -139,7 +140,7 @@ export const RemindUserEmail = async ({
       <Section style={section}>
         <Text style={text}>{t(`${key}.text`, values)}</Text>
 
-        <Button style={button} href={`${baseUrl}/wishlist/${wishlist.id}`}>
+        <Button style={button} href={url(`/wishlist/${wishlist.id}`)}>
           {t("button")}
         </Button>
       </Section>
@@ -288,7 +289,7 @@ export const DrawLotsEmail = async ({
           {t(member ? "member" : "invite", { receiver })}
         </Text>
 
-        <Button style={button} href={`${baseUrl}/group/${group.id}`}>
+        <Button style={button} href={url(`/group/${group.id}`)}>
           {t(member ? "button" : "join", { group: group.title })}
         </Button>
       </Section>
