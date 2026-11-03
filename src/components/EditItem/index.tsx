@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Checkbox } from "../ui/checkbox"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   item: {
@@ -37,6 +38,10 @@ interface Props {
 export const EditItem = ({ item, categories }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+  })
   const { id, title, links, unlimited } = item
   const t = useTranslations()
 
@@ -77,7 +82,7 @@ export const EditItem = ({ item, categories }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button className="absolute right-1" size="sm" variant="outline">
           <Pencil size="12" className="mr-2" /> {t("EditItem.button")}
@@ -91,6 +96,7 @@ export const EditItem = ({ item, categories }: Props) => {
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
         </DialogHeader>
         <form
+          ref={setForm}
           onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
@@ -132,6 +138,7 @@ export const EditItem = ({ item, categories }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

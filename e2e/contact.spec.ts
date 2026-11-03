@@ -125,3 +125,35 @@ test("what you typed stays when you switch topics", async ({ signIn }) => {
     "Kan ik lootjes trekken?"
   )
 })
+
+test("closing a message you started asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/vragen")
+  let dialog = await openContactForm(page)
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+
+  dialog = await openContactForm(page)
+  await dialog.getByLabel("Ik heb een vraag").check()
+  await dialog.getByLabel("Wat wil je weten?").fill("Kan ik lootjes trekken?")
+  await page.keyboard.press("Escape")
+
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog.getByLabel("Wat wil je weten?")).toHaveValue(
+    "Kan ik lootjes trekken?"
+  )
+
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  dialog = await openContactForm(page)
+  await expect(dialog.getByLabel("Ik heb een vraag")).not.toBeChecked()
+  await expect(dialog.getByRole("textbox")).toHaveCount(0)
+})

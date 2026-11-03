@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 import { sendContactMessage } from "@/lib/contact/sendContactMessage"
 import { contactTopics } from "@/lib/schema"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 type ContactTopic = (typeof contactTopics)[number]
 
@@ -39,6 +40,14 @@ export const ContactForm = ({ className }: Props) => {
   const [pending, startTransition] = useTransition()
   const [topic, setTopic] = useState<ContactTopic>()
   const [message, setMessage] = useState("")
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+    onDiscard: () => {
+      setTopic(undefined)
+      setMessage("")
+    },
+  })
 
   async function handleSubmit(data: FormData) {
     const { type, errors } = await sendContactMessage(data)
@@ -63,7 +72,7 @@ export const ContactForm = ({ className }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" className={className}>
           <MessageCircle size="16" className="mr-2" /> {t("button")}
@@ -74,7 +83,12 @@ export const ContactForm = ({ className }: Props) => {
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>{t("text")}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} id="contact" className="grid gap-4 py-4">
+        <form
+          ref={setForm}
+          onSubmit={onSubmit}
+          id="contact"
+          className="grid gap-4 py-4"
+        >
           <fieldset className="grid gap-2">
             <legend className="mb-2 text-sm font-medium">
               {t("form.topic")}
@@ -135,6 +149,7 @@ export const ContactForm = ({ className }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

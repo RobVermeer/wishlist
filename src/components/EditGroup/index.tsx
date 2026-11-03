@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useTranslations } from "next-intl"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   group: { id: string; title: string; theme: string | null }
@@ -43,6 +44,10 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
   const { toast } = useToast()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+  })
   const { id, title } = group
   const t = useTranslations()
 
@@ -93,7 +98,7 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <Button className={className} size="sm" variant="outline">
           <Pencil size="12" className="mr-2" /> {t("EditGroup.button")}
@@ -107,6 +112,7 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
           <DialogTitle>{t("EditGroup.title")}</DialogTitle>
         </DialogHeader>
         <form
+          ref={setForm}
           onSubmit={onSubmit}
           id={`change-${id}`}
           className="grid gap-4 py-4"
@@ -187,6 +193,7 @@ export const EditGroup = ({ group, members, wishlists, className }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

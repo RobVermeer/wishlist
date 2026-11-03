@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Checkbox } from "@/components/ui/checkbox"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   id: string
@@ -31,6 +32,10 @@ interface Props {
 export const NewItem = ({ id, categories, category }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+  })
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -57,7 +62,7 @@ export const NewItem = ({ id, categories, category }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         {category ? (
           <Button
@@ -78,7 +83,12 @@ export const NewItem = ({ id, categories, category }: Props) => {
         <DialogHeader>
           <DialogTitle>{t("NewItem.title")}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
+        <form
+          ref={setForm}
+          onSubmit={onSubmit}
+          id="add"
+          className="grid gap-4 py-4"
+        >
           <Label htmlFor="title">{t("NewItem.form.title")}</Label>
           <Input required id="title" name="title" />
 
@@ -106,6 +116,7 @@ export const NewItem = ({ id, categories, category }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }

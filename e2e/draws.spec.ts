@@ -677,3 +677,34 @@ test("drawing lots shows once there's someone to draw with", async ({
     page.getByRole("dialog", { name: "Lootjes trekken" })
   ).toContainText("Niemand ziet wie wie heeft getrokken, ook jij niet.")
 })
+
+test("closing the draw after changing something asks first", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Anna" })
+  const bert = await createUser({ firstName: "Bert" })
+  const group = await createGroup(owner, { members: [bert] })
+  const page = await signIn(owner)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
+  await dialog.getByLabel("Budget").fill("25")
+  await page.keyboard.press("Escape")
+
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  await addPerson(dialog, "Carla", "carla@example.com")
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  await page.getByRole("button", { name: "Lootjes trekken" }).click()
+  await expect(dialog.getByText("carla@example.com")).toHaveCount(0)
+  expect(await prisma.draw.count({ where: { groupId: group.id } })).toBe(0)
+})

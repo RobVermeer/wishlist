@@ -390,3 +390,144 @@ test("following only a wishlist doesn't show the empty state", async ({
   await expect(page.getByRole("link", { name: "Fenna" })).toBeVisible()
   await expect(page.getByText("Je zit nog niet in een groep")).toBeHidden()
 })
+
+test("closing an edited wishlist asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const family = await createGroup(user, { title: "Familie" })
+  await createGroup(user, { title: "Vrienden" })
+  const wishlist = await createWishlist(user, {
+    groups: [family],
+    theme: "birthday",
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Reizen" }).click()
+  await expect(page.getByRole("listbox")).toHaveCount(0)
+  await dialog.getByLabel("Vrienden").click()
+  await dialog.getByRole("button", { name: "Close" }).click()
+
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog.getByLabel("Thema")).toHaveText("Reizen")
+  await expect(dialog.getByLabel("Vrienden")).toBeChecked()
+
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+
+  const unchanged = await prisma.wishlist.findUniqueOrThrow({
+    where: { id: wishlist.id },
+    include: { groups: true },
+  })
+  expect(unchanged.theme).toBe("birthday")
+  expect(unchanged.groups.map(({ id }) => id)).toEqual([family.id])
+
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  await expect(dialog.getByLabel("Thema")).toHaveText("Verjaardag")
+  await expect(dialog.getByLabel("Vrienden")).not.toBeChecked()
+})
+
+test("closing a wishlist for someone else after changing the name asks first", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user, { title: "Opa Jan" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  await dialog.getByLabel("Naam", { exact: true }).fill("Oma Jo")
+  await page.keyboard.press("Escape")
+  await page
+    .getByRole("alertdialog", { name: "Wijzigingen niet opslaan?" })
+    .getByRole("button", { name: "Niet opslaan" })
+    .click()
+
+  await expect(dialog).toBeHidden()
+  expect(
+    (await prisma.wishlist.findUniqueOrThrow({ where: { id: wishlist.id } }))
+      .title
+  ).toBe("Opa Jan")
+})
+
+test("closing an edited wishlist without changes doesn't ask", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const family = await createGroup(user, { title: "Familie" })
+  const wishlist = await createWishlist(user, {
+    groups: [family],
+    theme: "birthday",
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig verlanglijstje" })
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await dialog.getByLabel("Familie").click()
+  await dialog.getByLabel("Familie").click()
+  await page.keyboard.press("Escape")
+
+  await expect(dialog).toBeHidden()
+  await expect(confirm).toHaveCount(0)
+
+  await page.getByRole("button", { name: "Wijzig verlanglijstje" }).click()
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Reizen" }).click()
+  await expect(page.getByRole("listbox")).toHaveCount(0)
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(confirm).toHaveCount(0)
+  await expect
+    .poll(
+      async () =>
+        (
+          await prisma.wishlist.findUniqueOrThrow({
+            where: { id: wishlist.id },
+          })
+        ).theme
+    )
+    .toBe("travel")
+})
+
+test("closing a new wishlist after choosing a group asks first", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  await createGroup(user, { title: "Familie" })
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuw verlanglijstje/ })
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+  await expect(confirm).toHaveCount(0)
+
+  await page.getByRole("button", { name: "Nieuw verlanglijstje" }).click()
+  await dialog.getByLabel("Familie").click()
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  expect(await prisma.wishlist.count({ where: { userId: user.id } })).toBe(0)
+})

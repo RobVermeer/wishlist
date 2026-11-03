@@ -1032,3 +1032,58 @@ test("owner can remove a member and their wishlists from the group", async ({
     memberPage.getByText("Je volgt deze groep nog niet")
   ).toBeVisible()
 })
+
+test("closing an edited group asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const group = await createGroup(user, {
+    title: "Familie",
+    theme: "christmas",
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/group/${group.id}`)
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig groep" })
+  const confirm = page.getByRole("alertdialog", {
+    name: "Wijzigingen niet opslaan?",
+  })
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+  await expect(confirm).toHaveCount(0)
+
+  await page.getByRole("button", { name: "Wijzig", exact: true }).click()
+  await dialog.getByLabel("Thema").click()
+  await page.getByRole("option", { name: "Sinterklaas" }).click()
+  await expect(page.getByRole("listbox")).toHaveCount(0)
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Verder bewerken" }).click()
+  await expect(confirm).toBeHidden()
+  await expect(dialog.getByLabel("Thema")).toHaveText("Sinterklaas")
+
+  await page.keyboard.press("Escape")
+  await confirm.getByRole("button", { name: "Niet opslaan" }).click()
+  await expect(dialog).toBeHidden()
+  expect(
+    await prisma.group.findUniqueOrThrow({ where: { id: group.id } })
+  ).toMatchObject({ title: "Familie", theme: "christmas" })
+})
+
+test("closing a half-typed new group asks first", async ({ signIn }) => {
+  const user = await createUser()
+  const page = await signIn(user)
+
+  await page.goto("/")
+  await page.getByRole("button", { name: "Nieuwe groep" }).click()
+
+  const dialog = page.getByRole("dialog", { name: /Nieuwe groep/ })
+  await dialog.getByLabel("Naam van de groep").fill("Familie")
+  await page.keyboard.press("Escape")
+  await page
+    .getByRole("alertdialog", { name: "Wijzigingen niet opslaan?" })
+    .getByRole("button", { name: "Niet opslaan" })
+    .click()
+
+  await expect(dialog).toBeHidden()
+  expect(await prisma.group.count({ where: { userId: user.id } })).toBe(0)
+})

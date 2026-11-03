@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useTranslations } from "next-intl"
+import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
   trigger: ReactNode
@@ -34,6 +35,10 @@ interface Props {
 export const NewGroup = ({ trigger, hasWishlist }: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
+  const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
+    open,
+    onOpenChange: setOpen,
+  })
   const t = useTranslations()
 
   async function handleSubmit(data: FormData) {
@@ -59,7 +64,7 @@ export const NewGroup = ({ trigger, hasWishlist }: Props) => {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -73,7 +78,12 @@ export const NewGroup = ({ trigger, hasWishlist }: Props) => {
             })}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} id="add" className="grid gap-4 py-4">
+        <form
+          ref={setForm}
+          onSubmit={onSubmit}
+          id="add"
+          className="grid gap-4 py-4"
+        >
           <Label htmlFor="title">{t("NewGroup.form.title")}</Label>
           <Input
             required
@@ -113,6 +123,7 @@ export const NewGroup = ({ trigger, hasWishlist }: Props) => {
           </Button>
         </DialogFooter>
       </DialogContent>
+      {confirmation}
     </Dialog>
   )
 }
