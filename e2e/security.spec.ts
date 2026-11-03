@@ -17,6 +17,8 @@ import {
   prisma,
   toasts,
   pickDate,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -1569,48 +1571,6 @@ test("more wishes can only be asked of someone who shares a list with you", asyn
 // Regular users can't open the admin, so these tests stop the admin's own
 // request and send it again with a regular user's session, like an attacker
 // who copied it would.
-async function captureAction(page: Page, path: string) {
-  return new Promise<{
-    url: string
-    headers: Record<string, string>
-    body: string
-  }>(resolve => {
-    page.route(
-      url => url.pathname === path,
-      async route => {
-        const request = route.request()
-        if (request.method() === "POST" && request.headers()["next-action"]) {
-          resolve({
-            url: request.url(),
-            headers: request.headers(),
-            body: request.postData()!,
-          })
-          return route.abort()
-        }
-        return route.continue()
-      }
-    )
-  })
-}
-
-async function replayAs(
-  page: Page,
-  action: Awaited<ReturnType<typeof captureAction>>
-) {
-  const { url, headers, body } = action
-  const response = await page.request.post(url, {
-    headers: {
-      "next-action": headers["next-action"],
-      "next-router-state-tree": headers["next-router-state-tree"],
-      "content-type": headers["content-type"],
-      accept: headers["accept"],
-      origin: new URL(url).origin,
-    },
-    data: body,
-  })
-  await response.body()
-}
-
 test("only admins can remove users", async ({ signIn }) => {
   const admin = await createAdmin()
   const user = await createUser()

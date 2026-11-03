@@ -8,6 +8,8 @@ import {
   emailsTo,
   prisma,
   toasts,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -346,29 +348,12 @@ test("only one of the people buying a wish at the same time gets it", async ({
 
   // Stop the request of the button and send it for every shopper at once.
   // The requests only overlap now and then, so it tries a number of times.
-  const buy = new Promise<{
-    url: string
-    headers: Record<string, string>
-    body: string
-  }>(resolve =>
-    pages[0].route(`**${path}`, async route => {
-      const request = route.request()
-      if (request.method() === "POST" && request.headers()["next-action"]) {
-        resolve({
-          url: request.url(),
-          headers: request.headers(),
-          body: request.postData()!,
-        })
-        return route.abort()
-      }
-      return route.continue()
-    })
-  )
+  const buy = captureAction(pages[0], path)
   await pages[0].goto(path)
   await itemCard(pages[0], "Sokken")
     .getByRole("button", { name: "Ik koop dit" })
     .click()
-  const { url, headers, body } = await buy
+  const action = await buy
 
   for (let attempt = 0; attempt < 10; attempt++) {
     await prisma.wishlistItem.update({
@@ -376,19 +361,9 @@ test("only one of the people buying a wish at the same time gets it", async ({
       data: { userId: null, boughtAt: null },
     })
     const bought = await Promise.all(
-      pages.map(async page => {
-        const response = await page.request.post(url, {
-          headers: {
-            "next-action": headers["next-action"],
-            "next-router-state-tree": headers["next-router-state-tree"],
-            "content-type": headers["content-type"],
-            accept: headers["accept"],
-            origin: new URL(url).origin,
-          },
-          data: body,
-        })
-        return (await response.text()).includes('{"type":"success"}')
-      })
+      pages.map(async page =>
+        (await replayAs(page, action)).includes('{"type":"success"}')
+      )
     )
 
     expect(bought.filter(Boolean)).toHaveLength(1)

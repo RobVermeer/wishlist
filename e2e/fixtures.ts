@@ -302,6 +302,53 @@ export async function holdActions(page: Page) {
   return release
 }
 
+// Stops the next server action the page sends to path, so a test can send it
+// again with replayAs.
+export function captureAction(page: Page, path: string) {
+  return new Promise<{
+    url: string
+    headers: Record<string, string>
+    body: string
+  }>(resolve => {
+    page.route(
+      url => url.pathname === path,
+      async route => {
+        const request = route.request()
+        if (request.method() === "POST" && request.headers()["next-action"]) {
+          resolve({
+            url: request.url(),
+            headers: request.headers(),
+            body: request.postData()!,
+          })
+          return route.abort()
+        }
+        return route.continue()
+      }
+    )
+  })
+}
+
+// Sends a captured server action with the session of page and returns the
+// response, which contains what the action returned.
+export async function replayAs(
+  page: Page,
+  action: Awaited<ReturnType<typeof captureAction>>
+) {
+  const { url, headers, body } = action
+  const response = await page.request.post(url, {
+    headers: {
+      "next-action": headers["next-action"],
+      "next-router-state-tree": headers["next-router-state-tree"],
+      "content-type": headers["content-type"],
+      accept: headers["accept"],
+      origin: new URL(url).origin,
+    },
+    data: body,
+  })
+
+  return response.text()
+}
+
 type Fixtures = {
   signIn: (user: TestUser, options?: BrowserContextOptions) => Promise<Page>
 }
