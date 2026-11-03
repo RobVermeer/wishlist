@@ -1,7 +1,6 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { groupProperties } from "./publicProperties"
 import { getSession } from "@/lib/getSession"
 import { cache } from "react"
 import { getTranslations } from "next-intl/server"
@@ -16,9 +15,14 @@ export const getGroupsForUser = cache(async () => {
 
   const userId = session.user.id
 
-  const groups = await prisma.group.findMany({
+  return prisma.group.findMany({
     orderBy: { createdAt: "asc" },
-    select: groupProperties,
+    select: {
+      id: true,
+      title: true,
+      theme: true,
+      _count: { select: { members: true } },
+    },
     where: {
       members: {
         some: { id: userId },
@@ -26,9 +30,4 @@ export const getGroupsForUser = cache(async () => {
       removed: false,
     },
   })
-
-  return groups.map(group => ({
-    ...group,
-    isOwnGroup: group.createdBy.id === userId,
-  }))
 })

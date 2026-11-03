@@ -115,7 +115,7 @@ export default async function GroupPage({ params }: Props) {
       id: wishlist.id,
       name: wishlist.title || tCommon("myList"),
       details: t("chooseWishlist.details", {
-        wishes: wishlist.wishlistItem.length,
+        wishes: wishlist._count.wishlistItem,
         groups: wishlist.groups.length,
         names: format.list(wishlist.groups.map(({ title }) => title)),
       }),

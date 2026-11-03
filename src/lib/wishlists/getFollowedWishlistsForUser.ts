@@ -1,7 +1,7 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { wishlistProperties } from "./publicProperties"
+import { wishlistCardProperties } from "./publicProperties"
 import { getSession } from "@/lib/getSession"
 import { cache } from "react"
 import { managedByUser } from "./visibility"
@@ -13,7 +13,7 @@ export const getFollowedWishlistsForUser = cache(async () => {
 
   const wishlists = await prisma.wishlist.findMany({
     orderBy: { createdAt: "asc" },
-    select: wishlistProperties,
+    select: wishlistCardProperties,
     where: {
       removed: false,
       followers: { some: { id: session.user.id } },

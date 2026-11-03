@@ -1,11 +1,11 @@
+import type { ComponentProps } from "react"
 import { Card } from "@/components/Card"
 import Link from "next/link"
 import { WishlistTitle } from "@/components/WishlistTitle"
-import type { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 import type { getGroupById } from "@/lib/groups/getGroupById"
 
 interface Props {
-  wishlist: Awaited<ReturnType<typeof getWishlistsForUser>>[0]
+  wishlist: { id: string } & ComponentProps<typeof WishlistTitle>["wishlist"]
   group?: NonNullable<Awaited<ReturnType<typeof getGroupById>>>
 }
 

@@ -1,7 +1,7 @@
 import "server-only"
 
 import { prisma } from "@/lib/prisma"
-import { wishlistProperties } from "./publicProperties"
+import { wishlistCardProperties } from "./publicProperties"
 import { getSession } from "@/lib/getSession"
 import { cache } from "react"
 import { getTranslations } from "next-intl/server"
@@ -19,7 +19,7 @@ export const getWishlistsForUser = cache(async () => {
 
   const data = await prisma.wishlist.findMany({
     orderBy: { createdAt: "asc" },
-    select: wishlistProperties,
+    select: wishlistCardProperties,
     where: { removed: false, ...managedByUser(userId) },
   })
 
