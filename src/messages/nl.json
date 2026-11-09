@@ -698,7 +698,7 @@
       },
       "categories": {
         "title": "Overzichtelijk",
-        "text": "Zet je wensen in categorieën en sleep ze in de volgorde die jij wilt."
+        "text": "Zet je wensen in categorieën, sleep ze in de volgorde die jij wilt en verplaats ze naar een ander verlanglijstje."
       },
       "managed": {
         "title": "Ook voor een ander",
@@ -868,6 +868,10 @@
           {
             "question": "Hoe zet ik mijn wensen in een andere volgorde?",
             "answer": "Kies ‘Volgorde aanpassen’ boven je wensen. Sleep dan een wens aan de puntjes ernaast naar een andere plek en kies ‘Klaar’ als alles goed staat. Met het toetsenbord kan het ook: ga naar de puntjes, druk op spatie, verplaats de wens met de pijltjestoetsen en druk weer op spatie. Categorieën verplaats je op dezelfde manier. Wil je een wens in een andere categorie, wijzig de wens dan en kies een andere categorie. Hij komt dan onderaan die categorie te staan."
+          },
+          {
+            "question": "Kan ik een wens naar een ander verlanglijstje verplaatsen?",
+            "answer": "Ja, naar elk verlanglijstje dat je hebt gemaakt of mee beheert. Kies bij de wens ‘Wijzig’, kies bij ‘Verplaats deze wens naar een ander verlanglijstje’ het verlanglijstje en kies ‘Opslaan’. De linkjes en de categorie gaan mee, en de wens komt onderaan te staan. Heeft iemand hem al afgestreept, dan blijft dat zo. Heb je maar één verlanglijstje, dan zie je deze keuze niet."
           },
           {
             "question": "Wat is een onbeperkte wens?",

@@ -31,6 +31,7 @@ test("find answers in the frequently asked questions", async ({ signIn }) => {
     "Hoe verwijder ik een wens?",
     "Hoe werken categorieën?",
     "Hoe zet ik mijn wensen in een andere volgorde?",
+    "Kan ik een wens naar een ander verlanglijstje verplaatsen?",
     "Wat is een onbeperkte wens?",
     "Ik hou niet van verlanglijstjes, kan het ook anders?",
     "Hoe maak ik een verlanglijstje voor mijn kind of iemand anders?",
@@ -382,6 +383,21 @@ test("the frequently asked questions explain how to change the order of wishes",
       /^Kies ‘Volgorde aanpassen’ boven je wensen\. Sleep dan een wens aan de puntjes ernaast naar een andere plek en kies ‘Klaar’ als alles goed staat\./
     )
   ).toBeVisible()
+})
+
+test("the frequently asked questions explain how to move a wish to another wishlist", async ({
+  page,
+}) => {
+  await page.goto("/vragen")
+
+  await page
+    .getByText("Kan ik een wens naar een ander verlanglijstje verplaatsen?")
+    .click()
+  await expect(
+    page.getByText(/^Ja, naar elk verlanglijstje dat je hebt gemaakt/)
+  ).toContainText(
+    "Kies bij de wens ‘Wijzig’, kies bij ‘Verplaats deze wens naar een ander verlanglijstje’ het verlanglijstje en kies ‘Opslaan’."
+  )
 })
 
 test("the frequently asked questions name the Wijzig button of a wishlist", async ({

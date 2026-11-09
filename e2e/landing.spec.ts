@@ -65,6 +65,11 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
   }
   await expect(
     page.getByRole("listitem").filter({
+      has: page.getByRole("heading", { name: "Overzichtelijk" }),
+    })
+  ).toContainText("verplaats ze naar een ander verlanglijstje")
+  await expect(
+    page.getByRole("listitem").filter({
       has: page.getByRole("heading", { name: "Ook voor een ander" }),
     })
   ).toContainText("samen met de andere ouder")
