@@ -10,9 +10,16 @@ interface Props {
     Awaited<ReturnType<typeof getWishlistById>>
   >["wishlistItem"][0]
   categories: string[]
+  wishlistId: string
+  wishlists: { id: string; name: string }[]
 }
 
-export const YourItemCard = ({ item, categories }: Props) => {
+export const YourItemCard = ({
+  item,
+  categories,
+  wishlistId,
+  wishlists,
+}: Props) => {
   const { title, links, unlimited } = item
   const t = useTranslations("Toggle")
 
@@ -35,6 +42,8 @@ export const YourItemCard = ({ item, categories }: Props) => {
           category: item.category,
         }}
         categories={categories}
+        wishlistId={wishlistId}
+        wishlists={wishlists}
       />
     </Card>
   )

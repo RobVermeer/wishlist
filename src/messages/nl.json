@@ -293,6 +293,8 @@
     "label": "Wijzig wens {title}",
     "title": "Wijzig wens",
     "description": "Pas de wens aan of verwijder hem.",
+    "descriptionMove": "Pas de wens aan, verplaats hem naar een ander verlanglijstje of verwijder hem.",
+    "moved": "{title} staat nu op {wishlist}.",
     "remove": {
       "description": "Je wens wordt definitief verwijderd."
     },
@@ -300,7 +302,10 @@
       "title": "Wens",
       "unlimited": "Deze wens mag onbeperkt vervuld worden",
       "category": "Categorie <small>(optioneel)</small>",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "wishlist": "Verplaats deze wens naar een ander verlanglijstje <small>(optioneel)</small>",
+      "wishlistPlaceholder": "Kies een verlanglijstje",
+      "stay": "Niet verplaatsen"
     }
   },
   "NewWishlist": {

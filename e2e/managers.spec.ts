@@ -13,6 +13,7 @@ import {
 
 const notFound = "We kunnen deze pagina niet vinden"
 const managersLabel = "Wie beheert dit verlanglijstje nog meer?"
+const wishlistLabel = "Verplaats deze wens naar een ander verlanglijstje"
 
 const chosenManagers = (dialog: Locator) =>
   dialog.getByRole("group", { name: managersLabel }).getByRole("listitem")
@@ -583,4 +584,36 @@ test("an empty wishlist you manage asks for the first wish", async ({
       "Voeg de eerste wens toe, of vul bij Wijzig in waar Emma blij van wordt."
     )
   ).toBeVisible()
+})
+
+test("managers move wishes between the wishlists they manage", async ({
+  signIn,
+}) => {
+  const mother = await createUser({ firstName: "Sanne" })
+  const father = await createUser({ firstName: "Rob" })
+  const wishlist = await createWishlist(mother, {
+    title: "Emma",
+    managers: [father],
+  })
+  const own = await createWishlist(father)
+  await createWishlist(mother)
+  await createItem(wishlist, { title: "Boormachine" })
+  const page = await signIn(father)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Boormachine" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel(wishlistLabel).click()
+  await expect(page.getByRole("option")).toHaveText([
+    "Niet verplaatsen",
+    "Mijn verlanglijstje",
+  ])
+  await page.getByRole("option", { name: "Mijn verlanglijstje" }).click()
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText(
+    "Boormachine staat nu op Mijn verlanglijstje."
+  )
+  await expect(itemCard(page, "Boormachine")).toHaveCount(0)
+  expect(await wishesOf(own)).toEqual(["Boormachine"])
 })
