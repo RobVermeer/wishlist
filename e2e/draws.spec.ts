@@ -274,20 +274,19 @@ test("someone filled in but not added yet still takes part", async ({
   const owner = await createUser({ firstName: "Anna" })
   const bert = await createUser({ firstName: "Bert" })
   const group = await createGroup(owner, { members: [bert] })
+  const opa = `opa-${bert.id}@e2e.test`
   const page = await signIn(owner)
 
   await page.goto(`/group/${group.id}`)
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await dialog.getByLabel("Naam van de deelnemer").fill("Opa")
-  await dialog.getByLabel("E-mailadres").fill("opa-erbij@e2e.test")
+  await dialog.getByLabel("E-mailadres").fill(opa)
   await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
-  await expect
-    .poll(async () => (await emailsTo("opa-erbij@e2e.test")).length)
-    .toBe(1)
+  await expect.poll(async () => (await emailsTo(opa)).length).toBe(1)
   const participants = await prisma.drawParticipant.findMany({
     where: { draw: { groupId: group.id } },
     select: { name: true },
