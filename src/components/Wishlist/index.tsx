@@ -27,6 +27,8 @@ import { Interests } from "@/components/Interests"
 import { SortMode } from "@/components/SortMode"
 import { ReactNode } from "react"
 import { PageTitle } from "@/components/PageTitle"
+import { getSession } from "@/lib/getSession"
+import { getWishlistsForUser } from "@/lib/wishlists/getWishlistsForUser"
 
 interface Props {
   id: string
@@ -51,6 +53,27 @@ export const Wishlist = async ({ id, groupId, backLink, as }: Props) => {
 
   const canBeReminded = await canBeRemindedForWishlist(wishlist.id)
   const ownGroups = wishlist.isOwnList ? await getGroupOptionsForUser() : []
+  const session = await getSession()
+  const managedWishlists = wishlist.isOwnList
+    ? (await getWishlistsForUser()).map(option => ({
+        id: option.id,
+        name:
+          option.title ||
+          (option.user.id === session?.user.id
+            ? tCommon("myList")
+            : getFirstName(option.user)),
+        groups: option.groups,
+      }))
+    : []
+  // Own verlanglijstjes without a name are told apart by their groups.
+  const wishlistOptions = managedWishlists.map(({ id, name, groups }) => ({
+    id,
+    name:
+      groups.length > 0 &&
+      managedWishlists.filter(option => option.name === name).length > 1
+        ? `${name} (${format.list(groups.map(({ title }) => title))})`
+        : name,
+  }))
   const managerOptions =
     wishlist.isOwnList && !wishlist.isManager
       ? await getManagerOptionsForUser(wishlist.id)
@@ -78,7 +101,13 @@ export const Wishlist = async ({ id, groupId, backLink, as }: Props) => {
   const renderItem = (item: (typeof wishlist.wishlistItem)[number]) => {
     if (wishlist.isOwnList) {
       return (
-        <YourItemCard key={item.id} item={item} categories={categoryTitles} />
+        <YourItemCard
+          key={item.id}
+          item={item}
+          categories={categoryTitles}
+          wishlistId={wishlist.id}
+          wishlists={wishlistOptions}
+        />
       )
     }
 

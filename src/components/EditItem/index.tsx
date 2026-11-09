@@ -24,6 +24,13 @@ import { useToast } from "@/components/ui/use-toast"
 import { Pencil, Save } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { Checkbox } from "../ui/checkbox"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { useUnsavedChanges } from "@/components/UnsavedChanges"
 
 interface Props {
@@ -35,9 +42,17 @@ interface Props {
     category: { title: string } | null
   }
   categories: string[]
+  wishlistId: string
+  // The verlanglijstjes you manage, to move the wish to another one.
+  wishlists: { id: string; name: string }[]
 }
 
-export const EditItem = ({ item, categories }: Props) => {
+export const EditItem = ({
+  item,
+  categories,
+  wishlistId,
+  wishlists,
+}: Props) => {
   const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const { setForm, onOpenChange, confirmation } = useUnsavedChanges({
@@ -46,6 +61,7 @@ export const EditItem = ({ item, categories }: Props) => {
   })
   const { id, title, links, unlimited } = item
   const t = useTranslations()
+  const canMove = wishlists.length > 1
 
   async function handleSubmit(data: FormData) {
     const result = await updateWishlistItemById(id, data)
@@ -60,8 +76,20 @@ export const EditItem = ({ item, categories }: Props) => {
       return
     }
 
-    if (result.categoryId) openCategory(result.categoryId)
     setOpen(false)
+
+    if (result.moved) {
+      const wishlist = wishlists.find(({ id }) => id === data.get("wishlist"))
+      toast({
+        title: t("EditItem.moved", {
+          title: data.get("title")?.toString().trim() ?? title,
+          wishlist: wishlist?.name ?? "",
+        }),
+      })
+      return
+    }
+
+    if (result.categoryId) openCategory(result.categoryId)
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -98,7 +126,9 @@ export const EditItem = ({ item, categories }: Props) => {
       <DialogContent className="sm:max-w-[425px]" onOpenAutoFocus={focusDialog}>
         <DialogHeader>
           <DialogTitle>{t("EditItem.title")}</DialogTitle>
-          <DialogDescription>{t("EditItem.description")}</DialogDescription>
+          <DialogDescription>
+            {t(canMove ? "EditItem.descriptionMove" : "EditItem.description")}
+          </DialogDescription>
         </DialogHeader>
         <form
           ref={setForm}
@@ -130,6 +160,35 @@ export const EditItem = ({ item, categories }: Props) => {
             categories={categories}
             defaultValue={item.category?.title ?? ""}
           />
+
+          {canMove && (
+            <>
+              <Label htmlFor="wishlist">
+                {t.rich("EditItem.form.wishlist", {
+                  small: chunks => <small>{chunks}</small>,
+                })}
+              </Label>
+              <Select name="wishlist">
+                <SelectTrigger id="wishlist">
+                  <SelectValue
+                    placeholder={t("EditItem.form.wishlistPlaceholder")}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={wishlistId}>
+                    {t("EditItem.form.stay")}
+                  </SelectItem>
+                  {wishlists
+                    .filter(({ id }) => id !== wishlistId)
+                    .map(({ id, name }) => (
+                      <SelectItem key={id} value={id}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
         </form>
         <DialogFooter className="gap-2 md:gap-0">
           <div>

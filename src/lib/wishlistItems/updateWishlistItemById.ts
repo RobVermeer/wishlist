@@ -52,10 +52,25 @@ export const updateWishlistItemById = async (
       category: formData.get("category")?.toString() || undefined,
     })
 
+    const wishlistId =
+      formData.get("wishlist")?.toString() || wishlistItem.wishlistId
+    const moved = wishlistId !== wishlistItem.wishlistId
+
+    if (moved) {
+      const wishlist = await prisma.wishlist.findUnique({
+        where: { id: wishlistId, removed: false, ...managedByUser(userId) },
+        select: { id: true },
+      })
+
+      if (!wishlist) {
+        throw new Error(t("wishlist.notFound"))
+      }
+    }
+
     const categoryId = await prisma.$transaction(async tx => {
       const categoryId = await findOrCreateCategory(
         tx,
-        wishlistItem.wishlistId,
+        wishlistId,
         data.category
       )
 
@@ -68,12 +83,10 @@ export const updateWishlistItemById = async (
             deleteMany: {},
             create: data.links.map((url, position) => ({ url, position })),
           },
+          wishlistId,
           categoryId,
-          ...(categoryId !== wishlistItem.categoryId && {
-            position: await nextWishlistItemPosition(
-              tx,
-              wishlistItem.wishlistId
-            ),
+          ...((moved || categoryId !== wishlistItem.categoryId) && {
+            position: await nextWishlistItemPosition(tx, wishlistId),
           }),
         },
         select: wishlistItemProperties,
@@ -89,6 +102,7 @@ export const updateWishlistItemById = async (
     return {
       type: "success" as const,
       categoryId,
+      moved,
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

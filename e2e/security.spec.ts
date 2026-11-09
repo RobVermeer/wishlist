@@ -20,6 +20,8 @@ import {
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
+const wishlistLabel = "Verplaats deze wens naar een ander verlanglijstje"
+
 async function forgeActions(
   page: Page,
   path: string,
@@ -1880,4 +1882,56 @@ test("regular users get no data from the admin", async ({ signIn }) => {
       .soft(body, path)
       .not.toMatch(/children\\*":\\*"Actief in het afgelopen jaar/)
   }
+})
+
+test("wishes can't be moved to a wishlist you don't manage", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const member = await createUser()
+  const group = await createGroup(user, { members: [member] })
+  const own = await createWishlist(user)
+  const other = await createWishlist(user, { title: "Lotje" })
+  const foreign = await createWishlist(member, { groups: [group] })
+  const item = await createItem(own, { title: "Trui" })
+  const page = await signIn(user)
+
+  await forgeActions(page, `/wishlist/${own.id}`, other.id, foreign.id)
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Lotje" }).click()
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .wishlistId
+  ).toBe(own.id)
+})
+
+test("wishes can't be moved to a removed wishlist", async ({ signIn }) => {
+  const user = await createUser()
+  const own = await createWishlist(user)
+  const other = await createWishlist(user, { title: "Lotje" })
+  const item = await createItem(own, { title: "Trui" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Lotje" }).click()
+  await prisma.wishlist.update({
+    where: { id: other.id },
+    data: { removed: true },
+  })
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
+  expect(
+    (await prisma.wishlistItem.findUniqueOrThrow({ where: { id: item.id } }))
+      .wishlistId
+  ).toBe(own.id)
 })

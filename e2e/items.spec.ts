@@ -11,6 +11,8 @@ import {
 } from "./fixtures"
 import { Locator, Page } from "@playwright/test"
 
+const wishlistLabel = "Verplaats deze wens naar een ander verlanglijstje"
+
 const itemCard = (page: Page, title: string) =>
   page.locator("div.rounded-2xl").filter({ hasText: title })
 
@@ -833,4 +835,124 @@ test("the owner hears which wishes are unlimited", async ({ signIn }) => {
 
   await expect(itemCard(page, "Sokken")).toContainText("Onbeperkt")
   await expect(itemCard(page, "Fiets")).not.toContainText("Onbeperkt")
+})
+
+const wishlistOfItem = async (id: string) =>
+  (await prisma.wishlistItem.findUniqueOrThrow({ where: { id } })).wishlistId
+
+test("move a wish to another wishlist", async ({ signIn }) => {
+  const user = await createUser()
+  const own = await createWishlist(user)
+  const other = await createWishlist(user, { title: "Lotje" })
+  const clothes = await createCategory(own, "Kleding", 0)
+  await createItem(other, { title: "Boek" })
+  const item = await createItem(own, {
+    title: "Trui",
+    links: ["https://example.com/trui"],
+    category: clothes,
+  })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: /^Kleding \d+$/ }).click()
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await expect(dialog.getByLabel(wishlistLabel)).toHaveText(
+    "Kies een verlanglijstje"
+  )
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Lotje" }).click()
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(toasts(page)).toContainText("Trui staat nu op Lotje.")
+  await expect(itemCard(page, "Trui")).toHaveCount(0)
+  await expect(page.getByRole("button", { name: /^Kleding \d+$/ })).toHaveCount(
+    0
+  )
+
+  await page.goto(`/wishlist/${other.id}`)
+  await page.getByRole("button", { name: /^Kleding \d+$/ }).click()
+  await expect(
+    itemCard(page, "Trui").getByRole("link", { name: "example.com" })
+  ).toHaveAttribute("href", "https://example.com/trui")
+
+  const moved = await prisma.wishlistItem.findUniqueOrThrow({
+    where: { id: item.id },
+    include: { category: true },
+  })
+  expect(moved).toMatchObject({
+    wishlistId: other.id,
+    category: { wishlistId: other.id, title: "Kleding" },
+    position: 1,
+  })
+  expect(
+    await prisma.wishlistCategory.count({ where: { wishlistId: own.id } })
+  ).toBe(0)
+})
+
+test("a wish can only be moved when you have another wishlist", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const wishlist = await createWishlist(user)
+  await createItem(wishlist, { title: "Trui" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await expect(dialog.getByLabel("Wens", { exact: true })).toBeVisible()
+  await expect(dialog.getByLabel(wishlistLabel)).toHaveCount(0)
+  await expect(dialog).toContainText("Pas de wens aan of verwijder hem.")
+})
+
+test("a bought wish stays bought on the wishlist it moved to", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const shopper = await createUser()
+  const group = await createGroup(user, { members: [shopper] })
+  const own = await createWishlist(user, { groups: [group] })
+  const other = await createWishlist(user, { title: "Lotje", groups: [group] })
+  const item = await createItem(own, { title: "Trui", boughtBy: shopper })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Lotje" }).click()
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+  await expect(dialog).toBeHidden()
+  await expect.poll(() => wishlistOfItem(item.id)).toBe(other.id)
+
+  const shopperPage = await signIn(shopper)
+  await shopperPage.goto(`/group/${group.id}/${other.id}`)
+  await expect(itemCard(shopperPage, "Trui")).toContainText("Jij koopt dit")
+})
+
+test("a wish stays when you choose not to move it after all", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const own = await createWishlist(user)
+  await createWishlist(user, { title: "Lotje" })
+  const item = await createItem(own, { title: "Trui" })
+  const page = await signIn(user)
+
+  await page.goto(`/wishlist/${own.id}`)
+  await page.getByRole("button", { name: "Wijzig wens Trui" }).click()
+  const dialog = page.getByRole("dialog", { name: "Wijzig wens" })
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Lotje" }).click()
+  await dialog.getByLabel(wishlistLabel).click()
+  await page.getByRole("option", { name: "Niet verplaatsen" }).click()
+  await dialog.getByRole("button", { name: "Opslaan" }).click()
+
+  await expect(dialog).toBeHidden()
+  await expect(itemCard(page, "Trui")).toBeVisible()
+  expect(await wishlistOfItem(item.id)).toBe(own.id)
 })
