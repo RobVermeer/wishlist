@@ -1,13 +1,12 @@
 "use client"
 
 import { CSSProperties, ReactNode, Ref } from "react"
-import { ChevronDown } from "lucide-react"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-import { cn } from "@/lib/utils"
+import { CategoryTitle } from "@/components/CategoryTitle"
 import { useCategoryOpen } from "./useCategoryOpen"
 
 export interface Category {
@@ -47,18 +46,11 @@ export const CategorySection = ({
       <div className="flex items-center gap-1">
         {handle}
         <CollapsibleTrigger className="flex flex-1 items-center gap-2 py-1 text-left text-lg font-semibold">
-          <ChevronDown
-            size="18"
-            strokeWidth="2.5"
-            className={cn(
-              "text-primary transition-transform",
-              !open && "-rotate-90"
-            )}
+          <CategoryTitle
+            title={category.title}
+            count={category.count}
+            open={open}
           />
-          {category.title}
-          <span className="text-sm font-normal text-muted-foreground">
-            {category.count}
-          </span>
         </CollapsibleTrigger>
         {actions}
       </div>
