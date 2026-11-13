@@ -1346,5 +1346,11 @@
     "houseRules": "Huisregels",
     "install": "Installeer de app",
     "copyright": "© {year} Niet Weer Sokken"
+  },
+  "Pagination": {
+    "label": "Pagina's",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "status": "Pagina {page} van {pageCount}"
   }
 }

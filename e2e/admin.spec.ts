@@ -96,6 +96,81 @@ test("admin can search users by name and e-mail address", async ({
   await expect(page.locator("div.rounded-2xl")).toHaveCount(0)
 })
 
+test("the admin user list is alphabetical, with nameless users last", async ({
+  signIn,
+}) => {
+  const admin = await createAdmin()
+  const token = randomUUID().slice(0, 8)
+  for (const name of ["bram", "Émile", "Anna", "daan"]) {
+    await createUser({ name: `${name} ${token}` })
+  }
+  const nameless = await prisma.user.create({
+    data: { email: `${token}-zonder-naam@e2e.test` },
+  })
+  const page = await signIn(admin)
+
+  await page.goto(`/admin/users?zoek=${token}`)
+
+  const cards = page.locator("div.rounded-2xl")
+  await expect(cards).toHaveCount(5)
+  await expect(cards).toContainText([
+    `Anna ${token}`,
+    `bram ${token}`,
+    `daan ${token}`,
+    `Émile ${token}`,
+    nameless.email!,
+  ])
+})
+
+test("the admin user list is split into pages", async ({ signIn }) => {
+  const admin = await createAdmin()
+  const token = randomUUID().slice(0, 8)
+  await prisma.user.createMany({
+    data: Array.from({ length: 26 }, (_, i) => ({
+      name: `Gebruiker ${token} ${i + 1}`,
+      email: `${token}-${i + 1}@e2e.test`,
+    })),
+  })
+  const page = await signIn(admin)
+  const cards = page.locator("div.rounded-2xl")
+  const pages = page.getByRole("navigation", { name: "Pagina's" })
+
+  await page.goto(`/admin/users?zoek=${token}`)
+  await expect(cards).toHaveCount(25)
+  await expect(cards.last()).toContainText(`Gebruiker ${token} 25`)
+  await expect(pages).toContainText("Pagina 1 van 2")
+  await expect(pages.getByRole("link", { name: "Vorige" })).toHaveCount(0)
+
+  await pages.getByRole("link", { name: "Volgende" }).click()
+  await expect(page).toHaveURL(`/admin/users?zoek=${token}&pagina=2`)
+  await expect(cards).toHaveCount(1)
+  await expect(cards).toContainText(`Gebruiker ${token} 26`)
+  await expect(pages).toContainText("Pagina 2 van 2")
+  await expect(pages.getByRole("link", { name: "Volgende" })).toHaveCount(0)
+  await expect(page.getByLabel("Zoek op naam of e-mailadres")).toHaveValue(
+    token
+  )
+
+  await page.goBack()
+  await expect(page).toHaveURL(`/admin/users?zoek=${token}`)
+  await expect(cards).toHaveCount(25)
+
+  await pages.getByRole("link", { name: "Volgende" }).click()
+  await pages.getByRole("link", { name: "Vorige" }).click()
+  await expect(page).toHaveURL(`/admin/users?zoek=${token}`)
+  await expect(cards).toHaveCount(25)
+
+  // A page that no longer exists, after removing users, shows the last one.
+  await page.goto(`/admin/users?zoek=${token}&pagina=9`)
+  await expect(pages).toContainText("Pagina 2 van 2")
+  await expect(cards).toHaveCount(1)
+
+  // There are more than enough users for pages without a search too.
+  await page.goto("/admin/users")
+  await expect(cards).toHaveCount(25)
+  await expect(pages.getByRole("link", { name: "Volgende" })).toBeVisible()
+})
+
 test("admin can remove a user", async ({ signIn }) => {
   const admin = await createAdmin()
   const user = await createUser({ name: "Weg Gebruiker" })

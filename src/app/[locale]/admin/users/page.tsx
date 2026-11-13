@@ -7,6 +7,7 @@ import { RemoveUser } from "./components/RemoveUser"
 import { ToggleAdmin } from "./components/ToggleAdmin"
 import { SearchUsers } from "./components/SearchUsers"
 import { EmptyState } from "@/components/EmptyState"
+import { Pagination } from "@/components/Pagination"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { getInitials } from "@/lib/utils"
@@ -23,7 +24,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface Props {
-  searchParams: Promise<{ zoek?: string | string[] }>
+  searchParams: Promise<{
+    zoek?: string | string[]
+    pagina?: string | string[]
+  }>
 }
 
 export default async function AdminUsersPage({ searchParams }: Props) {
@@ -31,9 +35,12 @@ export default async function AdminUsersPage({ searchParams }: Props) {
 
   if (!session) redirect("/login")
 
-  const { zoek } = await searchParams
+  const { zoek, pagina } = await searchParams
   const search = (typeof zoek === "string" ? zoek : "").trim()
-  const users = await getUsers(search)
+  const { users, page, pageCount } = await getUsers(
+    search,
+    Number.parseInt(typeof pagina === "string" ? pagina : "", 10) || 1
+  )
   const { isSuperAdmin } = session.user
   const t = await getTranslations("Admin")
 
@@ -82,6 +89,13 @@ export default async function AdminUsersPage({ searchParams }: Props) {
           </Card>
         ))}
       </List>
+
+      <Pagination
+        path="/admin/users"
+        page={page}
+        pageCount={pageCount}
+        params={search ? { zoek: search } : {}}
+      />
     </>
   )
 }
