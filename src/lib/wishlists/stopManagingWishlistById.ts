@@ -15,6 +15,15 @@ export const stopManagingWishlistById = async (id: string) => {
       throw new Error(t("notLoggedIn"))
     }
 
+    const wishlist = await prisma.wishlist.findFirst({
+      where: { id, managers: { some: { id: session.user.id } } },
+      select: { id: true },
+    })
+
+    if (!wishlist) {
+      throw new Error(t("wishlist.notFound"))
+    }
+
     await prisma.wishlist.update({
       where: { id },
       data: { managers: { disconnect: { id: session.user.id } } },

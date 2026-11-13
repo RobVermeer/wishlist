@@ -10,6 +10,8 @@ import {
   holdActions,
   prisma,
   toasts,
+  captureAction,
+  replayAs,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 import { baseURL } from "./support/env"
@@ -49,6 +51,38 @@ test("share your wishlist with a link", async ({ signIn }) => {
   await page.reload()
   await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
   await expect(link).toHaveValue(`http://localhost:3100/lijstje/${shareToken}`)
+})
+
+test("opening the share dialog twice at once makes one link", async ({
+  signIn,
+}) => {
+  const owner = await createUser()
+  const wishlist = await createWishlist(owner)
+  const page = await signIn(owner)
+
+  // Stop the request for the link and send it a few times at once. The
+  // requests only overlap now and then, so it tries a number of times.
+  const share = captureAction(page, `/wishlist/${wishlist.id}`)
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await page.getByRole("button", { name: "Deel dit verlanglijstje" }).click()
+  const action = await share
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    await prisma.wishlist.update({
+      where: { id: wishlist.id },
+      data: { shareToken: null },
+    })
+    const responses = await Promise.all(
+      [1, 2, 3].map(() => replayAs(page, action))
+    )
+    const { shareToken } = await prisma.wishlist.findUniqueOrThrow({
+      where: { id: wishlist.id },
+    })
+
+    for (const response of responses) {
+      expect(response).toContain(`"shareToken":"${shareToken}"`)
+    }
+  }
 })
 
 test("only the owner can share a wishlist", async ({ signIn }) => {
@@ -278,6 +312,21 @@ test("only followers can unfollow a wishlist", async ({ signIn }) => {
       page.getByRole("button", { name: "Stop met volgen" })
     ).toHaveCount(0)
   }
+})
+
+test("unfollowing a wishlist that no longer exists says so", async ({
+  signIn,
+}) => {
+  const owner = await createUser({ firstName: "Olga" })
+  const follower = await createUser()
+  const wishlist = await createWishlist(owner, { followers: [follower] })
+  const page = await signIn(follower)
+
+  await page.goto(`/wishlist/${wishlist.id}`)
+  await prisma.wishlist.delete({ where: { id: wishlist.id } })
+  await page.getByRole("button", { name: "Stop met volgen" }).click()
+
+  await expect(toasts(page)).toContainText("Verlanglijstje niet gevonden")
 })
 
 test("making a new link stops the old one, followers keep access", async ({

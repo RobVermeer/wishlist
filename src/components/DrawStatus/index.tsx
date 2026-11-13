@@ -10,7 +10,9 @@ import type { getDrawForCreator } from "@/lib/draws/getDrawForCreator"
 import { cn } from "@/lib/utils"
 
 interface Props {
-  participants: NonNullable<Awaited<ReturnType<typeof getDrawForCreator>>>
+  participants: NonNullable<
+    Awaited<ReturnType<typeof getDrawForCreator>>
+  >["participants"]
 }
 
 export const DrawStatus = ({ participants }: Props) => {

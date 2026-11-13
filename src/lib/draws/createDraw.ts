@@ -11,6 +11,7 @@ import { sendDrawLotsEmail } from "@/lib/email"
 import { getErrorMessage } from "@/lib/utils"
 import { getFirstName } from "@/lib/users/getFirstName"
 import { drawLots, maxParticipants } from "./drawLots"
+import { notOver } from "./notOver"
 
 export const createDraw = async (groupId: string, data: FormData) => {
   try {
@@ -61,8 +62,12 @@ export const createDraw = async (groupId: string, data: FormData) => {
       date: data.get("date")?.toString() || undefined,
     })
 
+    // E-mail addresses of people added to the draw are lowercase, those of
+    // members are stored as they signed up
+    const emailOf = (member: { email: string | null }) =>
+      member.email?.toLowerCase()
     const extraMemberIds = group.members
-      .filter(member => extra.some(({ email }) => email === member.email))
+      .filter(member => extra.some(({ email }) => email === emailOf(member)))
       .map(({ id }) => id)
     const participants: {
       name: string
@@ -83,7 +88,7 @@ export const createDraw = async (groupId: string, data: FormData) => {
         })),
       ...extra
         .filter(({ email }) =>
-          group.members.every(member => member.email !== email)
+          group.members.every(member => emailOf(member) !== email)
         )
         .map(({ name, email }) => ({ name, email, userId: null })),
     ]
@@ -106,8 +111,21 @@ export const createDraw = async (groupId: string, data: FormData) => {
 
     const receivers = drawLots(participants.length)
     const now = new Date()
+    const replaces = data.get("replaces")?.toString() || null
 
     const { redraw } = await prisma.$transaction(async tx => {
+      // The form says which draw it replaces. When that changed, the lootjes
+      // were just drawn, by a second click or in another tab, and drawing
+      // them again would send everyone a second lootje.
+      const current = await tx.draw.findFirst({
+        where: { groupId, cancelledAt: null, ...notOver() },
+        select: { id: true },
+      })
+
+      if ((current?.id ?? null) !== replaces) {
+        throw new Error(t("draw.changed"))
+      }
+
       const { count } = await tx.draw.updateMany({
         where: { groupId, cancelledAt: null },
         data: { cancelledAt: now },
