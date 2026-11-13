@@ -1,21 +1,79 @@
 import { clsx } from "clsx"
 import { Check, InfinityIcon, Link } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { CategoryTitle } from "@/components/CategoryTitle"
 import { ListTitle } from "@/components/ListTitle"
 
 const items = [
   { key: "bike", shops: ["bol.com", "coolblue.nl"] },
   { key: "books", unlimited: true },
-  { key: "lego", bought: true },
-  { key: "game", bought: true, byMe: true },
   { key: "socks" },
 ] as const
+
+const toys = [
+  { key: "lego", bought: true },
+  { key: "game", bought: true, byMe: true },
+] as const
+
+type Item = (typeof items)[number] | (typeof toys)[number]
 
 const interests = ["drawing", "dinos", "swimming"] as const
 
 export const LandingExample = () => {
   const t = useTranslations("Landing.example")
   const tToggle = useTranslations("Toggle")
+
+  const wish = (item: Item) => (
+    <li
+      key={item.key}
+      className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
+    >
+      <span className="grid gap-1">
+        <span
+          className={clsx(
+            "bought" in item && "line-through decoration-primary decoration-2"
+          )}
+        >
+          {t(`items.${item.key}`)}
+        </span>
+        {"shops" in item && (
+          <span className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-normal">
+            {item.shops.map(shop => (
+              <span
+                key={shop}
+                className="inline-flex items-center gap-1 text-muted-foreground underline underline-offset-2"
+              >
+                <Link size="12" strokeWidth="2.5" aria-hidden /> {shop}
+              </span>
+            ))}
+          </span>
+        )}
+      </span>
+      {"unlimited" in item ? (
+        <span className="flex items-center gap-1 text-sm font-normal text-muted-foreground">
+          <InfinityIcon aria-hidden size="18" /> {tToggle("unlimitedLabel")}
+        </span>
+      ) : "byMe" in item ? (
+        <span className="ml-auto flex shrink-0 items-center gap-2">
+          <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold text-gold-foreground dark:text-gold">
+            <Check aria-hidden size="16" strokeWidth="2.5" />{" "}
+            {tToggle("boughtByMe")}
+          </span>
+          <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
+            {tToggle("cancel")}
+          </span>
+        </span>
+      ) : "bought" in item ? (
+        <span className="text-sm font-normal text-muted-foreground no-underline">
+          {tToggle("boughtByOther")}
+        </span>
+      ) : (
+        <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
+          {t("buy")}
+        </span>
+      )}
+    </li>
+  )
 
   return (
     <section className="grid gap-2">
@@ -45,60 +103,17 @@ export const LandingExample = () => {
         </div>
 
         <ul aria-label={t("wishes")} className="grid gap-2">
-          {items.map(item => (
-            <li
-              key={item.key}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-secondary p-3 font-semibold"
-            >
-              <span className="grid gap-1">
-                <span
-                  className={clsx(
-                    "bought" in item &&
-                      "line-through decoration-primary decoration-2"
-                  )}
-                >
-                  {t(`items.${item.key}`)}
-                </span>
-                {"shops" in item && (
-                  <span className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-normal">
-                    {item.shops.map(shop => (
-                      <span
-                        key={shop}
-                        className="inline-flex items-center gap-1 text-muted-foreground underline underline-offset-2"
-                      >
-                        <Link size="12" strokeWidth="2.5" aria-hidden /> {shop}
-                      </span>
-                    ))}
-                  </span>
-                )}
-              </span>
-              {"unlimited" in item ? (
-                <span className="flex items-center gap-1 text-sm font-normal text-muted-foreground">
-                  <InfinityIcon aria-hidden size="18" />{" "}
-                  {tToggle("unlimitedLabel")}
-                </span>
-              ) : "byMe" in item ? (
-                <span className="ml-auto flex shrink-0 items-center gap-2">
-                  <span className="flex items-center gap-1 rounded-full bg-gold/20 px-2.5 py-1 text-xs font-semibold text-gold-foreground dark:text-gold">
-                    <Check aria-hidden size="16" strokeWidth="2.5" />{" "}
-                    {tToggle("boughtByMe")}
-                  </span>
-                  <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
-                    {tToggle("cancel")}
-                  </span>
-                </span>
-              ) : "bought" in item ? (
-                <span className="text-sm font-normal text-muted-foreground no-underline">
-                  {tToggle("boughtByOther")}
-                </span>
-              ) : (
-                <span className="rounded-md border border-input bg-background px-3 py-1.5 text-sm font-medium">
-                  {t("buy")}
-                </span>
-              )}
-            </li>
-          ))}
+          {items.map(wish)}
         </ul>
+
+        <div className="mt-2 grid gap-2">
+          <p className="flex items-center gap-2 py-1 text-lg font-semibold">
+            <CategoryTitle title={t("toys")} count={toys.length} open />
+          </p>
+          <ul aria-label={t("toys")} className="grid gap-2">
+            {toys.map(wish)}
+          </ul>
+        </div>
 
         <figcaption className="text-center text-sm text-muted-foreground">
           {t("caption")}
