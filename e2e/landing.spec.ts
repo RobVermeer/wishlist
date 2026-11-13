@@ -31,15 +31,21 @@ test("logged out visitors see what Niet Weer Sokken can do", async ({
   await expect(wishes).toHaveText([
     /^Fiets\s*bol\.com\s*coolblue\.nl\s*Ik koop dit$/,
     /^Boeken\s*Onbeperkt$/,
-    /^LEGO kasteel\s*Wordt al gekocht$/,
-    /^Bordspel\s*Jij koopt dit\s*Toch niet$/,
     /^Warme sokken\s*Ik koop dit$/,
   ])
+  await expect(example.getByText(/^Speelgoed\s*2$/)).toBeVisible()
+  const toys = example
+    .getByRole("list", { name: "Speelgoed" })
+    .getByRole("listitem")
+  await expect(toys).toHaveText([
+    /^LEGO kasteel\s*Wordt al gekocht$/,
+    /^Bordspel\s*Jij koopt dit\s*Toch niet$/,
+  ])
   for (const [index, title] of [
-    [2, "LEGO kasteel"],
-    [3, "Bordspel"],
+    [0, "LEGO kasteel"],
+    [1, "Bordspel"],
   ] as const) {
-    await expect(wishes.nth(index).getByText(title)).toHaveClass(/line-through/)
+    await expect(toys.nth(index).getByText(title)).toHaveClass(/line-through/)
   }
   await expect(example).toContainText("Sanne ziet dat niet")
 
