@@ -16,6 +16,7 @@ import {
   emailsTo,
   prisma,
   toasts,
+  pickDate,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -1059,7 +1060,7 @@ test("only the creator of a group can draw lots", async ({ signIn }) => {
   await page.goto(`/group/${ownGroup.id}`)
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Groep niet gevonden")

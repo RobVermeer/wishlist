@@ -9,6 +9,7 @@ import {
   emailsTo,
   prisma,
   toasts,
+  pickDate,
 } from "./fixtures"
 import { Page } from "@playwright/test"
 
@@ -46,7 +47,7 @@ test("the creator draws lots for the group", async ({ signIn }) => {
   await expect(dialog.getByRole("checkbox")).toHaveCount(4)
   await dialog.getByLabel("Dirk").uncheck()
   await dialog.getByLabel("Budget").fill("25")
-  await dialog.getByLabel("Datum van het feest").fill("2026-12-05")
+  await pickDate(dialog, "Datum van het feest", "2026-12-05")
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
@@ -135,7 +136,7 @@ test("drawing lots needs at least two participants", async ({ signIn }) => {
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await dialog.getByLabel("Bert").uncheck()
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -154,24 +155,39 @@ test("drawing lots needs the date of the party", async ({ signIn }) => {
   await page.goto(`/group/${group.id}`)
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
-  const date = dialog.getByLabel("Datum van het feest")
-  await expect(date).toHaveAttribute("required")
-  await date.evaluate(input => {
-    input.removeAttribute("required")
-    input.removeAttribute("min")
-  })
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Kies de datum van het feest")
   await expect(dialog).toBeVisible()
 
-  await date.fill(dateInAmsterdam(-1))
+  await dialog.getByRole("button", { name: "Datum van het feest" }).click()
+  const yesterday = new Date(`${dateInAmsterdam(-1)}T12:00:00Z`)
+  await expect(
+    page.getByRole("button", {
+      name: new RegExp(
+        `\\b${yesterday.getUTCDate()} ${new Intl.DateTimeFormat("nl-NL", {
+          month: "long",
+          year: "numeric",
+          timeZone: "UTC",
+        }).format(yesterday)}`
+      ),
+    })
+  ).toBeDisabled()
+  await page.keyboard.press("Escape")
+  await expect(page.getByRole("grid")).toBeHidden()
+
+  // The picker can't choose a day before today, so send one anyway.
+  await dialog
+    .locator('input[name="date"]')
+    .evaluate((input: HTMLInputElement, date) => {
+      input.value = date
+    }, dateInAmsterdam(-1))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Kies een datum vanaf vandaag")
 
   const budget = dialog.getByLabel("Budget")
-  await date.fill(dateInAmsterdam())
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam())
   await budget.fill("10001")
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
@@ -229,7 +245,7 @@ test("people who aren't in the group yet can take part", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", opa.email!.toUpperCase())
   await expect(dialog.getByRole("listitem")).toHaveText([/Opa/])
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
 
@@ -265,7 +281,7 @@ test("someone filled in but not added yet still takes part", async ({
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await dialog.getByLabel("Naam van de deelnemer").fill("Opa")
   await dialog.getByLabel("E-mailadres").fill("opa-erbij@e2e.test")
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")
@@ -295,7 +311,7 @@ test("someone filled in without a name can't be left out", async ({
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await dialog.getByLabel("E-mailadres").fill("zonder-naam@e2e.test")
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -319,7 +335,7 @@ test("someone added to the draw must have a valid e-mail address", async ({
   await page.getByRole("button", { name: "Lootjes trekken" }).click()
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", "geen-adres")
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("Vul een geldig e-mailadres in")
@@ -339,7 +355,7 @@ test("everyone in the draw needs their own e-mail address", async ({
   const dialog = page.getByRole("dialog", { name: "Lootjes trekken" })
   await addPerson(dialog, "Opa", "opa@e2e.test")
   await addPerson(dialog, "Oma", "opa@e2e.test")
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText(
@@ -540,7 +556,7 @@ test("drawing lots again replaces the previous draw", async ({ signIn }) => {
   const dialog = page.getByRole("dialog", { name: "Opnieuw lootjes trekken" })
   await expect(dialog).toContainText("De vorige loting telt dan niet meer")
   await expect(dialog.getByLabel("Opa")).toBeChecked()
-  await dialog.getByLabel("Datum van het feest").fill(dateInAmsterdam(30))
+  await pickDate(dialog, "Datum van het feest", dateInAmsterdam(30))
   await dialog.getByRole("button", { name: "Trek lootjes" }).click()
 
   await expect(toasts(page)).toContainText("De lootjes zijn getrokken")

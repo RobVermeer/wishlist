@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { createDraw } from "@/lib/draws/createDraw"
 import { today } from "@/lib/today"
 import { useUnsavedChanges } from "@/components/UnsavedChanges"
+import { DatePicker } from "@/components/DatePicker"
 
 interface Props {
   groupId: string
@@ -235,12 +236,11 @@ export const DrawLots = ({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="draw-date">{t("date")}</Label>
-              <Input
+              <DatePicker
                 id="draw-date"
                 name="date"
-                type="date"
+                placeholder={t("datePlaceholder")}
                 min={today()}
-                required
               />
             </div>
           </div>
