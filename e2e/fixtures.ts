@@ -2,6 +2,7 @@ import {
   test as base,
   BrowserContextOptions,
   expect,
+  Locator,
   Page,
 } from "@playwright/test"
 import { User } from "../src/generated/prisma/client"
@@ -259,6 +260,33 @@ export const dateInAmsterdam = (daysFromToday = 0) => {
 
 export const toasts = (page: Page) =>
   page.locator('[role="region"][aria-label^="Notifications"]')
+
+// Chooses a date (yyyy-MM-dd) in the date picker with the given label, by
+// going to its month and clicking the day like someone would.
+export const pickDate = async (scope: Locator, label: string, date: string) => {
+  const page = scope.page()
+  const [year, month, day] = date.split("-").map(Number)
+  const monthName = new Intl.DateTimeFormat("nl-NL", {
+    month: "long",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)))
+
+  await scope.getByRole("button", { name: label }).click()
+  const grid = page.getByRole("grid")
+  await expect(grid).toBeVisible()
+  for (let i = 0; i < 24; i++) {
+    if ((await grid.getAttribute("aria-label")) === `${monthName} ${year}`) {
+      break
+    }
+    await page.getByRole("button", { name: "Ga naar volgende maand" }).click()
+  }
+  await page
+    .getByRole("button", {
+      name: new RegExp(`\\b${day} ${monthName} ${year}`),
+    })
+    .click()
+  await expect(grid).toBeHidden()
+}
 
 // Holds back the server actions of a page until the returned function is
 // called, to check what the page shows while it waits for one.
