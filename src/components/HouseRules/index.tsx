@@ -33,7 +33,7 @@ export const HouseRules = ({ loggedIn }: Props) => {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className="grid scroll-mt-24 gap-3"
+          className="grid scroll-mt-8 gap-3"
         >
           <ListTitle>
             <span id={`${id}-title`}>{title}</span>
