@@ -12,9 +12,15 @@ import {
   toasts,
 } from "./fixtures"
 import { Page } from "@playwright/test"
+import { randomUUID } from "node:crypto"
 
 const card = (page: Page, text: string) =>
   page.locator("div.rounded-2xl").filter({ hasText: text })
+
+// Other tests add users all the time, so look someone up instead of hoping
+// they are on the first page.
+const openUser = (page: Page, user: { email: string | null }) =>
+  page.goto(`/admin/users?zoek=${encodeURIComponent(user.email!)}`)
 
 test("regular users cannot access the admin", async ({ signIn }) => {
   const user = await createUser()
@@ -51,12 +57,51 @@ test("admin can open the admin from their profile", async ({ signIn }) => {
   }
 })
 
+test("admin can search users by name and e-mail address", async ({
+  signIn,
+}) => {
+  const admin = await createAdmin()
+  const token = randomUUID().slice(0, 8)
+  const marieke = await createUser({ name: `Marieke ${token}` })
+  const other = await createUser()
+  const page = await signIn(admin)
+
+  await page.goto("/admin/users")
+  await page.getByLabel("Zoek op naam of e-mailadres").fill(`marieke ${token}`)
+  await page.getByRole("button", { name: "Zoek" }).click()
+
+  await expect(page).toHaveURL(
+    `/admin/users?zoek=${encodeURIComponent(`marieke ${token}`).replaceAll("%20", "+")}`
+  )
+  await expect(card(page, marieke.email!)).toBeVisible()
+  await expect(page.locator("div.rounded-2xl")).toHaveCount(1)
+  await expect(page.getByLabel("Zoek op naam of e-mailadres")).toHaveValue(
+    `marieke ${token}`
+  )
+
+  await openUser(page, other)
+  await expect(card(page, other.email!)).toBeVisible()
+  await expect(page.locator("div.rounded-2xl")).toHaveCount(1)
+
+  await page.getByLabel("Zoek op naam of e-mailadres").fill(`Niemand ${token}`)
+  await page.getByRole("button", { name: "Zoek" }).click()
+  await expect(
+    page.getByRole("heading", { name: "Niemand gevonden" })
+  ).toBeVisible()
+  await expect(
+    page.getByText(
+      `Er is niemand met ‘Niemand ${token}’ in de naam of het e-mailadres.`
+    )
+  ).toBeVisible()
+  await expect(page.locator("div.rounded-2xl")).toHaveCount(0)
+})
+
 test("admin can remove a user", async ({ signIn }) => {
   const admin = await createAdmin()
   const user = await createUser({ name: "Weg Gebruiker" })
   const page = await signIn(admin)
 
-  await page.goto("/admin/users")
+  await openUser(page, user)
   const userCard = card(page, user.email!)
   await expect(userCard).toContainText("Weg Gebruiker")
 
@@ -78,7 +123,7 @@ test("admin can remove a user", async ({ signIn }) => {
 })
 
 async function removeUser(page: Page, user: { email: string | null }) {
-  await page.goto("/admin/users")
+  await openUser(page, user)
   await card(page, user.email!)
     .getByRole("button", { name: "Verwijder" })
     .click()
@@ -176,7 +221,7 @@ test("super admin can make someone admin and take it away", async ({
   const page = await signIn(superAdmin)
   const userPage = await signIn(user)
 
-  await page.goto("/admin/users")
+  await openUser(page, user)
   const userCard = card(page, user.email!)
   await expect(userCard.getByText("Admin", { exact: true })).toBeHidden()
 
@@ -203,7 +248,7 @@ test("the super admin can't be taken away or removed", async ({ signIn }) => {
   const superAdmin = await createAdmin()
   const page = await signIn(superAdmin)
 
-  await page.goto("/admin/users")
+  await openUser(page, superAdmin)
   const superAdminCard = card(page, superAdmin.email!)
 
   await expect(superAdminCard.getByText("Superadmin")).toBeVisible()
@@ -217,11 +262,12 @@ test("admins see who is admin but can't manage admins", async ({ signIn }) => {
   const user = await createUser()
   const page = await signIn(admin)
 
-  await page.goto("/admin/users")
-
+  await openUser(page, superAdmin)
   await expect(
     card(page, superAdmin.email!).getByText("Superadmin")
   ).toBeVisible()
+
+  await openUser(page, otherAdmin)
   const otherAdminCard = card(page, otherAdmin.email!)
   await expect(otherAdminCard.getByText("Admin", { exact: true })).toBeVisible()
   await expect(
@@ -230,6 +276,8 @@ test("admins see who is admin but can't manage admins", async ({ signIn }) => {
   await expect(
     otherAdminCard.getByRole("button", { name: "Verwijder" })
   ).toHaveCount(0)
+
+  await openUser(page, user)
   const userCard = card(page, user.email!)
   await expect(
     userCard.getByRole("button", { name: "Verwijder" })
@@ -400,7 +448,7 @@ test("admin can remove bought wishes from someone's wishlist", async ({
   await createItem(wishlist, { title: "Puzzelboek" })
   const page = await signIn(admin)
 
-  await page.goto("/admin/users")
+  await openUser(page, owner)
   await card(page, owner.email!).getByRole("link", { name: "Bekijk" }).click()
 
   await expect(page).toHaveURL(`/admin/users/${owner.id}`)

@@ -6,7 +6,7 @@ import { getTranslations } from "next-intl/server"
 import { cache } from "react"
 import { isSuperAdmin } from "./isSuperAdmin"
 
-export const getUsers = cache(async () => {
+export const getUsers = cache(async (search: string) => {
   const session = await getSession()
   const t = await getTranslations("Errors")
 
@@ -19,6 +19,11 @@ export const getUsers = cache(async () => {
   }
 
   const data = await prisma.user.findMany({
+    where: search
+      ? {
+          OR: [{ name: { contains: search } }, { email: { contains: search } }],
+        }
+      : {},
     orderBy: { id: "desc" },
   })
 

@@ -592,6 +592,10 @@
     "users": {
       "admin": "Admin",
       "superAdmin": "Superadmin",
+      "search": "Zoek op naam of e-mailadres",
+      "searchButton": "Zoek",
+      "noResults": "Niemand gevonden",
+      "noResultsText": "Er is niemand met ‘{search}’ in de naam of het e-mailadres.",
       "makeAdmin": "Maak admin",
       "removeAdmin": "Geen admin meer",
       "view": "Bekijk",

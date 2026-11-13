@@ -25,15 +25,18 @@ async function forgeActions(
   from: string,
   to: string
 ) {
-  await page.route(`**${path}`, async route => {
-    const request = route.request()
-    if (request.method() === "POST" && request.headers()["next-action"]) {
-      return route.continue({
-        postData: request.postData()!.replaceAll(from, to),
-      })
+  await page.route(
+    url => url.pathname === path,
+    async route => {
+      const request = route.request()
+      if (request.method() === "POST" && request.headers()["next-action"]) {
+        return route.continue({
+          postData: request.postData()!.replaceAll(from, to),
+        })
+      }
+      return route.continue()
     }
-    return route.continue()
-  })
+  )
 }
 
 function blackPng(...sizes: [number, number][]) {
@@ -1571,18 +1574,21 @@ async function captureAction(page: Page, path: string) {
     headers: Record<string, string>
     body: string
   }>(resolve => {
-    page.route(`**${path}`, async route => {
-      const request = route.request()
-      if (request.method() === "POST" && request.headers()["next-action"]) {
-        resolve({
-          url: request.url(),
-          headers: request.headers(),
-          body: request.postData()!,
-        })
-        return route.abort()
+    page.route(
+      url => url.pathname === path,
+      async route => {
+        const request = route.request()
+        if (request.method() === "POST" && request.headers()["next-action"]) {
+          resolve({
+            url: request.url(),
+            headers: request.headers(),
+            body: request.postData()!,
+          })
+          return route.abort()
+        }
+        return route.continue()
       }
-      return route.continue()
-    })
+    )
   })
 }
 
@@ -1611,7 +1617,7 @@ test("only admins can remove users", async ({ signIn }) => {
   const adminPage = await signIn(admin)
 
   const action = captureAction(adminPage, "/admin/users")
-  await adminPage.goto("/admin/users")
+  await adminPage.goto(`/admin/users?zoek=${encodeURIComponent(victim.email!)}`)
   await adminPage
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
@@ -1675,7 +1681,9 @@ test("only the super admin can make someone admin", async ({ signIn }) => {
   const superAdminPage = await signIn(superAdmin)
 
   const action = captureAction(superAdminPage, "/admin/users")
-  await superAdminPage.goto("/admin/users")
+  await superAdminPage.goto(
+    `/admin/users?zoek=${encodeURIComponent(target.email!)}`
+  )
   await superAdminPage
     .locator("div.rounded-2xl")
     .filter({ hasText: target.email! })
@@ -1698,7 +1706,9 @@ test("only the super admin can take admin away", async ({ signIn }) => {
   const superAdminPage = await signIn(superAdmin)
 
   const action = captureAction(superAdminPage, "/admin/users")
-  await superAdminPage.goto("/admin/users")
+  await superAdminPage.goto(
+    `/admin/users?zoek=${encodeURIComponent(target.email!)}`
+  )
   await superAdminPage
     .locator("div.rounded-2xl")
     .filter({ hasText: target.email! })
@@ -1719,7 +1729,7 @@ test("admin can't be taken away from the super admin", async ({ signIn }) => {
   const page = await signIn(superAdmin)
 
   await forgeActions(page, "/admin/users", admin.id, superAdmin.id)
-  await page.goto("/admin/users")
+  await page.goto(`/admin/users?zoek=${encodeURIComponent(admin.email!)}`)
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: admin.email! })
@@ -1738,7 +1748,7 @@ test("only the super admin can remove admins", async ({ signIn }) => {
   const page = await signIn(admin)
 
   await forgeActions(page, "/admin/users", victim.id, otherAdmin.id)
-  await page.goto("/admin/users")
+  await page.goto(`/admin/users?zoek=${encodeURIComponent(victim.email!)}`)
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
@@ -1821,7 +1831,7 @@ test("nobody can remove the super admin", async ({ signIn }) => {
   const page = await signIn(admin)
 
   await forgeActions(page, "/admin/users", victim.id, superAdmin.id)
-  await page.goto("/admin/users")
+  await page.goto(`/admin/users?zoek=${encodeURIComponent(victim.email!)}`)
   await page
     .locator("div.rounded-2xl")
     .filter({ hasText: victim.email! })
