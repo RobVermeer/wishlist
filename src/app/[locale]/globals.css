@@ -103,6 +103,12 @@
   * {
     @apply border-border;
   }
+  /* The sticky header covers the top 4rem. Links to an anchor stop below it,
+     and Next.js scrolls a new page to the top when its start would be under
+     it, instead of keeping the scroll position. */
+  html {
+    scroll-padding-top: 4rem;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image: radial-gradient(

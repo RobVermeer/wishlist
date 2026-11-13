@@ -4,6 +4,7 @@ import {
   createUser,
   createGroup,
   createWishlist,
+  createItem,
 } from "./fixtures"
 
 test("a verlanglijstje in a group links back to the group", async ({
@@ -115,5 +116,50 @@ test("invitations link back to the home page before logging in", async ({
       .getByRole("link", { name: "Terug naar Niet Weer Sokken" })
       .click()
     await expect(page).toHaveURL("/")
+  }
+})
+
+test("a page opened after scrolling a bit starts with its back link below the header", async ({
+  signIn,
+}) => {
+  const user = await createUser()
+  const members = await Promise.all(
+    Array.from({ length: 12 }, (_, i) => createUser({ firstName: `Lid ${i}` }))
+  )
+  const group = await createGroup(user, { title: "Familie", members })
+  for (const member of members) {
+    const wishlist = await createWishlist(member, {
+      groups: [group],
+      followers: [user],
+    })
+    for (let i = 0; i < 12; i++) await createItem(wishlist)
+  }
+  const page = await signIn(user)
+  await page.setViewportSize({ width: 375, height: 667 })
+  const header = page.getByRole("banner")
+
+  for (const [from, link, back] of [
+    [`/group/${group.id}`, "Lid 0", "Familie"],
+    ["/", "Lid 0", "Overzicht"],
+    ["/", "Familie 13 leden", "Overzicht"],
+  ]) {
+    await page.goto(from)
+    await page.mouse.wheel(0, 60)
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(60)
+
+    await page.getByRole("link", { name: link, exact: true }).click()
+    const backLink = page.getByRole("link", { name: `Terug naar ${back}` })
+    await expect(backLink).toBeVisible()
+
+    // Not hidden behind the header, which stays at the top.
+    const headerBox = await header.boundingBox()
+    const backLinkBox = await backLink.boundingBox()
+    expect(backLinkBox!.y).toBeGreaterThanOrEqual(
+      headerBox!.y + headerBox!.height
+    )
+
+    // Going back still returns to where you were.
+    await page.goBack()
+    await expect.poll(() => page.evaluate(() => scrollY)).toBe(60)
   }
 })

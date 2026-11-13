@@ -40,7 +40,7 @@ export const Faq = ({ loggedIn }: Props) => {
 
   return (
     <>
-      <div id="top" className="grid scroll-mt-24 gap-1">
+      <div id="top" className="grid scroll-mt-8 gap-1">
         <h1 className="text-4xl font-semibold tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground">{t("intro")}</p>
       </div>
@@ -82,7 +82,7 @@ export const Faq = ({ loggedIn }: Props) => {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className="grid scroll-mt-24 gap-2"
+          className="grid scroll-mt-8 gap-2"
         >
           <ListTitle>
             <span id={`${id}-title`}>{title}</span>
@@ -135,7 +135,7 @@ export const Faq = ({ loggedIn }: Props) => {
 
       <section
         id="stel-je-vraag"
-        className="grid scroll-mt-24 gap-3 rounded-lg bg-secondary p-6 text-center"
+        className="grid scroll-mt-8 gap-3 rounded-lg bg-secondary p-6 text-center"
       >
         <h2 className="text-xl font-semibold">{t("contact.title")}</h2>
         <p className="text-muted-foreground">{t("contact.text")}</p>
